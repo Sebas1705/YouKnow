@@ -1,24 +1,22 @@
-<!--
-  ~ Copyright (C) 2022 The Android Open Source Project
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Application -->
-    <string name="app_name">General culture app</string>
+    <string name="app_name" translatable="false">You Know?</string>
 
     <!-- Splash Screen -->
-    <string name="icon_content_sp">General culture app</string>
+    <string name="icon_content_sp">You Know icon</string>
+
+    <!-- Boarding Screen -->
+    <string name="next">Next</string>
+    <string name="start">Start!</string>
+    <string name="back">Back</string>
+
+    <!-- Pages -->
+    <string name="titlePage1">Welcome and General Description</string>
+    <string name="desPage1">Welcome to our trivia app, designed to offer you an educational and entertaining experience. With a friendly and intuitive interface, you will be able to access a variety of questions in different categories and difficulty levels. Whether you want to test your knowledge in history, science, general knowledge or any other topic, our app is set to provide you with a stimulating and enriching challenge.</string>
+    <string name="titlePage2">Operation and Features</string>
+    <string name="desPage2">When you start the app, you can select the theme and difficulty you prefer. Each question comes with several answer options, only one of which is correct. You have the possibility to use hints and jokers to help you in the most difficult moments. Additionally, after each answer, you will receive a brief explanation that will allow you to learn more about the topic at hand, regardless of whether your answer was correct or incorrect.</string>
+    <string name="titlePage3">Monitoring and Competition</string>
+    <string name="desPage3">Our app also includes a feature to track your progress. You will be able to see detailed statistics about your answers, the categories in which you excel, and the areas in which you could improve. In addition, you can compete with your friends and other users, comparing scores and reaching new goals. We are committed to providing you with an educational tool that not only tests your knowledge, but also inspires you to learn more every day. Enjoy and continue growing with our trivia app!</string>
 
 </resources>

@@ -1,4 +1,6 @@
 [versions]
+accompanistSystemuicontroller = "<version>"
+accompanistSystemuicontrollerVersion = "0.31.4-beta"
 androidGradlePlugin = "8.5.1"
 androidxCore = "1.13.1"
 androidxLifecycle = "2.8.3"
@@ -12,12 +14,15 @@ androidxTestExt = "1.2.1"
 androidxTestRunner = "1.6.1"
 coreSplashscreenVersion = "1.0.1"
 coroutines = "1.8.1"
+datastorePreferences = "1.1.1"
 hilt = "2.51.1"
 junit = "4.13.2"
 kotlin = "2.0.0"
 ksp = "2.0.0-1.0.23"
 
 [libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+accompanist-systemuicontroller-v0314beta = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontrollerVersion" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -28,6 +33,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHilt" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }

@@ -25,17 +25,17 @@ plugins {
 }
 
 android {
-    namespace = "es.Sebas1705.quizzApp"
+    namespace = "es.sebas1705.youknowapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "es.Sebas1705.quizzApp"
+        applicationId = "es.sebas1705.youknowapp"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "es.Sebas1705.quizzApp.HiltTestRunner"
+        testInstrumentationRunner = "es.sebas1705.youknowapp.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -85,6 +85,12 @@ dependencies {
 
     //Splash API
     implementation(libs.androidx.core.splashscreen)
+
+    //Datastore
+    implementation(libs.androidx.datastore.preferences)
+
+    //SystemUi
+    implementation(libs.accompanist.systemuicontroller.v0314beta)
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
