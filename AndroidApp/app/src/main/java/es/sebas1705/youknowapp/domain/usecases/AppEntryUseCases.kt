@@ -1,6 +1,6 @@
 package es.sebas1705.youknowapp.domain.usecases
 
-import es.sebas1705.youknowapp.domain.manager.LocalUserManager
+import es.sebas1705.youknowapp.domain.repository.LocalUserManager
 import kotlinx.coroutines.flow.Flow
 
 

@@ -1,11 +1,11 @@
 package es.sebas1705.youknowapp.presentation.viewmodel
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknowapp.domain.usecases.AppEntryUseCases
 import es.sebas1705.youknowapp.presentation.navigation.Route
@@ -16,20 +16,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val appEntryUseCases: AppEntryUseCases
+    private val appEntryUseCases: AppEntryUseCases,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     var splashCondition by mutableStateOf(true)
         private set
 
-    var startDestination by mutableStateOf(Route.HomeScreen.route)
+    var startDestination by mutableStateOf(Route.AuthScreen.route)
         private set
 
-    init{
+    init {
         appEntryUseCases.readAppEntry().onEach {
             startDestination =
-                if(it) Route.HomeScreen.route
-                else Route.OnBoardingScreen.route
+                if (it) (
+                        if (firebaseAuth.currentUser != null) Route.TriviaScreen.route
+                        else Route.AuthScreen.route
+                ) else Route.OnBoardingScreen.route
             delay(300)
             splashCondition = false
         }.launchIn(viewModelScope)

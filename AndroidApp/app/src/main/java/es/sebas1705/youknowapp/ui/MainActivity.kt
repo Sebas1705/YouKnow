@@ -13,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import es.sebas1705.youknowapp.ui.theme.TriviaTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
 import es.sebas1705.youknowapp.presentation.navigation.AppNavigation
 import es.sebas1705.youknowapp.presentation.viewmodel.MainViewModel
-import es.sebas1705.youknowapp.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,15 +28,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window,false)
-        installSplashScreen().apply{
-            setKeepOnScreenCondition{
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
                 viewModel.splashCondition
             }
         }
 
+        val bundle = Bundle()
+        bundle.putString("Inicio", "Hola")
+        FirebaseAnalytics.getInstance(this).logEvent("Check", bundle)
+
         setContent {
-            MyApplicationTheme {
+            TriviaTheme {
+
 
                 val isSystemInDarkMode = isSystemInDarkTheme()
                 val systemController = rememberSystemUiController()

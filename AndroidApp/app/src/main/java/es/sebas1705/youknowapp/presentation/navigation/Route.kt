@@ -5,6 +5,9 @@ sealed class Route(
 ) {
 
     data object OnBoardingScreen : Route("boarding")
-    data object HomeScreen : Route("home")
+    data object TriviaScreen : Route("trivia")
+    data object AuthScreen : Route("auth")
+    data object LogScreen : Route("log")
+    data object SignScreen : Route("sign")
 
 }
