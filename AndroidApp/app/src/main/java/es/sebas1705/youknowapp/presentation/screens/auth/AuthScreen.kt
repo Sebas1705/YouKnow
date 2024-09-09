@@ -1,27 +1,18 @@
 package es.sebas1705.youknowapp.presentation.screens.auth
 
 import android.content.Intent
-import android.credentials.CredentialManager
-import android.credentials.GetCredentialRequest
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,15 +23,15 @@ import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import es.sebas1705.youknowapp.R
 import es.sebas1705.youknowapp.domain.utils.Previews
 import es.sebas1705.youknowapp.presentation.common.buttons.CustomEmptyIconButton
 import es.sebas1705.youknowapp.presentation.common.buttons.CustomFilledButton
 import es.sebas1705.youknowapp.presentation.common.buttons.CustomTextButton
+import es.sebas1705.youknowapp.presentation.common.customs.ApplyBack
 import es.sebas1705.youknowapp.presentation.common.customs.DoubleSpacer
 import es.sebas1705.youknowapp.presentation.common.customs.SimpleSpacer
-import es.sebas1705.youknowapp.presentation.navigation.Route
+import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import es.sebas1705.youknowapp.presentation.viewmodel.AuthViewModel
 import es.sebas1705.youknowapp.ui.theme.LargePadding
 import es.sebas1705.youknowapp.ui.theme.TriviaTheme
@@ -69,8 +60,8 @@ private fun AuthSubScreen(
                 val account = task.getResult(ApiException::class.java)
                 authViewModel?.signWithGoogleToken(
                     account.idToken!!,
-                    onSuccess = {navController?.navigate(Route.TriviaScreen.route)},
-                    onError = { Log.e("Google sign", "Failure for $it")}
+                    onSuccess = { navController?.navigate(AppRoutes.HomeScreen.route) },
+                    onError = { Log.e("Google sign", "Failure for $it") }
                 )
             } catch (e: Exception) {
                 Log.d("Login Google error", "error: $e")
@@ -90,17 +81,9 @@ private fun AuthSubScreen(
 
 
     TriviaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
+        ApplyBack(
+            R.drawable.back
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.back),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -136,7 +119,7 @@ private fun AuthSubScreen(
                         disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 ) {
-                    navController?.navigate(Route.SignScreen.route)
+                    navController?.navigate(AppRoutes.SignScreen.route)
                 }
                 SimpleSpacer()
                 CustomEmptyIconButton(
@@ -160,7 +143,7 @@ private fun AuthSubScreen(
                     text = stringResource(id = R.string.ToEmailLog),
                     textStyle = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
                 ) {
-                    navController?.navigate(Route.LogScreen.route)
+                    navController?.navigate(AppRoutes.LogScreen.route)
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }

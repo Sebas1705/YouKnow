@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknowapp.domain.usecases.AppEntryUseCases
-import es.sebas1705.youknowapp.presentation.navigation.Route
+import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,16 +23,16 @@ class MainViewModel @Inject constructor(
     var splashCondition by mutableStateOf(true)
         private set
 
-    var startDestination by mutableStateOf(Route.AuthScreen.route)
+    var startDestination by mutableStateOf(AppRoutes.AuthScreen.route)
         private set
 
     init {
         appEntryUseCases.readAppEntry().onEach {
             startDestination =
                 if (it) (
-                        if (firebaseAuth.currentUser != null) Route.TriviaScreen.route
-                        else Route.AuthScreen.route
-                ) else Route.OnBoardingScreen.route
+                        if (firebaseAuth.currentUser != null) AppRoutes.TriviaScreen.route
+                        else AppRoutes.AuthScreen.route
+                ) else AppRoutes.GuideScreen.route
             delay(300)
             splashCondition = false
         }.launchIn(viewModelScope)

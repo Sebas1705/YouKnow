@@ -1,8 +1,6 @@
 package es.sebas1705.youknowapp.presentation.screens.auth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,10 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,12 +29,12 @@ import androidx.navigation.NavController
 import es.sebas1705.youknowapp.R
 import es.sebas1705.youknowapp.domain.utils.Previews
 import es.sebas1705.youknowapp.presentation.common.buttons.CustomFilledButton
+import es.sebas1705.youknowapp.presentation.common.customs.ApplyBack
 import es.sebas1705.youknowapp.presentation.common.customs.EmailPassFields
-import es.sebas1705.youknowapp.presentation.navigation.Route
+import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import es.sebas1705.youknowapp.presentation.viewmodel.AuthViewModel
 import es.sebas1705.youknowapp.ui.theme.LargePadding
 import es.sebas1705.youknowapp.ui.theme.MediumPadding
-import es.sebas1705.youknowapp.ui.theme.SmallPadding
 import es.sebas1705.youknowapp.ui.theme.TriviaTheme
 
 @Composable
@@ -62,17 +57,9 @@ fun SignSubScreen(
     var errorText by remember { mutableStateOf(s) }
 
     TriviaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
+        ApplyBack(
+            R.drawable.back
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.back),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -83,7 +70,9 @@ fun SignSubScreen(
                 Image(
                     painter = painterResource(id = R.drawable.sign_user),
                     contentDescription = stringResource(id = R.string.icon_content),
-                    modifier = Modifier.fillMaxHeight(0.2f).clip(CircleShape)
+                    modifier = Modifier
+                        .fillMaxHeight(0.2f)
+                        .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 Text(
@@ -113,7 +102,7 @@ fun SignSubScreen(
                         create = true,
                         email = email,
                         password = password,
-                        onSuccess = { navController?.navigate(Route.LogScreen.route) },
+                        onSuccess = { navController?.navigate(AppRoutes.LogScreen.route) },
                         onError = {
                             if (it != null) errorText = it
                             error = true
@@ -122,7 +111,7 @@ fun SignSubScreen(
                 }
             }
         }
-        if(error){
+        if (error) {
             AlertDialog(
                 onDismissRequest = { error = false },
                 title = {

@@ -1,7 +1,11 @@
 package es.sebas1705.youknowapp.domain.utils
 
+import androidx.compose.ui.res.stringResource
+import es.sebas1705.youknowapp.R
+import es.sebas1705.youknowapp.domain.model.Page
 import es.sebas1705.youknowapp.domain.model.TriviaQuestion
 import es.sebas1705.youknowapp.domain.model.TriviaResponse
+import es.sebas1705.youknowapp.presentation.navigation.home.HomeRoutes
 
 object Constants {
 
@@ -28,5 +32,13 @@ object Constants {
                 )
             }
         }
+    )
+
+    val HOME_ROUTES_LIST = listOf(
+        HomeRoutes.ChatScreen,
+        HomeRoutes.GameScreen,
+        HomeRoutes.MainScreen,
+        HomeRoutes.FriendsScreen,
+        HomeRoutes.ProfileScreen
     )
 }

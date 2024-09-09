@@ -1,6 +1,5 @@
-package es.sebas1705.youknowapp.presentation.screens.home
+package es.sebas1705.youknowapp.presentation.screens.game
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,11 +18,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import es.sebas1705.youknowapp.presentation.navigation.Route
+import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import es.sebas1705.youknowapp.presentation.viewmodel.ResponseState
 import es.sebas1705.youknowapp.presentation.viewmodel.TriviaViewModel
 import es.sebas1705.youknowapp.R
@@ -31,7 +29,9 @@ import es.sebas1705.youknowapp.domain.model.TriviaResponse
 import es.sebas1705.youknowapp.domain.utils.Constants.TRIVIA_RESPONSE_EXAMPLE
 import es.sebas1705.youknowapp.domain.utils.Previews
 import es.sebas1705.youknowapp.domain.utils.decodeUrl
+import es.sebas1705.youknowapp.presentation.common.customs.ApplyBack
 import es.sebas1705.youknowapp.presentation.viewmodel.AuthViewModel
+import es.sebas1705.youknowapp.ui.theme.TriviaTheme
 
 @Composable
 fun TriviaScreen(
@@ -65,15 +65,17 @@ fun TriviaScreen(
 @Previews
 @Composable
 private fun LoadingSubScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.tertiary
-        )
+    TriviaTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
     }
 }
 
@@ -83,24 +85,25 @@ private fun ErrorSubScreen(
     message: String = "Error",
     navController: NavController? = null
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.error),
-        contentAlignment = Alignment.Center
-    ) {
-        TextButton(
-            onClick = {
-                navController?.navigate(Route.TriviaScreen.route)
-            },
+    TriviaTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.error),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = message,
-                color = MaterialTheme.colorScheme.onError
-            )
+            TextButton(
+                onClick = {
+                    navController?.navigate(AppRoutes.TriviaScreen.route)
+                },
+            ) {
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.onError
+                )
+            }
         }
     }
-
 }
 
 @Previews
@@ -110,41 +113,45 @@ private fun TriviaSubScreen(
     authViewModel: AuthViewModel? = null,
     navController: NavController? = null
 ) {
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = "Back",
-            tint = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .fillMaxHeight(0.1f)
-                .clickable {
-                    if (navController != null) {
-                        authViewModel?.signOut {
-                            navController.navigate(Route.AuthScreen.route){
-                                popUpTo(Route.TriviaScreen.route){
-                                    inclusive = true
+    TriviaTheme {
+        ApplyBack(
+            R.drawable.back
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back_arrow),
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .fillMaxHeight(0.1f)
+                        .clickable {
+                            if (navController != null) {
+                                authViewModel?.signOut {
+                                    navController.navigate(AppRoutes.AuthScreen.route) {
+                                        popUpTo(AppRoutes.TriviaScreen.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             }
                         }
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.9f)
+                ) {
+                    data.triviaQuestions.forEach {
+                        item {
+                            Text(
+                                text = it.question.decodeUrl(),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                }
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.9f)
-        ) {
-            data.triviaQuestions.forEach {
-                item {
-                    Text(
-                        text = it.question.decodeUrl(),
-                        color = MaterialTheme.colorScheme.primary
-                    )
                 }
             }
         }

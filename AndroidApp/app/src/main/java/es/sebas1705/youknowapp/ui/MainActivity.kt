@@ -17,7 +17,7 @@ import es.sebas1705.youknowapp.ui.theme.TriviaTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
-import es.sebas1705.youknowapp.presentation.navigation.AppNavigation
+import es.sebas1705.youknowapp.presentation.navigation.AppNav
 import es.sebas1705.youknowapp.presentation.viewmodel.MainViewModel
 
 @AndroidEntryPoint
@@ -42,8 +42,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TriviaTheme {
-
-
                 val isSystemInDarkMode = isSystemInDarkTheme()
                 val systemController = rememberSystemUiController()
 
@@ -59,7 +57,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val startDestination = viewModel.startDestination
-                    AppNavigation(startDestination)
+                    AppNav(startDestination)
                 }
             }
         }

@@ -1,10 +1,11 @@
 package es.sebas1705.youknowapp.presentation.common.customs
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import es.sebas1705.youknowapp.ui.theme.TriviaTheme
@@ -29,15 +29,18 @@ fun BoardingPage(
     page: Page
 ) {
     Column(
-        modifier = modifier.background(color = MaterialTheme.colorScheme.background),
+        modifier = modifier.fillMaxSize(),
     ) {
-        Image(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.5f),
-            painter = painterResource(id = page.image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
+                .fillMaxHeight(0.4f)
+                .background(
+                    Brush.horizontalGradient(listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
+                    ))
+                )
         )
         Spacer(modifier = Modifier.height(MediumPadding))
         Text(

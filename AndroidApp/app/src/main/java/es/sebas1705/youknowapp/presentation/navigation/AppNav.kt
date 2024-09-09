@@ -1,43 +1,41 @@
 package es.sebas1705.youknowapp.presentation.navigation
  
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.youknowapp.presentation.screens.auth.LogScreen
 import es.sebas1705.youknowapp.presentation.screens.auth.AuthScreen
-import es.sebas1705.youknowapp.presentation.screens.prelog.OnBoardingScreen
+import es.sebas1705.youknowapp.presentation.screens.prelog.GuideScreen
 import es.sebas1705.youknowapp.presentation.screens.auth.SignScreen
-import es.sebas1705.youknowapp.presentation.screens.home.TriviaScreen
-import es.sebas1705.youknowapp.presentation.viewmodel.OnBoardingViewModel
+import es.sebas1705.youknowapp.presentation.screens.game.TriviaScreen
+import es.sebas1705.youknowapp.presentation.screens.home.HomeScreen
 
 @Composable
-fun AppNavigation(
+fun AppNav(
     startDestination: String
 ) {
 
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
-        composable(Route.OnBoardingScreen.route) {
-            val viewModel: OnBoardingViewModel = hiltViewModel()
-            OnBoardingScreen(
-                navController = navController,
-                event = viewModel::onEvent
-            )
+        composable(AppRoutes.GuideScreen.route) {
+            GuideScreen(navController)
         }
-        composable(Route.TriviaScreen.route) {
+        composable(AppRoutes.TriviaScreen.route) {
             TriviaScreen(navController)
         }
-        composable(Route.AuthScreen.route){
+        composable(AppRoutes.AuthScreen.route){
             AuthScreen(navController)
         }
-        composable(Route.LogScreen.route){
+        composable(AppRoutes.LogScreen.route){
             LogScreen(navController)
         }
-        composable(Route.SignScreen.route){
+        composable(AppRoutes.SignScreen.route){
             SignScreen(navController)
+        }
+        composable(AppRoutes.HomeScreen.route){
+            HomeScreen(navController)
         }
     }
 }

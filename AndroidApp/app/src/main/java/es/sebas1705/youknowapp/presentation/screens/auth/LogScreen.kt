@@ -1,7 +1,6 @@
 package es.sebas1705.youknowapp.presentation.screens.auth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -15,8 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,8 +23,9 @@ import androidx.navigation.NavController
 import es.sebas1705.youknowapp.R
 import es.sebas1705.youknowapp.domain.utils.Previews
 import es.sebas1705.youknowapp.presentation.common.buttons.CustomFilledButton
+import es.sebas1705.youknowapp.presentation.common.customs.ApplyBack
 import es.sebas1705.youknowapp.presentation.common.customs.EmailPassFields
-import es.sebas1705.youknowapp.presentation.navigation.Route
+import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import es.sebas1705.youknowapp.presentation.viewmodel.AuthViewModel
 import es.sebas1705.youknowapp.ui.theme.LargePadding
 import es.sebas1705.youknowapp.ui.theme.MediumPadding
@@ -54,17 +52,9 @@ private fun LogSubScreen(
     var errorText by remember { mutableStateOf(s) }
 
     TriviaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
+        ApplyBack(
+            R.drawable.back
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.back),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,7 +107,7 @@ private fun LogSubScreen(
                         create = false,
                         email = email,
                         password = password,
-                        onSuccess = { navController?.navigate(Route.TriviaScreen.route) },
+                        onSuccess = { navController?.navigate(AppRoutes.HomeScreen.route) },
                         onError = {
                             if (it != null) errorText = it
                             error = true
