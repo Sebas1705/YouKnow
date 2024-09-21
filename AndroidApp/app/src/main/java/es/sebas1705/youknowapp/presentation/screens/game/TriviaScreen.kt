@@ -20,22 +20,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import es.sebas1705.youknowapp.presentation.navigation.AppRoutes
 import es.sebas1705.youknowapp.presentation.viewmodel.ResponseState
 import es.sebas1705.youknowapp.presentation.viewmodel.TriviaViewModel
 import es.sebas1705.youknowapp.R
 import es.sebas1705.youknowapp.domain.model.TriviaResponse
-import es.sebas1705.youknowapp.domain.utils.Constants.TRIVIA_RESPONSE_EXAMPLE
-import es.sebas1705.youknowapp.domain.utils.Previews
-import es.sebas1705.youknowapp.domain.utils.decodeUrl
+import es.sebas1705.youknowapp.common.Constants.TRIVIA_RESPONSE_EXAMPLE
+import es.sebas1705.youknowapp.common.Previews
+import es.sebas1705.youknowapp.common.decodeUrl
 import es.sebas1705.youknowapp.presentation.common.customs.ApplyBack
-import es.sebas1705.youknowapp.presentation.viewmodel.AuthViewModel
-import es.sebas1705.youknowapp.ui.theme.TriviaTheme
+import es.sebas1705.youknowapp.presentation.screens.auth.viewmodel.AuthViewModel
+import es.sebas1705.youknowapp.ui.theme.YouKnowTheme
 
 @Composable
 fun TriviaScreen(
-    navController: NavController
+    onSuccessLogOutNavigation: () -> Unit = {},
+    onErrorButton: () -> Unit = {},
 ) {
 
     val authViewModel: AuthViewModel = hiltViewModel()
@@ -44,117 +43,125 @@ fun TriviaScreen(
 
     when (responseState) {
         is ResponseState.Loading ->
-            LoadingSubScreen()
+            LoadingDesign()
 
         is ResponseState.Success ->
-            TriviaSubScreen(
+            TriviaDesign(
                 data = (responseState as ResponseState.Success).triviaResponse,
                 authViewModel = authViewModel,
-                navController = navController
+                onSuccessLogOutNavigation = onSuccessLogOutNavigation
             )
 
         is ResponseState.Error ->
-            ErrorSubScreen(
+            ErrorDesign(
                 message = (responseState as ResponseState.Error).message,
-                navController
+                onErrorButton = onErrorButton
             )
 
     }
 }
 
-@Previews
 @Composable
-private fun LoadingSubScreen() {
-    TriviaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
+private fun LoadingDesign() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 
 @Previews
 @Composable
-private fun ErrorSubScreen(
+private fun LoadingPreview() {
+    YouKnowTheme {
+        LoadingDesign()
+    }
+}
+
+@Composable
+private fun ErrorDesign(
     message: String = "Error",
-    navController: NavController? = null
+    onErrorButton: () -> Unit = {},
 ) {
-    TriviaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.error),
-            contentAlignment = Alignment.Center
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.error),
+        contentAlignment = Alignment.Center
+    ) {
+        TextButton(
+            onClick = onErrorButton,
         ) {
-            TextButton(
-                onClick = {
-                    navController?.navigate(AppRoutes.TriviaScreen.route)
-                },
-            ) {
-                Text(
-                    text = message,
-                    color = MaterialTheme.colorScheme.onError
-                )
-            }
+            Text(
+                text = message,
+                color = MaterialTheme.colorScheme.onError
+            )
         }
     }
 }
 
 @Previews
 @Composable
-private fun TriviaSubScreen(
+private fun ErrorPreview() {
+    YouKnowTheme {
+        ErrorDesign()
+    }
+}
+
+@Composable
+private fun TriviaDesign(
     data: TriviaResponse = TRIVIA_RESPONSE_EXAMPLE,
     authViewModel: AuthViewModel? = null,
-    navController: NavController? = null
+    onSuccessLogOutNavigation: () -> Unit = {},
 ) {
-    TriviaTheme {
-        ApplyBack(
-            R.drawable.back
+    ApplyBack(
+        R.drawable.back_fill
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            Column(
+            Icon(
+                painter = painterResource(id = R.drawable.back_arrow),
+                contentDescription = "Back",
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .fillMaxHeight(0.1f)
-                        .clickable {
-                            if (navController != null) {
-                                authViewModel?.signOut {
-                                    navController.navigate(AppRoutes.AuthScreen.route) {
-                                        popUpTo(AppRoutes.TriviaScreen.route) {
-                                            inclusive = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                )
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.9f)
-                ) {
-                    data.triviaQuestions.forEach {
-                        item {
-                            Text(
-                                text = it.question.decodeUrl(),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                    .fillMaxHeight(0.1f)
+                    .clickable {
+                        authViewModel?.signOut(
+                            onSuccess = onSuccessLogOutNavigation,
+                            onError = { }
+                        )
                     }
-                }
+            )
+        }
+    }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.9f)
+    ) {
+        data.triviaQuestions.forEach {
+            item {
+                Text(
+                    text = it.question.decodeUrl(),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
+    }
+}
+
+@Previews
+@Composable
+private fun TriviaPreview() {
+    YouKnowTheme {
+        TriviaDesign()
     }
 }
 

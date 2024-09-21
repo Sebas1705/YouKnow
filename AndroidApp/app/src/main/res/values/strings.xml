@@ -33,5 +33,20 @@
     <string name="titleError">Error message</string>
     <string name="web_client_id" translatable="false">445608778208-u91a5dbmgj8ija5g4p25oa61o8ip779r.apps.googleusercontent.com</string>
 
+    <!-- Social Screens -->
+    <string name="Main">Home</string>
+    <string name="Profile">Profile</string>
+    <string name="Info">Info</string>
+    <string name="Play">Play</string>
+    <string name="Social">Social</string>
+    <string name="logout">Log out</string>
+    <string name="alertTitle">"Want to log out?"</string>
+    <string name="confirm">Confirm</string>
+    <string name="dismiss">Dismiss</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">Settings</string>
+    <string name="volume">Volume</string>
+    <string name="contrast">Contrast</string>
 
 </resources>

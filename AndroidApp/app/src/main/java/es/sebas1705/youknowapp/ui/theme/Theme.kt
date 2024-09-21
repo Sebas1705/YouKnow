@@ -1,18 +1,20 @@
 package es.sebas1705.youknowapp.ui.theme
 
-import android.os.Build
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import es.sebas1705.youknowapp.common.Constants
+import es.sebas1705.youknowapp.ui.Contrast
 
-private val lightScheme = lightColorScheme(
+private val lowContrastLightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
     primaryContainer = primaryContainerLight,
@@ -50,7 +52,7 @@ private val lightScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
 
-private val darkScheme = darkColorScheme(
+private val lowContrastDarkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
     primaryContainer = primaryContainerDark,
@@ -253,18 +255,35 @@ val unspecified_scheme = ColorFamily(
 )
 
 @Composable
-fun TriviaTheme(
+fun YouKnowTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    contrast: Contrast = Constants.PREVIEWS_CONTRAST,
+    content: @Composable () -> Unit
 ) {
-    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && false
-    val colors = when {
-        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-        darkTheme -> highContrastDarkColorScheme
-        else -> highContrastLightColorScheme
-    }
+    val colors = when (contrast) {
+        Contrast.Low -> when {
+            darkTheme -> lowContrastDarkScheme
+            else -> lowContrastLightScheme
+        }
 
+        Contrast.Medium -> when {
+            darkTheme -> mediumContrastDarkColorScheme
+            else -> mediumContrastLightColorScheme
+        }
+
+        Contrast.High -> when {
+            darkTheme -> highContrastDarkColorScheme
+            else -> highContrastLightColorScheme
+        }
+    }
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = !darkTheme
+        }
+    }
     MaterialTheme(
         colorScheme = colors,
         typography = AppTypography,

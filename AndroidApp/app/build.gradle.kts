@@ -19,6 +19,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.gradle)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.googleServices)
@@ -31,7 +32,7 @@ android {
 
     defaultConfig {
         applicationId = "es.sebas1705.youknowapp"
-        minSdk = 24
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -82,18 +83,13 @@ dependencies {
 
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.runtime.livedata)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
-    //Splash API
-    implementation(libs.androidx.core.splashscreen)
-
     //Datastore
     implementation(libs.androidx.datastore.preferences)
-
-    //SystemUi
-    implementation(libs.accompanist.systemuicontroller.v0314beta)
 
     //Retrofit
     implementation(libs.retrofit)
@@ -120,6 +116,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestrore)
+    implementation(libs.firebase.messaging)
 
     //Auth with Credential Manager
     implementation(libs.play.services.auth)
@@ -132,8 +129,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization.json)
     ksp(libs.androidx.room.compiler)
 
     // Compose
@@ -156,5 +155,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+
+    //Coil:
+    implementation(libs.coil.compose)
 
 }

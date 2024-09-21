@@ -31,5 +31,20 @@
     <string name="textLogError">Email o contraseñas incorrectos</string>
     <string name="titleError">Mensaje de error</string>
 
+    <!-- Social Screens -->
+    <string name="Main">Casa</string>
+    <string name="Profile">Perfil</string>
+    <string name="Info">Info</string>
+    <string name="Play">Jugar</string>
+    <string name="Social">Social</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="alertTitle">"Quieres cerrar sesión?"</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dismiss">Cancelar</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">Ajustes</string>
+    <string name="volume">Volumen</string>
+    <string name="contrast">Contraste</string>
 
 </resources>

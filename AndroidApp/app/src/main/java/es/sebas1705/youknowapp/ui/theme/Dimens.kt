@@ -3,6 +3,7 @@ package es.sebas1705.youknowapp.ui.theme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
 
+val SmallestPadding = 6.dp
 val SmallPadding = 12.dp
 val MediumPadding = 24.dp
 val LargePadding = 32.dp

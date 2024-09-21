@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import java.util.Locale
 
 @Composable
 fun CustomFilledButton(
@@ -29,16 +30,10 @@ fun CustomFilledButton(
         shape = MaterialTheme.shapes.medium
     ){
         Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+            text = text.uppercase(Locale.ROOT),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
             textAlign = TextAlign.Center,
             maxLines = 1
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewCustomTextButton(){
-    CustomFilledButton(text = "Buenas") {}
 }
