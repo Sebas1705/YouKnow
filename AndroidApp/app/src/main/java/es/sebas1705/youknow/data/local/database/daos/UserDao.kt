@@ -31,19 +31,21 @@ interface UserDao {
      * Delete a user using the id
      *
      * @param firebaseId [String]: firebase id of the user
+     *
+     * @return [Int]: number of users deleted
      */
     @Query("DELETE FROM users_table WHERE firebaseId = :firebaseId")
-    suspend fun deleteById(firebaseId: String)
+    suspend fun deleteById(firebaseId: String): Int
 
     /**
      * Get the user with an id
      *
      * @param firebaseId [String]: firebase id of the user
      *
-     * @return [Flow]<[List]<[UserEntity]>>
+     * @return [UserEntity]
      */
     @Query("SELECT * FROM users_table WHERE firebaseId = :firebaseId")
-    fun getByID(firebaseId: String): Flow<UserEntity>
+    fun getByID(firebaseId: String): UserEntity?
 
     /**
      * Say if the user is in the database

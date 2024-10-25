@@ -1,5 +1,6 @@
 package es.sebas1705.youknow.data.local.datastore.repository
 
+import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
 import kotlinx.coroutines.flow.Flow
 
@@ -13,36 +14,34 @@ interface DatastoreRepository {
 
     /**
      * Save if the user has opened the app for the first time
+     *
+     * @return a [Flow] with [ResponseState] of the operation
      */
-    suspend fun saveFirstTime()
+    fun saveFirstTime(): Flow<ResponseState<Nothing>>
 
     /**
      * Read if the user has opened the app for the first time
      *
-     * @return a [Flow] with [Boolean] value of the first time
+     * @return a [Flow] with [ResponseState] of the operation and a [Boolean] with the result
      *
-     * @see Flow
      */
-    fun readFirstTime(): Flow<Boolean>
+    fun readFirstTime(): Flow<ResponseState<Boolean>>
 
     /**
      * Save the volume of the app
      *
      * @param volume [Float]: the volume of the app
      *
-     * @see Float
+     * @return a [Flow] with [ResponseState] of the operation
      */
-    suspend fun saveAppVolume(volume: Float)
+    fun saveAppVolume(volume: Float): Flow<ResponseState<Nothing>>
 
     /**
      * Read the volume of the app
      *
-     * @return a [Flow] with the [Float] volume of the app
-     *
-     * @see Flow
-     * @see Float
+     * @return a [Flow] with [ResponseState] of the operation and a [Float] with the volume
      */
-    fun readAppVolume(): Flow<Float>
+    fun readAppVolume(): Flow<ResponseState<Float>>
 
     /**
      * Save the contrast of the app
@@ -51,16 +50,13 @@ interface DatastoreRepository {
      *
      * @see ThemeContrast
      */
-    suspend fun saveAppContrast(themeContrast: ThemeContrast)
+    fun saveAppContrast(themeContrast: ThemeContrast): Flow<ResponseState<Nothing>>
 
     /**
      * Read the contrast of the app
      *
-     * @return a [Flow] with the [ThemeContrast] contrast of the app
-     *
-     * @see Flow
-     * @see ThemeContrast
+     * @return a [Flow] with [ResponseState] of the operation and a [ThemeContrast] with the contrast
      */
-    fun readAppContrast(): Flow<ThemeContrast>
+    fun readAppContrast(): Flow<ResponseState<ThemeContrast>>
 
 }

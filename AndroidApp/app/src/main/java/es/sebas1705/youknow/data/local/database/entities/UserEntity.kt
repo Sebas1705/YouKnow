@@ -18,7 +18,9 @@ package es.sebas1705.youknow.data.local.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import es.sebas1705.youknow.data.firebase.authentication.config.ProviderAuth
 import es.sebas1705.youknow.data.local.database.config.SettingsDB
+import es.sebas1705.youknow.domain.model.UserModel
 
 /**
  * Data class to represent the user data and use as entity in the database
@@ -46,4 +48,18 @@ data class UserEntity(
     val points: Int,
     val credits: Int,
     val friends: List<String>
-)
+){
+
+    fun toUserModel() = UserModel(
+        firebaseId = firebaseId,
+        email = email,
+        provider = ProviderAuth.entries[provider],
+        nickName = nickName,
+        photoUrl = photoUrl,
+        groupId = groupId,
+        points = points,
+        credits = credits,
+        friends = friends
+    )
+
+}

@@ -1,9 +1,4 @@
 package es.sebas1705.youknow.data.local.database.repository
-
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -20,6 +15,10 @@ import kotlinx.coroutines.flow.Flow
  * limitations under the License.
  *
  */
+
+import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.domain.model.UserModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface to represent the repository of the database

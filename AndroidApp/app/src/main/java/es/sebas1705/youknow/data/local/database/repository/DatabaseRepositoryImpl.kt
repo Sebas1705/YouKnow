@@ -1,20 +1,4 @@
 package es.sebas1705.youknow.data.local.database.repository
-
-import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
-import es.sebas1705.youknow.data.firebase.analytics.config.Layer
-import es.sebas1705.youknow.data.firebase.analytics.config.Repository
-import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepositoryImpl
-import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
-import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepositoryImpl
-import es.sebas1705.youknow.data.local.database.Database
-import es.sebas1705.youknow.data.local.database.daos.UserDao
-import es.sebas1705.youknow.data.model.ErrorResponseType
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,6 +15,19 @@ import javax.inject.Inject
  * limitations under the License.
  *
  */
+
+import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
+import es.sebas1705.youknow.data.firebase.analytics.config.Layer
+import es.sebas1705.youknow.data.firebase.analytics.config.Repository
+import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepositoryImpl
+import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
+import es.sebas1705.youknow.data.local.database.Database
+import es.sebas1705.youknow.data.local.database.config.SettingsDB
+import es.sebas1705.youknow.data.model.ErrorResponseType
+import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.domain.model.UserModel
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 /**
  * Class to represent the repository of the database
@@ -56,7 +53,7 @@ class DatabaseRepositoryImpl @Inject constructor(
             emit(ResponseState.Loading)
             database.userDao().insertOrReplace(userModel.toUserEntity())
             emit(ResponseState.EmptySuccess)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             ResponseState.Error(
                 this@DatabaseRepositoryImpl as ClassLogData,
                 ErrorResponseType.InternalError,
@@ -71,9 +68,19 @@ class DatabaseRepositoryImpl @Inject constructor(
     ) = flow {
         try {
             emit(ResponseState.Loading)
-            database.userDao().insertOrReplace(userModel.toUserEntity())
-            emit(ResponseState.EmptySuccess)
-        }catch (e: Exception){
+            val rowsAffected = database.userDao().deleteById(userModel.firebaseId)
+            if (rowsAffected != 0)
+                emit(ResponseState.EmptySuccess)
+            else
+                emit(
+                    ResponseState.Error(
+                        this@DatabaseRepositoryImpl as ClassLogData,
+                        ErrorResponseType.NotFound,
+                        SettingsDB.USER_ID_NOT_FOUND,
+                        analyticsRepository::logError
+                    )
+                )
+        } catch (e: Exception) {
             ResponseState.Error(
                 this@DatabaseRepositoryImpl as ClassLogData,
                 ErrorResponseType.InternalError,
@@ -83,7 +90,30 @@ class DatabaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUser(firebaseId: String): Flow<ResponseState<UserModel>> {
-        TODO("Not yet implemented")
+    override fun getUser(
+        firebaseId: String
+    ) = flow {
+        try {
+            emit(ResponseState.Loading)
+            val userEntity = database.userDao().getByID(firebaseId)
+            if (userEntity != null)
+                emit(ResponseState.Success(userEntity.toUserModel()))
+            else
+                emit(
+                    ResponseState.Error(
+                        this@DatabaseRepositoryImpl as ClassLogData,
+                        ErrorResponseType.NotFound,
+                        SettingsDB.USER_ID_NOT_FOUND,
+                        analyticsRepository::logError
+                    )
+                )
+        } catch (e: Exception) {
+            ResponseState.Error(
+                this@DatabaseRepositoryImpl as ClassLogData,
+                ErrorResponseType.InternalError,
+                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
+                analyticsRepository::logError
+            )
+        }
     }
 }
