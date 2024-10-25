@@ -17,17 +17,15 @@
     <string name="desPage3">Nuestra aplicación también incluye una función de seguimiento de tu progreso. Podrás ver estadísticas detalladas sobre tus respuestas, las categorías en las que destacas y las áreas en las que podrías mejorar. Además, puedes competir con tus amigos y otros usuarios, comparando puntuaciones y alcanzando nuevas metas. Estamos comprometidos en brindarte una herramienta educativa que no solo ponga a prueba tus conocimientos, sino que también te inspire a aprender más cada día. ¡Disfruta y sigue creciendo con nuestra aplicación de preguntas!</string>
 
     <!-- Auth Screens -->
-    <string name="textInitial1">Muchas preguntas</string>
-    <string name="textInitial2">Gratis en YouKnow</string>
+    <string name="textInitial">Muchas preguntas\nGratis en YouKnow</string>
     <string name="ToSignUp">Registrate gratis</string>
     <string name="ToGoogleLog">Continua con Google</string>
-    <string name="ToFacebookLog">Continua con Facebook</string>
-    <string name="ToEmailLog">Inicia sesión</string>
+    <string name="ToEmailLog">Continua con Email</string>
     <string name="textSignUp">Rellene los campos a continuación:</string>
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
-    <string name="signup">Registrarse</string>
-    <string name="login">Iniciar Sesión</string>
+    <string name="signup">Crear</string>
+    <string name="login">Acceder</string>
     <string name="textLogError">Email o contraseñas incorrectos</string>
     <string name="titleError">Mensaje de error</string>
 
@@ -46,5 +44,11 @@
     <string name="settings">Ajustes</string>
     <string name="volume">Volumen</string>
     <string name="contrast">Contraste</string>
+    <string name="forgotPassword">¿Contraseña olvidada?</string>
+    <string name="EnterEmail">Introduzca el email de su cuenta:</string>
+    <string name="loading">Cargando…</string>
+    <string name="wannaRegister">¿Crear cuenta?</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="emailPasswordNotMatch">Correos o contraseñas no coinciden</string>
 
 </resources>

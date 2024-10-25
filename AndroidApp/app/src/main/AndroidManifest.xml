@@ -35,9 +35,7 @@
             android:name=".core.root.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.QuizApp"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

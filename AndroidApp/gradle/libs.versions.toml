@@ -1,7 +1,8 @@
 [versions]
 
 # Core:
-agp = "8.6.1"
+androidGradlePlugin = "8.6.1"
+agp = "8.7.0"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 coroutines = "1.8.1"
@@ -12,22 +13,23 @@ ksp = "2.0.0-1.0.23"
 # Lifecycle:
 lifecycleRuntimeKtx = "2.8.6"
 androidxLifecycle = "2.8.6"
-runtimeLivedataVersion = "1.7.2"
-androidxNavigation = "2.8.1"
+runtimeLivedataVersion = "1.7.3"
+androidxNavigation = "2.8.2"
 
 # Compose:
 activityCompose = "1.9.2"
-composeBom = "2024.09.02"
+composeBom = "2024.09.03"
 constraintlayoutCompose = "1.0.1"
-materialIconsExtended = "1.7.2"
-uiTextGoogleFonts = "1.7.2"
+material3Adaptive = "1.0.0"
+materialIconsExtended = "1.7.3"
+uiTextGoogleFonts = "1.7.3"
 
 # Hilt:
 androidxHilt = "1.2.0"
 
 # Credentials:
-credentials = "1.3.0-rc01"
-credentialsPlayServicesAuth = "1.2.2"
+credentials = "1.3.0"
+credentialsPlayServicesAuth = "1.3.0"
 playServicesAuth = "21.2.0"
 googleid = "1.1.1"
 
@@ -36,7 +38,7 @@ hilt = "2.51.1"
 
 # Firebase:
 google-services = "4.4.2"
-firebaseBom = "33.3.0"
+firebaseBom = "33.4.0"
 firebaseCrashlytics = "3.0.2"
 
 # Retrofit:
@@ -54,8 +56,7 @@ coilComposeVersion = "2.7.0"
 
 # Testing:
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
+androidxTestExt = "1.2.1"
 androidxTest = "1.6.1"
 androidxTestRunner = "1.6.2"
 
@@ -64,6 +65,7 @@ androidxTestRunner = "1.6.2"
 
 # Core:
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-json" }
 
@@ -82,8 +84,6 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHilt" }
@@ -133,8 +133,9 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeV
 
 # Testing:
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 
@@ -147,6 +148,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # Compose:
