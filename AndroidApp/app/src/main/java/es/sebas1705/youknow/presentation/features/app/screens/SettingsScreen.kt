@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.twoDecimalFormat
-import es.sebas1705.youknow.data.config.local.datastore.DefaultValues
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.composables.CustomEmptyIconButton
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
@@ -228,10 +228,10 @@ private fun SettingsDesign(
                     contentColor = MaterialTheme.colorScheme.tertiary,
                     onClick = {
                         settingsViewModel?.eventHandler(
-                            SettingsIntent.ChangeContrast(DefaultValues.APP_Ui_CONTRAST)
+                            SettingsIntent.ChangeContrast(DefaultValuesDS.APP_UI_CONTRAST)
                         )
                         settingsViewModel?.eventHandler(
-                            SettingsIntent.ChangeVolume(DefaultValues.APP_VOLUME)
+                            SettingsIntent.ChangeVolume(DefaultValuesDS.APP_VOLUME)
                         )
                     }
                 )

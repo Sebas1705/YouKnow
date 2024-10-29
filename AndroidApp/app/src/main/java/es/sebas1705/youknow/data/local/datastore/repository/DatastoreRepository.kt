@@ -13,50 +13,44 @@ import kotlinx.coroutines.flow.Flow
 interface DatastoreRepository {
 
     /**
-     * Save if the user has opened the app for the first time
-     *
-     * @return a [Flow] with [ResponseState] of the operation
+     * Save the first time the user opens the app
      */
-    fun saveFirstTime(): Flow<ResponseState<Nothing>>
+    suspend fun saveFirstTime()
 
     /**
      * Read if the user has opened the app for the first time
      *
-     * @return a [Flow] with [ResponseState] of the operation and a [Boolean] with the result
-     *
+     * @return a flow with the value of the first time
      */
-    fun readFirstTime(): Flow<ResponseState<Boolean>>
+    fun readFirstTime(): Flow<Boolean>
 
     /**
      * Save the volume of the app
      *
-     * @param volume [Float]: the volume of the app
-     *
-     * @return a [Flow] with [ResponseState] of the operation
+     * @param volume the volume of the app
      */
-    fun saveAppVolume(volume: Float): Flow<ResponseState<Nothing>>
+    suspend fun saveAppVolume(volume: Float)
 
     /**
      * Read the volume of the app
      *
-     * @return a [Flow] with [ResponseState] of the operation and a [Float] with the volume
+     * @return a flow with the volume of the app
      */
-    fun readAppVolume(): Flow<ResponseState<Float>>
+    fun readAppVolume(): Flow<Float>
 
     /**
      * Save the contrast of the app
      *
-     * @param themeContrast [ThemeContrast]: the contrast of the app
-     *
-     * @see ThemeContrast
+     * @param contrast the contrast of the app
      */
-    fun saveAppContrast(themeContrast: ThemeContrast): Flow<ResponseState<Nothing>>
+    suspend fun saveAppContrast(contrast: ThemeContrast)
 
     /**
      * Read the contrast of the app
      *
-     * @return a [Flow] with [ResponseState] of the operation and a [ThemeContrast] with the contrast
+     * @return a flow with the contrast of the app ([ThemeContrast])
      */
-    fun readAppContrast(): Flow<ResponseState<ThemeContrast>>
+    fun readAppContrast(): Flow<ThemeContrast>
+
 
 }

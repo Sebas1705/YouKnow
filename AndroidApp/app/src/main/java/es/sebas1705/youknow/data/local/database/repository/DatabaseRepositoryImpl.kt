@@ -19,6 +19,7 @@ package es.sebas1705.youknow.data.local.database.repository
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
+import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepositoryImpl
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
 import es.sebas1705.youknow.data.local.database.Database
@@ -40,27 +41,16 @@ import javax.inject.Inject
  */
 class DatabaseRepositoryImpl @Inject constructor(
     private val database: Database,
-    private val analyticsRepository: AnalyticsRepositoryImpl
+    private val analyticsRepository: AnalyticsRepository
 ) : DatabaseRepository, ClassLogData {
 
     override val layer: Layer = Layer.Data
     override val repository: Repository = Repository.Database
 
-    override fun postOrUpdateUser(
+    override suspend fun postOrUpdateUser(
         userModel: UserModel
-    ) = flow {
-        try {
-            emit(ResponseState.Loading)
-            database.userDao().insertOrReplace(userModel.toUserEntity())
-            emit(ResponseState.EmptySuccess)
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatabaseRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
-        }
+    ) {
+        database.userDao().insertOrReplace(userModel.toUserEntity())
     }
 
     override fun deleteUser(

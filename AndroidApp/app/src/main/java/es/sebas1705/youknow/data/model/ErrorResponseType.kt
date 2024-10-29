@@ -17,7 +17,7 @@ package es.sebas1705.youknow.data.model
  */
 
 /**
- * Sealed class to represent the state of the data
+ * Sealed class to represent the type of the error response
  *
  * @param tag [String]: Tag of the error
  *

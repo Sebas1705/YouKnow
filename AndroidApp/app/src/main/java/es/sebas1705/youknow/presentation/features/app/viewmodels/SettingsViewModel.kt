@@ -16,12 +16,14 @@ package es.sebas1705.youknow.presentation.features.app.viewmodels
  *
  */
 
+import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.data.config.local.datastore.DefaultValues
-import es.sebas1705.youknow.domain.usecases.PreferencesUsesCases
+import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
+import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -29,20 +31,20 @@ import javax.inject.Inject
 /**
  * ViewModel for Settings Screen that will handle the UI logic and the data flow.
  *
- * @param preferencesUsesCases [PreferencesUsesCases]: UseCase to handle the app settings.
+ * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to handle the app settings.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
  * @see SettingsState
  * @see SettingsIntent
- * @see PreferencesUsesCases
+ * @see DatastoreUsesCases
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val preferencesUsesCases: PreferencesUsesCases
+    private val datastoreUsesCases: DatastoreUsesCases,
 ) : MVIBaseViewModel<SettingsState, SettingsIntent>() {
 
     override fun initState(): SettingsState = SettingsState.default()
@@ -59,19 +61,19 @@ class SettingsViewModel @Inject constructor(
     //Actions:
     private fun chargeSettings() {
         execute(Dispatchers.IO) {
-            preferencesUsesCases.readAppContrast().collect { data ->
+            datastoreUsesCases.readAppContrast().collect { data ->
                 updateUi { it.copy(themeContrast = data) }
             }
-            preferencesUsesCases.readAppVolume().collect { data ->
+            datastoreUsesCases.readAppVolume().collect { data ->
                 updateUi { it.copy(volume = data) }
             }
         }
     }
 
-    private fun saveSettings(){
-        execute(Dispatchers.IO){
-            preferencesUsesCases.saveAppContrast(uiState.value.themeContrast)
-            preferencesUsesCases.saveAppVolume(uiState.value.volume)
+    private fun saveSettings() {
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.saveAppContrast(uiState.value.themeContrast)
+            datastoreUsesCases.saveAppVolume(uiState.value.volume)
         }
     }
 
@@ -108,8 +110,8 @@ data class SettingsState(
          * @return [SettingsState]: Default state of the Settings Screen.
          */
         fun default() = SettingsState(
-            themeContrast = DefaultValues.APP_Ui_CONTRAST,
-            volume = DefaultValues.APP_VOLUME
+            themeContrast = DefaultValuesDS.APP_UI_CONTRAST,
+            volume = DefaultValuesDS.APP_VOLUME
         )
     }
 }

@@ -78,15 +78,13 @@ class SocialViewModel @Inject constructor(
                     text = message,
                     time = System.currentTimeMillis(),
                     authorId = user.uid,
-                    authorName = authenticationUsesCases.getCurrentUser()?.email
+                    authorName = user.email
                         ?: "email@random.es"
                 )
-            ).collect { response ->
-                when (response) {
-                    is ResponseState.Loading -> {}
-                    is ResponseState.Ok -> {}
-                    is ResponseState.BadRequest -> {}
-                }
+            ).collect {
+                it.catcher(
+
+                )
             }
         }
     }
@@ -102,17 +100,14 @@ class SocialViewModel @Inject constructor(
      */
     private fun loadGlobalChat() {
         execute(Dispatchers.IO) {
-            realtimeUsesCases.getMessagesFromGlobalChat().collect { response ->
-                when (response) {
-                    is ResponseState.Loading -> {}
-                    is ResponseState.Ok -> {
+            realtimeUsesCases.getMessagesFromGlobalChat().collect {
+                it.catcher(
+                    onSuccess = { data ->
                         updateUi {
-                            it.copy(chatGlobal = response.data)
+                            it.copy(chatGlobal = data)
                         }
                     }
-
-                    is ResponseState.BadRequest -> {}
-                }
+                )
             }
         }
     }

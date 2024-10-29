@@ -16,11 +16,13 @@ package es.sebas1705.youknow.presentation.features.app.viewmodels
  *
  */
 
+import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.PreferencesUsesCases
+import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -29,7 +31,7 @@ import javax.inject.Inject
  * It will show the guide screen if it is the first time the app is opened.
  * If it is not the first time, it will navigate to the Home Screen.
  *
- * @param preferencesUsesCases [PreferencesUsesCases]: UseCase to check if the app is opened for the first time.
+ * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to check if the app is opened for the first time.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
@@ -39,29 +41,30 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class GuideViewModel @Inject constructor(
-    private val preferencesUsesCases: PreferencesUsesCases
-) : MVIBaseViewModel<GuideState,GuideIntent>() {
+    private val datastoreUsesCases: DatastoreUsesCases,
+    private val application: Application
+) : MVIBaseViewModel<GuideState, GuideIntent>() {
 
     override fun initState(): GuideState = GuideState.default()
 
     override fun intentHandler(intent: GuideIntent) {
-        when(intent){
+        when (intent) {
             is GuideIntent.SaveFirstTime -> saveFirstTime()
         }
     }
 
     override fun onViewModelInit() {
         execute(Dispatchers.IO) {
-            preferencesUsesCases.readFirstTime().collect { data ->
+            datastoreUsesCases.readFirstTime().collect { data ->
                 updateUi { it.copy(firstTime = data) }
             }
         }
     }
 
     //Actions:
-    private fun saveFirstTime(){
-        execute(Dispatchers.IO){
-            preferencesUsesCases.saveFirstTime()
+    private fun saveFirstTime() {
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.saveFirstTime()
             updateUi { it.copy(firstTime = false) }
         }
     }

@@ -16,6 +16,7 @@ package es.sebas1705.youknow.data.di
  *
  */
 
+import android.app.Application
 import androidx.credentials.CredentialManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.sebas1705.youknow.data.firebase.authentication.repository.AuthenticationRepositoryImpl
 import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepositoryImpl
@@ -36,6 +38,11 @@ import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepositoryImpl
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
+import es.sebas1705.youknow.data.local.database.Database
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepositoryImpl
+import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
+import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepositoryImpl
 import javax.inject.Singleton
 
 /**
@@ -50,6 +57,12 @@ object RepositoriesModule {
 
     @Provides
     @Singleton
+    fun provideAnalyticsRepository(
+        firebaseAnalytics: FirebaseAnalytics
+    ): AnalyticsRepository = AnalyticsRepositoryImpl(firebaseAnalytics)
+
+    @Provides
+    @Singleton
     fun provideOpendbRepository(
         opendbApi: OpendbApi
     ): OpendbRepository = OpendbRepositoryImpl(opendbApi)
@@ -58,25 +71,35 @@ object RepositoriesModule {
     @Singleton
     fun provideAuthRepository(
         credentialManager: CredentialManager,
-        firebaseAuth: FirebaseAuth
-    ): AuthenticationRepository = AuthenticationRepositoryImpl(credentialManager,firebaseAuth)
-
-    @Provides
-    @Singleton
-    fun provideAnalyticsRepository(
-        firebaseAnalytics: FirebaseAnalytics
-    ): AnalyticsRepository = AnalyticsRepositoryImpl(firebaseAnalytics)
+        firebaseAuth: FirebaseAuth,
+        analyticsRepository: AnalyticsRepository
+    ): AuthenticationRepository = AuthenticationRepositoryImpl(credentialManager,firebaseAuth, analyticsRepository)
 
     @Provides
     @Singleton
     fun provideRealtimeRepository(
-        firebaseDatabase: FirebaseDatabase
-    ): RealtimeRepository = RealtimeRepositoryImpl(firebaseDatabase)
+        firebaseDatabase: FirebaseDatabase,
+        analyticsRepository: AnalyticsRepository
+    ): RealtimeRepository = RealtimeRepositoryImpl(firebaseDatabase, analyticsRepository)
 
     @Provides
     @Singleton
     fun provideFirestoreRepository(
-        firebaseFirestore: FirebaseFirestore
-    ): FirestoreRepository = FirestoreRepositoryImpl(firebaseFirestore)
+        firebaseFirestore: FirebaseFirestore,
+        analyticsRepository: AnalyticsRepository
+    ): FirestoreRepository = FirestoreRepositoryImpl(firebaseFirestore, analyticsRepository)
+
+    @Provides
+    @Singleton
+    fun provideDatastoreRepository(
+        application: Application
+    ): DatastoreRepository = DatastoreRepositoryImpl(application)
+
+    @Provides
+    @Singleton
+    fun provideDatabaseRepository(
+        database: Database,
+        analyticsRepository: AnalyticsRepository
+    ): DatabaseRepository = DatabaseRepositoryImpl(database, analyticsRepository)
 
 }

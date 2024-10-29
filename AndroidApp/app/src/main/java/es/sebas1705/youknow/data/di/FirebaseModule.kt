@@ -16,6 +16,8 @@ package es.sebas1705.youknow.data.di
  *
  */
 
+import android.app.Application
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,6 +36,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(
+        application: Application
+    ): FirebaseAnalytics = FirebaseAnalytics.getInstance(application)
 
     @Provides
     @Singleton

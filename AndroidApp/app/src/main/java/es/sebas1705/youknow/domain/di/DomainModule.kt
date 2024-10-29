@@ -25,6 +25,8 @@ import es.sebas1705.youknow.data.firebase.authentication.repository.Authenticati
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
+import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.domain.usecases.*
 import javax.inject.Singleton
 
@@ -42,7 +44,7 @@ object DomainModule {
     @Singleton
     fun provideAppEntryUseCases(
         datastoreRepository: DatastoreRepository
-    ): PreferencesUsesCases = PreferencesUsesCases(
+    ): DatastoreUsesCases = DatastoreUsesCases(
         readFirstTime = ReadFirstTime(datastoreRepository),
         saveFirstTime = SaveFirstTime(datastoreRepository),
         readAppVolume = ReadAppVolume(datastoreRepository),
@@ -87,9 +89,30 @@ object DomainModule {
     fun provideRealtimeUsesCases(
         realtimeRepository: RealtimeRepository
     ): RealtimeUsesCases = RealtimeUsesCases(
-        writeOnDefault = WriteOnDefault(realtimeRepository),
-        writeOnGlobalChat = WriteOnGlobalChat(realtimeRepository),
         addMessageToGlobalChat = AddMessageToGlobalChat(realtimeRepository),
         getMessagesFromGlobalChat = GetMessagesFromGlobalChat(realtimeRepository)
+    )
+
+    /*
+    @Provides
+    @Singleton
+    fun provideFirestoreUsesCases(
+        firestoreRepository: FirestoreRepository
+    ): FirestoreUsesCases = FirestoreUsesCases(
+        saveUser = SaveUser(firestoreRepository),
+        getUser = GetUser(firestoreRepository)
+    )*/
+
+    @Provides
+    @Singleton
+    fun provideUserUsesCases(
+        authenticationRepository: AuthenticationRepository,
+        databaseRepository: DatabaseRepository,
+        firestoreRepository: FirestoreRepository,
+        analyticsRepository: AnalyticsRepository
+    ): UserUsesCases = UserUsesCases(
+        signUpEmailUser = SignUpEmailUser(authenticationRepository),
+        saveUser = SaveUser(databaseRepository, firestoreRepository),
+        getUser = GetUser()
     )
 }

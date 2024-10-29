@@ -22,7 +22,7 @@ import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
 import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
-import es.sebas1705.youknow.domain.usecases.FirestoreUsesCases
+import es.sebas1705.youknow.domain.usecases.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authenticationUsesCases: AuthenticationUsesCases,
-    private val firestoreUsesCases: FirestoreUsesCases,
+    private val userUsesCases: UserUsesCases
 ) : MVIBaseViewModel<AuthState, AuthIntent>() {
 
     override fun initState(): AuthState = AuthState.default()
@@ -50,7 +50,7 @@ class AuthViewModel @Inject constructor(
             is AuthIntent.SignInWithEmail -> signInEmailAction(intent)
             is AuthIntent.SignUpWithEmail -> signUpEmailAction(intent)
             is AuthIntent.SignOut -> signOut(intent)
-            is AuthIntent.AuthWithGoogle -> authWithGoogle(intent)
+            is AuthIntent.SignWithGoogle -> authWithGoogle(intent)
             is AuthIntent.SendForgotPassword -> sendForgotPassword(intent)
         }
     }
@@ -69,7 +69,7 @@ class AuthViewModel @Inject constructor(
                     },
                     onError = {
                         stopLoading()
-                        execute { intent.onError(it) }
+                        execute { intent.onError(it.message) }
                     }
                 )
             }
@@ -79,25 +79,22 @@ class AuthViewModel @Inject constructor(
     private fun signUpEmailAction(
         intent: AuthIntent.SignUpWithEmail
     ) = execute(Dispatchers.IO) {
-        authenticationUsesCases.signUpWithEmail(intent.email, intent.password)
-            .collect { response ->
-                response.catcher(
-                    onLoading = { startLoading() },
-                    onSuccess = {
-
-                        execute(dispatcher = Dispatchers.IO){
-
-                        }
-                        stopLoading()
-                        execute(action = intent.onSuccess)
-                    },
-                    onError = {
-                        stopLoading()
-                        execute { intent.onError(it) }
-                    }
-                )
+        userUsesCases.signUpEmailUser(
+            intent.nickname,
+            intent.email,
+            intent.password,
+            onSuccess = { user ->
+                execute(Dispatchers.IO) {
+                    userUsesCases.saveUser(user)
+                }
+                stopLoading()
+                execute(action = intent.onSuccess)
+            },
+            onError = {
+                stopLoading()
+                execute { intent.onError(it) }
             }
-
+        )
     }
 
 
@@ -113,14 +110,14 @@ class AuthViewModel @Inject constructor(
                 },
                 onError = {
                     stopLoading()
-                    execute { intent.onError(it) }
+                    execute { intent.onError(it.message) }
                 }
             )
         }
     }
 
     private fun authWithGoogle(
-        intent: AuthIntent.AuthWithGoogle
+        intent: AuthIntent.SignWithGoogle
     ) = execute(Dispatchers.IO) {
         authenticationUsesCases.signWithGoogle(intent.context).collect { response ->
             response.catcher(
@@ -131,7 +128,7 @@ class AuthViewModel @Inject constructor(
                 },
                 onError = {
                     stopLoading()
-                    execute { intent.onError(it) }
+                    execute { intent.onError(it.message) }
                 }
             )
         }
@@ -248,7 +245,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      *
      * @see AuthIntent
      */
-    data class AuthWithGoogle(
+    data class SignWithGoogle(
         val context: Context,
         val onSuccess: () -> Unit,
         val onError: (String) -> Unit

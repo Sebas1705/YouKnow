@@ -81,17 +81,16 @@ fun SignScreen(
     SignDesign(
         windowState,
         authState,
-        onSignButtonAction = { email, pass, onError ->
+        onSignButtonAction = { email, pass, nick, onError ->
             authViewModel.eventHandler(
-                AuthIntent.AuthWithEmail(
-                    create = true,
+                AuthIntent.SignUpWithEmail(
                     email = email,
                     password = pass,
+                    nickname = nick,
                     onSuccess = toLogNav,
                     onError = onError
                 )
             )
-            authViewModel.eventHandler(AuthIntent.SignOut({},{}))
         }
     )
 }
@@ -114,7 +113,7 @@ fun SignScreen(
 private fun SignDesign(
     windowState: WindowState = WindowState(),
     authState: AuthState = AuthState.default(),
-    onSignButtonAction: (email: String, pass: String, onError: (String) -> Unit) -> Unit = { e, p, o -> }
+    onSignButtonAction: (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit = { e, p, n, o -> }
 ) {
 
     //Locals:
@@ -194,7 +193,7 @@ private fun SignDesign(
                         onClick = {
                             keyboard?.hide()
                             if (email == emailRepeat && password == passwordRepeat)
-                                onSignButtonAction(email, password, activateError)
+                                onSignButtonAction(email, password, userName, activateError)
                             else {
                                 val who = when {
                                     email != emailRepeat && password != passwordRepeat -> bothText

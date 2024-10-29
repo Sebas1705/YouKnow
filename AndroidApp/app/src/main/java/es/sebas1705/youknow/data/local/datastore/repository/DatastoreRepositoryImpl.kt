@@ -23,7 +23,6 @@ import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
-import es.sebas1705.youknow.data.local.database.repository.DatabaseRepositoryImpl
 import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.data.local.datastore.config.KeysDS
@@ -48,7 +47,6 @@ import javax.inject.Inject
  */
 class DatastoreRepositoryImpl @Inject constructor(
     private val context: Context,
-    private val analyticsRepository: AnalyticsRepository
 ) : DatastoreRepository, ClassLogData {
 
     override val layer: Layer = Layer.Data
@@ -56,75 +54,71 @@ class DatastoreRepositoryImpl @Inject constructor(
 
     private val datastore = context.dataStore
 
-    override fun saveFirstTime() = flow {
-        try {
-            emit(ResponseState.Loading)
-            datastore.edit {
-                it[KeysDS.FIRST_TIME] = true
-                emit(ResponseState.EmptySuccess)
-            }
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatastoreRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
+    /**
+     * Save the first time the user opens the app
+     */
+    override suspend fun saveFirstTime() {
+        datastore.edit {
+            it[KeysDS.FIRST_TIME] = true
         }
     }
 
-    override fun readFirstTime() = flow {
-        try {
-            emit(ResponseState.Loading)
-            datastore.data.collect {
-                emit(ResponseState.Success(it[KeysDS.FIRST_TIME] ?: DefaultValuesDS.FIRST_TIME))
-            }
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatastoreRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
+    /**
+     * Read if the user has opened the app for the first time
+     *
+     * @return a flow with the value of the first time
+     */
+    override fun readFirstTime(): Flow<Boolean> {
+        return datastore.data.map{
+            it[KeysDS.FIRST_TIME] ?: DefaultValuesDS.FIRST_TIME
         }
     }
 
-    override fun saveAppVolume(volume: Float) = flow {
-        try{
-            emit(ResponseState.Loading)
-            require(volume in 0.0..1.0){
-                "Volume must be between 0.0 and 1.0 (Volume: $volume)"
-            }
-            context.dataStore.edit {
-                it[KeysDS.APP_VOLUME] = volume
-                emit(ResponseState.EmptySuccess)
-            }
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatastoreRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
+    /**
+     * Save the volume of the app
+     *
+     * @param volume the volume of the app ranging from 0.0 to 1.0
+     */
+    override suspend fun saveAppVolume(volume: Float) {
+        require(volume in 0.0..1.0){
+            "Volume must be between 0.0 and 1.0 (Volume: $volume)"
+        }
+        datastore.edit {
+            it[KeysDS.APP_VOLUME] = volume
         }
     }
 
+    /**
+     * Read the volume of the app
+     *
+     * @return a flow with the volume of the app
+     */
     override fun readAppVolume(): Flow<Float> {
-        return context.dataStore.data.map{
+        return datastore.data.map{
             it[KeysDS.APP_VOLUME] ?: DefaultValuesDS.APP_VOLUME
         }
     }
 
-    override suspend fun saveAppContrast(themeContrast: ThemeContrast) {
-        context.dataStore.edit {
-            it[KeysDS.APP_CONTRAST] = themeContrast.ordinal
+    /**
+     * Save the contrast of the app
+     *
+     * @param contrast the contrast of the app
+     */
+    override suspend fun saveAppContrast(contrast: ThemeContrast) {
+        datastore.edit {
+            it[KeysDS.APP_CONTRAST] = contrast.ordinal
         }
     }
 
+    /**
+     * Read the contrast of the app
+     *
+     * @return a flow with the contrast of the app ([ThemeContrast])
+     */
     override fun readAppContrast(): Flow<ThemeContrast> {
-        return context.dataStore.data.map{
+        return datastore.data.map{
             ThemeContrast.entries.find { contrast ->
-                contrast.ordinal == (it[KeysDS.APP_CONTRAST] ?: DefaultValuesDS.APP_Ui_CONTRAST)
+                contrast.ordinal == (it[KeysDS.APP_CONTRAST] ?: DefaultValuesDS.APP_UI_CONTRAST)
             } ?: ThemeContrast.Low
         }
     }

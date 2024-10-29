@@ -22,42 +22,6 @@ import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Use case to write a message on the default topic
- *
- * @param realtimeRepository [RealtimeRepository]: repository to write the message
- *
- * @see RealtimeRepository
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-class WriteOnDefault(
-    private val realtimeRepository: RealtimeRepository
-) {
-    operator fun invoke(value: String) {
-        realtimeRepository.writeOnDefault("hello", value)
-    }
-}
-
-/**
- * Use case to write a message on the global chat topic
- *
- * @param realtimeRepository [RealtimeRepository]: repository to write the message
- *
- * @see RealtimeRepository
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-class WriteOnGlobalChat(
-    private val realtimeRepository: RealtimeRepository
-) {
-    operator fun invoke(value: String) {
-        realtimeRepository.writeOnGlobalChat("hello", value)
-    }
-}
-
-/**
  * Use case to add a message to the global chat
  *
  * @param realtimeRepository [RealtimeRepository]: repository to add the message
@@ -120,8 +84,6 @@ class GetMessagesFromGlobalChat(
  * @since 1.0.0
  */
 data class RealtimeUsesCases(
-    val writeOnDefault: WriteOnDefault,
-    val writeOnGlobalChat: WriteOnGlobalChat,
     val addMessageToGlobalChat: AddMessageToGlobalChat,
     val getMessagesFromGlobalChat: GetMessagesFromGlobalChat
 )

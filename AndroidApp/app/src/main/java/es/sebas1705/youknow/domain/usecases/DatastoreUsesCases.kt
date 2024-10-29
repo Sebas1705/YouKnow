@@ -54,7 +54,7 @@ class SaveFirstTime(
     private val datastoreRepository: DatastoreRepository
 ) {
     suspend operator fun invoke() {
-        datastoreRepository.saveFirstTime()
+        return datastoreRepository.saveFirstTime()
     }
 }
 
@@ -62,8 +62,6 @@ class SaveFirstTime(
  * Use case to read the app volume
  *
  * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
- *
- * @return [Flow] with a [Float] value indicating the app volume
  *
  * @see DatastoreRepository
  *
@@ -92,7 +90,7 @@ class SaveAppVolume(
     private val datastoreRepository: DatastoreRepository
 ) {
     suspend operator fun invoke(volume: Float) {
-        datastoreRepository.saveAppVolume(volume)
+        return datastoreRepository.saveAppVolume(volume)
     }
 }
 
@@ -100,8 +98,6 @@ class SaveAppVolume(
  * Use case to read the app contrast
  *
  * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
- *
- * @return [Flow] with a [ThemeContrast] value indicating the app contrast
  *
  * @see DatastoreRepository
  * @see ThemeContrast
@@ -132,12 +128,12 @@ class SaveAppContrast(
     private val datastoreRepository: DatastoreRepository
 ) {
     suspend operator fun invoke(themeContrast: ThemeContrast) {
-        datastoreRepository.saveAppContrast(themeContrast)
+        return datastoreRepository.saveAppContrast(themeContrast)
     }
 }
 
 /**
- * Data class to group all the use cases related to preferences
+ * Data class that contains all the use cases related to the Datastore
  *
  * @property readFirstTime [ReadFirstTime]: use case to read if the app is being opened for the first time
  * @property saveFirstTime [SaveFirstTime]: use case to save that the app is not being opened for the first time
@@ -156,7 +152,7 @@ class SaveAppContrast(
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-data class PreferencesUsesCases(
+data class DatastoreUsesCases(
     val readFirstTime: ReadFirstTime,
     val saveFirstTime: SaveFirstTime,
     val readAppVolume: ReadAppVolume,

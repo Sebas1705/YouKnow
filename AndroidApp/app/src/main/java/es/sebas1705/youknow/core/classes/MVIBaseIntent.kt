@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.data.local.database.repository
+package es.sebas1705.youknow.core.classes
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,21 +16,10 @@ package es.sebas1705.youknow.data.local.database.repository
  *
  */
 
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-
 /**
- * Interface to represent the repository of the database
+ * Base interface for the MVIBaseIntent
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-interface DatabaseRepository {
-
-    suspend fun postOrUpdateUser(userModel: UserModel)
-
-    fun deleteUser(userModel: UserModel): Flow<ResponseState<Nothing>>
-
-    fun getUser(firebaseId: String): Flow<ResponseState<UserModel>>
-}
+interface MVIBaseIntent

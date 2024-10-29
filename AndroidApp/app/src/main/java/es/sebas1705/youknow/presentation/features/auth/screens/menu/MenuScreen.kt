@@ -75,7 +75,7 @@ fun MenuScreen(
         onEmailLogButtonAction = toLogNav,
         onGoogleLogButtonAction = {
             authViewModel.eventHandler(
-                AuthIntent.AuthWithGoogle(
+                AuthIntent.SignWithGoogle(
                     context,
                     onSuccess = toHomeNav,
                     onError = { Log.e("Google sign", "Failure for $it") }

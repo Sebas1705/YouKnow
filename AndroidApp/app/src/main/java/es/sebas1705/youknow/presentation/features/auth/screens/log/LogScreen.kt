@@ -87,8 +87,7 @@ fun LogScreen(
         },
         onLoginButton = { email, password, onError ->
             authViewModel.eventHandler(
-                AuthIntent.AuthWithEmail(
-                    create = false,
+                AuthIntent.SignInWithEmail(
                     email = email,
                     password = password,
                     onSuccess = toHomeNav,

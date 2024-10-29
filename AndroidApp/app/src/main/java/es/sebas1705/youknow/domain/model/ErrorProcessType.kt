@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.data.local.database.repository
+package es.sebas1705.youknow.domain.model
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,21 +16,20 @@ package es.sebas1705.youknow.data.local.database.repository
  *
  */
 
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-
 /**
- * Interface to represent the repository of the database
+ * Sealed class to represent the type of error that can be thrown in the process
+ *
+ * @param tag [String]: Tag of the error
+ *
+ * @property BadParams [ErrorProcessType]: Error when the params are bad
+ * @property InternalError [ErrorProcessType]: Error when there is an internal error
+ * @property MissingData [ErrorProcessType]: Error when there is missing data
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-interface DatabaseRepository {
-
-    suspend fun postOrUpdateUser(userModel: UserModel)
-
-    fun deleteUser(userModel: UserModel): Flow<ResponseState<Nothing>>
-
-    fun getUser(firebaseId: String): Flow<ResponseState<UserModel>>
+sealed class ErrorProcessType(val tag: String){
+    object BadParams: ErrorProcessType("Bad params error")
+    object InternalError: ErrorProcessType("Internal error")
+    object MissingData: ErrorProcessType("Missing data error")
 }

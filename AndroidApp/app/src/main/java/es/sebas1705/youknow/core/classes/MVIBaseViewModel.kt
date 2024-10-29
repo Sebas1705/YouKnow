@@ -99,18 +99,3 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
 
 }
 
-/**
- * Base interface for the MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-interface MVIBaseIntent
-
-/**
- * Base interface for the MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-interface MVIBaseState

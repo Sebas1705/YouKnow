@@ -31,5 +31,5 @@ import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
 object DefaultValuesDS{
     const val FIRST_TIME = false
     const val APP_VOLUME = 1.0f
-    val APP_Ui_CONTRAST = ThemeContrast.Low
+    val APP_UI_CONTRAST = ThemeContrast.Low
 }

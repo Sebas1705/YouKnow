@@ -20,7 +20,7 @@ import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
 import kotlinx.coroutines.flow.Flow
-
+/*
 /**
  * Use case to save a user
  *
@@ -37,7 +37,7 @@ class SaveUser(
     private val firestoreRepository: FirestoreRepository
 ) {
     operator fun invoke(userModel: UserModel): Flow<ResponseState<Boolean>> {
-        return firestoreRepository.saveUser(userModel.toUserDocument())
+        return firestoreRepository.saveUser(userModel)
     }
 }
 
@@ -76,4 +76,4 @@ class GetUser(
 data class FirestoreUsesCases(
     val saveUser: SaveUser,
     val getUser: GetUser
-)
+)*/

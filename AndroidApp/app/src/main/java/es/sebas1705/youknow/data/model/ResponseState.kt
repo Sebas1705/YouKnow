@@ -17,8 +17,6 @@ package es.sebas1705.youknow.data.model
  */
 
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
-import es.sebas1705.youknow.data.firebase.analytics.config.Layer
-import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 
 /**
  * Sealed class to represent the state of the data

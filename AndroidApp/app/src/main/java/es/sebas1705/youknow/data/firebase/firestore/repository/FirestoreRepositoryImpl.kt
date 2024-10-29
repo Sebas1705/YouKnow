@@ -28,7 +28,6 @@ import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.UserModel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -51,46 +50,9 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     private val usersReference = firestore.collection(SettingsFS.USERS_COLLECTION_NAME)
 
-    override fun saveUser(
-        userModel: UserModel
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            val userDocument = userModel.toUserDocument()
-            usersReference.document(userDocument.firebaseId).set(userDocument)
-                .addOnCompleteListener {
-                    if (it.isSuccessful)
-                        this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                    else
-                        this@callbackFlow.trySendBlocking(
-                            ResponseState.Error(
-                                this@FirestoreRepositoryImpl as ClassLogData,
-                                ErrorResponseType.InternalError,
-                                SettingsFS.NOT_SUCCESSFUL_MESSAGE,
-                                analyticsRepository::logError
-                            )
-                        )
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@FirestoreRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@FirestoreRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
+    override suspend fun saveUser(userModel: UserModel) {
+        val userDocument = userModel.toUserDocument()
+        usersReference.document(userDocument.firebaseId).set(userDocument).await()
     }
 
     override fun getUser(

@@ -16,12 +16,13 @@ package es.sebas1705.youknow.presentation.features.splash.viewmodels
  *
  */
 
+import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.MVIBaseViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
+import es.sebas1705.youknow.core.classes.MVIBaseViewModel
 import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
-import es.sebas1705.youknow.domain.usecases.PreferencesUsesCases
+import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.presentation.features.app.navigation.AuthNavigation
 import es.sebas1705.youknow.presentation.features.app.navigation.GuideScreen
 import es.sebas1705.youknow.presentation.features.app.navigation.HomeNavigation
@@ -33,14 +34,14 @@ import javax.inject.Inject
  * depending on the user's state and the first time the app is opened.
  *
  * @param authenticationUsesCases [AuthenticationUsesCases]: UseCase to check if the user is logged in.
- * @param preferencesUsesCases [PreferencesUsesCases]: UseCase to check if the app is opened for the first time.
+ * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to check if the app is opened for the first time.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
  * @see SplashState
  * @see SplashIntent
  * @see AuthenticationUsesCases
- * @see PreferencesUsesCases
+ * @see DatastoreUsesCases
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -48,7 +49,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authenticationUsesCases: AuthenticationUsesCases,
-    private val preferencesUsesCases: PreferencesUsesCases
+    private val datastoreUsesCases: DatastoreUsesCases,
+    private val application: Application
 ) : MVIBaseViewModel<SplashState, SplashIntent>() {
 
     override fun initState(): SplashState = SplashState.default()
@@ -63,21 +65,19 @@ class SplashViewModel @Inject constructor(
     //Actions:
     /**
      * Action associated with [SplashIntent.ChargeCloudData] that will decide the start destination of the app.
-     * Execute the [PreferencesUsesCases.readFirstTime] UseCase to check if the app is opened for the first time
+     * Execute the [DatastoreUsesCases.readFirstTime] UseCase to check if the app is opened for the first time
      * using a [Dispatchers.IO] context.
      *
      * @see [SplashIntent.ChargeCloudData]
      */
     private fun chargeStartDestination() {
-        execute(Dispatchers.IO){
-            preferencesUsesCases.readFirstTime().collect { data ->
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.readFirstTime().collect { data ->
                 updateUi {
                     it.copy(
                         startDestination =
                         if (!data) GuideScreen
-                        else
-                            if (authenticationUsesCases.isUserLogged()) HomeNavigation
-                            else AuthNavigation
+                        else if (authenticationUsesCases.isUserLogged()) HomeNavigation else AuthNavigation
                     )
                 }
             }

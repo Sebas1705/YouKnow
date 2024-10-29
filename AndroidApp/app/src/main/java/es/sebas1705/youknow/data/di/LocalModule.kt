@@ -23,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.local.database.Database
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepositoryImpl
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
@@ -43,7 +44,7 @@ object LocalModule {
     @Provides
     @Singleton
     fun provideLocalDatabase(
-        @ApplicationContext application: Application
+        application: Application
     ): Database = Room.databaseBuilder(
         application,
         Database::class.java,
@@ -55,11 +56,4 @@ object LocalModule {
     fun provideUserDao(
         database: Database
     ): UserDao = database.userDao()
-
-    @Provides
-    @Singleton
-    fun provideLocalUserRepository(
-        application: Application
-    ): DatastoreRepository = DatastoreRepositoryImpl(application)
-
 }

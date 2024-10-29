@@ -37,9 +37,7 @@ interface FirestoreRepository {
      *
      * @return [Flow]<[ResponseState]<[Boolean]>>: Flow with the response of the operation
      */
-    fun saveUser(
-        userModel: UserModel
-    ): Flow<ResponseState<Boolean>>
+    suspend fun saveUser(userModel: UserModel)
 
 
     /**

@@ -48,10 +48,4 @@ object ApisModule {
             .create(OpendbApi::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideTriviaRepository(
-        opendbApi: OpendbApi
-    ): OpendbRepository = OpendbRepositoryImpl(opendbApi)
-
 }
