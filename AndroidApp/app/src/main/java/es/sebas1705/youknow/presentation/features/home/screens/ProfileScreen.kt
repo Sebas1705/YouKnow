@@ -34,15 +34,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeState
-import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeViewModel
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -53,19 +51,19 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun ProfileScreen(
+    userViewModel: UserViewModel,
+    homeState: HomeState
 ) {
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val homeState = homeViewModel.uiState.collectAsStateWithLifecycle()
-    ProfileDesign(homeViewModel,homeState)
+    ProfileDesign(userViewModel,homeState)
 }
 
 /**
  * Design of the Profile Screen. It shows the user's data.
  *
- * @param homeViewModel [HomeViewModel]: ViewModel of the Home Screen.
+ * @param userViewModel [UserViewModel]: ViewModel of the Home Screen.
  * @param homeState [State]<[HomeState]>: State of the Home Screen.
  *
- * @see HomeViewModel
+ * @see UserViewModel
  * @see HomeState
  * @see [ProfileScreen]
  *
@@ -74,10 +72,10 @@ fun ProfileScreen(
  */
 @Composable
 private fun ProfileDesign(
-    homeViewModel: HomeViewModel? = null,
-    homeState: State<HomeState>? = null,
+    userViewModel: UserViewModel? = null,
+    homeState: HomeState = HomeState.default(),
 ) {
-    val user = homeState?.value?.user
+    val user = homeState.userModel
 
     ApplyBack(
         R.drawable.back_portrait_empty
@@ -114,14 +112,15 @@ private fun ProfileDesign(
                 )
 
                 Text(
-                    text = "Name: ${user?.displayName?:"Null"}\n" +
+                    text = "Name: ${user?.nickName?:"Null"}\n" +
                             "Email: ${user?.email?:"Null"}\n" +
-                            "Phone: ${user?.phoneNumber?:"Null"}\n" +
-                            "Provider: ${user?.providerId?:"Null"}\n" +
-                            "Uid: ${user?.uid?:"Null"}\n" +
+                            "Provider: ${user?.provider?:"Null"}\n" +
+                            "Uid: ${user?.firebaseId?:"Null"}\n" +
                             "Photo: ${user?.photoUrl?:"Null"}\n" +
-                            "EmailVerified: ${user?.isEmailVerified?:"Null"}\n" +
-                            "ProviderData: ${user?.providerData?:"Null"}\n",
+                            "GroupId: ${user?.groupId?:"Null"}\n" +
+                            "Points: ${user?.points?:"Null"}\n" +
+                            "Credits: ${user?.credits ?: "Null"}\n" +
+                            "Friends: ${user?.friends?:"Null"}\n",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )

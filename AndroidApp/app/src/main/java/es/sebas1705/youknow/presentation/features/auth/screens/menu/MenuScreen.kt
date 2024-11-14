@@ -100,7 +100,7 @@ fun MenuScreen(
  */
 @Composable
 private fun MenuDesign(
-    windowState: WindowState = WindowState(),
+    windowState: WindowState = WindowState.default(),
     onSignButtonAction: () -> Unit = {},
     onEmailLogButtonAction: () -> Unit = {},
     onGoogleLogButtonAction: () -> Unit = {},

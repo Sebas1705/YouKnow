@@ -44,7 +44,7 @@ import es.sebas1705.youknow.R
 @Composable
 fun rememberWindowState(): MutableState<WindowState> {
 
-    val windowState = remember { mutableStateOf(WindowState()) }
+    val windowState = remember { mutableStateOf(WindowState.default()) }
 
     val view = LocalView.current
     DisposableEffect(view) {

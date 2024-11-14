@@ -17,6 +17,7 @@ package es.sebas1705.youknow.data.firebase.realtime.repository
  */
 
 import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.MessageModel
 import kotlinx.coroutines.flow.Flow
 
@@ -48,6 +49,25 @@ interface RealtimeRepository {
      * @see MessageModel
      * @see Flow
      */
-    fun getMessagesFromGlobalChat(): Flow<ResponseState<List<MessageModel>>>
+    fun setMessagesListener(
+        onDataChange: (List<MessageModel>) -> Unit,
+        onCancelled: (String) -> Unit
+    )
+
+    fun removeMessagesListener()
+
+    fun addGroup(groupModel: GroupModel) : Flow<ResponseState<Nothing>>
+
+    fun setGroupsListener(
+        onDataChange: (List<GroupModel>) -> Unit,
+        onCancelled: (String) -> Unit
+    )
+
+    fun addMemberToGroup(
+        groupId:String,
+        newMembersList: List<String>
+    ) : Flow<ResponseState<Nothing>>
+
+    fun removeGroupsListener()
 
 }

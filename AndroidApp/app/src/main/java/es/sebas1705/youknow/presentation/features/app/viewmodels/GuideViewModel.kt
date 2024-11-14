@@ -53,7 +53,7 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    override fun onViewModelInit() {
+    override fun onInit() {
         execute(Dispatchers.IO) {
             datastoreUsesCases.readFirstTime().collect { data ->
                 updateUi { it.copy(firstTime = data) }

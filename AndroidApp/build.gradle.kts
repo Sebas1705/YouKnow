@@ -17,3 +17,9 @@ plugins {
     alias(libs.plugins.googleServices) apply false
     alias(libs.plugins.crashlytics) apply false
 }
+
+allprojects {
+    repositories {
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+    }
+}

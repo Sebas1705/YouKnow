@@ -4,6 +4,7 @@
     <!-- Application -->
     <string name="icon_content">Icono de You Know</string>
     <string name="back_arrow_content">Flecha hacia atrás</string>
+    <string name="connection_lost">Conexión perdida</string>
 
     <!-- Prelog Screens -->
     <string name="next">Siguiente</string>
@@ -39,6 +40,9 @@
     <string name="alertTitle">"Quieres cerrar sesión?"</string>
     <string name="confirm">Confirmar</string>
     <string name="dismiss">Cancelar</string>
+    <string name="titleCreateGroup">Crear un grupo</string>
+    <string name="groupName">Nombre del grupo</string>
+    <string name="groupDescription">Descripción del grupo</string>
 
     <!-- Settings Screen -->
     <string name="settings">Ajustes</string>
@@ -50,5 +54,7 @@
     <string name="wannaRegister">¿Crear cuenta?</string>
     <string name="username">Nombre de usuario</string>
     <string name="emailPasswordNotMatch">Correos o contraseñas no coinciden</string>
+
+
 
 </resources>

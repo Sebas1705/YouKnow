@@ -16,13 +16,13 @@ package es.sebas1705.youknow.core.classes
  *
  */
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,7 +44,6 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     private val initialState: S by lazy { initState() }
     private val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initialState) }
     val uiState get() = _uiState
-        .onStart{ onViewModelInit() }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -66,7 +65,13 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     /**
      * Actions to be executed when the viewModel is initialized
      */
-    protected open fun onViewModelInit() = Unit
+    protected open fun onInit() {
+        Log.d("MVIBaseViewModel", "ViewModel initialized ${this::class.java.simpleName}")
+    }
+
+    init{
+        onInit()
+    }
 
     /**
      * Receive the intents from the composable

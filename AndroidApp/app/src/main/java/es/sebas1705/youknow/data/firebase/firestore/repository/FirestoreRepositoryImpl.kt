@@ -23,12 +23,7 @@ import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
 import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
-import es.sebas1705.youknow.data.model.ErrorResponseType
-import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -52,37 +47,50 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun saveUser(userModel: UserModel) {
         val userDocument = userModel.toUserDocument()
-        usersReference.document(userDocument.firebaseId).set(userDocument).await()
+        usersReference.document(userModel.firebaseId).set(userDocument).await()
     }
 
-    override fun getUser(
+    override suspend fun getUser(
         userId: String
-    ): Flow<ResponseState<UserModel>> = flow {
-        try {
-            emit(ResponseState.Loading)
-            val result = usersReference.document(userId).get()
-                .await().toObject(UserDocument::class.java)
-            if (result != null) emit(ResponseState.Success(result.toUserModel()))
-            else
-                emit(
-                    ResponseState.Error(
-                        this@FirestoreRepositoryImpl as ClassLogData,
-                        ErrorResponseType.NotFound,
-                        SettingsFS.NOT_FOUND_USER,
-                        analyticsRepository::logError
-                    )
-                )
+    ): UserModel? {
+        val result = usersReference.document(userId).get()
+            .await().toObject(UserDocument::class.java)
+        return result?.toUserModel(userId)
+    }
 
-        } catch (e: Exception) {
-            emit(
-                ResponseState.Error(
-                    this@FirestoreRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
+    override suspend fun setLoggedToUser(
+        userId: String,
+        logged: Boolean
+    ) {
+        usersReference.document(userId).update("logged", logged).await()
+    }
+
+    override suspend fun getLoggedFromUser(
+        userId: String
+    ): Boolean {
+        val result = usersReference.document(userId).get().await()
+        return result.getBoolean("logged") == true
+    }
+
+    override suspend fun setCreditsToUser(
+        userId: String,
+        newsCredits: Int
+    ) {
+        usersReference.document(userId).update("credits", newsCredits).await()
+    }
+
+    override suspend fun setGroupToUser(
+        userId: String,
+        groupId: String
+    ) {
+        usersReference.document(userId).update("groupId", groupId).await()
+    }
+
+    override suspend fun containsUser(
+        userId: String
+    ): Boolean {
+        val result = usersReference.document(userId).get().await()
+        return result.exists()
     }
 
 }

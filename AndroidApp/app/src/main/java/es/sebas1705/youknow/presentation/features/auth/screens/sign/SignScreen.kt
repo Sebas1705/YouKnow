@@ -111,7 +111,7 @@ fun SignScreen(
  */
 @Composable
 private fun SignDesign(
-    windowState: WindowState = WindowState(),
+    windowState: WindowState = WindowState.default(),
     authState: AuthState = AuthState.default(),
     onSignButtonAction: (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit = { e, p, n, o -> }
 ) {

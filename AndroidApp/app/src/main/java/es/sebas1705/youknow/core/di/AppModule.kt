@@ -17,6 +17,7 @@ package es.sebas1705.youknow.core.di
  */
 
 import android.app.Application
+import android.net.ConnectivityManager
 import androidx.credentials.CredentialManager
 import dagger.Module
 import dagger.Provides

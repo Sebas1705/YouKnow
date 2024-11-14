@@ -223,33 +223,9 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun signOut(): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            firebaseAuth.signOut()
-            if (firebaseAuth.currentUser == null)
-                this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-            else
-                this@callbackFlow.trySendBlocking(
-                    ResponseState.Error(
-                        this@AuthenticationRepositoryImpl as ClassLogData,
-                        ErrorResponseType.NotFound,
-                        SettingsAuth.USER_NOT_OUT,
-                        analyticsRepository::logError
-                    )
-                )
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@AuthenticationRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
-        }
-        awaitClose {
-            channel.close()
-            cancel()
-        }
+    override fun signOut(): Boolean {
+        firebaseAuth.signOut()
+        return firebaseAuth.currentUser == null
     }
 
     override fun sendForgotPassword(

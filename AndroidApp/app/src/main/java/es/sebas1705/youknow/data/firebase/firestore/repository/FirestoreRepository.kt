@@ -1,7 +1,6 @@
 package es.sebas1705.youknow.data.firebase.firestore.repository
 
 import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
 import es.sebas1705.youknow.domain.model.UserModel
 import kotlinx.coroutines.flow.Flow
 
@@ -47,8 +46,31 @@ interface FirestoreRepository {
      *
      * @return [Flow]<[ResponseState]<[UserModel]>>: Flow with the response of the operation
      */
-    fun getUser(
+    suspend fun getUser(
         userId: String
-    ): Flow<ResponseState<UserModel>>
+    ): UserModel?
+
+    suspend fun setLoggedToUser(
+        userId: String,
+        logged: Boolean
+    )
+
+    suspend fun getLoggedFromUser(
+        userId: String
+    ): Boolean
+
+    suspend fun setCreditsToUser(
+        userId: String,
+        newCredits: Int
+    )
+
+    suspend fun setGroupToUser(
+        userId: String,
+        groupId: String
+    )
+
+    suspend fun containsUser(
+        userId: String
+    ): Boolean
 
 }

@@ -1,4 +1,7 @@
 package es.sebas1705.youknow.domain.model
+
+import es.sebas1705.youknow.data.firebase.realtime.jsons.GroupJson
+
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,6 +33,16 @@ package es.sebas1705.youknow.domain.model
 data class GroupModel(
     val name: String,
     val description: String,
-    val members: List<Long>,
-    val leaderUID: Long,
-)
+    val members: List<String>,
+    val leaderUID: String,
+){
+
+    fun toGroupJson(): GroupJson {
+        return GroupJson(
+            description = this.description,
+            members = this.members,
+        )
+    }
+
+    val groupId: String get() = this.name + "-" + this.leaderUID
+}

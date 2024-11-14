@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.splash.screens
+package es.sebas1705.youknow.presentation.features.app.screens
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -28,8 +28,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.utlis.UiModePreviews
@@ -43,9 +47,9 @@ import es.sebas1705.youknow.presentation.features.app.navigation.AppNav
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsIntent
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsState
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsViewModel
-import es.sebas1705.youknow.presentation.features.splash.viewmodels.SplashIntent
-import es.sebas1705.youknow.presentation.features.splash.viewmodels.SplashState
-import es.sebas1705.youknow.presentation.features.splash.viewmodels.SplashViewModel
+import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashIntent
+import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashState
+import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashViewModel
 import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import kotlinx.coroutines.delay
@@ -69,22 +73,37 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen() {
 
+    val context = LocalContext.current
+
     //ViewModels:
     val splashViewModel: SplashViewModel = hiltViewModel()
     val settingsViewModel: SettingsViewModel = hiltViewModel()
+    splashViewModel.eventHandler(SplashIntent.SetConnectivityCallback(context))
 
     //States:
     val splashState by splashViewModel.uiState.collectAsStateWithLifecycle()
     val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
     val windowState by rememberWindowState()
+    var isLoaded by remember { mutableStateOf(false) }
 
     //Loading effect:
-    LaunchedEffect(Unit) {
-        splashViewModel.eventHandler(SplashIntent.ChargeCloudData)
-        settingsViewModel.eventHandler(SettingsIntent.ChargeSettings)
-        delay(2000)
-        splashViewModel.eventHandler(SplashIntent.FinishSplashScreen)
+    LaunchedEffect(isLoaded) {
+        if(!isLoaded){
+            splashViewModel.eventHandler(SplashIntent.ChargeCloudData)
+            settingsViewModel.eventHandler(SettingsIntent.ChargeSettings)
+            delay(2000)
+            splashViewModel.eventHandler(SplashIntent.FinishSplashScreen)
+            isLoaded = true
+        }
     }
+
+    //Check connectivity:
+    /*LaunchedEffect(Unit) {
+        while(true){
+            splashViewModel.eventHandler(SplashIntent.CheckConnectivity)
+            delay(2000)
+        }
+    }*/
 
     //Design:
     SplashDesign(
@@ -119,7 +138,7 @@ fun SplashScreen() {
  */
 @Composable
 private fun SplashDesign(
-    windowState: WindowState = WindowState(),
+    windowState: WindowState = WindowState.default(),
     splashState: SplashState = SplashState.default(),
     settingsState: SettingsState = SettingsState.default(),
     settingsViewModel: SettingsViewModel? = null,
@@ -155,16 +174,21 @@ private fun SplashDesign(
                     }
                 }
             }
-            else AppNav(
-                splashState.startDestination,
-                settingsState,
-                settingsViewModel!!,
-                windowState
-            )
+            else {
+                if(splashState.isNetworkAvailable) AppNav(
+                    splashState.startDestination,
+                    settingsState,
+                    settingsViewModel!!,
+                    windowState
+                )
+                else NetworkErrorScreen(windowState)
+            }
         }
     }
 
 }
+
+
 
 /**
  * Preview for [SplashDesign]

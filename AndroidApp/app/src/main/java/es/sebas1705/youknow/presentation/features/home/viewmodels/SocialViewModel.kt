@@ -16,20 +16,23 @@ package es.sebas1705.youknow.presentation.features.home.viewmodels
  *
  */
 
+import android.app.Application
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.core.utlis.printTextInToast
 import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.MessageModel
-import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
-import es.sebas1705.youknow.domain.usecases.RealtimeUsesCases
+import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
+import es.sebas1705.youknow.domain.usecases.social.GroupUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
- * ViewModel fon [es.sebas1705.youknow.presentation.features.home.screens.SocialScreen] that will handle the logic of the screen.
+ * ViewModel fon [es.sebas1705.youknow.presentation.features.home.screens.social.SocialScreen] that will handle the logic of the screen.
  * It will load the groups and the global chat. It will also send messages to the global chat.
  *
  * @param realtimeUsesCases [RealtimeUsesCases]: UseCase to get the messages from the global chat and send messages to it.
@@ -43,49 +46,73 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SocialViewModel @Inject constructor(
-    private val realtimeUsesCases: RealtimeUsesCases,
-    private val authenticationUsesCases: AuthenticationUsesCases
+    private val chatUsesCases: ChatUsesCases,
+    private val groupUsesCases: GroupUsesCases,
+    private val application: Application
 ) : MVIBaseViewModel<SocialState, SocialIntent>() {
 
     override fun initState(): SocialState = SocialState.default()
 
     override fun intentHandler(intent: SocialIntent) {
         when (intent) {
-            is SocialIntent.LoadGroups -> loadGroups()
+            is SocialIntent.LoadGroups -> loadGroups(intent)
             is SocialIntent.LoadGlobalChat -> loadGlobalChat()
-            is SocialIntent.SendMessage -> sendMessage(intent.message)
+            is SocialIntent.SendMessage -> sendMessage(intent)
+            is SocialIntent.CreateGroup -> createGroup(intent)
         }
     }
 
-    override fun onViewModelInit() {
-        loadGroups()
-        loadGlobalChat()
+    override fun onCleared() {
+        Log.d("SocialViewModel", "onCleared")
+        chatUsesCases.removeMessagesListener()
+        groupUsesCases.removeGroupsListener()
+        super.onCleared()
     }
 
     //Actions:
     /**
      * Action associated with [SocialIntent.SendMessage] that will send a message to the global chat.
      *
-     * @param message [String]: Message to send.
-     *
      * @see [SocialIntent.SendMessage]
      */
-    private fun sendMessage(message: String) {
-        val user = authenticationUsesCases.getCurrentUser()!!
+    private fun sendMessage(
+        sendMessage: SocialIntent.SendMessage
+    ) {
         execute(Dispatchers.IO) {
-            realtimeUsesCases.addMessageToGlobalChat(
-                MessageModel(
-                    text = message,
-                    time = System.currentTimeMillis(),
-                    authorId = user.uid,
-                    authorName = user.email
-                        ?: "email@random.es"
-                )
-            ).collect {
-                it.catcher(
+            chatUsesCases.sendMessage(
+                sendMessage.message,
+                sendMessage.userModel.firebaseId,
+                sendMessage.userModel.nickName,
+                onSuccess = {},
+                onError = { error ->
+                    execute{
+                        application.applicationContext.printTextInToast("Error in message sending: "+error)
+                    }
+                }
+            )
+        }
+    }
 
-                )
-            }
+    /**
+     * Action associated with [SocialIntent.CreateGroup] that will create a group.
+     *
+     * @see [SocialIntent.CreateGroup]
+     */
+    private fun createGroup(
+        createGroup: SocialIntent.CreateGroup
+    ) {
+        execute(Dispatchers.IO) {
+            groupUsesCases.createGroup(
+                createGroup.name,
+                createGroup.description,
+                createGroup.userId,
+                onSuccess = {},
+                onError = { error ->
+                    execute{
+                        application.applicationContext.printTextInToast("Error in group creation: "+error)
+                    }
+                }
+            )
         }
     }
 
@@ -98,28 +125,48 @@ class SocialViewModel @Inject constructor(
      * @see [RealtimeUsesCases.getMessagesFromGlobalChat]
      * @see [MessageModel]
      */
-    private fun loadGlobalChat() {
-        execute(Dispatchers.IO) {
-            realtimeUsesCases.getMessagesFromGlobalChat().collect {
-                it.catcher(
-                    onSuccess = { data ->
-                        updateUi {
-                            it.copy(chatGlobal = data)
-                        }
-                    }
-                )
+    private fun loadGlobalChat() = execute(Dispatchers.IO) {
+        chatUsesCases.setMessagesListener(
+            onSuccess = { data ->
+                updateUi {
+                    it.copy(chatGlobal = data)
+                }
+            },
+            onError = { error ->
+                execute{
+                    application.applicationContext.printTextInToast("Error in global chat loading: "+error)
+                }
             }
-        }
+        )
     }
+
+
+
 
     /**
      * Action associated with [SocialIntent.LoadGroups] that will load the groups.
      *
      * @see [SocialIntent.LoadGroups]
      */
-    private fun loadGroups() {
-
+    private fun loadGroups(intent: SocialIntent.LoadGroups) {
+        groupUsesCases.setGroupsListener(
+            onSuccess = { data ->
+                updateUi {
+                    it.copy(
+                        groups = data,
+                        myGroup = if (intent.myGroupId != null) data.find { it.groupId == intent.myGroupId } else null
+                    )
+                }
+            },
+            onError = { error ->
+                execute{
+                    application.applicationContext.printTextInToast("Error in groups loading: "+error)
+                }
+            }
+        )
     }
+
+
 }
 
 /**
@@ -138,7 +185,7 @@ class SocialViewModel @Inject constructor(
  */
 data class SocialState(
     val groups: List<GroupModel>,
-    val myGroup: Int,
+    val myGroup: GroupModel?,
     val chatGlobal: List<MessageModel>,
 ) : MVIBaseState {
     companion object {
@@ -150,7 +197,7 @@ data class SocialState(
          */
         fun default() = SocialState(
             groups = emptyList(),
-            myGroup = 0,
+            myGroup = null,
             chatGlobal = emptyList(),
         )
     }
@@ -162,6 +209,7 @@ data class SocialState(
  * @property LoadGroups [SocialIntent]: Action to load the groups.
  * @property LoadGlobalChat [SocialIntent]: Action to load the global chat.
  * @property SendMessage [SocialIntent]: Action to send a message to the global chat.
+ * @property CreateGroup [SocialIntent]: Action to create a group.
  *
  * @see MVIBaseIntent
  * @see SocialViewModel
@@ -172,7 +220,22 @@ data class SocialState(
  */
 sealed interface SocialIntent : MVIBaseIntent {
 
-    data object LoadGroups : SocialIntent
+    /**
+     * Action to load the groups.
+     *
+     * @param myGroupId [String]: Id of the group of the user.
+     *
+     * @see SocialIntent
+     */
+    data class LoadGroups(
+        val myGroupId: String?
+    ) : SocialIntent
+
+    /**
+     * Action to load the global chat.
+     *
+     * @see SocialIntent
+     */
     data object LoadGlobalChat : SocialIntent
 
     /**
@@ -182,5 +245,23 @@ sealed interface SocialIntent : MVIBaseIntent {
      *
      * @see SocialIntent
      */
-    data class SendMessage(val message: String) : SocialIntent
+    data class SendMessage(
+        val message: String,
+        val userModel: UserModel
+    ) : SocialIntent
+
+    /**
+     * Action to create a group.
+     *
+     * @param name [String]: Name of the group.
+     * @param description [String]: Description of the group.
+     * @param userId [String]: Id of the user that creates the group.
+     *
+     * @see SocialIntent
+     */
+    data class CreateGroup(
+        val name: String,
+        val description: String,
+        val userId: String
+    ) : SocialIntent
 }

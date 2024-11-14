@@ -1,3 +1,7 @@
+package es.sebas1705.youknow.data.firebase.realtime.jsons
+
+import es.sebas1705.youknow.domain.model.GroupModel
+
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -12,30 +16,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-}
+data class GroupJson(
+    val description: String = "",
+    val members: List<String> = emptyList(),
+){
 
-rootProject.name = "YouKnow"
-include(":app")
- 
+    fun toGroupModel(groupId: String): GroupModel {
+        val groupData = groupId.split("-")
+        return GroupModel(
+            name = groupData[0],
+            description = this.description,
+            members = this.members,
+            leaderUID = groupData[1],
+        )
+    }
+}

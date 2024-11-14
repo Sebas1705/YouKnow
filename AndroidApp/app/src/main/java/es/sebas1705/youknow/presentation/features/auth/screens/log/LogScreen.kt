@@ -123,7 +123,7 @@ fun LogScreen(
  */
 @Composable
 private fun LogDesign(
-    windowState: WindowState = WindowState(),
+    windowState: WindowState = WindowState.default(),
     authState: AuthState = AuthState.default(),
     onRegisterButton: () -> Unit = {},
     onPasswordForgot: (String) -> Unit = {},

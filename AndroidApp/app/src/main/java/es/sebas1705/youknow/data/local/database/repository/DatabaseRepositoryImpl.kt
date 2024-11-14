@@ -20,7 +20,6 @@ import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
-import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepositoryImpl
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
 import es.sebas1705.youknow.data.local.database.Database
 import es.sebas1705.youknow.data.local.database.config.SettingsDB
@@ -47,63 +46,51 @@ class DatabaseRepositoryImpl @Inject constructor(
     override val layer: Layer = Layer.Data
     override val repository: Repository = Repository.Database
 
+    //Selects
+    override suspend fun getUser(
+        firebaseId: String
+    ): UserModel? {
+        val userEntity = database.userDao().getByID(firebaseId)
+        return userEntity?.toUserModel()
+    }
+
+    override suspend fun containsUser(
+        firebaseId: String
+    ): Boolean {
+        return database.userDao().contains(firebaseId) > 0
+    }
+
+    //Inserts
     override suspend fun postOrUpdateUser(
         userModel: UserModel
     ) {
         database.userDao().insertOrReplace(userModel.toUserEntity())
     }
 
-    override fun deleteUser(
-        userModel: UserModel
-    ) = flow {
-        try {
-            emit(ResponseState.Loading)
-            val rowsAffected = database.userDao().deleteById(userModel.firebaseId)
-            if (rowsAffected != 0)
-                emit(ResponseState.EmptySuccess)
-            else
-                emit(
-                    ResponseState.Error(
-                        this@DatabaseRepositoryImpl as ClassLogData,
-                        ErrorResponseType.NotFound,
-                        SettingsDB.USER_ID_NOT_FOUND,
-                        analyticsRepository::logError
-                    )
-                )
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatabaseRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
-        }
+    //Updates
+    override suspend fun updateCreditsFromUser(
+        userId: String,
+        newCredits: Int
+    ): Boolean {
+        val rowsAffected = database.userDao().updateCreditsById(userId, newCredits)
+        return rowsAffected > 0
     }
 
-    override fun getUser(
-        firebaseId: String
-    ) = flow {
-        try {
-            emit(ResponseState.Loading)
-            val userEntity = database.userDao().getByID(firebaseId)
-            if (userEntity != null)
-                emit(ResponseState.Success(userEntity.toUserModel()))
-            else
-                emit(
-                    ResponseState.Error(
-                        this@DatabaseRepositoryImpl as ClassLogData,
-                        ErrorResponseType.NotFound,
-                        SettingsDB.USER_ID_NOT_FOUND,
-                        analyticsRepository::logError
-                    )
-                )
-        } catch (e: Exception) {
-            ResponseState.Error(
-                this@DatabaseRepositoryImpl as ClassLogData,
-                ErrorResponseType.InternalError,
-                e.message ?: SettingsFS.ERROR_GENERIC_MESSAGE,
-                analyticsRepository::logError
-            )
-        }
+    override suspend fun updateGroupFromUser(
+        userId: String,
+        groupId: String
+    ): Boolean {
+        val rowsAffected = database.userDao().updateGroupById(userId, groupId)
+        return rowsAffected > 0
     }
+
+    //Deletes
+    override suspend fun deleteUser(
+        userModel: UserModel
+    ): Boolean {
+        val rowsAffected = database.userDao().deleteById(userModel.firebaseId)
+        return rowsAffected > 0
+    }
+
+
 }

@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeState
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -32,6 +34,8 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun InfoScreen(
+    userViewModel: UserViewModel,
+    homeState: HomeState
 ) {
     InfoDesign()
 }

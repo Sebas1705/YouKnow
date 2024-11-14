@@ -42,6 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -54,8 +56,10 @@ import es.sebas1705.youknow.presentation.features.home.screens.InfoScreen
 import es.sebas1705.youknow.presentation.features.home.screens.MainScreen
 import es.sebas1705.youknow.presentation.features.home.screens.PlayScreen
 import es.sebas1705.youknow.presentation.features.home.screens.ProfileScreen
-import es.sebas1705.youknow.presentation.features.home.screens.SocialScreen
+import es.sebas1705.youknow.presentation.features.home.screens.social.SocialScreen
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.features.home.windows.LogoutWindow
+import es.sebas1705.youknow.presentation.ui.classes.WindowState
 
 /**
  * Home Navigation Composable that will handle the navigation between the different screens of the app.
@@ -73,6 +77,7 @@ import es.sebas1705.youknow.presentation.features.home.windows.LogoutWindow
  */
 @Composable
 fun HomeNav(
+    windowState: WindowState,
     onLogOutNavigation: () -> Unit,
     onSettingsNavigation: () -> Unit
 ) {
@@ -112,6 +117,8 @@ fun HomeNav(
         }
     }
 
+    val userViewModel: UserViewModel = hiltViewModel()
+    val homeState by userViewModel.uiState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val windowState by rememberWindowState()
     var selectedItem by remember { mutableIntStateOf(2) }
@@ -172,19 +179,19 @@ fun HomeNav(
             modifier = if (windowState.isImeVisible) Modifier.imePadding() else Modifier.padding(it)
         ) {
             composable<MainScreen> {
-                MainScreen()
+                MainScreen(userViewModel,homeState)
             }
             composable<ProfileScreen> {
-                ProfileScreen()
+                ProfileScreen(userViewModel,homeState)
             }
             composable<SocialScreen> {
-                SocialScreen()
+                SocialScreen(userViewModel,windowState,homeState)
             }
             composable<PlayScreen> {
-                PlayScreen()
+                PlayScreen(userViewModel,homeState)
             }
             composable<InfoScreen> {
-                InfoScreen()
+                InfoScreen(userViewModel,homeState)
             }
         }
     }

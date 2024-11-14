@@ -1,28 +1,28 @@
 [versions]
 
 # Core:
-androidGradlePlugin = "8.6.1"
-agp = "8.7.0"
+# androidGradlePlugin = "8.6.1"
+agp = "8.7.2"
 kotlin = "2.0.0"
-coreKtx = "1.13.1"
+coreKtx = "1.15.0"
 coroutines = "1.8.1"
-kotlinx-json = "1.3.0"
+kotlinx-json = "1.6.3"
 kotlinx-serialization ="2.0.20"
 ksp = "2.0.0-1.0.23"
 
 # Lifecycle:
-lifecycleRuntimeKtx = "2.8.6"
-androidxLifecycle = "2.8.6"
-runtimeLivedataVersion = "1.7.3"
-androidxNavigation = "2.8.2"
+lifecycleRuntimeKtx = "2.8.7"
+androidxLifecycle = "2.8.7"
+runtimeLivedataVersion = "1.7.5"
+androidxNavigation = "2.8.3"
 
 # Compose:
-activityCompose = "1.9.2"
-composeBom = "2024.09.03"
-constraintlayoutCompose = "1.0.1"
-material3Adaptive = "1.0.0"
-materialIconsExtended = "1.7.3"
-uiTextGoogleFonts = "1.7.3"
+activityCompose = "1.9.3"
+composeBom = "2024.10.01"
+constraintlayoutCompose = "1.1.0"
+# material3Adaptive = "1.0.0"
+materialIconsExtended = "1.7.5"
+uiTextGoogleFonts = "1.7.5"
 
 # Hilt:
 androidxHilt = "1.2.0"
@@ -38,7 +38,7 @@ hilt = "2.51.1"
 
 # Firebase:
 google-services = "4.4.2"
-firebaseBom = "33.4.0"
+firebaseBom = "33.5.1"
 firebaseCrashlytics = "3.0.2"
 
 # Retrofit:
@@ -53,6 +53,9 @@ datastorePreferences = "1.1.1"
 
 # Coil:
 coilComposeVersion = "2.7.0"
+
+# Lottie:
+lottie = "6.6.0"
 
 # Testing:
 junit = "4.13.2"
@@ -102,7 +105,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-hilt-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+# hilt-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 
 # Firebase:
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -113,7 +116,7 @@ firebase-firestrore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase-database = { module = "com.google.firebase:firebase-database-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
-firebase-remote-config = { module = "com.google.firebase:firebase-remote-config-ktx" }
+# firebase-remote-config = { module = "com.google.firebase:firebase-remote-config-ktx" }
 
 # Retrofit:
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -130,6 +133,8 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 # Coil:
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 
+# Lottie:
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 # Testing:
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -148,7 +153,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+# android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # Compose:

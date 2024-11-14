@@ -96,6 +96,7 @@ fun AppNav(
         }
         composable<HomeNavigation> {
             HomeNav(
+                windowState = windowState,
                 onLogOutNavigation = {
                     authViewModel.eventHandler(AuthIntent.SignOut(
                         {appNavController.navAndPopUp(AuthNavigation, HomeNavigation)},

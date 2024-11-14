@@ -25,7 +25,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import es.sebas1705.youknow.presentation.features.splash.screens.SplashScreen
+import es.sebas1705.youknow.presentation.features.app.screens.SplashScreen
 
 
 /**

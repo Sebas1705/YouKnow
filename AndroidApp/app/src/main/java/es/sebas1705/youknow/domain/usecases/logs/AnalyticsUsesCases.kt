@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.domain.usecases
+package es.sebas1705.youknow.domain.usecases.logs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,6 +17,7 @@ package es.sebas1705.youknow.domain.usecases
  */
 
 import android.os.Bundle
+import android.util.Log
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
 import es.sebas1705.youknow.data.firebase.analytics.config.UserProperty
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
@@ -35,6 +36,7 @@ class LogEvent(
     private val analyticsRepository: AnalyticsRepository
 ) {
     operator fun invoke(event: EventLog, bundle: Bundle) {
+        Log.i("LogEvent", "Event: ${event.tag}, Bundle: $bundle")
         analyticsRepository.logEvent(event, bundle)
     }
 }
@@ -53,6 +55,7 @@ class SetUserProperty(
     private val analyticsRepository: AnalyticsRepository
 ) {
     operator fun invoke(userProperty: UserProperty, value: String) {
+        Log.i("SetUserProperty", "UserProperty: ${userProperty.tag}, Value: $value")
         analyticsRepository.setUserProperty(userProperty, value)
     }
 }

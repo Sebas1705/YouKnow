@@ -26,12 +26,12 @@ import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.authentication.config.SettingsAuth
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
-import es.sebas1705.youknow.data.firebase.realtime.config.isRealtimeSavable
+import es.sebas1705.youknow.data.firebase.realtime.jsons.GroupJson
 import es.sebas1705.youknow.data.firebase.realtime.jsons.MessageJson
 import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.MessageModel
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -59,23 +59,10 @@ class RealtimeRepositoryImpl @Inject constructor(
 
     private val defaultReference = database.reference.child(SettingsRT.DEFAULT_REFERENCE)
     private val globalChatReference = database.reference.child(SettingsRT.CHAT_GLOBAL_REFERENCE)
+    private val groupsReference = database.reference.child(SettingsRT.GROUPS_REFERENCE)
 
-    private fun <T : Any> checksWrites(child: String, value: T) {
-        require(value.isRealtimeSavable()) { "Value must be a real time savable type" }
-        require(child.isNotEmpty()) { "Child must not be empty" }
-    }
-
-    private fun <T : Any> writeOnDefault(child: String, value: T) {
-        checksWrites(child, value)
-        val ref = defaultReference.child(child)
-        ref.setValue(value)
-    }
-
-    private fun <T : Any> writeOnGlobalChat(child: String, value: T) {
-        checksWrites(child, value)
-        val ref = globalChatReference.child(child)
-        ref.setValue(value)
-    }
+    private var messagesListener: ValueEventListener? = null
+    private var groupsListener: ValueEventListener? = null
 
     override fun addMessageToGlobalChat(
         value: MessageModel
@@ -108,66 +95,155 @@ class RealtimeRepositoryImpl @Inject constructor(
                 )
             )
         }
+        awaitClose {
+            channel.close()
+            close()
+        }
     }
 
-    override fun getMessagesFromGlobalChat(): Flow<ResponseState<List<MessageModel>>> =
-        callbackFlow {
-            try {
-                this@callbackFlow.trySendBlocking(ResponseState.Loading)
-
-                val postListener = globalChatReference.addValueEventListener(
-                    object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val messages = mutableListOf<Pair<String, MessageJson>>()
-                            snapshot.children.forEach {
-                                val message = it.getValue(MessageJson::class.java)
-                                if (message != null) {
-                                    messages.add(it.key!! to message)
-                                }
-                            }
-                            val messageModels = messages.map { it.second.toMessageModel(it.first) }
-                                .sortedBy { it.time }
-                            if (messageModels.size > SettingsRT.MAX_MESSAGES_ON_GLOBAL_CHAT) {
-                                val key = messageModels[0].messageId
-                                globalChatReference.child(key).removeValue()
-                            }
-                            this@callbackFlow.trySendBlocking(ResponseState.Success(messageModels))
+    override fun setMessagesListener(
+        onDataChange: (List<MessageModel>) -> Unit,
+        onCancelled: (String) -> Unit
+    ) {
+        messagesListener = globalChatReference.addValueEventListener(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val messages = mutableListOf<Pair<String, MessageJson>>()
+                    snapshot.children.forEach {
+                        val message = it.getValue(MessageJson::class.java)
+                        if (message != null) {
+                            messages.add(it.key!! to message)
                         }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            this@callbackFlow.trySendBlocking(
-                                ResponseState.Error(
-                                    this@RealtimeRepositoryImpl as ClassLogData,
-                                    ErrorResponseType.Unauthorized,
-                                    error.message,
-                                    analyticsRepository::logError
-                                )
-                            )
-                        }
-
                     }
-                )
-
-                globalChatReference.addValueEventListener(postListener)
-
-                awaitClose {
-                    globalChatReference.removeEventListener(postListener)
-                    channel.close()
-                    cancel()
+                    val messageModels = messages.map { it.second.toMessageModel(it.first) }
+                        .sortedBy { it.time }
+                    if (messageModels.size > SettingsRT.MAX_MESSAGES_ON_GLOBAL_CHAT) {
+                        val key = messageModels[0].messageId
+                        globalChatReference.child(key).removeValue()
+                    }
+                    onDataChange(messageModels)
                 }
 
-            } catch (e: Exception) {
-                this@callbackFlow.trySendBlocking(
-                    ResponseState.Error(
-                        this@RealtimeRepositoryImpl as ClassLogData,
-                        ErrorResponseType.InternalError,
-                        e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                        analyticsRepository::logError
-                    )
-                )
+                override fun onCancelled(error: DatabaseError) {
+                    onCancelled(error.message)
+                }
+
             }
+        )
+    }
 
+    override fun removeMessagesListener() {
+        messagesListener?.let {
+            globalChatReference.removeEventListener(it)
+            messagesListener = null
         }
+    }
 
+    override fun addGroup(
+        value: GroupModel
+    ): Flow<ResponseState<Nothing>> = callbackFlow {
+        try {
+            this@callbackFlow.trySendBlocking(ResponseState.Loading)
+            val ref = groupsReference.child(value.groupId)
+            ref.setValue(value.toGroupJson())
+                .addOnCompleteListener {
+                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
+                }
+                .addOnFailureListener {
+                    this@callbackFlow.trySendBlocking(
+                        ResponseState.Error(
+                            this@RealtimeRepositoryImpl as ClassLogData,
+                            ErrorResponseType.BadRequest,
+                            it.message ?: SettingsRT.ERROR_GENERIC_MESSAGE,
+                            analyticsRepository::logError
+                        )
+                    )
+                }
 
+        } catch (e: Exception) {
+            this@callbackFlow.trySendBlocking(
+                ResponseState.Error(
+                    this@RealtimeRepositoryImpl as ClassLogData,
+                    ErrorResponseType.InternalError,
+                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
+                    analyticsRepository::logError
+                )
+            )
+        }
+        awaitClose {
+            channel.close()
+            close()
+        }
+    }
+
+    override fun addMemberToGroup(
+        groupId: String,
+        newMembersList: List<String>
+    ): Flow<ResponseState<Nothing>> = callbackFlow {
+        try {
+            this@callbackFlow.trySendBlocking(ResponseState.Loading)
+            val ref = groupsReference.child(groupId).child(SettingsRT.MEMBERS_REFERENCE)
+            ref.setValue(newMembersList)
+                .addOnCompleteListener {
+                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
+                }
+                .addOnFailureListener {
+                    this@callbackFlow.trySendBlocking(
+                        ResponseState.Error(
+                            this@RealtimeRepositoryImpl as ClassLogData,
+                            ErrorResponseType.BadRequest,
+                            it.message ?: SettingsRT.ERROR_GENERIC_MESSAGE,
+                            analyticsRepository::logError
+                        )
+                    )
+                }
+
+        } catch (e: Exception) {
+            this@callbackFlow.trySendBlocking(
+                ResponseState.Error(
+                    this@RealtimeRepositoryImpl as ClassLogData,
+                    ErrorResponseType.InternalError,
+                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
+                    analyticsRepository::logError
+                )
+            )
+        }
+        awaitClose {
+            channel.close()
+            close()
+        }
+    }
+
+    override fun setGroupsListener(
+        onDataChange: (List<GroupModel>) -> Unit,
+        onCancelled: (String) -> Unit
+    ) {
+        groupsListener = groupsReference.addValueEventListener(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val groups = mutableListOf<Pair<String, GroupJson>>()
+                    snapshot.children.forEach {
+                        val group = it.getValue(GroupJson::class.java)
+                        if (group != null) {
+                            groups.add(it.key!! to group)
+                        }
+                    }
+                    val messageModels = groups.map { it.second.toGroupModel(it.first) }
+                    onDataChange(messageModels)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    onCancelled(error.message)
+                }
+
+            }
+        )
+    }
+
+    override fun removeGroupsListener() {
+        groupsListener?.let {
+            groupsReference.removeEventListener(it)
+            groupsListener = null
+        }
+    }
 }

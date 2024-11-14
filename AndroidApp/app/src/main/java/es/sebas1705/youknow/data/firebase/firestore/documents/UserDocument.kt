@@ -37,7 +37,6 @@ import es.sebas1705.youknow.domain.model.UserModel
  * @since 1.0.0
  */
 data class UserDocument(
-    val firebaseId: String = "",
     val email: String = "",
     val provider: Int = 0,
     val nickName: String = "",
@@ -45,9 +44,10 @@ data class UserDocument(
     val groupId: String? = null,
     val points: Int = 0,
     val credits: Int = 0,
-    val friends: List<String> = emptyList()
+    val friends: List<String> = emptyList(),
+    val logged : Boolean = false
 ){
-    fun toUserModel() = UserModel(
+    fun toUserModel(firebaseId: String) = UserModel(
         firebaseId = firebaseId,
         email = email,
         provider = ProviderAuth.entries[provider],

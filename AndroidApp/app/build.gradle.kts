@@ -37,7 +37,7 @@ plugins {
 
 android {
     namespace = "es.sebas1705.youknow"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "es.sebas1705.youknow"
@@ -159,6 +159,9 @@ dependencies {
 
     // Coil:
     implementation(libs.coil.compose)
+
+    // Lottie:
+    implementation(libs.lottie.compose)
 
     // Testing:
     testImplementation(libs.junit)

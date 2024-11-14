@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeState
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -37,6 +39,8 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun MainScreen(
+    userViewModel: UserViewModel,
+    homeState: HomeState
 ) {
     MainDesign()
 }
@@ -60,18 +64,7 @@ private fun MainDesign(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            /*
-            val adaptiveInfo = currentWindowAdaptiveInfo()
-            val sizeClassText =
-                "${adaptiveInfo.windowSizeClass.windowWidthSizeClass}\n" +
-                        "${adaptiveInfo.windowSizeClass.windowHeightSizeClass}"
-            Text(
-                text = sizeClassText,
-                color = Color.Magenta,
-                modifier = Modifier.padding(
-                    WindowInsets.safeDrawing.asPaddingValues()
-                )
-            )*/
+
         }
     }
 

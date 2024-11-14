@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.splash.viewmodels
+package es.sebas1705.youknow.presentation.features.app.viewmodels
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,13 +16,19 @@ package es.sebas1705.youknow.presentation.features.splash.viewmodels
  *
  */
 
-import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
 import es.sebas1705.youknow.presentation.features.app.navigation.AuthNavigation
 import es.sebas1705.youknow.presentation.features.app.navigation.GuideScreen
 import es.sebas1705.youknow.presentation.features.app.navigation.HomeNavigation
@@ -33,24 +39,20 @@ import javax.inject.Inject
  * ViewModel for Splash Screen that will decide the start destination of the app
  * depending on the user's state and the first time the app is opened.
  *
- * @param authenticationUsesCases [AuthenticationUsesCases]: UseCase to check if the user is logged in.
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to check if the app is opened for the first time.
+ * @param userUsesCases [UserUsesCases]: UseCases for the user.
+ * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
- * @see SplashState
- * @see SplashIntent
- * @see AuthenticationUsesCases
- * @see DatastoreUsesCases
+ * @see UserUsesCases
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authenticationUsesCases: AuthenticationUsesCases,
-    private val datastoreUsesCases: DatastoreUsesCases,
-    private val application: Application
+    private val userUsesCases: UserUsesCases,
+    private val datastoreUsesCases: DatastoreUsesCases
 ) : MVIBaseViewModel<SplashState, SplashIntent>() {
 
     override fun initState(): SplashState = SplashState.default()
@@ -59,8 +61,10 @@ class SplashViewModel @Inject constructor(
         when (intent) {
             is SplashIntent.ChargeCloudData -> chargeStartDestination()
             is SplashIntent.FinishSplashScreen -> finishSplashScreen()
+            is SplashIntent.SetConnectivityCallback -> setConnectivityCallback(intent)
         }
     }
+
 
     //Actions:
     /**
@@ -77,7 +81,7 @@ class SplashViewModel @Inject constructor(
                     it.copy(
                         startDestination =
                         if (!data) GuideScreen
-                        else if (authenticationUsesCases.isUserLogged()) HomeNavigation else AuthNavigation
+                        else if (userUsesCases.isUserLogged()) HomeNavigation else AuthNavigation
                     )
                 }
             }
@@ -95,6 +99,45 @@ class SplashViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set the connectivity callback to check the network status.
+     *
+     * @see [ConnectivityManager.NetworkCallback]
+     */
+    private fun setConnectivityCallback(intent: SplashIntent.SetConnectivityCallback) {
+        val connectivityManager = intent.context.getSystemService(ConnectivityManager::class.java)
+        val activeNetwork = connectivityManager.activeNetwork
+        val isConnected = activeNetwork != null
+
+        updateUi {
+            it.copy(isNetworkAvailable = isConnected)
+        }
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network : Network) {
+                updateUi {
+                    it.copy(isNetworkAvailable = true)
+                }
+                Log.i("Network", "The default network is now: $network")
+            }
+
+            override fun onLost(network : Network) {
+                updateUi {
+                    it.copy(isNetworkAvailable = false)
+                }
+                Log.i("Network", "The application no longer has a default network. The last default network was $network")
+            }
+
+            override fun onCapabilitiesChanged(network : Network, networkCapabilities : NetworkCapabilities) {
+                Log.i("Network", "The default network changed capabilities: $networkCapabilities")
+            }
+
+            override fun onLinkPropertiesChanged(network : Network, linkProperties : LinkProperties) {
+                Log.i("Network", "The default network changed link properties: $linkProperties")
+            }
+        })
+
+    }
+
 }
 
 /**
@@ -110,7 +153,8 @@ class SplashViewModel @Inject constructor(
  */
 data class SplashState(
     var startDestination: Any,
-    var isSplashScreenVisible: Boolean
+    var isSplashScreenVisible: Boolean,
+    var isNetworkAvailable: Boolean
 ) : MVIBaseState {
     companion object {
 
@@ -121,7 +165,8 @@ data class SplashState(
          */
         fun default() = SplashState(
             startDestination = GuideScreen,
-            isSplashScreenVisible = true
+            isSplashScreenVisible = true,
+            isNetworkAvailable = true
         )
     }
 }
@@ -140,5 +185,6 @@ data class SplashState(
 sealed interface SplashIntent : MVIBaseIntent {
     data object ChargeCloudData : SplashIntent
     data object FinishSplashScreen : SplashIntent
+    data class SetConnectivityCallback(val context: Context) : SplashIntent
 }
 

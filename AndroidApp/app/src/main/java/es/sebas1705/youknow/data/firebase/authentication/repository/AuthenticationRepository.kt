@@ -90,7 +90,7 @@ interface AuthenticationRepository {
      *
      * @see Flow
      */
-    fun signOut() : Flow<ResponseState<Nothing>>
+    fun signOut() : Boolean
 
     /**
      * Check if the user is logged

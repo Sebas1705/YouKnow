@@ -19,24 +19,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    /**
-     * Insert a user or replace if already exists
-     *
-     * @param userEntity [UserEntity]: user to insert
-     */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplace(userEntity: UserEntity)
-
-    /**
-     * Delete a user using the id
-     *
-     * @param firebaseId [String]: firebase id of the user
-     *
-     * @return [Int]: number of users deleted
-     */
-    @Query("DELETE FROM users_table WHERE firebaseId = :firebaseId")
-    suspend fun deleteById(firebaseId: String): Int
-
+    //Selects:
     /**
      * Get the user with an id
      *
@@ -56,4 +39,49 @@ interface UserDao {
      */
     @Query("SELECT COUNT(*) FROM users_table WHERE firebaseId = :firebaseId")
     suspend fun contains(firebaseId: String): Int
+
+
+    //Inserts:
+    /**
+     * Insert a user or replace if already exists
+     *
+     * @param userEntity [UserEntity]: user to insert
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrReplace(userEntity: UserEntity)
+
+    //Updates:
+    /**
+     * Update the credits of a specific user
+     *
+     * @param firebaseId [String]: firebase id of the user
+     * @param credits [Int]: new credits value to update
+     *
+     * @return [Int]: number of rows updated
+     */
+    @Query("UPDATE users_table SET credits = :credits WHERE firebaseId = :firebaseId")
+    suspend fun updateCreditsById(firebaseId: String, credits: Int): Int
+
+    /**
+     * Update the group of a specific user
+     *
+     * @param firebaseId [String]: firebase id of the user
+     * @param groupId [String]: new group id to update
+     *
+     * @return [Int]: number of rows updated
+     */
+    @Query("UPDATE users_table SET groupId = :groupId WHERE firebaseId = :firebaseId")
+    fun updateGroupById(firebaseId: String, groupId: String): Int
+
+    //Deletes:
+    /**
+     * Delete a user using the id
+     *
+     * @param firebaseId [String]: firebase id of the user
+     *
+     * @return [Int]: number of users deleted
+     */
+    @Query("DELETE FROM users_table WHERE firebaseId = :firebaseId")
+    suspend fun deleteById(firebaseId: String): Int
+
 }

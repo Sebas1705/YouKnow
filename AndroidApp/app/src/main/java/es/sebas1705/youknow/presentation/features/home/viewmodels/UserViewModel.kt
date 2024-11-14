@@ -21,7 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
+import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
@@ -36,27 +38,37 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val authenticationUsesCases: AuthenticationUsesCases
+class UserViewModel @Inject constructor(
+    private val userUsesCases: UserUsesCases
 ) : MVIBaseViewModel<HomeState, HomeIntent>() {
 
     override fun initState(): HomeState = HomeState.default()
 
     override fun intentHandler(intent: HomeIntent) {
         when(intent){
-            else -> {}
+            is HomeIntent.LoadActualUser -> loadActualUser()
         }
     }
 
-    override fun onViewModelInit() {
-        authenticationUsesCases.getCurrentUser().let { user ->
-            updateUi { it.copy(user = user) }
+    override fun onInit() {
+        super.onInit()
+        loadActualUser()
+    }
+
+
+    //Actions:
+    private fun loadActualUser() = execute(Dispatchers.IO) {
+        userUsesCases.getFirebaseUser()?.let { firebaseUser ->
+            updateUi { it.copy(firebaseUser = firebaseUser) }
+            userUsesCases.getUser(firebaseUser.uid, false).let { user ->
+                updateUi { it.copy(userModel = user) }
+            }
         }
     }
 }
 
 /**
- * State for [HomeViewModel] that will handle the user's data.
+ * State for [UserViewModel] that will handle the user's data.
  *
  * @property user [FirebaseUser]: The current user.
  *
@@ -67,7 +79,8 @@ class HomeViewModel @Inject constructor(
  * @since 1.0.0
  */
 data class HomeState(
-    val user: FirebaseUser?
+    val userModel: UserModel?,
+    val firebaseUser: FirebaseUser?
 ) : MVIBaseState {
     companion object {
 
@@ -77,17 +90,20 @@ data class HomeState(
          * @return [HomeState]
          */
         fun default() = HomeState(
-            user = null
+            userModel = null,
+            firebaseUser = null
         )
     }
 }
 
 /**
- * Intent for [HomeViewModel].
+ * Intent for [UserViewModel].
  *
  * @see MVIBaseIntent
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-sealed interface HomeIntent : MVIBaseIntent
+sealed interface HomeIntent : MVIBaseIntent{
+    object LoadActualUser : HomeIntent
+}

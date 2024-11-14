@@ -41,13 +41,29 @@ import es.sebas1705.youknow.core.utlis.PreviewSettings
  * @since 1.0.0
  */
 data class WindowState(
-    val widthDp: Dp = PreviewSettings.WIDTH.dp,
-    val heightDp: Dp = PreviewSettings.HEIGHT.dp,
-    val widthType: SizeType = SizeType.COMPACT,
-    val heightType: SizeType = SizeType.COMPACT,
-    val isImeVisible: Boolean = false,
-    val isPortrait: Boolean = true,
-    val backFill: Int = R.drawable.back_portrait_fill,
-    val backEmpty: Int = R.drawable.back_portrait_empty,
+    val widthDp: Dp,
+    val heightDp: Dp,
+    val widthType: SizeType,
+    val heightType: SizeType,
+    val isImeVisible: Boolean,
+    val isPortrait: Boolean,
+    val backFill: Int,
+    val backEmpty: Int
+){
     val isLandscapeAndIme: Boolean = !isPortrait and isImeVisible
-)
+
+    companion object {
+        fun default(): WindowState{
+            return WindowState(
+                widthDp = PreviewSettings.WIDTH.dp,
+                heightDp = PreviewSettings.HEIGHT.dp,
+                widthType = SizeType.COMPACT,
+                heightType = SizeType.COMPACT,
+                isImeVisible = false,
+                isPortrait = true,
+                backFill = R.drawable.back_portrait_fill,
+                backEmpty = R.drawable.back_portrait_empty,
+            )
+        }
+    }
+}

@@ -28,9 +28,19 @@ import kotlinx.coroutines.flow.Flow
  */
 interface DatabaseRepository {
 
+    //Selects
+    suspend fun getUser(firebaseId: String): UserModel?
+    suspend fun containsUser(firebaseId: String): Boolean
+
+    //Inserts
     suspend fun postOrUpdateUser(userModel: UserModel)
 
-    fun deleteUser(userModel: UserModel): Flow<ResponseState<Nothing>>
+    //Updates
+    suspend fun updateCreditsFromUser(userId: String, credits: Int): Boolean
+    suspend fun updateGroupFromUser(userId: String, groupId: String): Boolean
 
-    fun getUser(firebaseId: String): Flow<ResponseState<UserModel>>
+    //Deletes
+    suspend fun deleteUser(userModel: UserModel): Boolean
+
+
 }

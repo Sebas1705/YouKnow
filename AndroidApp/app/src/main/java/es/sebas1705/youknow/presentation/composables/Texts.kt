@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
 
@@ -38,10 +39,46 @@ import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
 fun TitleApp(
     modifier: Modifier = Modifier
 ){
+    Title(
+        modifier = modifier,
+        text = stringResource(id = R.string.app_name)
+    )
+}
+
+/**
+ * Title
+ *
+ * @param modifier Modifier
+ *
+ * @see Text
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+@Composable
+fun Title(
+    modifier: Modifier = Modifier,
+    text: String,
+){
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.app_name),
+        text = text,
         style = MaterialTheme.typography.displayLarge.copy(fontFamily = titleFontFamily),
         color = MaterialTheme.colorScheme.primary,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun Subtitle(
+    modifier: Modifier = Modifier,
+    text: String,
+){
+    Text(
+        modifier = modifier,
+        text = text,
+        style = MaterialTheme.typography.displaySmall.copy(fontFamily = titleFontFamily),
+        color = MaterialTheme.colorScheme.onSurface,
+        textAlign = TextAlign.Center
     )
 }

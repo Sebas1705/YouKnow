@@ -16,20 +16,21 @@ package es.sebas1705.youknow.presentation.features.auth.viewmodels
  *
  */
 
+import android.app.Application
 import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.MVIBaseState
 import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.AuthenticationUsesCases
-import es.sebas1705.youknow.domain.usecases.UserUsesCases
+import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
  * ViewModel for Auth Screen that will handle the authentication process.
  *
- * @param authenticationUsesCases [AuthenticationUsesCases]: UseCase to handle the authentication process.
+ * @param userUsesCases [UserUsesCases]: UseCase to handle the authentication process.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
@@ -39,8 +40,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authenticationUsesCases: AuthenticationUsesCases,
-    private val userUsesCases: UserUsesCases
+    private val userUsesCases: UserUsesCases,
+    private val application: Application
 ) : MVIBaseViewModel<AuthState, AuthIntent>() {
 
     override fun initState(): AuthState = AuthState.default()
@@ -59,21 +60,35 @@ class AuthViewModel @Inject constructor(
     private fun signInEmailAction(
         intent: AuthIntent.SignInWithEmail
     ) = execute(Dispatchers.IO) {
-        authenticationUsesCases.signInWithEmail(intent.email, intent.password)
-            .collect { response ->
-                response.catcher(
-                    onLoading = { startLoading() },
-                    onSuccess = {
+        userUsesCases.signInEmailUser(
+            intent.email,
+            intent.password,
+            onLoading = { startLoading() },
+            onSuccess = { firebaseId ->
+                execute(Dispatchers.IO) {
+                    if(userUsesCases.verifyJustLogged(firebaseId)){
+                        stopLoading()
+                        execute{ application.applicationContext.printTextInToast("You are already logged in other dispositive, please log out first from the other dispositive") }
+                        return@execute
+                    }
+                    val user = userUsesCases.getFirebaseUser()
+                    if(user != null && user.isEmailVerified){
+                        userUsesCases.setLogged(firebaseId, true)
+                        userUsesCases.getUser(firebaseId, true)
                         stopLoading()
                         execute(action = intent.onSuccess)
-                    },
-                    onError = {
+                    }else{
                         stopLoading()
-                        execute { intent.onError(it.message) }
+                        execute{ application.applicationContext.printTextInToast("Verify your email") }
                     }
-                )
-            }
 
+                }
+            },
+            onError = {
+                stopLoading()
+                execute { intent.onError(it) }
+            }
+        )
     }
 
     private fun signUpEmailAction(
@@ -83,12 +98,13 @@ class AuthViewModel @Inject constructor(
             intent.nickname,
             intent.email,
             intent.password,
+            onLoading = { startLoading() },
             onSuccess = { user ->
                 execute(Dispatchers.IO) {
                     userUsesCases.saveUser(user)
+                    stopLoading()
+                    execute(action = intent.onSuccess)
                 }
-                stopLoading()
-                execute(action = intent.onSuccess)
             },
             onError = {
                 stopLoading()
@@ -101,49 +117,50 @@ class AuthViewModel @Inject constructor(
     private fun signOut(
         intent: AuthIntent.SignOut
     ) = execute(Dispatchers.IO) {
-        authenticationUsesCases.signOut().collect { response ->
-            response.catcher(
-                onLoading = { startLoading() },
-                onSuccess = {
-                    stopLoading()
-                    execute(action = intent.onSuccess)
-                },
-                onError = {
-                    stopLoading()
-                    execute { intent.onError(it.message) }
+        userUsesCases.signOut(
+            onSuccess = { firebaseId ->
+                execute(Dispatchers.IO) {
+                    userUsesCases.setLogged(firebaseId, false)
                 }
-            )
-        }
+                execute(action = intent.onSuccess)
+            },
+            onError = { execute { intent.onError(it) } }
+        )
     }
 
     private fun authWithGoogle(
         intent: AuthIntent.SignWithGoogle
     ) = execute(Dispatchers.IO) {
-        authenticationUsesCases.signWithGoogle(intent.context).collect { response ->
-            response.catcher(
-                onLoading = { startLoading() },
-                onSuccess = {
+        userUsesCases.signGoogle(
+            intent.context,
+            onLoading = { startLoading() },
+            onSuccess = { firebaseId ->
+                execute(Dispatchers.IO) {
+                    val wasLogged = userUsesCases.verifyWasLogged(firebaseId)
+                    if(wasLogged)
+                        userUsesCases.setLogged(firebaseId, true)
+                    else
+                        userUsesCases.saveUser(userUsesCases.signGoogle.createNewGoogleUser())
                     stopLoading()
                     execute(action = intent.onSuccess)
-                },
-                onError = {
-                    stopLoading()
-                    execute { intent.onError(it.message) }
                 }
-            )
-        }
+            },
+            onError = {
+                stopLoading()
+                execute { intent.onError(it) }
+            }
+        )
     }
 
     private fun sendForgotPassword(
         intent: AuthIntent.SendForgotPassword
     ) = execute(Dispatchers.IO) {
-        authenticationUsesCases.sendForgotPassword(intent.email).collect { response ->
-            response.catcher(
-                onLoading = { startLoading() },
-                onSuccess = { stopLoading() },
-                onError = { stopLoading() }
-            )
-        }
+        userUsesCases.sendForgotPassword(
+            intent.email,
+            onLoading = { startLoading() },
+            onSuccess = { stopLoading() },
+            onError = { stopLoading() }
+        )
     }
 
 

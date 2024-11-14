@@ -16,7 +16,6 @@ data class UserModel(
     val friends: List<String>
 ) {
     fun toUserDocument() = UserDocument(
-        firebaseId,
         email,
         provider.ordinal,
         nickName,

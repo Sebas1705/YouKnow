@@ -20,8 +20,8 @@ import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 
 object PreviewSettings{
-    const val WIDTH = 392
-    const val HEIGHT = 850
+    const val WIDTH = 395
+    const val HEIGHT = 855
 }
 
 @Target(AnnotationTarget.FUNCTION)

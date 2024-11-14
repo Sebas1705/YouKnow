@@ -5,6 +5,7 @@
     <string name="app_name" translatable="false">You Know?</string>
     <string name="icon_content">You Know icon</string>
     <string name="back_arrow_content">Back arrow</string>
+    <string name="connection_lost">Connection lost</string>
 
     <!-- Prelog Screens -->
     <string name="next">Next</string>
@@ -41,6 +42,9 @@
     <string name="alertTitle">"Want to log out?"</string>
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
+    <string name="titleCreateGroup">Create a group</string>
+    <string name="groupName">Group name</string>
+    <string name="groupDescription">Group description</string>
 
     <!-- Settings Screen -->
     <string name="settings">Settings</string>
@@ -53,5 +57,7 @@
     <string name="username">User name</string>
     <string name="emailPasswordNotMatch">Emails or passwords not match</string>
     <string name="both">Both\n</string>
+
+
 
 </resources>
