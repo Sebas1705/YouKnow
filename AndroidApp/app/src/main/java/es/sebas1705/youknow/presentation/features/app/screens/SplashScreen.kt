@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.AppIcon
 import es.sebas1705.youknow.presentation.composables.ApplyBack
@@ -50,7 +51,6 @@ import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsViewMod
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashIntent
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashState
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SplashViewModel
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import kotlinx.coroutines.delay
 
@@ -88,7 +88,7 @@ fun SplashScreen() {
 
     //Loading effect:
     LaunchedEffect(isLoaded) {
-        if(!isLoaded){
+        if (!isLoaded) {
             splashViewModel.eventHandler(SplashIntent.ChargeCloudData)
             settingsViewModel.eventHandler(SettingsIntent.ChargeSettings)
             delay(2000)
@@ -97,16 +97,8 @@ fun SplashScreen() {
         }
     }
 
-    //Check connectivity:
-    /*LaunchedEffect(Unit) {
-        while(true){
-            splashViewModel.eventHandler(SplashIntent.CheckConnectivity)
-            delay(2000)
-        }
-    }*/
-
     //Design:
-    SplashDesign(
+    SplashStructure(
         windowState,
         splashState,
         settingsState,
@@ -137,7 +129,7 @@ fun SplashScreen() {
  * @author Sebastian Ramiro Entrerrios García
  */
 @Composable
-private fun SplashDesign(
+private fun SplashStructure(
     windowState: WindowState = WindowState.default(),
     splashState: SplashState = SplashState.default(),
     settingsState: SettingsState = SettingsState.default(),
@@ -153,42 +145,55 @@ private fun SplashDesign(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
         ) {
-            if (splashState.isSplashScreenVisible) ApplyBack(
-                backId = windowState.backEmpty,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        AppIcon(
-                            Modifier
-                                .fillMaxWidth(0.7f)
-                                .fillMaxHeight(0.4f)
-                        )
-                        SimpleSpacer()
-                        TitleApp()
-                        DoubleSpacer()
-                        LinearProgressIndicator()
-                    }
-                }
-            }
+            if (splashState.isSplashScreenVisible) SplashDesign(windowState)
             else {
-                if(splashState.isNetworkAvailable) AppNav(
+                if (splashState.isNetworkAvailable) AppNav(
                     splashState.startDestination,
+                    windowState,
                     settingsState,
-                    settingsViewModel!!,
-                    windowState
+                    settingsViewModel!!
                 )
                 else NetworkErrorScreen(windowState)
             }
         }
     }
-
 }
 
-
+/**
+ * SplashDesign is the design of the [SplashScreen].
+ * It shows the app icon, the app name and a loading bar.
+ *
+ * @param windowState [WindowState]: is the state of the window.
+ *
+ * @since 1.0.0
+ * @author Sebastian Ramiro Entrerrios García
+ */
+@Composable
+fun SplashDesign(
+    windowState: WindowState = WindowState.default(),
+){
+    ApplyBack(
+        backId = windowState.backEmpty,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                AppIcon(
+                    Modifier
+                        .fillMaxWidth(0.7f)
+                        .fillMaxHeight(0.4f)
+                )
+                SimpleSpacer()
+                TitleApp()
+                DoubleSpacer()
+                LinearProgressIndicator()
+            }
+        }
+    }
+}
 
 /**
  * Preview for [SplashDesign]

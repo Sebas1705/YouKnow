@@ -50,7 +50,7 @@ fun ForgotAndRegisterButtons(
         verticalAlignment = Alignment.CenterVertically
     ){
         CustomTextButton(
-            text = stringResource(id = R.string.forgotPassword),
+            text = stringResource(id = R.string.forgot_password),
             onClick = onForgotButton
         )
         VerticalDivider(
@@ -58,7 +58,7 @@ fun ForgotAndRegisterButtons(
             color = MaterialTheme.colorScheme.primary
         )
         CustomTextButton(
-            text = stringResource(id = R.string.wannaRegister),
+            text = stringResource(id = R.string.wanna_register),
             onClick = onRegisterButton
         )
     }

@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
@@ -59,11 +60,12 @@ fun TitleApp(
 fun Title(
     modifier: Modifier = Modifier,
     text: String,
+    style: TextStyle = MaterialTheme.typography.displayLarge
 ){
     Text(
         modifier = modifier,
         text = text,
-        style = MaterialTheme.typography.displayLarge.copy(fontFamily = titleFontFamily),
+        style = style.copy(fontFamily = titleFontFamily),
         color = MaterialTheme.colorScheme.primary,
         textAlign = TextAlign.Center
     )

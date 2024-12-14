@@ -16,13 +16,11 @@ package es.sebas1705.youknow.presentation.features.home.screens.social
  *
  */
 
-import androidx.compose.foundation.BorderStroke
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,25 +28,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.Chat
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.Group
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.GroupsList
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.IconsBar
-import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.SocialIntent
 import es.sebas1705.youknow.presentation.features.home.viewmodels.SocialState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.SocialViewModel
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserIntent
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.presentation.features.home.windows.UserInfoWindow
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -65,34 +61,51 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun SocialScreen(
-    userViewModel: UserViewModel,
     windowState: WindowState,
-    homeState: HomeState
+    userState: UserState,
+    socialState: SocialState,
+    userViewModel: UserViewModel,
+    socialViewModel: SocialViewModel
 ) {
-
     //Locals:
-    var context = LocalContext.current
-
-    val socialViewModel: SocialViewModel = hiltViewModel()
-    val socialState by socialViewModel.uiState.collectAsStateWithLifecycle()
-    socialViewModel.eventHandler(SocialIntent.LoadGlobalChat)
-    homeState.userModel?.let {
-        socialViewModel.eventHandler(SocialIntent.LoadGroups(it.firebaseId))
-    } ?: context.printTextInToast("User not found, restart the app")
+    val context = LocalContext.current
+    BackHandler {}
 
     SocialDesign(
-        socialViewModel = socialViewModel,
-        homeState = homeState,
+        windowState = windowState,
+        userState = userState,
         socialState = socialState,
+        socialViewModel = socialViewModel,
         messageSender = { message ->
-            homeState.userModel?.let{
-                socialViewModel.eventHandler(SocialIntent.SendMessage(message,it))
-            }?: context.printTextInToast("User not found, restart the app")
+            userState.userModel?.let {
+                socialViewModel.eventHandler(SocialIntent.SendMessage(message, it))
+            } ?: context.printTextInToast(context.getString(R.string.user_not_found))
         },
         groupCreator = { name, description ->
-            homeState.userModel?.let{
-                socialViewModel.eventHandler(SocialIntent.CreateGroup(name, description, it.firebaseId))
-            }?: context.printTextInToast("User not found, restart the app")
+            userState.userModel?.let {
+                socialViewModel.eventHandler(SocialIntent.CreateGroup(name, description, it))
+            } ?: context.printTextInToast(context.getString(R.string.user_not_found))
+        },
+        groupJoin = { groupModel ->
+            userState.userModel?.let {
+                socialViewModel.eventHandler(SocialIntent.JoinGroup(groupModel, it))
+            } ?: context.printTextInToast(context.getString(R.string.user_not_found))
+        },
+        onGroupOutButton = {
+            userState.userModel?.let {
+                socialViewModel.eventHandler(
+                    SocialIntent.OutGroup(
+                        socialState.myGroup!!,
+                        it
+                    )
+                )
+            } ?: context.printTextInToast(context.getString(R.string.user_not_found))
+        },
+        onKickButton = {
+            socialViewModel.eventHandler(SocialIntent.KickGroup(socialState.myGroup!!, it))
+        },
+        userGet = {
+            userViewModel.eventHandler(UserIntent.GetUser(it))
         }
     )
 }
@@ -114,65 +127,75 @@ fun SocialScreen(
  */
 @Composable
 private fun SocialDesign(
+    windowState: WindowState = WindowState.default(),
+    userState: UserState = UserState.default(),
+    socialState: SocialState = SocialState.default(),
     socialViewModel: SocialViewModel? = null,
-    homeState: HomeState = HomeState.default(),
-    socialState: SocialState? = SocialState.default(),
     messageSender: (String) -> Unit = {},
-    groupCreator: (String, String) -> Unit = { _, _ -> }
+    groupCreator: (String, String) -> Unit = { _, _ -> },
+    groupJoin: (GroupModel) -> Unit = {},
+    onGroupOutButton: () -> Unit = {},
+    onKickButton: (String) -> Unit = {},
+    userGet: (String) -> Unit = {}
 ) {
 
     //States:
-    var chatPage by remember { mutableStateOf(false) }
+    var chatPage by remember { mutableStateOf(true) }
+    var infoDisplay by remember { mutableStateOf(false) }
+    var userInfoId by remember { mutableStateOf("") }
 
+    if (infoDisplay) UserInfoWindow(
+        userModel = userState.infoUser,
+        onDismiss = { infoDisplay = false }
+    )
 
-    ApplyBack(
-        R.drawable.back_portrait_empty,
+    Column(
+        modifier = Modifier.padding(top = SmallestPadding),
     ) {
-        Column(
-            modifier = Modifier.padding(top = MediumPadding),
+        IconsBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(windowState.heightType.filter(0.2f, 0.075f, 0.075f)),
+            isGroup = !chatPage,
+            changeToGroup = { chatPage = false },
+            changeToChat = { chatPage = true },
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
         ) {
-            IconsBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.8f),
-                isGroup = !chatPage,
-                changeToGroup = { chatPage = false },
-                changeToChat = { chatPage = true },
-            )
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(20f)
-                    .padding(horizontal = SmallPadding)
-                    .padding(bottom = MediumPadding),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                border = BorderStroke(
-                    width = 4.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                ),
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(SmallPadding),
-                    shape = MaterialTheme.shapes.small,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                ) {
-                    when {
-                        chatPage -> Chat(socialState?.chatGlobal!!, messageSender)
-                        socialState?.myGroup != null -> Group(
-                            socialState.myGroup,
-                            socialState.myGroup.leaderUID == homeState.userModel!!.firebaseId
-                        )
-                        else -> GroupsList(socialState?.groups!!, {}, groupCreator)
-                    }
-                }
+            when {
+                chatPage -> Chat(
+                    windowState = windowState,
+                    firebaseId = userState.userModel?.firebaseId ?: "",
+                    messageModels = socialState.chatGlobal,
+                    onMessageSend = messageSender
+                )
+
+                socialState.myGroup != null -> Group(
+                    groupModel = socialState.myGroup,
+                    windowState = windowState,
+                    admin = socialState.myGroup.leaderUID == userState.userModel?.firebaseId,
+                    onOutButton = onGroupOutButton,
+                    onInfoButton = {
+                        userGet(it)
+                        userInfoId = it
+                        infoDisplay = true
+                    },
+                    onKickButton = onKickButton,
+                )
+
+                else -> GroupsList(
+                    windowState = windowState,
+                    groupModels = socialState.groups,
+                    onGroupClick = groupJoin,
+                    onGroupCreate = groupCreator
+                )
             }
         }
     }
 }
-
 
 
 /**

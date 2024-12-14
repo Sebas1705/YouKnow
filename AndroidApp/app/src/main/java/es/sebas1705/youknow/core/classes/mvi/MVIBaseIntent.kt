@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes
+package es.sebas1705.youknow.core.classes.mvi
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

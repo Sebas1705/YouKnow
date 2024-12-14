@@ -16,8 +16,12 @@ package es.sebas1705.youknow.presentation.features.home.screens.social.composabl
  *
  */
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,14 +31,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -46,14 +45,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.core.utlis.reverseOne
 import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
-import es.sebas1705.youknow.presentation.composables.Spacers.VerticalSpacer
+import es.sebas1705.youknow.presentation.composables.CustomIconButton
+import es.sebas1705.youknow.presentation.composables.InteractiveCard
+import es.sebas1705.youknow.presentation.composables.SimpleOutlinedTextField
 import es.sebas1705.youknow.presentation.features.home.windows.CreateGroupWindow
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.youknow.presentation.ui.theme.SurfaceBorderWidth
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -73,6 +80,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GroupsList(
+    windowState: WindowState = WindowState.default(),
     groupModels: List<GroupModel> = (1..10).map { value ->
         GroupModel(
             name = "Group $value",
@@ -104,130 +112,78 @@ fun GroupsList(
         )
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(SmallPadding),
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-
-        stickyHeader {
-            Surface(
+        CurvedBorderSurface(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    .fillMaxWidth()
+                    .padding(bottom = SmallPadding),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
+                SimpleOutlinedTextField(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = SmallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        modifier = Modifier.weight(0.70f),
-                        value = search,
-                        onValueChange = {
-                            search = it
-                        },
-                        placeholder = { Text("Search") },
-                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                        singleLine = true,
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            focusedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                    )
-                    VerticalSpacer(0.05f)
-                    IconButton(
-                        modifier = Modifier
-                            .weight(0.25f)
-                            .fillMaxHeight(),
-                        onClick = { alertDisplay = true },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Create Group",
-                            )
-                        },
-                        colors =  IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    )
-                }
+                        .padding(SmallPadding)
+                        .weight(8f),
+                    value = search,
+                    placeholder = "Search",
+                    label = "Search",
+                    onValueChange = { search = it }
+                )
+                CustomIconButton(
+                    onClick = { alertDisplay = true },
+                    icon = Icons.Filled.Add,
+                    modifierButton = Modifier
+                        .padding(end = SmallPadding)
+                        .weight(1f),
+                    modifierIcon = Modifier.fillMaxSize(),
+                    contentDescription = "Create Group",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
 
-        items(groupsFilter.size) { index ->
-            CardGroup(
-                groupsFilter[index],
-                onGroupClick = onGroupClick
-            )
-        }
-    }
-
-}
-
-/**
- * Card group composable that will show the group information.
- * The user can see the group information and join the group.
- * The user can join the group if it is not full.
- *
- * @param groupModel [GroupModel]: Group to show.
- * @param onGroupClick (GroupModel) -> Unit: Function to join the group.
- *
- * @see GroupModel
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-@Composable
-fun CardGroup(
-    groupModel: GroupModel,
-    onGroupClick: (GroupModel) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = SmallPadding)
-            .padding(horizontal = SmallestPadding),
-    ) {
-        Row(
+        ApplyBack(
+            backId = windowState.backEmpty,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(SmallPadding),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .weight(1f)
         ) {
-            Text(
-                text = groupModel.name,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            LazyColumn(
                 modifier = Modifier
-                    .padding(SmallPadding),
-            )
-
-            VerticalDivider(thickness = 5.dp)
-
-            Text(
-                text = "${groupModel.members.size}/${Constants.MAX_GROUP}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(SmallPadding),
-            )
-
-            CustomFilledButton(
-                modifier = Modifier,
-                text = "Join",
-                onClick = { onGroupClick(groupModel) }
-            )
+                    .fillMaxSize()
+                    .padding(top = SmallestPadding, bottom = SmallestPadding),
+            ) {
+                items(groupsFilter.size) { index ->
+                    InteractiveCard(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(bottom = SmallPadding)
+                            .padding(horizontal = SmallestPadding),
+                        title = groupsFilter[index].name,
+                        subtitle = "${groupsFilter[index].members.size}/${Constants.MAX_GROUP}",
+                        buttons = {
+                            CustomFilledButton(
+                                text = "Join",
+                                onClick = { onGroupClick(groupsFilter[index]) },
+                                enabled = groupsFilter[index].members.size < Constants.MAX_GROUP
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
 }
 
 @UiModePreviews
 @Composable
-private fun GroupsListPreview(){
+private fun GroupsListPreview() {
     YouKnowTheme {
         GroupsList()
     }

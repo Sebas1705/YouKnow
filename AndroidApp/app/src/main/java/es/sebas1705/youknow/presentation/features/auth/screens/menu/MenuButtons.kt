@@ -27,7 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.presentation.composables.CustomEmptyIconButton
+import es.sebas1705.youknow.presentation.composables.CustomIconTextButton
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
 import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
 
@@ -40,7 +40,7 @@ import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
  * @param onGoogleLogButtonAction () -> Unit: Function to navigate to the Google Log In screen.
  *
  * @see CustomFilledButton
- * @see CustomEmptyIconButton
+ * @see CustomIconTextButton
  * @see SimpleSpacer
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -55,7 +55,7 @@ fun MenuButtons(
 ){
     CustomFilledButton(
         modifier = buttonsModifier.height(48.dp),
-        text = stringResource(id = R.string.ToSignUp),
+        text = stringResource(id = R.string.sign_up),
         colors = ButtonColors(
             containerColor = MaterialTheme.colorScheme.tertiary,
             contentColor = MaterialTheme.colorScheme.onTertiary,
@@ -65,16 +65,16 @@ fun MenuButtons(
         onClick = onSignButtonAction
     )
     SimpleSpacer()
-    CustomEmptyIconButton(
+    CustomIconTextButton(
         modifier = buttonsModifier.height(48.dp),
-        text = stringResource(id = R.string.ToGoogleLog),
+        text = stringResource(id = R.string.google_log),
         icon = painterResource(id = R.drawable.google),
         onClick = onGoogleLogButtonAction
     )
     SimpleSpacer()
-    CustomEmptyIconButton(
+    CustomIconTextButton(
         modifier = buttonsModifier.height(48.dp),
-        text = stringResource(id = R.string.ToEmailLog),
+        text = stringResource(id = R.string.email_log),
         imageVector = Icons.Default.Email,
         onClick = onEmailLogButtonAction
     )

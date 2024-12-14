@@ -18,17 +18,22 @@ package es.sebas1705.youknow.core.utlis
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.domain.model.PageModel
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.text.startsWith
 
 //Any:
 /**
@@ -68,8 +73,56 @@ fun Dp.toPx(context: Context): Int {
 }
 
 
+//FlowResponse:
+/**
+ * Catcher function to handle the different states of the response
+ *
+ * @receiver [FlowResponse]: the response state
+ *
+ * @param onLoading () -> Unit: Function to handle the loading state
+ * @param onSuccess (T) -> Unit: Function to handle the success state
+ * @param onError (String) -> Unit: Function to handle the error state
+ *
+ * @see FlowResponse
+ */
+suspend fun <T> FlowResponse<T>.catcher(
+    onLoading: () -> Unit = {},
+    onSuccess: (T) -> Unit = {},
+    onError: (String) -> Unit = {}
+) {
+    this.collect {
+        it.catcher(
+            onLoading = onLoading,
+            onSuccess = onSuccess,
+            onError = { onError(it.message) }
+        )
+    }
+}
 
-//Strings:
+/**
+ * Catcher function to handle the different states of the response
+ *
+ * @receiver [FlowResponseNothing]: the response state
+ *
+ * @param onLoading () -> Unit: Function to handle the loading state
+ * @param onEmptySuccess () -> Unit: Function to handle the empty success state
+ * @param onError (String) -> Unit: Function to handle the error state
+ *
+ * @see FlowResponseNothing
+ */
+suspend fun FlowResponseNothing.catcher(
+    onLoading: suspend () -> Unit = {},
+    onEmptySuccess: suspend () -> Unit = {},
+    onError: suspend (String) -> Unit = {}
+) {
+    this.collect {
+        it.catcher(
+            onLoading = onLoading,
+            onEmptySuccess = onEmptySuccess,
+            onError = { onError(it.message) }
+        )
+    }
+}
 
 
 //Float:
@@ -86,6 +139,37 @@ fun Dp.toPx(context: Context): Int {
 @SuppressLint("DefaultLocale")
 fun Float.twoDecimalFormat(): String {
     return String.format("%.2f", this)
+}
+
+/**
+ * Format a float number to a string with two decimal and a percentage symbol
+ *
+ * @receiver [Float]: the number to format
+ *
+ * @return [String]: the number formatted
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+@SuppressLint("DefaultLocale")
+fun Float.percentageFormat(): String {
+    return String.format("%.2f", this * 100) + "%"
+}
+
+/**
+ * Reverse a float number
+ *
+ * @receiver [Float]: the number to reverse
+ *
+ * @return [Float]: the number reversed
+ *
+ * @see reverseOne
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+fun Float.reverseOne(): Float {
+    return 1 - this
 }
 
 //Context:
@@ -205,3 +289,24 @@ fun Long.millisToFormatDate(): String {
         .withZone(ZoneId.systemDefault())
     return formatter.format(Instant.ofEpochMilli(this))
 }
+
+//String:
+fun String.isImageUrl(): Boolean {
+    var isImage = false
+    try {
+        val client = OkHttpClient()
+        val request = Request.Builder().url(this).build()
+        val response: Response = client.newCall(request).execute()
+        val contentType = response.header("Content-Type")
+        Log.i("isImageUrl", "Content-Type: $contentType")
+        isImage = contentType != null && contentType.startsWith("image/")
+    } catch (e: Exception) {
+        Log.e("isImageUrl", e.message.toString())
+        isImage = false
+    }
+    Log.i("isImageUrl", "Is image: $isImage")
+    return isImage
+}
+
+//TextStyles:
+fun TextStyle.makeBold(): TextStyle = this.copy(fontWeight = FontWeight.Bold)

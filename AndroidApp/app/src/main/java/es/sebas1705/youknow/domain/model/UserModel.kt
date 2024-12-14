@@ -1,5 +1,6 @@
 package es.sebas1705.youknow.domain.model
 
+import com.google.firebase.auth.FirebaseUser
 import es.sebas1705.youknow.data.firebase.authentication.config.ProviderAuth
 import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
 import es.sebas1705.youknow.data.local.database.entities.UserEntity
@@ -15,6 +16,38 @@ data class UserModel(
     val credits: Int,
     val friends: List<String>
 ) {
+
+    companion object {
+        fun newGoogleUser(firebaseUser: FirebaseUser) = UserModel(
+            firebaseId = firebaseUser.uid,
+            email = firebaseUser.email!!,
+            provider = ProviderAuth.GOOGLE,
+            nickName = firebaseUser.displayName!!,
+            photoUrl = firebaseUser.photoUrl!!.toString(),
+            groupId = null,
+            points = 0,
+            credits = 1000,
+            friends = emptyList(),
+        )
+
+        fun newEmailUser(nickName: String, firebaseUser: FirebaseUser) = UserModel(
+            firebaseId = firebaseUser.uid,
+            email = firebaseUser.email!!,
+            provider = ProviderAuth.EMAIL,
+            nickName = nickName,
+            photoUrl = null,
+            groupId = null,
+            points = 0,
+            credits = 1000,
+            friends = emptyList(),
+        )
+    }
+
+    /**
+     * Transform the [UserModel] to a [UserDocument]
+     *
+     * @return [UserDocument]: the user document
+     */
     fun toUserDocument() = UserDocument(
         email,
         provider.ordinal,
@@ -26,7 +59,11 @@ data class UserModel(
         friends
     )
 
-
+    /**
+     * Transform the [UserModel] to a [UserEntity]
+     *
+     * @return [UserEntity]: the user entity
+     */
     fun toUserEntity() = UserEntity(
         firebaseId,
         email,
@@ -38,5 +75,7 @@ data class UserModel(
         credits,
         friends
     )
+
+    fun memberId() = "$firebaseId-$nickName"
 
 }

@@ -35,7 +35,7 @@ data class GroupModel(
     val description: String,
     val members: List<String>,
     val leaderUID: String,
-){
+) {
 
     fun toGroupJson(): GroupJson {
         return GroupJson(
@@ -44,5 +44,5 @@ data class GroupModel(
         )
     }
 
-    val groupId: String get() = this.name + "-" + this.leaderUID
+    val groupId: String get() = this.name + "-" + this.leaderUID.split("-")[0]
 }

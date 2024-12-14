@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes
+package es.sebas1705.youknow.core.classes.mvi
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 /**
  * Base class for the MVIBaseViewModel
  *
- * @param S [MVIBaseState]: State of the viewModel
- * @param I [MVIBaseIntent]: Intent of the viewModel
+ * @param S [es.sebas1705.youknow.core.classes.mvi.MVIBaseState]: State of the viewModel
+ * @param I [es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent]: Intent of the viewModel
  *
  * @property initialState [S]: Initial state of the viewModel
  * @property uiState [MutableStateFlow]<[S]>: UiState for the composable
@@ -43,12 +43,13 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
 
     private val initialState: S by lazy { initState() }
     private val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initialState) }
-    val uiState get() = _uiState
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            initialState
-        )
+    val uiState
+        get() = _uiState
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000L),
+                initialState
+            )
 
     /**
      * Initial state of the viewModel
@@ -69,7 +70,7 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
         Log.d("MVIBaseViewModel", "ViewModel initialized ${this::class.java.simpleName}")
     }
 
-    init{
+    init {
         onInit()
     }
 

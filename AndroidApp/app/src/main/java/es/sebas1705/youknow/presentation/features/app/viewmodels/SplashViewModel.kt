@@ -21,14 +21,13 @@ import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.MVIBaseState
-import es.sebas1705.youknow.core.classes.MVIBaseViewModel
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
+import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import es.sebas1705.youknow.presentation.features.app.navigation.AuthNavigation
 import es.sebas1705.youknow.presentation.features.app.navigation.GuideScreen
 import es.sebas1705.youknow.presentation.features.app.navigation.HomeNavigation
@@ -51,7 +50,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val userUsesCases: UserUsesCases,
+    private val authUsesCases: AuthUsesCases,
     private val datastoreUsesCases: DatastoreUsesCases
 ) : MVIBaseViewModel<SplashState, SplashIntent>() {
 
@@ -81,7 +80,7 @@ class SplashViewModel @Inject constructor(
                     it.copy(
                         startDestination =
                         if (!data) GuideScreen
-                        else if (userUsesCases.isUserLogged()) HomeNavigation else AuthNavigation
+                        else if (authUsesCases.getFirebaseUser() != null) HomeNavigation else AuthNavigation
                     )
                 }
             }
@@ -112,27 +111,31 @@ class SplashViewModel @Inject constructor(
         updateUi {
             it.copy(isNetworkAvailable = isConnected)
         }
-        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network : Network) {
+        connectivityManager.registerDefaultNetworkCallback(object :
+            ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
                 updateUi {
                     it.copy(isNetworkAvailable = true)
                 }
-                Log.i("Network", "The default network is now: $network")
+                //Log.i("Network", "The default network is now: $network")
             }
 
-            override fun onLost(network : Network) {
+            override fun onLost(network: Network) {
                 updateUi {
                     it.copy(isNetworkAvailable = false)
                 }
-                Log.i("Network", "The application no longer has a default network. The last default network was $network")
+                //Log.i("Network", "The application no longer has a default network. The last default network was $network")
             }
 
-            override fun onCapabilitiesChanged(network : Network, networkCapabilities : NetworkCapabilities) {
-                Log.i("Network", "The default network changed capabilities: $networkCapabilities")
+            override fun onCapabilitiesChanged(
+                network: Network,
+                networkCapabilities: NetworkCapabilities
+            ) {
+                //Log.i("Network", "The default network changed capabilities: $networkCapabilities")
             }
 
-            override fun onLinkPropertiesChanged(network : Network, linkProperties : LinkProperties) {
-                Log.i("Network", "The default network changed link properties: $linkProperties")
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+                //Log.i("Network", "The default network changed link properties: $linkProperties")
             }
         })
 

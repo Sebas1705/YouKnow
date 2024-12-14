@@ -48,8 +48,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.navToTab
 import es.sebas1705.youknow.presentation.composables.rememberWindowState
+import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.home.composables.BottomNavigationItem
 import es.sebas1705.youknow.presentation.features.home.composables.HomeBottomNavigationBar
 import es.sebas1705.youknow.presentation.features.home.screens.InfoScreen
@@ -57,9 +59,10 @@ import es.sebas1705.youknow.presentation.features.home.screens.MainScreen
 import es.sebas1705.youknow.presentation.features.home.screens.PlayScreen
 import es.sebas1705.youknow.presentation.features.home.screens.ProfileScreen
 import es.sebas1705.youknow.presentation.features.home.screens.social.SocialScreen
+import es.sebas1705.youknow.presentation.features.home.viewmodels.SocialIntent
+import es.sebas1705.youknow.presentation.features.home.viewmodels.SocialViewModel
 import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.features.home.windows.LogoutWindow
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 
 /**
  * Home Navigation Composable that will handle the navigation between the different screens of the app.
@@ -83,7 +86,6 @@ fun HomeNav(
 ) {
 
     var alertDisplay by remember { mutableStateOf(false) }
-    BackHandler(onBack = {})
     val context = LocalContext.current
     val bottomNavigationItems by remember {
         derivedStateOf {
@@ -118,7 +120,9 @@ fun HomeNav(
     }
 
     val userViewModel: UserViewModel = hiltViewModel()
-    val homeState by userViewModel.uiState.collectAsStateWithLifecycle()
+    val userState by userViewModel.uiState.collectAsStateWithLifecycle()
+    val socialViewModel: SocialViewModel = hiltViewModel()
+    val socialState by socialViewModel.uiState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val windowState by rememberWindowState()
     var selectedItem by remember { mutableIntStateOf(2) }
@@ -129,9 +133,15 @@ fun HomeNav(
             HomeBottomNavigationBar(
                 items = bottomNavigationItems,
                 selectedItem = selectedItem,
-                onItemClick = {
-                    navController.navToTab(bottomNavigationItems[it].route)
-                    selectedItem = it
+                onItemClick = { newItem, lastItem ->
+                    if (newItem != lastItem) {
+                        if (bottomNavigationItems[lastItem].route == SocialScreen)
+                            socialViewModel.eventHandler(SocialIntent.ClearSocial)
+                        if (bottomNavigationItems[newItem].route == SocialScreen)
+                            socialViewModel.eventHandler(SocialIntent.LoadSocial(userState.userModel!!.groupId))
+                        navController.navToTab(bottomNavigationItems[newItem].route)
+                        selectedItem = newItem
+                    }
                 },
             )
         },
@@ -144,10 +154,10 @@ fun HomeNav(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.settings)
+                        contentDescription = stringResource(R.string.settings_title)
                     )
                 }
-            else if(selectedItem == 1)
+            else if (selectedItem == 1)
                 SmallFloatingActionButton(
                     onClick = { alertDisplay = true },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -161,6 +171,7 @@ fun HomeNav(
         },
     ) {
 
+
         if (alertDisplay) {
             LogoutWindow(
                 modifier = Modifier.padding(it),
@@ -173,25 +184,28 @@ fun HomeNav(
             )
         }
 
+        if (userState.isLoading || socialState.isLoading)
+            LoadingWindow(windowState)
+
         NavHost(
             navController = navController,
             startDestination = MainScreen,
             modifier = if (windowState.isImeVisible) Modifier.imePadding() else Modifier.padding(it)
         ) {
             composable<MainScreen> {
-                MainScreen(userViewModel,homeState)
+                MainScreen(windowState, userState, userViewModel)
             }
             composable<ProfileScreen> {
-                ProfileScreen(userViewModel,homeState)
+                ProfileScreen(windowState, userState, userViewModel)
             }
             composable<SocialScreen> {
-                SocialScreen(userViewModel,windowState,homeState)
+                SocialScreen(windowState, userState, socialState, userViewModel, socialViewModel)
             }
             composable<PlayScreen> {
-                PlayScreen(userViewModel,homeState)
+                PlayScreen(windowState, userState, userViewModel)
             }
             composable<InfoScreen> {
-                InfoScreen(userViewModel,homeState)
+                InfoScreen(windowState, userState, userViewModel)
             }
         }
     }

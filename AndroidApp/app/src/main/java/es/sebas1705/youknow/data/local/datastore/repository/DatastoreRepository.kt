@@ -1,7 +1,6 @@
 package es.sebas1705.youknow.data.local.datastore.repository
 
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
+import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import kotlinx.coroutines.flow.Flow
 
 /**

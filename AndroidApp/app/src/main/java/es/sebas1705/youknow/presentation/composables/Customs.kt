@@ -62,13 +62,13 @@ import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
 @Composable
 fun ApplyBack(
     backId: Int,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxSize(),
     paddingValues: PaddingValues = PaddingValues(),
     applyCondition: Boolean = true,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
-        modifier = modifier.fillMaxSize().padding(paddingValues)
+        modifier = modifier.padding(paddingValues)
     ) {
         if (applyCondition) Image(
             painter = painterResource(id = backId),

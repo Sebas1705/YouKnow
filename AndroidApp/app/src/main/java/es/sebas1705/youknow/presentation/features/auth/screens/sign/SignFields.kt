@@ -62,11 +62,12 @@ fun SignField(
     onPasswordChange: (String) -> Unit,
     passwordRepeat: String,
     onPasswordRepeatChange: (String) -> Unit
-){
+) {
     //Texts:
     val userNameText = stringResource(id = R.string.username)
     val emailText = stringResource(id = R.string.email)
     val passwordText = stringResource(id = R.string.password)
+    val repeatText = stringResource(id = R.string.repeat)
 
     //Fields:
     CustomOutlinedTextField(
@@ -101,7 +102,7 @@ fun SignField(
         modifier = fieldsModifier,
         value = passwordRepeat,
         onValueChange = onPasswordRepeatChange,
-        label = "Repeat $passwordText",
-        placeholder = "Repeat $passwordText"
+        label = "$repeatText $passwordText",
+        placeholder = "$repeatText $passwordText"
     )
 }

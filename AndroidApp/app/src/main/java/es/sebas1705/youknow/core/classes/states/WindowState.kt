@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.ui.classes
+package es.sebas1705.youknow.core.classes.states
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,6 +19,7 @@ package es.sebas1705.youknow.presentation.ui.classes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.theme.SizeType
 import es.sebas1705.youknow.core.utlis.PreviewSettings
 
 /**
@@ -34,7 +35,7 @@ import es.sebas1705.youknow.core.utlis.PreviewSettings
  * @param backEmpty Int: Resource of the background image for the empty state.
  * @param isLandscapeAndIme Boolean: True if the window is in landscape mode and the IME is visible, false otherwise.
  *
- * @see SizeType
+ * @see es.sebas1705.youknow.core.classes.theme.SizeType
  * @see Dp
  *
  * @author: Sebastián Ramiro Entrerrios García
@@ -49,11 +50,11 @@ data class WindowState(
     val isPortrait: Boolean,
     val backFill: Int,
     val backEmpty: Int
-){
+) {
     val isLandscapeAndIme: Boolean = !isPortrait and isImeVisible
 
     companion object {
-        fun default(): WindowState{
+        fun default(): WindowState {
             return WindowState(
                 widthDp = PreviewSettings.WIDTH.dp,
                 heightDp = PreviewSettings.HEIGHT.dp,
@@ -65,5 +66,15 @@ data class WindowState(
                 backEmpty = R.drawable.back_portrait_empty,
             )
         }
+    }
+
+    fun <T> sizeFilter(
+        compactOpt: T,
+        mediumOpt: T,
+        expandedOpt: T
+    ): T {
+        return if (widthType == SizeType.EXPANDED || heightType == SizeType.EXPANDED) expandedOpt
+        else if (widthType == SizeType.MEDIUM || heightType == SizeType.MEDIUM) mediumOpt
+        else compactOpt
     }
 }

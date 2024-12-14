@@ -18,19 +18,14 @@ package es.sebas1705.youknow.data.local.datastore.repository
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
+import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
-import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
-import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
-import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.data.local.datastore.config.KeysDS
 import es.sebas1705.youknow.data.local.datastore.config.dataStore
-import es.sebas1705.youknow.data.model.ErrorResponseType
-import es.sebas1705.youknow.data.model.ResponseState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -69,7 +64,7 @@ class DatastoreRepositoryImpl @Inject constructor(
      * @return a flow with the value of the first time
      */
     override fun readFirstTime(): Flow<Boolean> {
-        return datastore.data.map{
+        return datastore.data.map {
             it[KeysDS.FIRST_TIME] ?: DefaultValuesDS.FIRST_TIME
         }
     }
@@ -80,7 +75,7 @@ class DatastoreRepositoryImpl @Inject constructor(
      * @param volume the volume of the app ranging from 0.0 to 1.0
      */
     override suspend fun saveAppVolume(volume: Float) {
-        require(volume in 0.0..1.0){
+        require(volume in 0.0..1.0) {
             "Volume must be between 0.0 and 1.0 (Volume: $volume)"
         }
         datastore.edit {
@@ -94,7 +89,7 @@ class DatastoreRepositoryImpl @Inject constructor(
      * @return a flow with the volume of the app
      */
     override fun readAppVolume(): Flow<Float> {
-        return datastore.data.map{
+        return datastore.data.map {
             it[KeysDS.APP_VOLUME] ?: DefaultValuesDS.APP_VOLUME
         }
     }
@@ -116,7 +111,7 @@ class DatastoreRepositoryImpl @Inject constructor(
      * @return a flow with the contrast of the app ([ThemeContrast])
      */
     override fun readAppContrast(): Flow<ThemeContrast> {
-        return datastore.data.map{
+        return datastore.data.map {
             ThemeContrast.entries.find { contrast ->
                 contrast.ordinal == (it[KeysDS.APP_CONTRAST] ?: DefaultValuesDS.APP_UI_CONTRAST)
             } ?: ThemeContrast.Low

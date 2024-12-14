@@ -18,6 +18,7 @@ package es.sebas1705.youknow.domain.usecases.social
 
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.domain.model.UserModel
 
 class CreateGroup(
     private val realtimeRepository: RealtimeRepository
@@ -25,19 +26,36 @@ class CreateGroup(
     suspend operator fun invoke(
         name: String,
         description: String,
-        firebaseId: String,
-        onSuccess: () -> Unit,
+        userModel: UserModel,
+        onSuccess: suspend (GroupModel) -> Unit,
         onError: (String) -> Unit
     ) {
         val groupModel = GroupModel(
             name = name,
             description = description,
-            members = listOf(firebaseId),
-            leaderUID = firebaseId
+            members = listOf(userModel.memberId()),
+            leaderUID = userModel.memberId()
         )
         realtimeRepository.addGroup(groupModel).collect {
             it.catcher(
-                onEmptySuccess = onSuccess,
+                onEmptySuccess = { onSuccess(groupModel) },
+                onError = { onError(it.message) },
+            )
+        }
+    }
+}
+
+class RemoveGroup(
+    private val realtimeRepository: RealtimeRepository
+) {
+    suspend operator fun invoke(
+        groupModel: GroupModel,
+        onSuccess: suspend () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        realtimeRepository.removeGroup(groupModel.groupId).collect {
+            it.catcher(
+                onEmptySuccess = { onSuccess() },
                 onError = { onError(it.message) },
             )
         }
@@ -69,6 +87,7 @@ class RemoveGroupsListener(
 
 data class GroupUsesCases(
     val createGroup: CreateGroup,
+    val removeGroup: RemoveGroup,
     val setGroupsListener: SetGroupsListener,
     val removeGroupsListener: RemoveGroupsListener
 )

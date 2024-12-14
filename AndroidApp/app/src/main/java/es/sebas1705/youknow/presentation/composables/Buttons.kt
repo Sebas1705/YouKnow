@@ -30,6 +30,8 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,6 +48,32 @@ import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import java.util.Locale
+
+
+@Composable
+fun CustomIconButton(
+    onClick: () -> Unit,
+    icon: ImageVector,
+    modifierButton: Modifier = Modifier,
+    modifierIcon: Modifier = Modifier,
+    contentDescription: String = "IconButton",
+    tint: Color = LocalContentColor.current,
+    enabled: Boolean = true
+){
+    IconButton(
+        modifier = modifierButton,
+        onClick = onClick,
+        enabled = enabled
+    ) {
+        Icon(
+            modifier = modifierIcon,
+            imageVector = icon,
+            contentDescription = contentDescription,
+            tint = tint
+        )
+    }
+}
+
 
 /**
  * Custom button with an icon and text
@@ -65,18 +93,19 @@ import java.util.Locale
  * @since 1.0.0
  */
 @Composable
-fun CustomEmptyIconButton(
+fun CustomIconTextButton(
     modifier: Modifier = Modifier,
     text: String,
     contentDescription: String = "",
     icon: Painter? = null,
     imageVector: ImageVector = Icons.Default.Menu,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    backgroundColor: Color = Color.Transparent,
     onClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
-            .background(Color.Transparent)
+            .background(backgroundColor,CircleShape)
             .border(2.dp, contentColor, CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.CenterStart
@@ -131,12 +160,14 @@ fun CustomFilledButton(
         disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
     ),
     onClick: ()->Unit,
+    enabled: Boolean = true
 ) {
     Button(
         modifier = modifier,
         onClick = onClick,
         colors = colors,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        enabled = enabled
     ){
         Text(
             text = text.uppercase(Locale.ROOT),

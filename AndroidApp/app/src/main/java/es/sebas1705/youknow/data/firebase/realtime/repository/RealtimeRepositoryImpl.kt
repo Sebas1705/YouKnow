@@ -20,22 +20,18 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import es.sebas1705.youknow.core.classes.managers.TaskFlowManager
+import es.sebas1705.youknow.core.utlis.FlowResponseNothing
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
-import es.sebas1705.youknow.data.firebase.authentication.config.SettingsAuth
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.data.firebase.realtime.jsons.GroupJson
 import es.sebas1705.youknow.data.firebase.realtime.jsons.MessageJson
-import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.MessageModel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 /**
@@ -54,53 +50,73 @@ class RealtimeRepositoryImpl @Inject constructor(
     private val analyticsRepository: AnalyticsRepository
 ) : RealtimeRepository, ClassLogData {
 
+    //Properties:
     override val layer: Layer = Layer.Data
     override val repository: Repository = Repository.Realtime
 
+    //Managers:
+    private val taskFlowManager = TaskFlowManager(
+        this,
+        analyticsRepository::logError,
+        SettingsRT.ERROR_GENERIC_MESSAGE_FAIL,
+        SettingsRT.ERROR_GENERIC_MESSAGE_EX
+    )
+
+    //References:
     private val defaultReference = database.reference.child(SettingsRT.DEFAULT_REFERENCE)
     private val globalChatReference = database.reference.child(SettingsRT.CHAT_GLOBAL_REFERENCE)
     private val groupsReference = database.reference.child(SettingsRT.GROUPS_REFERENCE)
 
+    //Listeners:
     private var messagesListener: ValueEventListener? = null
     private var groupsListener: ValueEventListener? = null
 
+    //Tasks:
     override fun addMessageToGlobalChat(
         value: MessageModel
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            val ref = globalChatReference.child(value.messageId)
-            ref.setValue(value.toMessageJson())
-                .addOnCompleteListener {
-                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@RealtimeRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsRT.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { globalChatReference.child(value.messageId).setValue(value.toMessageJson()) },
+        onSuccessListener = { ResponseState.EmptySuccess },
+    )
 
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@RealtimeRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
-        awaitClose {
-            channel.close()
-            close()
-        }
-    }
+    override fun addGroup(
+        value: GroupModel
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { groupsReference.child(value.groupId).setValue(value.toGroupJson()) },
+        onSuccessListener = { ResponseState.EmptySuccess },
+    )
 
+    override fun removeGroup(
+        groupId: String
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { groupsReference.child(groupId).removeValue() },
+        onSuccessListener = { ResponseState.EmptySuccess },
+    )
+
+    override fun changeMembersToGroup(
+        groupId: String,
+        newMembersList: List<String>
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = {
+            groupsReference.child(groupId)
+                .updateChildren(mapOf(SettingsRT.MEMBERS_REFERENCE to newMembersList))
+        },
+        onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
+    override fun pushMembersToGroup(
+        groupId: String,
+        newMembersList: List<String>
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = {
+            groupsReference.child(groupId)
+                .child(SettingsRT.MEMBERS_REFERENCE)
+                .setValue(newMembersList)
+        },
+        onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
+    //Sets Listeners:
     override fun setMessagesListener(
         onDataChange: (List<MessageModel>) -> Unit,
         onCancelled: (String) -> Unit
@@ -132,88 +148,6 @@ class RealtimeRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun removeMessagesListener() {
-        messagesListener?.let {
-            globalChatReference.removeEventListener(it)
-            messagesListener = null
-        }
-    }
-
-    override fun addGroup(
-        value: GroupModel
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            val ref = groupsReference.child(value.groupId)
-            ref.setValue(value.toGroupJson())
-                .addOnCompleteListener {
-                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@RealtimeRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsRT.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@RealtimeRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
-        awaitClose {
-            channel.close()
-            close()
-        }
-    }
-
-    override fun addMemberToGroup(
-        groupId: String,
-        newMembersList: List<String>
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            val ref = groupsReference.child(groupId).child(SettingsRT.MEMBERS_REFERENCE)
-            ref.setValue(newMembersList)
-                .addOnCompleteListener {
-                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@RealtimeRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsRT.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@RealtimeRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
-        awaitClose {
-            channel.close()
-            close()
-        }
-    }
-
     override fun setGroupsListener(
         onDataChange: (List<GroupModel>) -> Unit,
         onCancelled: (String) -> Unit
@@ -238,6 +172,14 @@ class RealtimeRepositoryImpl @Inject constructor(
 
             }
         )
+    }
+
+    //Removes Listeners:
+    override fun removeMessagesListener() {
+        messagesListener?.let {
+            globalChatReference.removeEventListener(it)
+            messagesListener = null
+        }
     }
 
     override fun removeGroupsListener() {

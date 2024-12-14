@@ -17,25 +17,17 @@ package es.sebas1705.youknow.presentation.features.home.screens.social.composabl
  */
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,12 +36,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.core.utlis.millisToFormatDate
+import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.domain.model.MessageModel
+import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
+import es.sebas1705.youknow.presentation.composables.CustomIconButton
+import es.sebas1705.youknow.presentation.composables.SimpleOutlinedTextField
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Chat composable that will show the messages of the chat.
@@ -67,6 +64,8 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Chat(
+    windowState: WindowState = WindowState.default(),
+    firebaseId: String = "",
     messageModels: List<MessageModel> = (1..10).map {
         MessageModel(
             text = "Message $it",
@@ -80,6 +79,7 @@ fun Chat(
 
     var message by remember { mutableStateOf("") }
     val lazyListState = rememberLazyListState()
+
     LaunchedEffect(messageModels.size) {
         lazyListState.scrollToItem(
             if (messageModels.isEmpty()) 0
@@ -87,100 +87,77 @@ fun Chat(
         )
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize(),
-        state = lazyListState,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        stickyHeader {
+        CurvedBorderSurface(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .padding(bottom = SmallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedTextField(
+                SimpleOutlinedTextField(
                     modifier = Modifier
                         .padding(SmallPadding)
                         .weight(8f),
                     value = message,
-                    onValueChange = { message = it },
-                    placeholder = { Text("Message") },
-                    singleLine = true,
+                    placeholder = "Search",
+                    label = "Search",
+                    onValueChange = { message = it }
                 )
-
-                IconButton(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(end = SmallPadding)
-                        .weight(1f),
-                    enabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH,
+                CustomIconButton(
                     onClick = {
                         onMessageSend(message)
                         message = ""
                     },
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Send",
-                        modifier = Modifier,
-                    )
-                }
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    modifierButton = Modifier
+                        .padding(end = SmallPadding)
+                        .weight(1f),
+                    modifierIcon = Modifier.fillMaxSize(0.9f),
+                    contentDescription = "Send",
+                    tint = MaterialTheme.colorScheme.primary,
+                    enabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH
+                )
             }
         }
 
-        messageModels.sortedBy { it.time }.forEach {
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                ){
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .align(
-                                if (it.authorId == "1") Alignment.End
-                                else Alignment.Start
-                            )
-                            .height(150.dp)
-                            .padding(SmallPadding),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f)
-                            ) {
-                                Text(
-                                    text = it.authorName,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier
-                                        .padding(SmallPadding)
-                                        .weight(1f),
-                                )
-                                Text(
-                                    text = it.time.millisToFormatDate(),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    modifier = Modifier
-                                        .padding(SmallPadding)
-                                        .weight(1.5f),
-                                )
-                            }
-                            HorizontalDivider(thickness = 2.dp)
-                            Text(
-                                text = it.text,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(2f)
-                                    .padding(SmallPadding),
-                            )
-                        }
+        ApplyBack(
+            backId = windowState.backEmpty,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = SmallestPadding, bottom = SmallestPadding),
+                state = lazyListState,
+            ) {
+                messageModels.sortedBy { it.time }.forEach {
+                    item {
+                        MessageCard(
+                            messageModel = it,
+                            isCurrentUser = it.authorId == firebaseId
+                        )
                     }
                 }
             }
         }
+
+    }
+}
+
+@UiModePreviews
+@Composable
+private fun ChatPreview() {
+    YouKnowTheme {
+        Chat()
     }
 }

@@ -1,5 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.viewmodels
-/*
+package es.sebas1705.youknow.presentation.features.auth.viewmodels/*
  * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +17,15 @@ package es.sebas1705.youknow.presentation.features.auth.viewmodels
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.MVIBaseState
-import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
+import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
+import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,9 +42,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    private val authUsesCases: AuthUsesCases,
     private val userUsesCases: UserUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<AuthState, AuthIntent>() {
+
+    private val context = application.applicationContext
 
     override fun initState(): AuthState = AuthState.default()
 
@@ -60,106 +65,117 @@ class AuthViewModel @Inject constructor(
     private fun signInEmailAction(
         intent: AuthIntent.SignInWithEmail
     ) = execute(Dispatchers.IO) {
-        userUsesCases.signInEmailUser(
-            intent.email,
+        authUsesCases.signInEmailUser(intent.email,
             intent.password,
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
-                    if(userUsesCases.verifyJustLogged(firebaseId)){
-                        stopLoading()
-                        execute{ application.applicationContext.printTextInToast("You are already logged in other dispositive, please log out first from the other dispositive") }
-                        return@execute
-                    }
-                    val user = userUsesCases.getFirebaseUser()
-                    if(user != null && user.isEmailVerified){
-                        userUsesCases.setLogged(firebaseId, true)
-                        userUsesCases.getUser(firebaseId, true)
-                        stopLoading()
-                        execute(action = intent.onSuccess)
-                    }else{
-                        stopLoading()
-                        execute{ application.applicationContext.printTextInToast("Verify your email") }
-                    }
-
+                    userUsesCases.getLoggedFromUser(firebaseId, onSuccess = { logged ->
+                        if (logged) stopAndError(
+                            context.getString(R.string.already_logged), intent.onError
+                        )
+                        else {
+                            val user = authUsesCases.getFirebaseUser()
+                            if (user != null && user.isEmailVerified) {
+                                execute(Dispatchers.IO) {
+                                    userUsesCases.setLoggedToUser(
+                                        firebaseId,
+                                        true,
+                                        onEmptySuccess = {
+                                            stopLoading()
+                                            execute(action = intent.onSuccess)
+                                        },
+                                        onError = { stopAndError(it, intent.onError) })
+                                }
+                            } else stopAndError(
+                                context.getString(R.string.verify_email), intent.onError
+                            )
+                        }
+                    }, onError = { stopAndError(it, intent.onError) })
                 }
             },
-            onError = {
-                stopLoading()
-                execute { intent.onError(it) }
-            }
-        )
+            onError = { stopAndError(it, intent.onError) })
     }
 
     private fun signUpEmailAction(
         intent: AuthIntent.SignUpWithEmail
     ) = execute(Dispatchers.IO) {
-        userUsesCases.signUpEmailUser(
-            intent.nickname,
+        authUsesCases.signUpEmailUser(intent.nickname,
             intent.email,
             intent.password,
             onLoading = { startLoading() },
             onSuccess = { user ->
                 execute(Dispatchers.IO) {
-                    userUsesCases.saveUser(user)
-                    stopLoading()
-                    execute(action = intent.onSuccess)
+                    userUsesCases.saveUser(userModel = user,
+                        onLoading = { startLoading() },
+                        onEmptySuccess = {
+                            stopLoading()
+                            execute(action = intent.onSuccess)
+                        },
+                        onError = { stopAndError(it, intent.onError) })
                 }
             },
-            onError = {
-                stopLoading()
-                execute { intent.onError(it) }
-            }
-        )
+            onError = { stopAndError(it, intent.onError) })
     }
 
 
     private fun signOut(
         intent: AuthIntent.SignOut
     ) = execute(Dispatchers.IO) {
-        userUsesCases.signOut(
-            onSuccess = { firebaseId ->
-                execute(Dispatchers.IO) {
-                    userUsesCases.setLogged(firebaseId, false)
-                }
-                execute(action = intent.onSuccess)
-            },
-            onError = { execute { intent.onError(it) } }
-        )
+        authUsesCases.signOut(onSuccess = { firebaseId ->
+            execute(Dispatchers.IO) {
+                userUsesCases.setLoggedToUser(firebaseId,
+                    false,
+                    onLoading = { startLoading() },
+                    onEmptySuccess = {
+                        stopLoading()
+                        userUsesCases.removeUserListener()
+                        execute(action = intent.onSuccess)
+                    },
+                    onError = { stopAndError(it, intent.onError) })
+            }
+        }, onError = { stopAndError(it, intent.onError) })
     }
 
     private fun authWithGoogle(
         intent: AuthIntent.SignWithGoogle
     ) = execute(Dispatchers.IO) {
-        userUsesCases.signGoogle(
-            intent.context,
+        authUsesCases.signGoogle(intent.context,
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
+                Log.d("Google sign", "Firebase id: $firebaseId")
                 execute(Dispatchers.IO) {
-                    val wasLogged = userUsesCases.verifyWasLogged(firebaseId)
-                    if(wasLogged)
-                        userUsesCases.setLogged(firebaseId, true)
-                    else
-                        userUsesCases.saveUser(userUsesCases.signGoogle.createNewGoogleUser())
-                    stopLoading()
-                    execute(action = intent.onSuccess)
+                    userUsesCases.containsUser(firebaseId, onSuccess = { wasLogged ->
+                        Log.d("Google sign", "Was logged: $wasLogged")
+                        if (wasLogged) execute(Dispatchers.IO) {
+                            userUsesCases.setLoggedToUser(firebaseId, true, onEmptySuccess = {
+                                Log.d("Google sign", "Logged")
+                                stopLoading()
+                                execute(action = intent.onSuccess)
+                            }, onError = { stopAndError(it, intent.onError) })
+                        }
+                        else execute(Dispatchers.IO) {
+                            userUsesCases.saveUser(userModel = UserModel.newGoogleUser(authUsesCases.getFirebaseUser()!!),
+                                onEmptySuccess = {
+                                    Log.d("Google sign", "Saved")
+                                    stopLoading()
+                                    execute(action = intent.onSuccess)
+                                },
+                                onError = { stopAndError(it, intent.onError) })
+                        }
+                    }, onError = { stopAndError(it, intent.onError) })
                 }
             },
-            onError = {
-                stopLoading()
-                execute { intent.onError(it) }
-            }
-        )
+            onError = { stopAndError(it, intent.onError) })
     }
 
     private fun sendForgotPassword(
         intent: AuthIntent.SendForgotPassword
     ) = execute(Dispatchers.IO) {
-        userUsesCases.sendForgotPassword(
-            intent.email,
+        authUsesCases.sendForgotPassword(intent.email,
             onLoading = { startLoading() },
-            onSuccess = { stopLoading() },
-            onError = { stopLoading() }
+            onEmptySuccess = { stopLoading() },
+            onError = { stopAndError(it, intent.onError) }
         )
     }
 
@@ -171,6 +187,11 @@ class AuthViewModel @Inject constructor(
 
     private fun stopLoading() {
         updateUi { it.copy(isLoading = false) }
+    }
+
+    private fun stopAndError(error: String, onError: (String) -> Unit) {
+        stopLoading()
+        execute { onError(error) }
     }
 }
 
@@ -249,8 +270,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      * @see AuthIntent
      */
     data class SignOut(
-        val onSuccess: () -> Unit,
-        val onError: (String) -> Unit
+        val onSuccess: () -> Unit, val onError: (String) -> Unit
     ) : AuthIntent
 
     /**
@@ -263,9 +283,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      * @see AuthIntent
      */
     data class SignWithGoogle(
-        val context: Context,
-        val onSuccess: () -> Unit,
-        val onError: (String) -> Unit
+        val context: Context, val onSuccess: () -> Unit, val onError: (String) -> Unit
     ) : AuthIntent
 
     /**
@@ -276,7 +294,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      * @see AuthIntent
      */
     data class SendForgotPassword(
-        val email: String
+        val email: String, val onError: (String) -> Unit
     ) : AuthIntent
 
 }

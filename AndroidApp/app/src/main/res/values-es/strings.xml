@@ -17,20 +17,49 @@
     <string name="titlePage3">Seguimiento y Competencia</string>
     <string name="desPage3">Nuestra aplicación también incluye una función de seguimiento de tu progreso. Podrás ver estadísticas detalladas sobre tus respuestas, las categorías en las que destacas y las áreas en las que podrías mejorar. Además, puedes competir con tus amigos y otros usuarios, comparando puntuaciones y alcanzando nuevas metas. Estamos comprometidos en brindarte una herramienta educativa que no solo ponga a prueba tus conocimientos, sino que también te inspire a aprender más cada día. ¡Disfruta y sigue creciendo con nuestra aplicación de preguntas!</string>
 
+    <!-- Setting Screen -->
+    <string name="settings_title">Ajustes</string>
+    <string name="volume">Volumen</string>
+    <string name="contrast">Contraste</string>
+    <string name="low_contrast">Bajo</string>
+    <string name="medium_contrast">Medio</string>
+    <string name="high_contrast">Alto</string>
+    <string name="save_settings">Guardar ajustes</string>
+    <string name="reset_defaults">Restaurar ajustes</string>
+    <!-- End -->
+
     <!-- Auth Screens -->
-    <string name="textInitial">Muchas preguntas\nGratis en YouKnow</string>
-    <string name="ToSignUp">Registrate gratis</string>
-    <string name="ToGoogleLog">Continua con Google</string>
-    <string name="ToEmailLog">Continua con Email</string>
-    <string name="textSignUp">Rellene los campos a continuación:</string>
+    <!-- Log Screen -->
+    <string name="access">Acceder</string>
+    <string name="wanna_register">¿Crear cuenta?</string>
+    <string name="forgot_password">¿Contraseña olvidada?</string>
+    <!-- Menu Screen -->
+    <string name="initial_text">Muchas preguntas\nGratis en YouKnow</string>
+    <string name="sign_up">Registrate gratis</string>
+    <string name="google_log">Continua con Google</string>
+    <string name="email_log">Continua con Email</string>
+    <!-- Sign Screen -->
+    <string name="username">Nombre de usuario</string>
+    <string name="repeat">Repeat</string>
+    <string name="any_not_match">Correos o contraseñas no coinciden</string>
+    <string name="signup">Crear</string>
+    <string name="both">Ambos\n</string>
+    <!-- ErrorInfo Window -->
+    <string name="title_error">Mensaje de error</string>
+    <!-- ForgotPassword Window -->
+    <string name="enter_email">Introduzca el email de su cuenta:</string>
+    <!-- Common -->
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
-    <string name="signup">Crear</string>
-    <string name="login">Acceder</string>
-    <string name="textLogError">Email o contraseñas incorrectos</string>
-    <string name="titleError">Mensaje de error</string>
+    <string name="login_error">Email o contraseñas incorrectos</string>
+    <!-- AuthViewModel -->
+    <string name="already_logged">Ya has iniciado en otro dispositivo, primero salte de él</string>
+    <string name="verify_email">Verifica primero tu email</string>
+    <!-- End -->
 
-    <!-- Social Screens -->
+    <!-- Home Screens -->
+    <!-- Social Screen -->
+    <string name="user_not_found">Usuario no encontrado, reinicia la app</string>
     <string name="Main">Casa</string>
     <string name="Profile">Perfil</string>
     <string name="Info">Info</string>
@@ -43,18 +72,24 @@
     <string name="titleCreateGroup">Crear un grupo</string>
     <string name="groupName">Nombre del grupo</string>
     <string name="groupDescription">Descripción del grupo</string>
+    <!-- Profile Screen -->
+    <string name="profile_title">Mi perfil</string>
+    <string name="url_photo">Foto URL</string>
+    <string name="invalid_url">La URL no corresponde a una imagen, prueba otra</string>
+    <string name="nickname">Nombre de usuario</string>
+    <string name="user_data_title">Mis datos</string>
+    <string name="change_nickname_title">Cambiar nombre</string>
+    <string name="change_nickname_body">¿Seguro que quieres cambiar a </string>
+    <string name="change_nickname_body2"> o por completo a </string>
+    <string name="change_nickname_body3">\?</string>
+    <!-- UserViewModel -->
+    <string name="user_not_logged">Usuario no cargado correctamente, prueba de nuevo o contacta con soporte</string>
 
-    <!-- Settings Screen -->
-    <string name="settings">Ajustes</string>
-    <string name="volume">Volumen</string>
-    <string name="contrast">Contraste</string>
-    <string name="forgotPassword">¿Contraseña olvidada?</string>
-    <string name="EnterEmail">Introduzca el email de su cuenta:</string>
     <string name="loading">Cargando…</string>
-    <string name="wannaRegister">¿Crear cuenta?</string>
-    <string name="username">Nombre de usuario</string>
-    <string name="emailPasswordNotMatch">Correos o contraseñas no coinciden</string>
-
+    <string name="firebase_id">FirebaseId</string>
+    <string name="credits">Credits</string>
+    <string name="points">Points</string>
+    <string name="delete_account">Delete account</string>
 
 
 </resources>

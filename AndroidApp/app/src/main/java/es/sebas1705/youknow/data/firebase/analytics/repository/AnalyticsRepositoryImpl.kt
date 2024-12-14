@@ -21,8 +21,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
-import es.sebas1705.youknow.data.firebase.analytics.config.Layer
-import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.config.UserProperty
 import es.sebas1705.youknow.domain.model.AnalyticsModel
 import javax.inject.Inject
@@ -40,14 +38,14 @@ import javax.inject.Inject
  */
 class AnalyticsRepositoryImpl @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
-): AnalyticsRepository {
+) : AnalyticsRepository {
 
     override fun logEvent(event: EventLog, bundle: Bundle) {
         firebaseAnalytics.logEvent(event.tag, bundle)
     }
 
     override fun logError(classLogData: ClassLogData, error: String) {
-        firebaseAnalytics.logEvent(EventLog.Error.tag){
+        firebaseAnalytics.logEvent(EventLog.Error.tag) {
             param("layer", classLogData.layer.tag)
             param("repository", classLogData.repository.tag)
             param("error", error)
@@ -59,7 +57,7 @@ class AnalyticsRepositoryImpl @Inject constructor(
     }
 
     override fun sendEvent(analyticsModel: AnalyticsModel) {
-        firebaseAnalytics.logEvent(analyticsModel.title){
+        firebaseAnalytics.logEvent(analyticsModel.title) {
             analyticsModel.analyticsString.forEach { (key, value) -> param(key, value) }
             analyticsModel.analyticsLong.forEach { (key, value) -> param(key, value) }
             analyticsModel.analyticsDouble.forEach { (key, value) -> param(key, value) }

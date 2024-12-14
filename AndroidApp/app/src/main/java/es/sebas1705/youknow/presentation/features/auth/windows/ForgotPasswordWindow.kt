@@ -37,6 +37,8 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
+import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.presentation.composables.RequestDialog
 
 /**
  * Composable that displays a dialog to recover the password.
@@ -52,18 +54,51 @@ import androidx.compose.ui.text.style.TextAlign
  */
 @Composable
 fun ForgotPasswordWindow(
+    windowState: WindowState = WindowState.default(),
     modifier: Modifier = Modifier,
     onConfirm: (String) -> Unit = {},
     onDismiss: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
 
+    RequestDialog(
+        confirmButton = {
+            Button(onClick = {onConfirm(email)}) {
+                Text(text = stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text(text = stringResource(R.string.dismiss))
+            }
+        },
+        onDismissRequest = onDismiss,
+        modifier,
+        title = {
+            Text(
+                text = stringResource(R.string.enter_email),
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center
+            )
+        },
+        body = {
+            CustomOutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = email,
+                onValueChange = { email = it },
+                placeholder = stringResource(R.string.email),
+                label = stringResource(R.string.email),
+            )
+        },
+    )
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(R.string.EnterEmail),
+                text = stringResource(R.string.enter_email),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center

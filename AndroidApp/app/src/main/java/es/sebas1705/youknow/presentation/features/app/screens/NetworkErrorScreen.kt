@@ -22,22 +22,22 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
+import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
-import es.sebas1705.youknow.R
 import es.sebas1705.youknow.presentation.composables.Subtitle
+import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Screen to show when there is a network error.

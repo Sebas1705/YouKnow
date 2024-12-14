@@ -18,6 +18,7 @@ package es.sebas1705.youknow.data.firebase.authentication.repository
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseUser
+import es.sebas1705.youknow.core.utlis.FlowResponseNothing
 import es.sebas1705.youknow.data.model.ResponseState
 import kotlinx.coroutines.flow.Flow
 
@@ -29,20 +30,22 @@ import kotlinx.coroutines.flow.Flow
  */
 interface AuthenticationRepository {
 
+    //Tasks:
+
     /**
      * Sign up with email and password
      *
      * @param email [String]: Email to sign up
      * @param password [String]: Password to sign up
      *
-     * @return [Flow] with the response of the operation
+     * @return [Flow]<[ResponseState]>: with the response of the operation
      *
      * @see Flow
      */
     fun signUpWithEmail(
         email: String,
         password: String
-    ): Flow<ResponseState<Nothing>>
+    ): FlowResponseNothing
 
     /**
      * Sign in with email and password
@@ -50,47 +53,49 @@ interface AuthenticationRepository {
      * @param email [String]: Email to sign in
      * @param password [String]: Password to sign in
      *
-     * @return [Flow] with the response of the operation
+     * @return [Flow]<[ResponseState]>: with the response of the operation
      *
      * @see Flow
      */
     fun signInWithEmail(
         email: String,
         password: String
-    ): Flow<ResponseState<Nothing>>
+    ): FlowResponseNothing
 
     /**
      * Sign in with Google
      *
      * @param context [Context]: Context to sign in
      *
-     * @return [Flow] with the response of the operation
+     * @return [Flow]<[ResponseState]>: with the response of the operation
      *
      * @see Flow
      */
     suspend fun signWithGoogle(
         context: Context
-    ): Flow<ResponseState<Nothing>>
+    ): FlowResponseNothing
 
     /**
      * Send a forgot password email
      *
      * @param email [String]: Email to send the forgot password email
      *
-     * @return [Flow] with the response of the operation
+     * @return [Flow]<[ResponseState]>: with the response of the operation
      *
      * @see Flow
      */
-    fun sendForgotPassword(email: String): Flow<ResponseState<Nothing>>
+    fun sendForgotPassword(email: String): FlowResponseNothing
+
+    //Functions:
 
     /**
      * Sign out the user
      *
-     * @return [Flow] with the response of the operation
+     * @return [Boolean] with the result
      *
      * @see Flow
      */
-    fun signOut() : Boolean
+    fun signOut(): Boolean
 
     /**
      * Check if the user is logged

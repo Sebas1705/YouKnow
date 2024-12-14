@@ -16,8 +16,11 @@ package es.sebas1705.youknow.presentation.features.home.composables
  *
  */
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
@@ -30,10 +33,14 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
 import es.sebas1705.youknow.presentation.features.home.navigation.MainScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.ProfileScreen
+import es.sebas1705.youknow.presentation.ui.theme.SurfaceBorderWidth
+import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -53,12 +60,17 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun HomeBottomNavigationBar(
     items: List<BottomNavigationItem>,
     selectedItem: Int,
-    onItemClick: (Int) -> Unit
+    onItemClick: (Int, Int) -> Unit
+) = CurvedBorderSurface(
+    modifier = Modifier
+    .fillMaxWidth()
 ) {
     NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        tonalElevation = TonalElevation.Level5
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -68,7 +80,7 @@ fun HomeBottomNavigationBar(
                 label = {
                     Text(
                         text = item.label,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 },
                 icon = {
@@ -79,7 +91,7 @@ fun HomeBottomNavigationBar(
                     )
 
                 },
-                onClick = { onItemClick(index) },
+                onClick = { onItemClick(index, selectedItem) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.secondary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -104,7 +116,11 @@ fun HomeNavigationBarPreview() {
         HomeBottomNavigationBar(items = listOf(
             BottomNavigationItem(icon = Icons.Default.Home, label = "Home", ProfileScreen),
             BottomNavigationItem(icon = Icons.Default.Search, label = "Search", MainScreen),
-            BottomNavigationItem(icon = Icons.Default.Bookmark, label = "Bookmark", ProfileScreen),
-        ), selectedItem = 2, onItemClick = {})
+            BottomNavigationItem(
+                icon = Icons.Default.Bookmark,
+                label = "Bookmark",
+                ProfileScreen
+            ),
+        ), selectedItem = 2, onItemClick = { _, _ -> })
     }
 }

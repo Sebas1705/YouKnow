@@ -59,3 +59,12 @@ val CurvedShape: Shape = GenericShape { size, _ ->
     )
     close()
 }
+
+val OnlyDownShape: Shape = GenericShape { size, _ ->
+    val width = size.width
+    val height = size.height
+
+    moveTo(x = width * 0f, y = height * 1f)
+    lineTo(x = width * 1f, y = height * 1f)
+    close()
+}

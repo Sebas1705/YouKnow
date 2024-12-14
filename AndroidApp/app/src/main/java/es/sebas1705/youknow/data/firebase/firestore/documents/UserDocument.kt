@@ -23,7 +23,6 @@ import es.sebas1705.youknow.domain.model.UserModel
 /**
  * Data class to represent the user document in Firestore
  *
- * @property firebaseId [String]: Firebase id
  * @property email [String]: Email
  * @property provider [Int]: Provider
  * @property nickName [String]: Nickname
@@ -32,6 +31,7 @@ import es.sebas1705.youknow.domain.model.UserModel
  * @property points [Int]: Points
  * @property credits [Int]: Credits
  * @property friends [List]<[String]>: Friends
+ * @property logged [Boolean]: Logged
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -45,8 +45,8 @@ data class UserDocument(
     val points: Int = 0,
     val credits: Int = 0,
     val friends: List<String> = emptyList(),
-    val logged : Boolean = false
-){
+    val logged: Boolean = false
+) {
     fun toUserModel(firebaseId: String) = UserModel(
         firebaseId = firebaseId,
         email = email,

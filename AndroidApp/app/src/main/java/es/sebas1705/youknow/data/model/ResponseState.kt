@@ -18,6 +18,7 @@ package es.sebas1705.youknow.data.model
 
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 
+
 /**
  * Sealed class to represent the state of the data
  *
@@ -41,13 +42,13 @@ sealed class ResponseState<out T> {
      * @param onEmptySuccess () -> Unit: Function to handle the empty success state
      * @param onError (Error) -> Unit: Function to handle the error state
      */
-    fun catcher(
-        onLoading: () -> Unit = {},
-        onSuccess: (T) -> Unit = {},
-        onEmptySuccess: () -> Unit = {},
-        onError: (Error) -> Unit = {}
-    ){
-        when(this){
+    suspend fun catcher(
+        onLoading: suspend () -> Unit = {},
+        onSuccess: suspend (T) -> Unit = {},
+        onEmptySuccess: suspend () -> Unit = {},
+        onError: suspend (Error) -> Unit = {}
+    ) {
+        when (this) {
             is Loading -> onLoading()
             is Success -> onSuccess(data)
             is EmptySuccess -> onEmptySuccess()
@@ -78,7 +79,7 @@ sealed class ResponseState<out T> {
      *
      * @see ResponseState
      */
-    object EmptySuccess: ResponseState<Nothing>()
+    object EmptySuccess : ResponseState<Nothing>()
 
     /**
      * Error state
@@ -95,7 +96,7 @@ sealed class ResponseState<out T> {
         val type: ErrorResponseType,
         val message: String,
         private val loggerAction: (ClassLogData, String) -> Unit
-    ): ResponseState<Nothing>(){
+    ) : ResponseState<Nothing>() {
         init {
             loggerAction(classLogData, "${type.tag}: $message")
         }

@@ -16,10 +16,10 @@ package es.sebas1705.youknow.presentation.features.home.screens.social.composabl
  *
  */
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,21 +27,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Output
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.Constants
+import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.core.utlis.makeBold
 import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
+import es.sebas1705.youknow.presentation.composables.CustomIconButton
+import es.sebas1705.youknow.presentation.composables.InteractiveCard
+import es.sebas1705.youknow.presentation.ui.theme.CardDividerThickness
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Group composable that will show the group information.
@@ -56,130 +61,124 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Group(
     groupModel: GroupModel,
+    windowState: WindowState = WindowState.default(),
     admin: Boolean = true,
+    onOutButton: () -> Unit = {},
+    onInfoButton: (String) -> Unit = {},
+    onKickButton: (String) -> Unit = {},
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
+        CurvedBorderSurface(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(SmallPadding),
+                .fillMaxWidth()
         ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                Text(
-                    text = groupModel.name,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(SmallPadding),
-                )
-                HorizontalDivider()
+            Column {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(2f)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = groupModel.description,
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = groupModel.name,
+                        style = MaterialTheme.typography.titleLarge.makeBold(),
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(3f)
-                            .padding(SmallPadding),
+                            .padding(SmallestPadding)
+                            .padding(start = SmallPadding)
                     )
-                    VerticalDivider()
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f)
-                            .padding(SmallPadding),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Members",
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        )
-                        Text(
-                            text = "${groupModel.members.size}/${Constants.MAX_GROUP}",
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        )
-                    }
+                    CustomIconButton(
+                        onClick = onOutButton,
+                        icon = Icons.Default.Output,
+                        modifierButton = Modifier.padding(SmallestPadding),
+                        contentDescription = "Out",
+                    )
                 }
-
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    thickness = CardDividerThickness,
+                    modifier = Modifier.padding(
+                        vertical = SmallestPadding,
+                        horizontal = SmallPadding
+                    )
+                )
+                Text(
+                    text = groupModel.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(SmallPadding),
+                )
             }
+        }
 
-            Text(
-                text = "Members:",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.tertiaryContainer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SmallestPadding),
-            )
-
+        ApplyBack(
+            backId = windowState.backEmpty,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f)
                     .padding(SmallPadding),
             ) {
-                items(groupModel.members.size) { index ->
-                    Card(
+                stickyHeader {
+                    Text(
+                        text = "Members (${groupModel.members.size}/${Constants.MAX_GROUP}):",
+                        style = MaterialTheme.typography.titleMedium.makeBold(),
+                        color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(SmallPadding),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(SmallPadding),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Member $index",
-                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                                modifier = Modifier
-                                    .padding(SmallPadding),
-                            )
-                            IconButton(
-                                onClick = { /*TODO*/ },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.AddCircleOutline,
-                                    contentDescription = "Fight",
-                                    modifier = Modifier
-                                        .padding(SmallPadding),
-                                )
-                            }
-                            if (admin) IconButton(
-                                onClick = { /*TODO*/ },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete",
-                                    modifier = Modifier
-                                        .padding(SmallPadding),
-                                )
-                            }
-                        }
-                    }
+                            .padding(SmallestPadding),
+                    )
+                }
 
+                items(groupModel.members.size) { index ->
+                    InteractiveCard(
+                        title = groupModel.members[index].split("-")[1],
+                        subtitle = if (groupModel.leaderUID == groupModel.members[index]) "(Leader)" else "",
+                        buttons = {
+                            CustomIconButton(
+                                onClick = { onInfoButton(groupModel.members[index].split("-")[0]) },
+                                icon = Icons.Filled.AddCircleOutline,
+                                contentDescription = "Fight",
+                                modifierIcon = Modifier.padding(SmallestPadding),
+                            )
+                            if (admin) CustomIconButton(
+                                onClick = { onKickButton(groupModel.members[index]) },
+                                icon = Icons.Filled.Delete,
+                                contentDescription = "Delete",
+                                modifierIcon = Modifier.padding(SmallestPadding),
+                            )
+                        },
+                        modifier = Modifier.padding(bottom = SmallPadding)
+                    )
                 }
             }
         }
     }
+}
 
+@UiModePreviews
+@Composable
+fun GroupPreview() {
+    YouKnowTheme {
+        Group(
+            GroupModel(
+                "Group 1",
+                "Description of the group 1",
+                listOf("Member 1", "Member 2", "Member 3", "Member 4", "Member 5"),
+                "Leader 1"
+            ),
+            admin = false
+        )
+    }
 }

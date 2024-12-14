@@ -16,6 +16,7 @@ package es.sebas1705.youknow.data.firebase.realtime.repository
  *
  */
 
+import es.sebas1705.youknow.core.utlis.FlowResponseNothing
 import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.MessageModel
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface RealtimeRepository {
 
+    //Tasks:
     /**
      * Add a message to the global chat
      *
@@ -39,8 +41,63 @@ interface RealtimeRepository {
      * @see MessageModel
      * @see Flow
      */
-    fun addMessageToGlobalChat(value: MessageModel) : Flow<ResponseState<Nothing>>
+    fun addMessageToGlobalChat(value: MessageModel): FlowResponseNothing
 
+    /**
+     * Add a group to the database
+     *
+     * @param groupModel [GroupModel]: Group to add
+     *
+     * @return [Flow] with the response of the operation
+     *
+     * @see GroupModel
+     * @see Flow
+     */
+    fun addGroup(groupModel: GroupModel): FlowResponseNothing
+
+    /**
+     * Delete a group from the database
+     *
+     * @param groupModel [GroupModel]: Group to delete
+     *
+     * @return [Flow] with the response of the operation
+     *
+     * @see GroupModel
+     * @see Flow
+     */
+    fun removeGroup(groupId: String): FlowResponseNothing
+
+    /**
+     * Change the members of a group
+     *
+     * @param groupId [String]: Group id
+     * @param newMembersList [List]<[String]>: New members list
+     *
+     * @return [Flow] with the response of the operation
+     *
+     * @see Flow
+     */
+    fun changeMembersToGroup(
+        groupId: String,
+        newMembersList: List<String>
+    ): FlowResponseNothing
+
+    /**
+     * Push members to a group
+     *
+     * @param groupId [String]: Group id
+     * @param newMembersList [List]<[String]>: New members list
+     *
+     * @return [Flow] with the response of the operation
+     *
+     * @see Flow
+     */
+    fun pushMembersToGroup(
+        groupId: String,
+        newMembersList: List<String>
+    ): FlowResponseNothing
+
+    //Sets Listeners:
     /**
      * Get the messages from the global chat
      *
@@ -54,20 +111,29 @@ interface RealtimeRepository {
         onCancelled: (String) -> Unit
     )
 
-    fun removeMessagesListener()
-
-    fun addGroup(groupModel: GroupModel) : Flow<ResponseState<Nothing>>
-
+    /**
+     * Get the groups from the database
+     *
+     * @return [Flow] with the [ResponseState] of the [List]<[GroupModel]>
+     *
+     * @see GroupModel
+     * @see Flow
+     */
     fun setGroupsListener(
         onDataChange: (List<GroupModel>) -> Unit,
         onCancelled: (String) -> Unit
     )
 
-    fun addMemberToGroup(
-        groupId:String,
-        newMembersList: List<String>
-    ) : Flow<ResponseState<Nothing>>
 
+    //Removes Listeners:
+    /**
+     * Remove the listener from the messages
+     */
+    fun removeMessagesListener()
+
+    /**
+     * Remove the listener from the groups
+     */
     fun removeGroupsListener()
 
 }

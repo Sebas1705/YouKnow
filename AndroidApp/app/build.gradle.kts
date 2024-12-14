@@ -106,6 +106,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
     // Compose:
+    implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)

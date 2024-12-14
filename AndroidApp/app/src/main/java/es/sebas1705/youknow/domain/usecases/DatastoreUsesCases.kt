@@ -16,7 +16,7 @@ package es.sebas1705.youknow.domain.usecases
  *
  */
 
-import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
+import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import kotlinx.coroutines.flow.Flow
 

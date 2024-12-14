@@ -16,7 +16,7 @@ package es.sebas1705.youknow.data.local.datastore.config
  *
  */
 
-import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
+import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 
 /**
  * Default values for the data store
@@ -28,7 +28,7 @@ import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-object DefaultValuesDS{
+object DefaultValuesDS {
     const val FIRST_TIME = false
     const val APP_VOLUME = 1.0f
     val APP_UI_CONTRAST = ThemeContrast.Low

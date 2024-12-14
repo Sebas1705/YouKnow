@@ -1,5 +1,7 @@
 package es.sebas1705.youknow.data.firebase.firestore.repository
 
+import es.sebas1705.youknow.core.utlis.FlowResponse
+import es.sebas1705.youknow.core.utlis.FlowResponseNothing
 import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.UserModel
 import kotlinx.coroutines.flow.Flow
@@ -34,9 +36,11 @@ interface FirestoreRepository {
      *
      * @param userModel [UserModel]: User to save
      *
-     * @return [Flow]<[ResponseState]<[Boolean]>>: Flow with the response of the operation
+     * @return [Flow]<[ResponseState]<Nothing>>: Flow with the response of the operation
      */
-    suspend fun saveUser(userModel: UserModel)
+    fun saveUser(
+        userModel: UserModel
+    ): FlowResponseNothing
 
 
     /**
@@ -46,31 +50,142 @@ interface FirestoreRepository {
      *
      * @return [Flow]<[ResponseState]<[UserModel]>>: Flow with the response of the operation
      */
-    suspend fun getUser(
+    fun getUser(
         userId: String
-    ): UserModel?
+    ): FlowResponse<UserModel>
 
-    suspend fun setLoggedToUser(
-        userId: String,
+    /**
+     * Set the logged status of a user
+     *
+     * @param userId [String]: Id of the user to set the logged status
+     * @param logged [Boolean]: Logged status to set
+     *
+     * @return [Flow]<[ResponseState]<Nothing>>: Flow with the response of the operation
+     */
+    fun setLoggedToUser(
+        firebaseId: String,
         logged: Boolean
-    )
+    ): FlowResponseNothing
 
-    suspend fun getLoggedFromUser(
+    /**
+     * Get the logged status of a user
+     *
+     * @param userId [String]: Id of the user to get the logged status
+     *
+     * @return [FlowResponse]<[Boolean]>: Flow with the response of the operation
+     */
+    fun getLoggedFromUser(
         userId: String
-    ): Boolean
+    ): FlowResponse<Boolean>
 
-    suspend fun setCreditsToUser(
+    /**
+     * Add credits to a user
+     *
+     * @param userId [String]: Id of the user to add the credits
+     * @param oldCredits [Int]: Old credits of the user
+     * @param addCredits [Int]: Credits to add
+     *
+     * @return [FlowResponse]<[Int]>: Flow with the response of the operation
+     */
+    fun addCreditsToUser(
         userId: String,
-        newCredits: Int
+        oldCredits: Int,
+        addCredits: Int
+    ): FlowResponse<Int>
+
+    /**
+     * Set the group of a user
+     *
+     * @param firebaseId [String]: Id of the user to set the group
+     * @param groupId [String]: Id of the group to set
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun setGroupToUser(
+        firebaseId: String,
+        groupId: String?
+    ): FlowResponseNothing
+
+    /**
+     * Remove the group of a user
+     *
+     * @param firebaseId [String]: Id of the user to remove the group
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun removeGroupFromUser(
+        firebaseId: String
+    ): FlowResponseNothing
+
+    /**
+     * Change the photo of a user
+     *
+     * @param firebaseId [String]: Id of the user to change the photo
+     * @param photoUrl [String]: Url of the new photo
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun changePhotoToUser(
+        firebaseId: String,
+        photoUrl: String
+    ): FlowResponseNothing
+
+    /**
+     * Change the nickname of a user
+     *
+     * @param firebaseId [String]: Id of the user to change the nickname
+     * @param nickname [String]: New nickname
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun changeNicknameToUser(
+        firebaseId: String,
+        nickname: String
+    ): FlowResponseNothing
+
+    /**
+     * Get the group of a user
+     *
+     * @param firebaseId [String]: Id of the user to get the group
+     *
+     * @return [FlowResponse]<[Boolean]>: Flow with the response of the operation
+     */
+    fun containsUser(
+        firebaseId: String
+    ): FlowResponse<Boolean>
+
+    /**
+     * Get the ranking of the users
+     *
+     * @return [FlowResponse]<[List]<[UserModel]>>: Flow with the response of the operation
+     */
+    fun getUserRanking(): FlowResponse<List<UserModel>>
+
+    /**
+     * Get a user by nickname
+     *
+     * @param nickname [String]: Nickname of the user to get
+     *
+     * @return [FlowResponse]<[UserModel]>: Flow with the response of the operation
+     */
+    fun getUserByNickname(
+        nickname: String
+    ): FlowResponse<UserModel>
+
+    // Listeners:
+    /**
+     * Set a listener to get the user data
+     *
+     * @param firebaseId [String]: Id of the user to listen
+     * @param onDataChange [(UserModel) -> Unit]: Function to call when the data changes
+     */
+    fun setUserListener(
+        firebaseId: String,
+        onDataChange: (UserModel) -> Unit,
     )
 
-    suspend fun setGroupToUser(
-        userId: String,
-        groupId: String
-    )
-
-    suspend fun containsUser(
-        userId: String
-    ): Boolean
-
+    /**
+     * Remove the listener of the user data
+     */
+    fun removeUserListener()
 }

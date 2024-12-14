@@ -17,7 +17,7 @@ package es.sebas1705.youknow.presentation.features.app.screens
  */
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Restore
@@ -33,31 +34,27 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.twoDecimalFormat
+import es.sebas1705.youknow.core.utlis.percentageFormat
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CustomEmptyIconButton
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
-import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
+import es.sebas1705.youknow.presentation.composables.CustomIconTextButton
+import es.sebas1705.youknow.presentation.composables.Spacers.HorizontalSpacer
+import es.sebas1705.youknow.presentation.composables.TitleSurface
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsIntent
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsState
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsViewModel
-import es.sebas1705.youknow.presentation.ui.classes.ThemeContrast
-import es.sebas1705.youknow.presentation.ui.theme.CurvedShape
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -75,14 +72,32 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun SettingsScreen(
+    windowState: WindowState,
     settingsState: SettingsState,
     settingsViewModel: SettingsViewModel,
     onBack: () -> Unit
 ) {
     SettingsDesign(
-        settingsViewModel,
+        windowState,
         settingsState,
-        onBack
+        onBack,
+        onVolumeSlideBarChange = {
+            settingsViewModel.eventHandler(SettingsIntent.ChangeVolume(it))
+        },
+        onContrastClick = {
+            settingsViewModel.eventHandler(SettingsIntent.ChangeContrast(it))
+        },
+        onSaveClick = {
+            settingsViewModel.eventHandler(SettingsIntent.SaveSettings)
+        },
+        onRestoreClick = {
+            settingsViewModel.eventHandler(
+                SettingsIntent.ChangeContrast(DefaultValuesDS.APP_UI_CONTRAST)
+            )
+            settingsViewModel.eventHandler(
+                SettingsIntent.ChangeVolume(DefaultValuesDS.APP_VOLUME)
+            )
+        }
     )
 }
 
@@ -90,7 +105,7 @@ fun SettingsScreen(
  * Design of the Settings Screen.
  * It contains the UI elements of the Settings Screen.
  * It has a [Slider] to change the volume of the app and [CustomFilledButton] to change the contrast of the theme.
- * It also has a [CustomEmptyIconButton] to save the settings and restore the default settings.
+ * It also has a [CustomIconTextButton] to save the settings and restore the default settings.
  * It has a [IconButton] to go back to the previous screen.
  *
  * @param settingsViewModel [SettingsViewModel]: ViewModel for the Settings.
@@ -105,137 +120,112 @@ fun SettingsScreen(
  */
 @Composable
 private fun SettingsDesign(
-    settingsViewModel: SettingsViewModel? = null,
-    settingsState: SettingsState? = null,
-    onBack: () -> Unit = { }
+    windowState: WindowState = WindowState.default(),
+    settingsState: SettingsState = SettingsState.default(),
+    onBack: () -> Unit = { },
+    onVolumeSlideBarChange: (Float) -> Unit = { },
+    onContrastClick: (ThemeContrast) -> Unit = { },
+    onSaveClick: () -> Unit = { },
+    onRestoreClick: () -> Unit = { }
 ) {
     BackHandler { onBack() }
 
     ApplyBack(
-        backId = R.drawable.back_portrait_empty
+        backId = windowState.backFill
     ) {
         IconButton(
             modifier = Modifier
+                .padding(SmallestPadding)
+                .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
+                .padding(SmallestPadding / 2)
                 .align(Alignment.TopStart)
-                .size(80.dp)
-                .padding(SmallestPadding),
+                .size(40.dp),
             onClick = { onBack() }) {
             Icon(
                 modifier = Modifier.fillMaxSize(),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                tint = MaterialTheme.colorScheme.onBackground,
-                contentDescription = "Back"
+                tint = MaterialTheme.colorScheme.tertiary,
+                contentDescription = "Back",
             )
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Surface(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = CurvedShape,
-                shadowElevation = HugePadding,
-                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            HorizontalSpacer(0.4f)
+            TitleSurface(text = stringResource(R.string.settings_title))
+            HorizontalSpacer(0.2f)
+            var titleStyle = windowState.heightType.filter(
+                MaterialTheme.typography.titleSmall,
+                MaterialTheme.typography.titleLarge,
+                MaterialTheme.typography.headlineMedium
+            )
+            Text(
+                text = stringResource(R.string.volume) +
+                        ": ${settingsState.volume.percentageFormat()}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = titleStyle
+            )
+            Slider(
+                modifier = Modifier
+                    .weight(windowState.heightType.filter(0.2f, 0.25f, 0.3f))
+                    .padding(vertical = MediumPadding)
+                    .padding(horizontal = MediumPadding)
+                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
+                value = settingsState.volume,
+                onValueChange = onVolumeSlideBarChange,
+                steps = 39,
+            )
+            Text(
+                text = stringResource(R.string.contrast) +
+                        ": ${settingsState.themeContrast.name}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = titleStyle
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f))
+                    .padding(vertical = MediumPadding)
             ) {
-                Text(
-                    text = "Settings",
-                    style = MaterialTheme.typography.displayMedium
-                        .copy(fontWeight = FontWeight.ExtraBold, fontStyle = FontStyle.Italic),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
+                CustomFilledButton(
+                    text = stringResource(R.string.low_contrast),
+                    onClick = { onContrastClick(ThemeContrast.Low) },
+                )
+                CustomFilledButton(
+                    text = stringResource(R.string.medium_contrast),
+                    onClick = { onContrastClick(ThemeContrast.Medium) },
+                )
+                CustomFilledButton(
+                    text = stringResource(R.string.high_contrast),
+                    onClick = { onContrastClick(ThemeContrast.High) },
                 )
             }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 20.dp),
-                    text = stringResource(R.string.volume) +
-                            ": ${settingsState?.volume?.twoDecimalFormat() ?: "0.50"}",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Slider(
-                    modifier = Modifier
-                        .padding(horizontal = SmallPadding)
-                        .padding(bottom = MediumPadding),
-                    value = settingsState?.volume ?: 0.5f,
-                    onValueChange = {
-                        settingsViewModel?.eventHandler(
-                            SettingsIntent.ChangeVolume(it)
-                        )
-                    },
-                    steps = 19,
-                )
-                Text(
-                    modifier = Modifier.padding(bottom = 20.dp),
-                    text = stringResource(R.string.contrast) +
-                            ": ${settingsState?.themeContrast?.name ?: "Low"}",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    CustomFilledButton(
-                        text = "Low",
-                        onClick = {
-                            settingsViewModel?.eventHandler(
-                                SettingsIntent.ChangeContrast(ThemeContrast.Low)
-                            )
-                        },
-                    )
-                    CustomFilledButton(
-                        text = "Medium",
-                        onClick = {
-                            settingsViewModel?.eventHandler(
-                                SettingsIntent.ChangeContrast(ThemeContrast.Medium)
-                            )
-                        },
-                    )
-                    CustomFilledButton(
-                        text = "High",
-                        onClick = {
-                            settingsViewModel?.eventHandler(
-                                SettingsIntent.ChangeContrast(ThemeContrast.High)
-                            )
-                        },
-                    )
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                CustomEmptyIconButton(
-                    text = "Save Settings",
-                    imageVector = Icons.Default.Save,
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                    onClick = {
-                        settingsViewModel?.eventHandler(SettingsIntent.SaveSettings)
-                    }
-                )
-                SimpleSpacer()
-                CustomEmptyIconButton(
-                    text = "Restore Default Settings",
-                    imageVector = Icons.Default.Restore,
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                    onClick = {
-                        settingsViewModel?.eventHandler(
-                            SettingsIntent.ChangeContrast(DefaultValuesDS.APP_UI_CONTRAST)
-                        )
-                        settingsViewModel?.eventHandler(
-                            SettingsIntent.ChangeVolume(DefaultValuesDS.APP_VOLUME)
-                        )
-                    }
-                )
-            }
+            HorizontalSpacer(0.1f)
+            CustomIconTextButton(
+                modifier = Modifier
+                    .weight(windowState.heightType.filter(0.1f, 0.15f, 0.2f))
+                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
+                text = stringResource(R.string.save_settings),
+                imageVector = Icons.Default.Save,
+                contentColor = MaterialTheme.colorScheme.tertiary,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                onClick = onSaveClick
+            )
+            HorizontalSpacer(0.1f)
+            CustomIconTextButton(
+                modifier = Modifier
+                    .weight(windowState.heightType.filter(0.1f, 0.15f, 0.2f))
+                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
+                text = stringResource(R.string.reset_defaults),
+                imageVector = Icons.Default.Restore,
+                contentColor = MaterialTheme.colorScheme.tertiary,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                onClick = onRestoreClick
+            )
+            HorizontalSpacer(0.4f)
         }
     }
 }

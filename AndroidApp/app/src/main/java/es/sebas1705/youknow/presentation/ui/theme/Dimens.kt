@@ -19,10 +19,21 @@ package es.sebas1705.youknow.presentation.ui.theme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
 
+val IndicatorSize = 14.dp
+val PageIndicatorSeparator = 5.dp
+
+val OutlineHeight = 1.dp
+val OutlinePadding = PaddingValues(10.dp, 0.dp, 10.dp, 20.dp)
+
+val SurfaceBorderWidth = 2.dp
+
+val CardDividerThickness = 2.dp
+
+// Composables:
 /**
  * Custom paddings to be used in the app.
  */
-object Paddings{
+object Paddings {
     val SmallestPadding = 6.dp
     val SmallPadding = 12.dp
     val MediumPadding = 24.dp
@@ -30,10 +41,19 @@ object Paddings{
     val HugePadding = 48.dp
 }
 
+/**
+ * Custom tonal elevation values to be used in the app.
+ */
+object TonalElevation {
+    val Level0 = 0.dp
+    val Level1 = 2.dp
+    val Level2 = 4.dp
+    val Level3 = 6.dp
+    val Level4 = 8.dp
+    val Level5 = 12.dp
+}
 
-
-val IndicatorSize = 14.dp
-val PageIndicatorSeparator = 5.dp
-
-val OutlineHeight = 1.dp
-val OutlinePadding = PaddingValues(10.dp,0.dp,10.dp,20.dp)
+// Dialogs:
+val dialogBorderThickness = 2.dp
+val dialogCornerRadius = 16.dp
+val dialogTonalElevation = 24.dp

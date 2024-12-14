@@ -31,13 +31,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.AppIcon
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.composables.Spacers.HorizontalSpacer
+import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
+import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -61,6 +63,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun MenuScreen(
     windowState: WindowState,
+    authState: AuthState,
     authViewModel: AuthViewModel,
     toSignNav: () -> Unit,
     toHomeNav: () -> Unit,
@@ -70,7 +73,8 @@ fun MenuScreen(
     val context = LocalContext.current
 
     MenuDesign(
-        windowState = windowState,
+        windowState,
+        authState,
         onSignButtonAction = toSignNav,
         onEmailLogButtonAction = toLogNav,
         onGoogleLogButtonAction = {
@@ -101,15 +105,18 @@ fun MenuScreen(
 @Composable
 private fun MenuDesign(
     windowState: WindowState = WindowState.default(),
+    authState: AuthState = AuthState.default(),
     onSignButtonAction: () -> Unit = {},
     onEmailLogButtonAction: () -> Unit = {},
     onGoogleLogButtonAction: () -> Unit = {},
 ) {
-    
+
     ApplyBack(
         if (windowState.isPortrait) R.drawable.back_portrait_fill
         else R.drawable.back_landscape_fill,
     ) {
+        if (authState.isLoading) LoadingWindow(windowState)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,13 +124,14 @@ private fun MenuDesign(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalSpacer(0.4f)
-            AppIcon(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+            AppIcon(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
             )
             HorizontalSpacer(0.2f)
             Text(
-                text = stringResource(id = R.string.textInitial),
+                text = stringResource(id = R.string.initial_text),
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center

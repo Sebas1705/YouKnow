@@ -26,8 +26,15 @@ package es.sebas1705.youknow.data.firebase.firestore.config
  */
 object SettingsFS {
     const val USERS_COLLECTION_NAME = "users"
+    const val USERS_LOGGED_FIELD = "logged"
+    const val USERS_CREDITS_FIELD = "credits"
+    const val USERS_POINTS_FIELD = "points"
+    const val USERS_GROUP_FIELD = "groupId"
+    const val USERS_PHOTO_FIELD = "photoUrl"
+    const val USERS_NICKNAME_FIELD = "nickName"
 
-    const val ERROR_GENERIC_MESSAGE = "An error occurred on firestore"
-    const val NOT_SUCCESSFUL_MESSAGE = "The operation was not successful"
-    const val NOT_FOUND_USER = "User not found on firestore database"
+    const val ERROR_GENERIC_MESSAGE_EX = "An error occurred on firestore by an exception"
+    const val ERROR_GENERIC_MESSAGE_FAIL = "An error occurred on firestore by failure listener"
+    const val ERROR_CREDITS_NEGATIVE = "The credits can't be negative"
+    const val USER_NOT_FOUND = "User not found"
 }

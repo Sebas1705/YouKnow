@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.screens
  *
  */
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,9 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.features.home.viewmodels.HomeState
+import es.sebas1705.youknow.presentation.features.home.viewmodels.UserState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -39,9 +41,11 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun MainScreen(
+    windowState: WindowState,
+    userState: UserState,
     userViewModel: UserViewModel,
-    homeState: HomeState
 ) {
+    BackHandler {}
     MainDesign()
 }
 

@@ -32,22 +32,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.core.utlis.printTextInToast
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
 import es.sebas1705.youknow.presentation.composables.Spacers.HalfSpacer
 import es.sebas1705.youknow.presentation.composables.Spacers.HorizontalSpacer
 import es.sebas1705.youknow.presentation.composables.TitleSurface
+import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 import es.sebas1705.youknow.presentation.features.auth.windows.ErrorInfoWindow
 import es.sebas1705.youknow.presentation.features.auth.windows.ForgotPasswordWindow
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -70,12 +72,12 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun LogScreen(
     windowState: WindowState,
+    authState: AuthState,
     authViewModel: AuthViewModel,
     toHomeNav: () -> Unit,
     toSignNav: () -> Unit
 ) {
-    //States:
-    val authState by authViewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     //Design:
     LogDesign(
@@ -83,7 +85,7 @@ fun LogScreen(
         authState,
         onRegisterButton = toSignNav,
         onPasswordForgot = {
-            authViewModel.eventHandler(AuthIntent.SendForgotPassword(it))
+            authViewModel.eventHandler(AuthIntent.SendForgotPassword(it, context::printTextInToast))
         },
         onLoginButton = { email, password, onError ->
             authViewModel.eventHandler(
@@ -134,7 +136,7 @@ private fun LogDesign(
     val keyboard = LocalSoftwareKeyboardController.current
 
     //Texts:
-    val defaultError = stringResource(id = R.string.textLogError)
+    val defaultError = stringResource(id = R.string.login_error)
 
     //States:
     var email by rememberSaveable { mutableStateOf("") }
@@ -170,6 +172,7 @@ private fun LogDesign(
     ApplyBack(
         backId = windowState.backFill,
     ) {
+        if (authState.isLoading) LoadingWindow(windowState)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -179,17 +182,13 @@ private fun LogDesign(
             item {
                 Column(
                     modifier = Modifier
-                            .height(windowState.heightDp)
-                            .fillParentMaxWidth(),
+                        .height(windowState.heightDp)
+                        .fillParentMaxWidth(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     HorizontalSpacer(0.4f)
-                    if (authState.isLoading) CircularProgressIndicator(
-                        Modifier
-                            .padding(MediumPadding)
-                    )
-                    else TitleSurface(text = stringResource(id = R.string.login))
+                    TitleSurface(text = stringResource(id = R.string.access))
                     HorizontalSpacer(0.2f)
                     EmailAndPassFields(
                         fieldsModifier = Modifier
@@ -212,7 +211,7 @@ private fun LogDesign(
                     )
                     HorizontalSpacer(0.2f)
                     CustomFilledButton(
-                        text = stringResource(id = R.string.login),
+                        text = stringResource(id = R.string.access),
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()

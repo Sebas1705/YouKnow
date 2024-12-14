@@ -12,7 +12,9 @@ package es.sebas1705.youknow.data.firebase.authentication.config
 object SettingsAuth {
     const val FILTER_BY_AUTHORIZED_ACCOUNTS = false
 
-    const val ERROR_GENERIC_MESSAGE = "Error in the authentication process"
+    const val ERROR_GENERIC_MESSAGE_EX = "An error occurred on authentication by an exception"
+    const val ERROR_GENERIC_MESSAGE_FAIL = "An error occurred on authentication by failure listener"
+
     const val NOT_LOGGED_USER = "Not correctly logged user to take their data"
     const val USER_NOT_OUT = "User not logged out"
     const val WRONG_CREDENTIALS = "Wrong credentials"

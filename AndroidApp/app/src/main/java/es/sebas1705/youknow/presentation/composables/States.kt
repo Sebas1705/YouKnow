@@ -26,10 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import es.sebas1705.youknow.core.utlis.toDp
-import es.sebas1705.youknow.presentation.ui.classes.SizeType
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.utlis.toDp
 
 /**
  * Remember the state of the window
@@ -51,7 +51,8 @@ fun rememberWindowState(): MutableState<WindowState> {
         val listener = ViewTreeObserver.OnGlobalLayoutListener {
             val height = view.height.toDp(view.context)
             val width = view.width.toDp(view.context)
-            val portrait = view.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            val portrait =
+                view.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             windowState.value = WindowState(
                 widthDp = width,
                 heightDp = height,
@@ -60,8 +61,8 @@ fun rememberWindowState(): MutableState<WindowState> {
                 isImeVisible = ViewCompat.getRootWindowInsets(view)
                     ?.isVisible(WindowInsetsCompat.Type.ime()) != false,
                 isPortrait = portrait,
-                backFill = if(portrait) R.drawable.back_portrait_fill else R.drawable.back_landscape_fill,
-                backEmpty = if(portrait) R.drawable.back_portrait_empty else R.drawable.back_landscape_empty
+                backFill = if (portrait) R.drawable.back_portrait_fill else R.drawable.back_landscape_fill,
+                backEmpty = if (portrait) R.drawable.back_portrait_empty else R.drawable.back_landscape_empty
             )
         }
 

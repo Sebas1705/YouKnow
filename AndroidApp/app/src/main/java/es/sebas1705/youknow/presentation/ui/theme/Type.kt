@@ -16,11 +16,14 @@ package es.sebas1705.youknow.presentation.ui.theme
  *
  */
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 
 /**
  * Google Fonts provider for the app.
@@ -86,3 +89,17 @@ val AppTypography = Typography(
     labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
 )
 
+//Customs type filters:
+@Composable
+fun WindowState.dialogTitleType() = this.sizeFilter(
+    MaterialTheme.typography.titleLarge,
+    MaterialTheme.typography.headlineSmall,
+    MaterialTheme.typography.headlineLarge
+)
+
+@Composable
+fun WindowState.dialogTextType() = this.sizeFilter(
+    MaterialTheme.typography.labelLarge,
+    MaterialTheme.typography.bodySmall,
+    MaterialTheme.typography.bodyLarge
+)

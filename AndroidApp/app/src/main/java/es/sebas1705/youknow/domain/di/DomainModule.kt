@@ -20,41 +20,47 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.authentication.repository.AuthenticationRepository
-import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
-import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
-import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
-import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
+import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
+import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.domain.usecases.*
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.LogEvent
 import es.sebas1705.youknow.domain.usecases.logs.SetUserProperty
-import es.sebas1705.youknow.domain.usecases.social.ChangeCredits
 import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
 import es.sebas1705.youknow.domain.usecases.social.CreateGroup
-import es.sebas1705.youknow.domain.usecases.social.GetFirebaseUser
-import es.sebas1705.youknow.domain.usecases.social.GetUser
 import es.sebas1705.youknow.domain.usecases.social.GroupUsesCases
-import es.sebas1705.youknow.domain.usecases.social.IsUserLogged
-import es.sebas1705.youknow.domain.usecases.social.JoinGroupAsLeader
-import es.sebas1705.youknow.domain.usecases.social.JoinGroupAsMember
+import es.sebas1705.youknow.domain.usecases.social.RemoveGroup
 import es.sebas1705.youknow.domain.usecases.social.RemoveGroupsListener
 import es.sebas1705.youknow.domain.usecases.social.RemoveMessagesListener
-import es.sebas1705.youknow.domain.usecases.social.SaveUser
-import es.sebas1705.youknow.domain.usecases.social.SendForgotPassword
 import es.sebas1705.youknow.domain.usecases.social.SendMessage
 import es.sebas1705.youknow.domain.usecases.social.SetGroupsListener
-import es.sebas1705.youknow.domain.usecases.social.SetLogged
 import es.sebas1705.youknow.domain.usecases.social.SetMessagesListener
-import es.sebas1705.youknow.domain.usecases.social.SignGoogle
-import es.sebas1705.youknow.domain.usecases.social.SignInEmailUser
-import es.sebas1705.youknow.domain.usecases.social.SignOut
-import es.sebas1705.youknow.domain.usecases.social.SignUpEmailUser
-import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
-import es.sebas1705.youknow.domain.usecases.social.VerifyJustLogged
-import es.sebas1705.youknow.domain.usecases.social.VerifyWasLogged
+import es.sebas1705.youknow.domain.usecases.user.AddCreditsToUser
+import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
+import es.sebas1705.youknow.domain.usecases.user.ChangeNicknameToUser
+import es.sebas1705.youknow.domain.usecases.user.ChangePhotoToUser
+import es.sebas1705.youknow.domain.usecases.user.ContainsUser
+import es.sebas1705.youknow.domain.usecases.user.GetFirebaseUser
+import es.sebas1705.youknow.domain.usecases.user.GetLoggedFromUser
+import es.sebas1705.youknow.domain.usecases.user.GetUser
+import es.sebas1705.youknow.domain.usecases.user.GetUserByNickname
+import es.sebas1705.youknow.domain.usecases.user.GetUserRanking
+import es.sebas1705.youknow.domain.usecases.user.RemoveGroupToUser
+import es.sebas1705.youknow.domain.usecases.user.RemoveUserListener
+import es.sebas1705.youknow.domain.usecases.user.SaveUser
+import es.sebas1705.youknow.domain.usecases.user.SendForgotPassword
+import es.sebas1705.youknow.domain.usecases.user.SetGroupToUser
+import es.sebas1705.youknow.domain.usecases.user.SetLoggedToUser
+import es.sebas1705.youknow.domain.usecases.user.SetUserListener
+import es.sebas1705.youknow.domain.usecases.user.SignGoogle
+import es.sebas1705.youknow.domain.usecases.user.SignInEmailUser
+import es.sebas1705.youknow.domain.usecases.user.SignOut
+import es.sebas1705.youknow.domain.usecases.user.SignUpEmailUser
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import javax.inject.Singleton
 
 /**
@@ -100,26 +106,36 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideUserUsesCases(
-        authenticationRepository: AuthenticationRepository,
-        databaseRepository: DatabaseRepository,
         firestoreRepository: FirestoreRepository,
         realtimeRepository: RealtimeRepository
     ): UserUsesCases = UserUsesCases(
-        signUpEmailUser = SignUpEmailUser(authenticationRepository),
+        addCreditsToUser = AddCreditsToUser(firestoreRepository),
+        containsUser = ContainsUser(firestoreRepository),
+        getLoggedFromUser = GetLoggedFromUser(firestoreRepository),
+        getUser = GetUser(firestoreRepository),
+        saveUser = SaveUser(firestoreRepository),
+        setGroupToUser = SetGroupToUser(firestoreRepository, realtimeRepository),
+        removeGroupToUser = RemoveGroupToUser(firestoreRepository, realtimeRepository),
+        setLoggedToUser = SetLoggedToUser(firestoreRepository),
+        setUserListener = SetUserListener(firestoreRepository),
+        removeUserListener = RemoveUserListener(firestoreRepository),
+        changePhotoToUser = ChangePhotoToUser(firestoreRepository),
+        changeNicknameToUser = ChangeNicknameToUser(firestoreRepository),
+        getUserRanking = GetUserRanking(firestoreRepository),
+        getUserByNickname = GetUserByNickname(firestoreRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideAuthUsesCases(
+        authenticationRepository: AuthenticationRepository
+    ): AuthUsesCases = AuthUsesCases(
+        getFirebaseUser = GetFirebaseUser(authenticationRepository),
+        sendForgotPassword = SendForgotPassword(authenticationRepository),
         signInEmailUser = SignInEmailUser(authenticationRepository),
         signGoogle = SignGoogle(authenticationRepository),
         signOut = SignOut(authenticationRepository),
-        saveUser = SaveUser(databaseRepository, firestoreRepository),
-        getUser = GetUser(databaseRepository, firestoreRepository),
-        setLogged = SetLogged(firestoreRepository),
-        verifyWasLogged = VerifyWasLogged(databaseRepository, firestoreRepository),
-        verifyJustLogged = VerifyJustLogged(firestoreRepository),
-        sendForgotPassword = SendForgotPassword(authenticationRepository),
-        getFirebaseUser = GetFirebaseUser(authenticationRepository),
-        isUserLogged = IsUserLogged(authenticationRepository),
-        changeCredits = ChangeCredits(databaseRepository, firestoreRepository),
-        joinGroupAsMember = JoinGroupAsMember(firestoreRepository, databaseRepository, realtimeRepository),
-        joinGroupAsLeader = JoinGroupAsLeader(firestoreRepository, databaseRepository)
+        signUpEmailUser = SignUpEmailUser(authenticationRepository)
     )
 
     @Provides
@@ -138,6 +154,7 @@ object DomainModule {
         realtimeRepository: RealtimeRepository
     ): GroupUsesCases = GroupUsesCases(
         createGroup = CreateGroup(realtimeRepository),
+        removeGroup = RemoveGroup(realtimeRepository),
         setGroupsListener = SetGroupsListener(realtimeRepository),
         removeGroupsListener = RemoveGroupsListener(realtimeRepository)
     )

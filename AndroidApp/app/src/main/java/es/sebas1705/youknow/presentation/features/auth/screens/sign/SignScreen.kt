@@ -37,17 +37,18 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.composables.CustomFilledButton
 import es.sebas1705.youknow.presentation.composables.Spacers.DoubleSpacer
 import es.sebas1705.youknow.presentation.composables.Spacers.QuadSpacer
 import es.sebas1705.youknow.presentation.composables.TitleSurface
+import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 import es.sebas1705.youknow.presentation.features.auth.windows.ErrorInfoWindow
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -71,12 +72,10 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun SignScreen(
     windowState: WindowState,
+    authState: AuthState,
     authViewModel: AuthViewModel,
     toLogNav: () -> Unit,
 ) {
-    //States:
-    val authState: AuthState by authViewModel.uiState.collectAsStateWithLifecycle()
-
     //Design:
     SignDesign(
         windowState,
@@ -120,8 +119,8 @@ private fun SignDesign(
     val keyboard = LocalSoftwareKeyboardController.current
 
     //Texts:
-    val defaultErrorText = stringResource(id = R.string.textLogError)
-    val notMatchErrorText = stringResource(id = R.string.emailPasswordNotMatch)
+    val defaultErrorText = stringResource(id = R.string.login_error)
+    val notMatchErrorText = stringResource(id = R.string.any_not_match)
     val bothText = stringResource(id = R.string.both)
     val emailText = stringResource(id = R.string.email)
     val passwordText = stringResource(id = R.string.password)
@@ -150,6 +149,8 @@ private fun SignDesign(
     ApplyBack(
         backId = windowState.backFill,
     ) {
+        if (authState.isLoading) LoadingWindow(windowState)
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -160,8 +161,12 @@ private fun SignDesign(
                 Column(
                     modifier = windowState.heightType.filter(
                         Modifier.fillMaxWidth(),
-                        Modifier.height(windowState.heightDp).fillMaxWidth(),
-                        Modifier.height(windowState.heightDp).fillParentMaxWidth()
+                        Modifier
+                            .height(windowState.heightDp)
+                            .fillMaxWidth(),
+                        Modifier
+                            .height(windowState.heightDp)
+                            .fillParentMaxWidth()
                     ),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally

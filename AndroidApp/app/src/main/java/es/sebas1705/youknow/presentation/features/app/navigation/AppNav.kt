@@ -19,21 +19,23 @@ package es.sebas1705.youknow.presentation.features.app.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.getValue
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.navAndPopUp
 import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.presentation.features.auth.navigation.AuthNav
-import es.sebas1705.youknow.presentation.features.game.screens.TriviaScreen
 import es.sebas1705.youknow.presentation.features.app.screens.GuideScreen
 import es.sebas1705.youknow.presentation.features.app.screens.SettingsScreen
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsState
 import es.sebas1705.youknow.presentation.features.app.viewmodels.SettingsViewModel
+import es.sebas1705.youknow.presentation.features.auth.navigation.AuthNav
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
-import es.sebas1705.youknow.presentation.ui.classes.WindowState
+import es.sebas1705.youknow.presentation.features.game.screens.TriviaScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
 
 /**
  * Navigation for the app.
@@ -49,12 +51,20 @@ import es.sebas1705.youknow.presentation.ui.classes.WindowState
 @Composable
 fun AppNav(
     startDestination: Any,
+    windowState: WindowState,
     settingsState: SettingsState,
     settingsViewModel: SettingsViewModel,
-    windowState: WindowState
 ) {
+    // NavController:
     val appNavController = rememberNavController()
+
+    // ViewModel:
     val authViewModel = hiltViewModel<AuthViewModel>()
+
+    // States:
+    val authState by authViewModel.uiState.collectAsStateWithLifecycle()
+
+    // Context:
     val context = LocalContext.current
 
     NavHost(navController = appNavController, startDestination = startDestination) {
@@ -79,6 +89,7 @@ fun AppNav(
         }
         composable<SettingsScreen> {
             SettingsScreen(
+                windowState,
                 settingsState,
                 settingsViewModel,
                 onBack = {
@@ -86,9 +97,11 @@ fun AppNav(
                 }
             )
         }
-        composable<AuthNavigation>{
+        composable<AuthNavigation> {
             AuthNav(
-                windowState = windowState,
+                windowState,
+                authState,
+                authViewModel,
                 toHomeNav = {
                     appNavController.navAndPopUp(HomeNavigation, AuthNavigation)
                 },
@@ -96,11 +109,11 @@ fun AppNav(
         }
         composable<HomeNavigation> {
             HomeNav(
-                windowState = windowState,
+                windowState,
                 onLogOutNavigation = {
                     authViewModel.eventHandler(AuthIntent.SignOut(
-                        {appNavController.navAndPopUp(AuthNavigation, HomeNavigation)},
-                        {context.printTextInToast("Error in sign out, try again or reinstall the app")}
+                        { appNavController.navAndPopUp(AuthNavigation, HomeNavigation) },
+                        { context.printTextInToast("Error in sign out, try again or reinstall the app") }
                     ))
                 },
                 onSettingsNavigation = {

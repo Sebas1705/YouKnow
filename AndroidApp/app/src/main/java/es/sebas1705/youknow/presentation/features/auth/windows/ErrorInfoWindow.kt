@@ -26,10 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.DialogProperties
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.presentation.composables.RequestDialog
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.presentation.ui.theme.dialogTextType
+import es.sebas1705.youknow.presentation.ui.theme.dialogTitleType
 
 /**
  * Composable that shows an AlertDialog with an error message.
@@ -45,40 +48,35 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun ErrorInfoWindow(
+    windowState: WindowState = WindowState.default(),
     modifier: Modifier = Modifier,
     errorText: String,
     onConfirm: () -> Unit = {},
-) {
-    AlertDialog(
-        modifier = modifier,
-        onDismissRequest = { },
-        title = {
+) = RequestDialog(
+    confirmButton = {
+        Button(onClick = onConfirm) {
             Text(
-                text = stringResource(R.string.titleError),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground,
+                text = stringResource(R.string.confirm),
+                style = windowState.dialogTitleType()
             )
-        },
-        text = {
-            Text(
-                text = errorText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-        },
-        confirmButton = {
-            Button(onClick = onConfirm) {
-                Text(text = stringResource(R.string.confirm))
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.background,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = true
+        }
+    },
+    dismissButton = {},
+    onDismissRequest = {},
+    modifier = modifier,
+    title = {
+        Text(
+            text = stringResource(R.string.title_error),
+            style = windowState.dialogTitleType()
         )
-    )
-}
+    },
+    body = {
+        Text(
+            text = errorText,
+            style = windowState.dialogTextType(),
+        )
+    }
+)
 
 /**
  * Preview for [ErrorInfoWindow]
@@ -88,7 +86,7 @@ fun ErrorInfoWindow(
 @UiModePreviews
 @Composable
 private fun ErrorInfoWindowPreview() {
-    YouKnowTheme{
+    YouKnowTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

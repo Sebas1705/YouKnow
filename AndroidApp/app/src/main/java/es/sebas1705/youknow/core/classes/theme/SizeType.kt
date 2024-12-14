@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.ui.classes
+package es.sebas1705.youknow.core.classes.theme
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

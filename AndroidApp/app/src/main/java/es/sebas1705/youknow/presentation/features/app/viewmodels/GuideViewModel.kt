@@ -18,10 +18,9 @@ package es.sebas1705.youknow.presentation.features.app.viewmodels
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.MVIBaseState
-import es.sebas1705.youknow.core.classes.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

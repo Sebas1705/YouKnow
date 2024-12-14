@@ -1,4 +1,8 @@
-package es.sebas1705.youknow.core.classes
+package es.sebas1705.youknow.core.utlis
+
+import es.sebas1705.youknow.data.model.ResponseState
+import kotlinx.coroutines.flow.Flow
+
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,9 +21,19 @@ package es.sebas1705.youknow.core.classes
  */
 
 /**
- * Base interface for the MVIBaseState
+ * Type alias to represent a flow of response
  *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
+ * @param T: Type of the response
+ *
+ * @see ResponseState
+ * @see Flow
  */
-interface MVIBaseState
+typealias FlowResponse<T> = Flow<ResponseState<T>>
+
+/**
+ * Type alias to represent a flow of response with a Nothing type
+ *
+ * @see ResponseState
+ * @see Flow
+ */
+typealias FlowResponseNothing = Flow<ResponseState<Nothing>>

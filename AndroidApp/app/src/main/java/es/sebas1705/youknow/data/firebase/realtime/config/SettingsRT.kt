@@ -39,6 +39,7 @@ object SettingsRT {
     const val MESSAGE_MAX_LENGTH = 50
     const val MAX_MESSAGES_ON_GLOBAL_CHAT = 100
 
-    const val ERROR_GENERIC_MESSAGE = "An error occurred on realtime"
+    const val ERROR_GENERIC_MESSAGE_EX = "An error occurred on realtime by an exception"
+    const val ERROR_GENERIC_MESSAGE_FAIL = "An error occurred on realtime by failure listener"
 }
 

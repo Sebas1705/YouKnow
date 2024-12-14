@@ -23,6 +23,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import es.sebas1705.youknow.core.classes.managers.TaskFlowManager
+import es.sebas1705.youknow.core.utlis.FlowResponseNothing
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
@@ -31,11 +33,6 @@ import es.sebas1705.youknow.data.firebase.authentication.config.SettingsAuth
 import es.sebas1705.youknow.data.firebase.authentication.config.getCredentialRequestGoogle
 import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 /**
@@ -58,209 +55,90 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val analyticsRepository: AnalyticsRepository
 ) : AuthenticationRepository, ClassLogData {
 
+    //Properties:
     override val layer = Layer.Data
     override val repository = Repository.Authentication
 
+    //Managers:
+    private val taskFlowManager = TaskFlowManager(
+        this,
+        analyticsRepository::logError,
+        SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
+        SettingsAuth.ERROR_GENERIC_MESSAGE_EX
+    )
+
+    //Tasks:
     override fun signUpWithEmail(
         email: String,
         password: String,
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    if (it.user != null) {
-                        it.user?.sendEmailVerification()
-                        this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                    } else {
-                        this@callbackFlow.trySendBlocking(
-                            ResponseState.Error(
-                                this@AuthenticationRepositoryImpl as ClassLogData,
-                                ErrorResponseType.InternalError,
-                                SettingsAuth.NOT_LOGGED_USER,
-                                analyticsRepository::logError
-                            )
-                        )
-                    }
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@AuthenticationRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@AuthenticationRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { firebaseAuth.createUserWithEmailAndPassword(email, password) },
+        onSuccessListener = {
+            if (it.user != null) {
+                it.user?.sendEmailVerification()
+                ResponseState.EmptySuccess
+            } else taskFlowManager.createResponse(
+                ErrorResponseType.InternalError,
+                SettingsAuth.NOT_LOGGED_USER
             )
         }
-        awaitClose {
-            channel.close()
-            cancel()
-        }
-    }
+    )
 
     override fun signInWithEmail(
         email: String,
         password: String,
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    if (it.user != null)
-                        this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                    else {
-                        this@callbackFlow.trySendBlocking(
-                            ResponseState.Error(
-                                this@AuthenticationRepositoryImpl as ClassLogData,
-                                ErrorResponseType.NotFound,
-                                SettingsAuth.NOT_LOGGED_USER,
-                                analyticsRepository::logError
-                            )
-                        )
-                    }
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@AuthenticationRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@AuthenticationRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { firebaseAuth.signInWithEmailAndPassword(email, password) },
+        onSuccessListener = {
+            if (it.user != null) ResponseState.EmptySuccess
+            else taskFlowManager.createResponse(
+                ErrorResponseType.InternalError,
+                SettingsAuth.NOT_LOGGED_USER
             )
         }
-
-        awaitClose {
-            channel.close()
-            cancel()
-        }
-    }
+    )
 
     override suspend fun signWithGoogle(
         context: Context
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-
-            val credential = credentialManager.getCredential(
-                context,
-                context.getCredentialRequestGoogle
-            ).credential
-
-            if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+    ): FlowResponseNothing {
+        val credential = credentialManager.getCredential(
+            context,
+            context.getCredentialRequestGoogle
+        ).credential
+        return taskFlowManager.taskFlowProducer(
+            assertChecker = {
+                if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)
+                    null
+                else SettingsAuth.WRONG_CREDENTIALS
+            },
+            taskAction = {
                 val googleIdTokenCredential =
                     GoogleIdTokenCredential.createFrom(credential.data)
                 val authCredential =
                     GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-
                 firebaseAuth.signInWithCredential(authCredential)
-                    .addOnSuccessListener {
-                        if (it.user != null)
-                            this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                        else this@callbackFlow.trySendBlocking(
-                            ResponseState.Error(
-                                this@AuthenticationRepositoryImpl as ClassLogData,
-                                ErrorResponseType.NotFound,
-                                SettingsAuth.NOT_LOGGED_USER,
-                                analyticsRepository::logError
-                            )
-                        )
-                    }
-                    .addOnFailureListener {
-                        this@callbackFlow.trySendBlocking(
-                            ResponseState.Error(
-                                this@AuthenticationRepositoryImpl as ClassLogData,
-                                ErrorResponseType.BadRequest,
-                                it.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                                analyticsRepository::logError
-                            )
-                        )
-                    }
-            } else {
-                this@callbackFlow.trySendBlocking(
-                    ResponseState.Error(
-                        this as ClassLogData,
-                        ErrorResponseType.BadRequest,
-                        SettingsAuth.WRONG_CREDENTIALS,
-                        analyticsRepository::logError
-                    )
+            },
+            onSuccessListener = {
+                if (it.user != null) ResponseState.EmptySuccess
+                else taskFlowManager.createResponse(
+                    ErrorResponseType.InternalError,
+                    SettingsAuth.NOT_LOGGED_USER
                 )
             }
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@AuthenticationRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
-        awaitClose {
-            channel.close()
-            cancel()
-        }
-    }
-
-    override fun signOut(): Boolean {
-        firebaseAuth.signOut()
-        return firebaseAuth.currentUser == null
+        )
     }
 
     override fun sendForgotPassword(
         email: String
-    ): Flow<ResponseState<Nothing>> = callbackFlow {
-        try {
-            this@callbackFlow.trySendBlocking(ResponseState.Loading)
-            firebaseAuth.sendPasswordResetEmail(email)
-                .addOnSuccessListener {
-                    this@callbackFlow.trySendBlocking(ResponseState.EmptySuccess)
-                }
-                .addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(
-                        ResponseState.Error(
-                            this@AuthenticationRepositoryImpl as ClassLogData,
-                            ErrorResponseType.BadRequest,
-                            it.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                            analyticsRepository::logError
-                        )
-                    )
-                }
-        } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(
-                ResponseState.Error(
-                    this@AuthenticationRepositoryImpl as ClassLogData,
-                    ErrorResponseType.InternalError,
-                    e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE,
-                    analyticsRepository::logError
-                )
-            )
-        }
-        awaitClose {
-            channel.close()
-            cancel()
-        }
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { firebaseAuth.sendPasswordResetEmail(email) },
+        onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
+    //Functions:
+    override fun signOut(): Boolean {
+        firebaseAuth.signOut()
+        return firebaseAuth.currentUser == null
     }
 
     override fun isUserLogged(): Boolean = firebaseAuth.currentUser != null

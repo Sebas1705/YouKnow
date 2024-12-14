@@ -33,10 +33,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.core.utlis.printTextInToast
 import es.sebas1705.youknow.presentation.composables.CustomOutlinedTextField
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -52,6 +54,7 @@ fun CreateGroupWindow(
     onConfirmButton: (String,String) -> Unit = {_,_ ->},
     onDismissAction: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     var groupName by remember { mutableStateOf("") }
     var groupDescription by remember { mutableStateOf("") }
 
@@ -87,7 +90,13 @@ fun CreateGroupWindow(
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirmButton(groupName,groupDescription) }) {
+            Button(
+                onClick = {
+                    if(groupName.isNotEmpty() && groupDescription.isNotEmpty())
+                        onConfirmButton(groupName,groupDescription)
+                    else context.printTextInToast("Please fill all the fields")
+                }
+            ) {
                 Text(text = "${stringResource(R.string.confirm)} (2000 credits)")
             }
         },

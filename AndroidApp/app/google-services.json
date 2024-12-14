@@ -3,7 +3,7 @@
     "project_number": "875884945428",
     "firebase_url": "https://youknow-tfg-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "youknow-tfg",
-    "storage_bucket": "youknow-tfg.appspot.com"
+    "storage_bucket": "youknow-tfg.firebasestorage.app"
   },
   "client": [
     {
@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "875884945428-f8lsme4neda2f6s70eauh91uk0ne4rgv.apps.googleusercontent.com",
+          "client_id": "875884945428-gbqo4sk3bep82atei70aa7tnf7uouedr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "es.sebas1705.youknow",
-            "certificate_hash": "f3e4c69c37d7fb08feb77e927da47e5c9f3fe470"
+            "certificate_hash": "8828d9fad95f54a423225f2d5f6a79c87d996c6c"
           }
         },
         {
@@ -52,11 +52,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "875884945428-gchnr6di0tmalg0esmdtl5cmreohafb1.apps.googleusercontent.com",
+          "client_id": "875884945428-ahfjb5e8rudldo8ugsg0252nm68cmaka.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "es.sebas1705.youknow.debug",
-            "certificate_hash": "e15e53a95c3a0b81692b2c9d3eb016ac34350bd7"
+            "certificate_hash": "7154fbc7867f62657ad2d2bc1527572792861d4b"
           }
         },
         {

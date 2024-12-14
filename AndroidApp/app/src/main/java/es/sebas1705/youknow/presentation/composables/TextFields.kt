@@ -70,24 +70,33 @@ fun CustomOutlinedTextField(
     password: Boolean = false,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
+    leadingIcon: (@Composable () -> Unit)? = {
+        Icon(
+            imageVector = if (password) Icons.Filled.Password else Icons.Filled.Mail,
+            contentDescription = label
+        )
+    },
+    trailingIcon: (@Composable () -> Unit)? = null
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
     var isFocused by remember { mutableStateOf(false) }
 
-    val trailingIcon = if (password) {
-        @Composable {
-            IconButton(
-                onClick = { passwordVisible = !passwordVisible }
-            ) {
-                Icon(
-                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                    contentDescription = "Toggle password visibility"
-                )
+    val trailingIcon =
+        if (trailingIcon != null) trailingIcon
+        else if (password) {
+            @Composable {
+                IconButton(
+                    onClick = { passwordVisible = !passwordVisible }
+                ) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = "Toggle password visibility"
+                    )
+                }
             }
-        }
-    } else null
+        } else null
 
     OutlinedTextField(
         value = value,
@@ -95,12 +104,7 @@ fun CustomOutlinedTextField(
         placeholder = {
             if (!isFocused) Text(text = placeholder)
         },
-        leadingIcon = {
-            Icon(
-                imageVector = if (password) Icons.Filled.Password else Icons.Filled.Mail,
-                contentDescription = label
-            )
-        },
+        leadingIcon = leadingIcon,
         label = {
             Text(text = label)
         },
@@ -151,7 +155,7 @@ fun CustomTextFieldPassword(
     label = label,
     password = true,
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-    onValueChange = onValueChange
+    onValueChange = onValueChange,
 )
 
 /**
@@ -182,4 +186,34 @@ fun CustomTextFieldEmail(
     label = label,
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
     onValueChange = onValueChange
+)
+
+/**
+ * Simple CustomTextField without leading icon and with default values
+ *
+ * @param modifier Modifier: modifier of the OutlinedTextField
+ * @param value String: value of the OutlinedTextField
+ * @param placeholder String: placeholder of the OutlinedTextField
+ * @param label String: label of the OutlinedTextField
+ * @param onValueChange (String) -> Unit: function to handle the value change of the OutlinedTextField
+ *
+ * @see CustomOutlinedTextField
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+@Composable
+fun SimpleOutlinedTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    placeholder: String = "",
+    label: String = "",
+    onValueChange: (String) -> Unit = {},
+) = CustomOutlinedTextField(
+    modifier = modifier,
+    value = value,
+    placeholder = placeholder,
+    label = label,
+    onValueChange = onValueChange,
+    leadingIcon = null,
 )

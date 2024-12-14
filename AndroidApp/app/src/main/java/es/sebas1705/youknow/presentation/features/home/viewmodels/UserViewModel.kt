@@ -16,20 +16,25 @@ package es.sebas1705.youknow.presentation.features.home.viewmodels
  *
  */
 
+import android.app.Application
+import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.MVIBaseState
-import es.sebas1705.youknow.core.classes.MVIBaseViewModel
+import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
+import es.sebas1705.youknow.core.utlis.printTextInToast
 import es.sebas1705.youknow.domain.model.UserModel
-import es.sebas1705.youknow.domain.usecases.social.UserUsesCases
+import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
- * ViewModel for [es.sebas1705.youknow.presentation.features.home.navigation.HomeNav] that will handle the user's data and the navigation to other screens.
+ * ViewModel for [es.sebas1705.youknow.presentation.features.app.navigation.HomeNavigation] that will handle the logic of the screen.
  *
- * @param authenticationUsesCases [AuthenticationUsesCases]: UseCase to get the current user.
+ * @param userUsesCases [UserUsesCases]: UseCase to get the user's data.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
@@ -39,38 +44,108 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val userUsesCases: UserUsesCases
-) : MVIBaseViewModel<HomeState, HomeIntent>() {
+    private val authUsesCases: AuthUsesCases,
+    private val userUsesCases: UserUsesCases,
+    private val application: Application
+) : MVIBaseViewModel<UserState, UserIntent>() {
 
-    override fun initState(): HomeState = HomeState.default()
+    private val context: Context = application.applicationContext
 
-    override fun intentHandler(intent: HomeIntent) {
-        when(intent){
-            is HomeIntent.LoadActualUser -> loadActualUser()
+    override fun initState(): UserState = UserState.default()
+
+    override fun intentHandler(intent: UserIntent) {
+        when (intent) {
+            is UserIntent.LoadActual -> loadActual()
+            is UserIntent.ClearActual -> updateUi { it.copy(userModel = null, firebaseUser = null) }
+            is UserIntent.AddCredits -> addCredits(intent)
+            is UserIntent.GetUser -> getUser(intent)
         }
     }
 
     override fun onInit() {
         super.onInit()
-        loadActualUser()
+        loadActual()
     }
 
 
     //Actions:
-    private fun loadActualUser() = execute(Dispatchers.IO) {
-        userUsesCases.getFirebaseUser()?.let { firebaseUser ->
+    private fun loadActual() = execute(Dispatchers.IO) {
+        val firebaseUser = authUsesCases.getFirebaseUser()
+        if (firebaseUser == null)
+            stopAndError(context.getString(R.string.user_not_logged), context::printTextInToast)
+        else {
             updateUi { it.copy(firebaseUser = firebaseUser) }
-            userUsesCases.getUser(firebaseUser.uid, false).let { user ->
-                updateUi { it.copy(userModel = user) }
-            }
+            userUsesCases.setUserListener(
+                firebaseUser.uid,
+                onDataChange = { userModel ->
+                    updateUi { it.copy(userModel = userModel) }
+                },
+            )
         }
+    }
+
+    private fun clearActual() = execute(Dispatchers.IO) {
+        userUsesCases.removeUserListener()
+        updateUi { it.copy(userModel = null, firebaseUser = null) }
+    }
+
+    private fun addCredits(
+        intent: UserIntent.AddCredits
+    ) = execute(Dispatchers.IO) {
+        if (uiState.value.userModel == null)
+            execute { context.printTextInToast(context.getString(R.string.user_not_logged)) }
+        else userUsesCases.addCreditsToUser(
+            uiState.value.userModel!!,
+            intent.credits,
+            onLoading = { startLoading() },
+            onSuccess = { newCredits ->
+                stopLoading()
+                updateUi { it.copy(userModel = it.userModel?.copy(credits = newCredits)) }
+            },
+            onError = { error ->
+                stopLoading()
+                execute { context.printTextInToast(error) }
+            }
+        )
+    }
+
+    private fun getUser(
+        intent: UserIntent.GetUser
+    ) = execute(Dispatchers.IO) {
+        userUsesCases.getUser(
+            intent.userId,
+            onLoading = { startLoading() },
+            onSuccess = { userModel ->
+                stopLoading()
+                updateUi { it.copy(infoUser = userModel) }
+            },
+            onError = { error ->
+                stopAndError(error, context::printTextInToast)
+            }
+        )
+    }
+
+
+    //Privates:
+    private fun startLoading() {
+        updateUi { it.copy(isLoading = true) }
+    }
+
+    private fun stopLoading() {
+        updateUi { it.copy(isLoading = false) }
+    }
+
+    private fun stopAndError(error: String, onError: (String) -> Unit) {
+        stopLoading()
+        execute { onError(error) }
     }
 }
 
 /**
  * State for [UserViewModel] that will handle the user's data.
  *
- * @property user [FirebaseUser]: The current user.
+ * @property userModel [UserModel]: User's data.
+ * @property firebaseUser [FirebaseUser]: Firebase's user data.
  *
  * @see MVIBaseState
  * @see FirebaseUser
@@ -78,20 +153,24 @@ class UserViewModel @Inject constructor(
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-data class HomeState(
+data class UserState(
+    val isLoading: Boolean,
     val userModel: UserModel?,
-    val firebaseUser: FirebaseUser?
+    val firebaseUser: FirebaseUser?,
+    val infoUser: UserModel?
 ) : MVIBaseState {
     companion object {
 
         /**
-         * Default [HomeState] with no user.
+         * Default [UserState] with no user.
          *
-         * @return [HomeState]
+         * @return [UserState]
          */
-        fun default() = HomeState(
+        fun default() = UserState(
+            isLoading = false,
             userModel = null,
-            firebaseUser = null
+            firebaseUser = null,
+            infoUser = null
         )
     }
 }
@@ -104,6 +183,17 @@ data class HomeState(
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-sealed interface HomeIntent : MVIBaseIntent{
-    object LoadActualUser : HomeIntent
+sealed interface UserIntent : MVIBaseIntent {
+
+    object LoadActual : UserIntent
+
+    object ClearActual : UserIntent
+
+    data class AddCredits(
+        val credits: Int
+    ) : UserIntent
+
+    data class GetUser(
+        val userId: String
+    ) : UserIntent
 }
