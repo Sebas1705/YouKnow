@@ -17,6 +17,11 @@ package es.sebas1705.youknow.data.apis.opendb.dtos
  */
 
 import com.google.gson.annotations.SerializedName
+import es.sebas1705.youknow.core.classes.enums.Category
+import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.Languages
+import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.domain.model.games.QuestionModel
 
 /**
  * DTO to represent a question from the Opentbd API
@@ -38,4 +43,19 @@ data class QuestionOpendbDto(
     @SerializedName("incorrect_answers") val incorrectAnswers: List<String>,
     val question: String,
     val type: String
-)
+) {
+    /**
+     * Function to convert the DTO to a QuestionModel
+     *
+     * @return [QuestionModel]: QuestionModel
+     */
+    fun toQuestionModel() = QuestionModel(
+        question = question,
+        answers = incorrectAnswers + correctAnswer,
+        correctAnswer = correctAnswer,
+        category = Category.getCategory(category.toInt()),
+        language = Languages.EN,
+        difficulty = Difficulty.getDifficulty(difficulty),
+        quizType = QuizType.getType(type)
+    )
+}

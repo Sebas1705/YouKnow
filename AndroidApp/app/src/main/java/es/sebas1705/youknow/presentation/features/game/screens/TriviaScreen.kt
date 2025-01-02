@@ -36,15 +36,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import es.sebas1705.youknow.presentation.features.game.viewmodels.ResponseState
-import es.sebas1705.youknow.presentation.features.game.viewmodels.TriviaViewModel
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_RESPONSE_EXAMPLE
 import es.sebas1705.youknow.data.apis.opendb.config.decodeUrl
-import es.sebas1705.youknow.presentation.composables.ApplyBack
+import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
+import es.sebas1705.youknow.presentation.features.game.viewmodels.ResponseState
+import es.sebas1705.youknow.presentation.features.game.viewmodels.TriviaViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**

@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import es.sebas1705.youknow.core.classes.managers.TaskFlowManager
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository

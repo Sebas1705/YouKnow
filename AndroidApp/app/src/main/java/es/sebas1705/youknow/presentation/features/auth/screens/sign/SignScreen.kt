@@ -35,20 +35,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
+import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CustomFilledButton
-import es.sebas1705.youknow.presentation.composables.Spacers.DoubleSpacer
-import es.sebas1705.youknow.presentation.composables.Spacers.QuadSpacer
-import es.sebas1705.youknow.presentation.composables.TitleSurface
-import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 import es.sebas1705.youknow.presentation.features.auth.windows.ErrorInfoWindow
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -149,7 +148,7 @@ private fun SignDesign(
     ApplyBack(
         backId = windowState.backFill,
     ) {
-        if (authState.isLoading) LoadingWindow(windowState)
+        if (authState.isLoading) LoadingDialog(windowState)
 
         LazyColumn(
             modifier = Modifier
@@ -176,7 +175,7 @@ private fun SignDesign(
                             .padding(MediumPadding)
                     )
                     else TitleSurface(text = stringResource(id = R.string.signup))
-                    QuadSpacer()
+                    IVerSpacer(height = HugePadding)
                     SignField(
                         fieldsModifier = Modifier
                             .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
@@ -191,9 +190,9 @@ private fun SignDesign(
                         passwordRepeat = passwordRepeat,
                         onPasswordRepeatChange = { passwordRepeat = it }
                     )
-                    DoubleSpacer()
-                    CustomFilledButton(
-                        text = stringResource(id = R.string.signup),
+                    IVerSpacer(height = MediumPadding)
+                    IFilledButton(
+                        label = stringResource(id = R.string.signup),
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()

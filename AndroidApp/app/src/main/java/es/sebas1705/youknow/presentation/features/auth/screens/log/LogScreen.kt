@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,20 +36,20 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
+import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CustomFilledButton
-import es.sebas1705.youknow.presentation.composables.Spacers.HalfSpacer
-import es.sebas1705.youknow.presentation.composables.Spacers.HorizontalSpacer
-import es.sebas1705.youknow.presentation.composables.TitleSurface
-import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 import es.sebas1705.youknow.presentation.features.auth.windows.ErrorInfoWindow
 import es.sebas1705.youknow.presentation.features.auth.windows.ForgotPasswordWindow
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -172,7 +171,7 @@ private fun LogDesign(
     ApplyBack(
         backId = windowState.backFill,
     ) {
-        if (authState.isLoading) LoadingWindow(windowState)
+        if (authState.isLoading) LoadingDialog(windowState)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -187,9 +186,9 @@ private fun LogDesign(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    HorizontalSpacer(0.4f)
-                    TitleSurface(text = stringResource(id = R.string.access))
-                    HorizontalSpacer(0.2f)
+                    IVerSpacer(0.4f)
+                    TitleSurface(stringResource(R.string.access))
+                    IVerSpacer(0.2f)
                     EmailAndPassFields(
                         fieldsModifier = Modifier
                             .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
@@ -198,7 +197,7 @@ private fun LogDesign(
                         onEmailChange = { email = it },
                         onPasswordChange = { password = it },
                     )
-                    HalfSpacer()
+                    IVerSpacer(height = SmallestPadding)
                     ForgotAndRegisterButtons(
                         onForgotButton = {
                             keyboard?.hide()
@@ -209,9 +208,9 @@ private fun LogDesign(
                             onRegisterButton()
                         }
                     )
-                    HorizontalSpacer(0.2f)
-                    CustomFilledButton(
-                        text = stringResource(id = R.string.access),
+                    IVerSpacer(0.2f)
+                    IFilledButton(
+                        label = stringResource(id = R.string.access),
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()
@@ -221,7 +220,7 @@ private fun LogDesign(
                             }
                         }
                     )
-                    HorizontalSpacer(if (windowState.isImeVisible) 0.2f else 0.7f)
+                    IVerSpacer(if (windowState.isImeVisible) 0.2f else 0.7f)
                 }
             }
         }

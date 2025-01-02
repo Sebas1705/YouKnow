@@ -19,8 +19,8 @@ package es.sebas1705.youknow.data.firebase.firestore.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import es.sebas1705.youknow.core.classes.managers.TaskFlowManager
-import es.sebas1705.youknow.core.utlis.FlowResponse
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
+import es.sebas1705.youknow.core.utlis.alias.FlowResponse
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
@@ -121,6 +121,18 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .update(SettingsFS.USERS_CREDITS_FIELD, oldCredits + addCredits)
         },
         onSuccessListener = { ResponseState.Success(oldCredits + addCredits) }
+    )
+
+    override fun addPointsToUser(
+        userId: String,
+        addPoints: Int,
+        oldPoints: Int
+    ): FlowResponse<Int> = taskFlowManager.taskFlowProducer(
+        taskAction = {
+            usersReference.document(userId)
+                .update(SettingsFS.USERS_POINTS_FIELD, oldPoints + addPoints)
+        },
+        onSuccessListener = { ResponseState.Success(oldPoints + addPoints) }
     )
 
     override fun setGroupToUser(

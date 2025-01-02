@@ -18,21 +18,26 @@ package es.sebas1705.youknow.presentation.features.home.screens.social
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.Chat
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.Group
 import es.sebas1705.youknow.presentation.features.home.screens.social.composables.GroupsList
@@ -140,7 +145,7 @@ private fun SocialDesign(
 ) {
 
     //States:
-    var chatPage by remember { mutableStateOf(true) }
+    var chatPage by rememberSaveable { mutableStateOf(true) }
     var infoDisplay by remember { mutableStateOf(false) }
     var userInfoId by remember { mutableStateOf("") }
 
@@ -148,50 +153,61 @@ private fun SocialDesign(
         userModel = userState.infoUser,
         onDismiss = { infoDisplay = false }
     )
-
-    Column(
-        modifier = Modifier.padding(top = SmallestPadding),
+    ApplyBack(
+        backId = windowState.backEmpty,
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        IconsBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(windowState.heightType.filter(0.2f, 0.075f, 0.075f)),
-            isGroup = !chatPage,
-            changeToGroup = { chatPage = false },
-            changeToChat = { chatPage = true },
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-        ) {
-            when {
-                chatPage -> Chat(
-                    windowState = windowState,
-                    firebaseId = userState.userModel?.firebaseId ?: "",
-                    messageModels = socialState.chatGlobal,
-                    onMessageSend = messageSender
+        LazyColumn {
+            val iconHeight = windowState.heightType.filter(50.dp, 62.dp, 75.dp)
+            item {
+                IconsBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(iconHeight)
+                        .padding(top = SmallestPadding),
+                    isGroup = !chatPage,
+                    changeToGroup = { chatPage = false },
+                    changeToChat = { chatPage = true },
                 )
+            }
 
-                socialState.myGroup != null -> Group(
-                    groupModel = socialState.myGroup,
-                    windowState = windowState,
-                    admin = socialState.myGroup.leaderUID == userState.userModel?.firebaseId,
-                    onOutButton = onGroupOutButton,
-                    onInfoButton = {
-                        userGet(it)
-                        userInfoId = it
-                        infoDisplay = true
-                    },
-                    onKickButton = onKickButton,
-                )
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(windowState.heightDp - iconHeight - 80.dp),
+                ) {
+                    when {
+                        chatPage -> Chat(
+                            windowState = windowState,
+                            firebaseId = userState.userModel?.firebaseId ?: "",
+                            messageModels = socialState.chatGlobal,
+                            onMessageSend = messageSender
+                        )
 
-                else -> GroupsList(
-                    windowState = windowState,
-                    groupModels = socialState.groups,
-                    onGroupClick = groupJoin,
-                    onGroupCreate = groupCreator
-                )
+                        socialState.myGroup != null -> Group(
+                            firebaseId = userState.userModel?.firebaseId ?: "",
+                            groupModel = socialState.myGroup,
+                            windowState = windowState,
+                            admin = socialState.myGroup.leaderUID == userState.userModel?.firebaseId,
+                            onOutButton = onGroupOutButton,
+                            onInfoButton = {
+                                userGet(it)
+                                userInfoId = it
+                                infoDisplay = true
+                            },
+                            onKickButton = onKickButton,
+                        )
+
+                        else -> GroupsList(
+                            windowState = windowState,
+                            groupModels = socialState.groups,
+                            onGroupClick = groupJoin,
+                            onGroupCreate = groupCreator
+                        )
+                    }
+                }
             }
         }
     }

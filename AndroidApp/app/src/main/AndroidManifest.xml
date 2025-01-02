@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +17,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -30,10 +29,10 @@
         android:roundIcon="@mipmap/yk_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizApp"
-        android:name=".core.root.YouKnowApplication"
+        android:name=".core.root.application.YouKnowApplication"
         tools:targetApi="35">
         <activity
-            android:name=".core.root.MainActivity"
+            android:name=".core.root.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.QuizApp"
             android:windowSoftInputMode="adjustResize">

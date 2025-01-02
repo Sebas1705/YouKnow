@@ -16,10 +16,10 @@ package es.sebas1705.youknow.data.firebase.realtime.repository
  *
  */
 
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.GroupModel
-import es.sebas1705.youknow.domain.model.MessageModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.domain.model.social.MessageModel
 import kotlinx.coroutines.flow.Flow
 
 /**

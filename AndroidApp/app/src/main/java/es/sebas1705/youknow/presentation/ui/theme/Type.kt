@@ -97,9 +97,3 @@ fun WindowState.dialogTitleType() = this.sizeFilter(
     MaterialTheme.typography.headlineLarge
 )
 
-@Composable
-fun WindowState.dialogTextType() = this.sizeFilter(
-    MaterialTheme.typography.labelLarge,
-    MaterialTheme.typography.bodySmall,
-    MaterialTheme.typography.bodyLarge
-)

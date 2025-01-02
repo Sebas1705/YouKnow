@@ -25,25 +25,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Output
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.icon.IFilledIconButton
+import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
+import es.sebas1705.youknow.core.composables.divider.IHorDivider
+import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.makeBold
-import es.sebas1705.youknow.domain.model.GroupModel
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
-import es.sebas1705.youknow.presentation.composables.CustomIconButton
-import es.sebas1705.youknow.presentation.composables.InteractiveCard
-import es.sebas1705.youknow.presentation.ui.theme.CardDividerThickness
+import es.sebas1705.youknow.core.utlis.extensions.composables.makeBold
+import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -64,6 +65,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Group(
+    firebaseId: String,
     groupModel: GroupModel,
     windowState: WindowState = WindowState.default(),
     admin: Boolean = true,
@@ -74,9 +76,9 @@ fun Group(
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.Top,
     ) {
-        CurvedBorderSurface(
+        IPrimarySurface (
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -94,20 +96,19 @@ fun Group(
                             .padding(SmallestPadding)
                             .padding(start = SmallPadding)
                     )
-                    CustomIconButton(
+                    IFilledIconButton(
                         onClick = onOutButton,
-                        icon = Icons.Default.Output,
-                        modifierButton = Modifier.padding(SmallestPadding),
                         contentDescription = "Out",
+                        modifier = Modifier.padding(SmallestPadding),
+                        imageVector = Icons.Default.Output,
                     )
                 }
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    thickness = CardDividerThickness,
+                IHorDivider(
                     modifier = Modifier.padding(
                         vertical = SmallestPadding,
                         horizontal = SmallPadding
-                    )
+                    ),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
                     text = groupModel.description,
@@ -119,49 +120,45 @@ fun Group(
             }
         }
 
-        ApplyBack(
-            backId = windowState.backEmpty,
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .padding(SmallPadding),
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SmallPadding),
-            ) {
-                stickyHeader {
-                    Text(
-                        text = "Members (${groupModel.members.size}/${Constants.MAX_GROUP}):",
-                        style = MaterialTheme.typography.titleMedium.makeBold(),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(SmallestPadding),
-                    )
-                }
+            stickyHeader {
+                IText(
+                    text = "Members (${groupModel.members.size}/${Constants.MAX_GROUP}):",
+                    style = MaterialTheme.typography.titleMedium.makeBold(),
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(SmallestPadding),
+                )
+            }
 
-                items(groupModel.members.size) { index ->
-                    InteractiveCard(
-                        title = groupModel.members[index].split("-")[1],
-                        subtitle = if (groupModel.leaderUID == groupModel.members[index]) "(Leader)" else "",
-                        buttons = {
-                            CustomIconButton(
-                                onClick = { onInfoButton(groupModel.members[index].split("-")[0]) },
-                                icon = Icons.Filled.AddCircleOutline,
-                                contentDescription = "Fight",
-                                modifierIcon = Modifier.padding(SmallestPadding),
-                            )
-                            if (admin) CustomIconButton(
-                                onClick = { onKickButton(groupModel.members[index]) },
-                                icon = Icons.Filled.Delete,
-                                contentDescription = "Delete",
-                                modifierIcon = Modifier.padding(SmallestPadding),
-                            )
-                        },
-                        modifier = Modifier.padding(bottom = SmallPadding)
-                    )
-                }
+            items(groupModel.members.size) { index ->
+                val member = groupModel.members[index]
+                val memberId = member.split("-")[0]
+                val memberName = member.split("-")[1]
+                IInteractiveCard(
+                    title = if (firebaseId == memberId) stringResource(R.string.You) else memberName,
+                    subtitle = if (groupModel.leaderUID == memberId) "(${stringResource(R.string.leader)})" else "",
+                    buttons = {
+                        if (firebaseId != memberId) IFilledIconButton(
+                            onClick = { onInfoButton(memberId) },
+                            contentDescription = stringResource(R.string.view_profile),
+                            modifier = Modifier.padding(SmallestPadding),
+                            imageVector = Icons.Filled.Search,
+                        )
+                        if (admin && firebaseId != memberId) IFilledIconButton(
+                            onClick = { onKickButton(member) },
+                            contentDescription = "Delete",
+                            modifier = Modifier.padding(SmallestPadding),
+                            imageVector = Icons.Filled.Delete,
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = SmallPadding)
+                )
             }
         }
     }
@@ -172,6 +169,7 @@ fun Group(
 fun GroupPreview() {
     YouKnowTheme {
         Group(
+            "",
             GroupModel(
                 "Group 1",
                 "Description of the group 1",

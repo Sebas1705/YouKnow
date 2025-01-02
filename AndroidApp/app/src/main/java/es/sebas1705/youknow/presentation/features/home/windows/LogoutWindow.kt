@@ -20,14 +20,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.DialogProperties
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -36,8 +37,8 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * and dismiss must close the dialog inclusive you click outside the dialog or press back button.
  *
  * @param modifier [Modifier]: Modifier to be applied to the composable.
- * @param onConfirmButton () -> Unit: Action to be executed when the confirm button is clicked.
- * @param onDismissAction () -> Unit: Action to be executed when the dismiss button or dismiss action is active.
+ * @param onConfirm () -> Unit: Action to be executed when the confirm button is clicked.
+ * @param onDismiss () -> Unit: Action to be executed when the dismiss button or dismiss action is active.
  *
  * @see AlertDialog
  * @see Button
@@ -49,37 +50,27 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun LogoutWindow(
     modifier: Modifier = Modifier,
-    onConfirmButton: () -> Unit = {},
-    onDismissAction: () -> Unit = {}
-) {
-    AlertDialog(
-        modifier = modifier,
-        onDismissRequest = onDismissAction,
-        title = {
-            Text(
-                text = stringResource(R.string.alertTitle),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-        },
-        confirmButton = {
-            Button(onClick = onConfirmButton) {
-                Text(text = stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismissAction) {
-                Text(text = stringResource(R.string.dismiss))
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.background,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = true
+    onConfirm: () -> Unit = {},
+    onDismiss: () -> Unit = {}
+) = IDialog(
+    onDismissRequest = onDismiss,
+    modifier = modifier,
+    confirmButton = {
+        IFilledButton(
+            label = stringResource(R.string.confirm),
+            onClick = onConfirm,
         )
-    )
-}
+    },
+    dismissButton = {
+        IFilledButton(
+            label = stringResource(R.string.dismiss),
+            onClick = onDismiss,
+        )
+    },
+    title = {
+        IText(stringResource(R.string.logout))
+    }
+)
 
 /**
  * Preview for [LogoutWindow]
@@ -89,7 +80,7 @@ fun LogoutWindow(
 @UiModePreviews
 @Composable
 private fun LogoutWindowPreview() {
-    YouKnowTheme{
+    YouKnowTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

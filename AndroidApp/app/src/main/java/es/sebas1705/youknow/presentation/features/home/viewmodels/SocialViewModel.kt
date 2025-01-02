@@ -21,10 +21,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.printTextInToast
-import es.sebas1705.youknow.domain.model.GroupModel
-import es.sebas1705.youknow.domain.model.MessageModel
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.domain.model.social.MessageModel
 import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
 import es.sebas1705.youknow.domain.usecases.social.GroupUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
@@ -51,6 +51,8 @@ class SocialViewModel @Inject constructor(
     private val userUsesCases: UserUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<SocialState, SocialIntent>() {
+
+    private val ctx = application.applicationContext
 
     override fun initState(): SocialState = SocialState.default()
 
@@ -82,7 +84,7 @@ class SocialViewModel @Inject constructor(
             onSuccess = {},
             onError = { error ->
                 execute {
-                    application.applicationContext.printTextInToast("Error in message sending: $error")
+                    ctx.printTextInToast("Error in message sending: $error")
                 }
             }
         )
@@ -119,7 +121,7 @@ class SocialViewModel @Inject constructor(
                                 onError = {
                                     stopAndError(
                                         it,
-                                        application.applicationContext::printTextInToast
+                                        ctx::printTextInToast
                                     )
                                 }
                             )
@@ -127,13 +129,13 @@ class SocialViewModel @Inject constructor(
                         onError = {
                             stopAndError(
                                 it,
-                                application.applicationContext::printTextInToast
+                                ctx::printTextInToast
                             )
                         }
                     )
                 }
             },
-            onError = { stopAndError(it, application.applicationContext::printTextInToast) }
+            onError = { stopAndError(it, ctx::printTextInToast) }
         )
     }
 
@@ -154,10 +156,7 @@ class SocialViewModel @Inject constructor(
                 stopLoading()
             },
             onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
+                stopAndError(it, ctx::printTextInToast)
             }
         )
     }
@@ -181,7 +180,7 @@ class SocialViewModel @Inject constructor(
                             onError = {
                                 stopAndError(
                                     it,
-                                    application.applicationContext::printTextInToast
+                                    ctx::printTextInToast
                                 )
                             }
                         )
@@ -192,10 +191,7 @@ class SocialViewModel @Inject constructor(
                 }
             },
             onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
+                stopAndError(it, ctx::printTextInToast)
             }
         )
     }
@@ -209,10 +205,7 @@ class SocialViewModel @Inject constructor(
             onLoading = { startLoading() },
             onSuccess = { stopLoading() },
             onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
+                stopAndError(it, ctx::printTextInToast)
             }
         )
     }
@@ -229,10 +222,8 @@ class SocialViewModel @Inject constructor(
                     it.copy(chatGlobal = data)
                 }
             },
-            onError = { error ->
-                execute {
-                    application.applicationContext.printTextInToast("Error in global chat loading: $error")
-                }
+            onError = {
+                stopAndError(it, ctx::printTextInToast)
             }
         )
         groupUsesCases.setGroupsListener(
@@ -242,10 +233,8 @@ class SocialViewModel @Inject constructor(
                     it.copy(groups = data, myGroup = myGroup)
                 }
             },
-            onError = { error ->
-                execute {
-                    application.applicationContext.printTextInToast("Error in groups loading: $error")
-                }
+            onError = {
+                stopAndError(it, ctx::printTextInToast)
             }
         )
     }

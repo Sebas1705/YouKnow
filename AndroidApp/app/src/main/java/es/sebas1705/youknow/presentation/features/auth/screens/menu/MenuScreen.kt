@@ -17,6 +17,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu
  */
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,16 +28,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.AppIcon
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.Spacers.HorizontalSpacer
-import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
@@ -115,7 +116,7 @@ private fun MenuDesign(
         if (windowState.isPortrait) R.drawable.back_portrait_fill
         else R.drawable.back_landscape_fill,
     ) {
-        if (authState.isLoading) LoadingWindow(windowState)
+        if (authState.isLoading) LoadingDialog(windowState)
 
         Column(
             modifier = Modifier
@@ -123,20 +124,22 @@ private fun MenuDesign(
                 .padding(horizontal = LargePadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HorizontalSpacer(0.4f)
-            AppIcon(
-                Modifier
+            IVerSpacer(0.4f)
+            Image(
+                painter = painterResource(id = R.drawable.icon),
+                contentDescription = stringResource(id = R.string.app_name),
+                modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             )
-            HorizontalSpacer(0.2f)
+            IVerSpacer(0.2f)
             Text(
                 text = stringResource(id = R.string.initial_text),
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
-            HorizontalSpacer(0.2f)
+            IVerSpacer(0.2f)
             MenuButtons(
                 buttonsModifier = Modifier
                     .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
@@ -144,7 +147,7 @@ private fun MenuDesign(
                 onEmailLogButtonAction = onEmailLogButtonAction,
                 onGoogleLogButtonAction = onGoogleLogButtonAction
             )
-            HorizontalSpacer(0.7f)
+            IVerSpacer(0.7f)
         }
     }
 }

@@ -2,7 +2,7 @@ package es.sebas1705.youknow.domain.usecases.user
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseUser
-import es.sebas1705.youknow.core.utlis.catcher
+import es.sebas1705.youknow.core.utlis.extensions.types.catcher
 import es.sebas1705.youknow.data.firebase.authentication.repository.AuthenticationRepository
 import es.sebas1705.youknow.domain.model.UserModel
 

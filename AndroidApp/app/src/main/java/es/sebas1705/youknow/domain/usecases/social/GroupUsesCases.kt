@@ -17,7 +17,7 @@ package es.sebas1705.youknow.domain.usecases.social
  */
 
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
-import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.domain.model.UserModel
 
 class CreateGroup(

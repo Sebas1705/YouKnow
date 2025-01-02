@@ -1,6 +1,6 @@
 package es.sebas1705.youknow.data.firebase.realtime.jsons
 
-import es.sebas1705.youknow.domain.model.GroupModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
 
 /*
  * Copyright (C) 2022 The Android Open Source Project

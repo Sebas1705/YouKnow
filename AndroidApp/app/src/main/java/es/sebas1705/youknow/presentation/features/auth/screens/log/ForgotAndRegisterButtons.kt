@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.presentation.composables.CustomTextButton
+import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
 
 /**
  * Component that contains the buttons of forgot password and register question
@@ -49,16 +49,16 @@ fun ForgotAndRegisterButtons(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ){
-        CustomTextButton(
-            text = stringResource(id = R.string.forgot_password),
+        ITextButton(
+            label = stringResource(id = R.string.forgot_password),
             onClick = onForgotButton
         )
         VerticalDivider(
             modifier = Modifier.height(30.dp),
             color = MaterialTheme.colorScheme.primary
         )
-        CustomTextButton(
-            text = stringResource(id = R.string.wanna_register),
+        ITextButton(
+            label = stringResource(id = R.string.wanna_register),
             onClick = onRegisterButton
         )
     }

@@ -18,19 +18,15 @@ package es.sebas1705.youknow.presentation.features.home.windows
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.OnlyTextRequestDialog
-import es.sebas1705.youknow.presentation.composables.RequestDialog
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -45,21 +41,36 @@ fun NickWindow(
     modifier: Modifier = Modifier,
     nickname: String = "temp",
     firebaseId: String = "------",
-    onConfirmButton: (String) -> Unit = {},
-    onDismissAction: () -> Unit = {}
-) = OnlyTextRequestDialog(
+    onConfirm: (String) -> Unit = {},
+    onDismiss: () -> Unit = {}
+) = IDialog(
+    onDismissRequest = onDismiss,
+    confirmButton = {
+        IFilledButton(
+            label = stringResource(R.string.confirm),
+            onClick = { onConfirm(nickname) },
+        )
+    },
     modifier = modifier,
-    onConfirm = { onConfirmButton(nickname) },
-    onDismiss = onDismissAction,
-    title = stringResource(R.string.change_nickname_title),
-    body = stringResource(R.string.change_nickname_body)
-            + " "
-            + nickname
-            + " "
-            + stringResource(R.string.change_nickname_body2)
-            + " "
-            + nickname + "-" + firebaseId
-            + stringResource(R.string.change_nickname_body3),
+    dismissButton = {
+        IFilledButton(
+            label = stringResource(R.string.dismiss),
+            onClick = onDismiss,
+        )
+    },
+    title = {
+        IText(stringResource(R.string.change_nickname_title))
+    },
+    text = {
+        IText(stringResource(R.string.change_nickname_body)
+                + " "
+                + nickname
+                + " "
+                + stringResource(R.string.change_nickname_body2)
+                + " "
+                + nickname + "-" + firebaseId
+                + stringResource(R.string.change_nickname_body3))
+    }
 )
 
 /**

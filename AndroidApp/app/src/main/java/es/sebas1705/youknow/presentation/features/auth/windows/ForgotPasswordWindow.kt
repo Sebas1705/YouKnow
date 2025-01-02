@@ -20,25 +20,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.DialogProperties
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.CustomOutlinedTextField
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.composables.RequestDialog
+import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
+import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
+import es.sebas1705.youknow.core.composables.texts.IText
+import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Composable that displays a dialog to recover the password.
@@ -61,74 +58,32 @@ fun ForgotPasswordWindow(
 ) {
     var email by remember { mutableStateOf("") }
 
-    RequestDialog(
+    IDialog(
+        onDismissRequest = onDismiss,
         confirmButton = {
-            Button(onClick = {onConfirm(email)}) {
-                Text(text = stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text(text = stringResource(R.string.dismiss))
-            }
-        },
-        onDismissRequest = onDismiss,
-        modifier,
-        title = {
-            Text(
-                text = stringResource(R.string.enter_email),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
+            ITextButton(
+                onClick = { onConfirm(email) },
+                label = stringResource(R.string.confirm)
             )
         },
-        body = {
-            CustomOutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
-                placeholder = stringResource(R.string.email),
-                label = stringResource(R.string.email),
-            )
-        },
-    )
-
-    AlertDialog(
         modifier = modifier,
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = stringResource(R.string.enter_email),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
+        dismissButton = {
+            ITextButton(
+                onClick = onDismiss,
+                label = stringResource(R.string.dismiss)
             )
+        },
+        icon = null,
+        title = {
+            IText(stringResource(R.string.enter_email))
         },
         text = {
-            CustomOutlinedTextField(
+            IEmailTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
-                onValueChange = { email = it },
-                placeholder = stringResource(R.string.email),
-                label = stringResource(R.string.email),
+                onValueChange = { email = it }
             )
-        },
-        confirmButton = {
-            Button(onClick = {onConfirm(email)}) {
-                Text(text = stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text(text = stringResource(R.string.dismiss))
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.background,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = true
-        )
+        }
     )
 }
 

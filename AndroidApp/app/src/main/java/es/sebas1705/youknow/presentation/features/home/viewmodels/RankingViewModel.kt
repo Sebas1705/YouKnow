@@ -21,16 +21,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
- * ViewModel fon [es.sebas1705.youknow.presentation.features.home.screens.social.SocialScreen] that will handle the logic of the screen.
- * It will load the groups and the global chat. It will also send messages to the global chat.
- *
- * @param realtimeUsesCases [RealtimeUsesCases]: UseCase to get the messages from the global chat and send messages to it.
- * @param authenticationUsesCases [AuthenticationUsesCases]: UseCase to get the current user.
+ * ViewModel that will handle the ranking screen.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
@@ -40,216 +38,30 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class RankingViewModel @Inject constructor(
+    private val userUsesCases: UserUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<RankingState, RankingIntent>() {
 
     override fun initState(): RankingState = RankingState.default()
 
-    override fun intentHandler(intent: SocialIntent) {
+    override fun intentHandler(intent: RankingIntent) {
         when (intent) {
-            is SocialIntent.SendMessage -> sendMessage(intent)
-            is SocialIntent.CreateGroup -> createGroup(intent)
-            is SocialIntent.JoinGroup -> joinGroup(intent)
-            is SocialIntent.OutGroup -> outGroup(intent)
-            is SocialIntent.KickGroup -> kickGroup(intent)
-            is SocialIntent.LoadSocial -> loadSocial(intent)
-            is SocialIntent.ClearSocial -> clearSocial()
+            is RankingIntent.GetRanking -> getRanking()
         }
     }
 
     //Actions:
-    /**
-     * Action associated with [SocialIntent.SendMessage] that will send a message to the global chat.
-     *
-     * @see [SocialIntent.SendMessage]
-     */
-    private fun sendMessage(
-        intent: SocialIntent.SendMessage
-    ) = execute(Dispatchers.IO) {
-        chatUsesCases.sendMessage(
-            intent.message,
-            intent.userModel.firebaseId,
-            intent.userModel.nickName,
-            onSuccess = {},
-            onError = { error ->
-                execute {
-                    application.applicationContext.printTextInToast("Error in message sending: $error")
-                }
-            }
-        )
-    }
-
-
-    /**
-     * Action associated with [SocialIntent.CreateGroup] that will create a group.
-     *
-     * @see [SocialIntent.CreateGroup]
-     */
-    private fun createGroup(
-        intent: SocialIntent.CreateGroup
-    ) = execute(Dispatchers.IO) {
-        userUsesCases.addCreditsToUser(
-            user = intent.userModel,
-            creditsToAdd = -2000,
+    private fun getRanking() = execute(Dispatchers.IO) {
+        userUsesCases.getUserRanking(
             onLoading = { startLoading() },
-            onSuccess = {
-                execute(Dispatchers.IO) {
-                    groupUsesCases.createGroup(
-                        intent.name,
-                        intent.description,
-                        intent.userModel,
-                        onSuccess = { group ->
-                            userUsesCases.setGroupToUser(
-                                group,
-                                intent.userModel,
-                                true,
-                                onSuccess = {
-                                    updateUi { it.copy(myGroup = group) }
-                                    stopLoading()
-                                },
-                                onError = {
-                                    stopAndError(
-                                        it,
-                                        application.applicationContext::printTextInToast
-                                    )
-                                }
-                            )
-                        },
-                        onError = {
-                            stopAndError(
-                                it,
-                                application.applicationContext::printTextInToast
-                            )
-                        }
-                    )
-                }
-            },
-            onError = { stopAndError(it, application.applicationContext::printTextInToast) }
-        )
-    }
-
-    /**
-     * Action associated with [SocialIntent.JoinGroup] that will join a group.
-     *
-     * @see [SocialIntent.JoinGroup]
-     */
-    private fun joinGroup(
-        intent: SocialIntent.JoinGroup
-    ) = execute(Dispatchers.IO) {
-        userUsesCases.setGroupToUser(
-            group = intent.groupModel,
-            user = intent.userModel,
-            creator = false,
-            onSuccess = {
-                updateUi { it.copy(myGroup = intent.groupModel) }
+            onSuccess = { ranking ->
                 stopLoading()
-            },
-            onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
-            }
-        )
-    }
-
-    private fun outGroup(
-        intent: SocialIntent.OutGroup
-    ) = execute(Dispatchers.IO) {
-        userUsesCases.removeGroupToUser(
-            group = intent.groupModel,
-            userMemberId = intent.userModel.memberId(),
-            onLoading = { startLoading() },
-            onSuccess = {
-                if (intent.groupModel.leaderUID == intent.userModel.firebaseId || intent.groupModel.members.isEmpty()) {
-                    execute(Dispatchers.IO) {
-                        groupUsesCases.removeGroup(
-                            intent.groupModel,
-                            onSuccess = {
-                                updateUi { it.copy(myGroup = null) }
-                                stopLoading()
-                            },
-                            onError = {
-                                stopAndError(
-                                    it,
-                                    application.applicationContext::printTextInToast
-                                )
-                            }
-                        )
-                    }
-                } else {
-                    updateUi { it.copy(myGroup = null) }
-                    stopLoading()
-                }
-            },
-            onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
-            }
-        )
-    }
-
-    private fun kickGroup(
-        intent: SocialIntent.KickGroup
-    ) = execute(Dispatchers.IO) {
-        userUsesCases.removeGroupToUser(
-            group = intent.groupModel,
-            userMemberId = intent.userToKickMemberId,
-            onLoading = { startLoading() },
-            onSuccess = { stopLoading() },
-            onError = {
-                stopAndError(
-                    it,
-                    application.applicationContext::printTextInToast
-                )
-            }
-        )
-    }
-
-    /**
-     * Action associated with [SocialIntent.LoadSocial] that will load the social data.
-     *
-     * @see [SocialIntent.LoadSocial]
-     */
-    private fun loadSocial(intent: SocialIntent.LoadSocial) {
-        chatUsesCases.setMessagesListener(
-            onSuccess = { data ->
-                updateUi {
-                    it.copy(chatGlobal = data)
-                }
+                updateUi { it.copy(ranking = ranking) }
             },
             onError = { error ->
-                execute {
-                    application.applicationContext.printTextInToast("Error in global chat loading: $error")
-                }
+                stopAndError(error, application::printTextInToast)
             }
         )
-        groupUsesCases.setGroupsListener(
-            onSuccess = { data ->
-                updateUi {
-                    val myGroup = data.find { it.groupId == intent.myGroupId }
-                    it.copy(groups = data, myGroup = myGroup)
-                }
-            },
-            onError = { error ->
-                execute {
-                    application.applicationContext.printTextInToast("Error in groups loading: $error")
-                }
-            }
-        )
-    }
-
-
-    /**
-     * Action associated with [SocialIntent.ClearSocial] that will clear the social data.
-     *
-     * @see [SocialIntent.ClearSocial]
-     */
-    private fun clearSocial() {
-        chatUsesCases.removeMessagesListener()
-        groupUsesCases.removeGroupsListener()
     }
 
     //Privates:
@@ -279,6 +91,7 @@ class RankingViewModel @Inject constructor(
  */
 data class RankingState(
     val isLoading: Boolean,
+    val ranking: List<UserModel>
 ) : MVIBaseState {
     companion object {
 
@@ -288,7 +101,8 @@ data class RankingState(
          * @return [RankingState]: Default state.
          */
         fun default() = RankingState(
-            isLoading = false
+            isLoading = false,
+            ranking = emptyList()
         )
     }
 }
@@ -311,6 +125,7 @@ data class RankingState(
  */
 sealed interface RankingIntent : MVIBaseIntent {
 
+    data object GetRanking : RankingIntent
 }
 
 

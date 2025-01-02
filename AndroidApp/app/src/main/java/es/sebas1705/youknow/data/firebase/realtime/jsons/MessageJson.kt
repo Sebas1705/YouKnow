@@ -16,7 +16,7 @@ package es.sebas1705.youknow.data.firebase.realtime.jsons
  *
  */
 
-import es.sebas1705.youknow.domain.model.MessageModel
+import es.sebas1705.youknow.domain.model.social.MessageModel
 
 /**
  * JSON representation of a message

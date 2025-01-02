@@ -18,7 +18,6 @@ package es.sebas1705.youknow.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-//--------------------------------------------------------------------
 // Light low contrast color palette
 val primaryLightLowContrast = Color(0xFF584275)
 val onPrimaryLightLowContrast = Color(0xFFFFFFFF)
@@ -55,8 +54,8 @@ val surfaceContainerLowLightLowContrast = Color(0xFFEFF5F5)
 val surfaceContainerLightLowContrast = Color(0xFFE9EFEF)
 val surfaceContainerHighLightLowContrast = Color(0xFFE3E9EA)
 val surfaceContainerHighestLightLowContrast = Color(0xFFDEE4E4)
-
 //--------------------------------------------------------------------
+
 // Light medium contrast color palette
 val primaryLightMediumContrast = Color(0xFF4F376E)
 val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
@@ -93,8 +92,8 @@ val surfaceContainerLowLightMediumContrast = Color(0xFFEFF5F5)
 val surfaceContainerLightMediumContrast = Color(0xFFE9EFEF)
 val surfaceContainerHighLightMediumContrast = Color(0xFFE3E9EA)
 val surfaceContainerHighestLightMediumContrast = Color(0xFFDEE4E4)
-
 //--------------------------------------------------------------------
+
 // Light high contrast color palette
 val primaryLightHighContrast = Color(0xFF2D154B)
 val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
@@ -131,8 +130,8 @@ val surfaceContainerLowLightHighContrast = Color(0xFFEFF5F5)
 val surfaceContainerLightHighContrast = Color(0xFFE9EFEF)
 val surfaceContainerHighLightHighContrast = Color(0xFFE3E9EA)
 val surfaceContainerHighestLightHighContrast = Color(0xFFDEE4E4)
-
 //--------------------------------------------------------------------
+
 // Dark low contrast color palette
 val primaryDarkLowContrast = Color(0xFFD7BAFB)
 val onPrimaryDarkLowContrast = Color(0xFF3C255A)
@@ -169,8 +168,8 @@ val surfaceContainerLowDarkLowContrast = Color(0xFF161D1D)
 val surfaceContainerDarkLowContrast = Color(0xFF1A2121)
 val surfaceContainerHighDarkLowContrast = Color(0xFF252B2C)
 val surfaceContainerHighestDarkLowContrast = Color(0xFF303637)
-
 //--------------------------------------------------------------------
+
 // Dark medium contrast color palette
 val primaryDarkMediumContrast = Color(0xFFDCBFFF)
 val onPrimaryDarkMediumContrast = Color(0xFF20073E)
@@ -207,8 +206,8 @@ val surfaceContainerLowDarkMediumContrast = Color(0xFF161D1D)
 val surfaceContainerDarkMediumContrast = Color(0xFF1A2121)
 val surfaceContainerHighDarkMediumContrast = Color(0xFF252B2C)
 val surfaceContainerHighestDarkMediumContrast = Color(0xFF303637)
-
 //--------------------------------------------------------------------
+
 // Dark high contrast color palette
 val primaryDarkHighContrast = Color(0xFFFFF9FC)
 val onPrimaryDarkHighContrast = Color(0xFF000000)
@@ -245,7 +244,6 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF161D1D)
 val surfaceContainerDarkHighContrast = Color(0xFF1A2121)
 val surfaceContainerHighDarkHighContrast = Color(0xFF252B2C)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF303637)
-
 //--------------------------------------------------------------------
 
 

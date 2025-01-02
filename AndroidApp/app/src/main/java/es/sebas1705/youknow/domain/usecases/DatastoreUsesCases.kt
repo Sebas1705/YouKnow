@@ -89,8 +89,19 @@ class ReadAppVolume(
 class SaveAppVolume(
     private val datastoreRepository: DatastoreRepository
 ) {
-    suspend operator fun invoke(volume: Float) {
-        return datastoreRepository.saveAppVolume(volume)
+    suspend operator fun invoke(
+        volume: Float,
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            onLoading()
+            datastoreRepository.saveAppVolume(volume)
+            onSuccess()
+        } catch (e: Exception) {
+            onError(e.message.toString())
+        }
     }
 }
 
@@ -127,8 +138,19 @@ class ReadAppContrast(
 class SaveAppContrast(
     private val datastoreRepository: DatastoreRepository
 ) {
-    suspend operator fun invoke(themeContrast: ThemeContrast) {
-        return datastoreRepository.saveAppContrast(themeContrast)
+    suspend operator fun invoke(
+        themeContrast: ThemeContrast,
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            onLoading()
+            datastoreRepository.saveAppContrast(themeContrast)
+            onSuccess()
+        } catch (e: Exception) {
+            onError(e.message.toString())
+        }
     }
 }
 

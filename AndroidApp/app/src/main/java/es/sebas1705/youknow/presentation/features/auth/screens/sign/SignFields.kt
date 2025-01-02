@@ -16,14 +16,16 @@ package es.sebas1705.youknow.presentation.features.auth.screens.sign
  *
  */
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.presentation.composables.CustomOutlinedTextField
-import es.sebas1705.youknow.presentation.composables.CustomTextFieldEmail
-import es.sebas1705.youknow.presentation.composables.CustomTextFieldPassword
-import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
+import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.youknow.core.composables.textfields.IPasswordTextField
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 
 /**
  * Sign Field that will allow the user to sign up.
@@ -42,15 +44,11 @@ import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
  * @param passwordRepeat [String]: Repeat password of the user.
  * @param onPasswordRepeatChange (String) -> Unit: Function to handle the repeat password change.
  *
- * @see CustomOutlinedTextField
- * @see CustomTextFieldEmail
- * @see CustomTextFieldPassword
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @Composable
-fun SignField(
+fun ColumnScope.SignField(
     fieldsModifier: Modifier = Modifier,
     userName: String,
     onUserNameChange: (String) -> Unit,
@@ -70,35 +68,35 @@ fun SignField(
     val repeatText = stringResource(id = R.string.repeat)
 
     //Fields:
-    CustomOutlinedTextField(
+    IOutlinedTextField(
         modifier = fieldsModifier,
         value = userName,
         onValueChange = onUserNameChange,
         label = userNameText,
         placeholder = userNameText
     )
-    SimpleSpacer()
-    CustomTextFieldEmail(
+    IVerSpacer(height = SmallPadding)
+    IEmailTextField(
         modifier = fieldsModifier,
         value = email,
         onValueChange = onEmailChange,
     )
-    SimpleSpacer()
-    CustomTextFieldEmail(
+    IVerSpacer(height = SmallPadding)
+    IEmailTextField(
         modifier = fieldsModifier,
         value = emailRepeat,
         onValueChange = onEmailRepeatChange,
-        label = "Repeat $emailText",
-        placeholder = "Repeat $emailText"
+        label = "$repeatText $emailText",
+        placeholder = "$repeatText $emailText"
     )
-    SimpleSpacer()
-    CustomTextFieldPassword(
+    IVerSpacer(height = SmallPadding)
+    IPasswordTextField(
         modifier = fieldsModifier,
         value = password,
         onValueChange = onPasswordChange
     )
-    SimpleSpacer()
-    CustomTextFieldPassword(
+    IVerSpacer(height = SmallPadding)
+    IPasswordTextField(
         modifier = fieldsModifier,
         value = passwordRepeat,
         onValueChange = onPasswordRepeatChange,

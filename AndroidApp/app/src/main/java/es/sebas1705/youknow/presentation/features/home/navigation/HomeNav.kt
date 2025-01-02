@@ -22,22 +22,17 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,11 +44,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.navToTab
-import es.sebas1705.youknow.presentation.composables.rememberWindowState
-import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
-import es.sebas1705.youknow.presentation.features.home.composables.BottomNavigationItem
-import es.sebas1705.youknow.presentation.features.home.composables.HomeBottomNavigationBar
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.states.rememberWindowState
+import es.sebas1705.youknow.core.utlis.extensions.composables.navToTab
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
+import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
+import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens
+import es.sebas1705.youknow.presentation.features.home.composables.HomeBottomBar
+import es.sebas1705.youknow.presentation.features.home.composables.HomeTopBar
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.InfoScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.MainScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.PlayScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.ProfileScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.SocialScreen
 import es.sebas1705.youknow.presentation.features.home.screens.InfoScreen
 import es.sebas1705.youknow.presentation.features.home.screens.MainScreen
 import es.sebas1705.youknow.presentation.features.home.screens.PlayScreen
@@ -81,43 +85,14 @@ import es.sebas1705.youknow.presentation.features.home.windows.LogoutWindow
 @Composable
 fun HomeNav(
     windowState: WindowState,
+    authViewModel: AuthViewModel,
     onLogOutNavigation: () -> Unit,
-    onSettingsNavigation: () -> Unit
+    onSettingsNavigation: () -> Unit,
+    onGameNavigation: (GameScreens) -> Unit
 ) {
 
     var alertDisplay by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val bottomNavigationItems by remember {
-        derivedStateOf {
-            listOf(
-                BottomNavigationItem(
-                    icon = Icons.Default.Public,
-                    label = context.getString(R.string.Social),
-                    route = SocialScreen
-                ),
-                BottomNavigationItem(
-                    icon = Icons.Default.Person,
-                    label = context.getString(R.string.Profile),
-                    route = ProfileScreen
-                ),
-                BottomNavigationItem(
-                    icon = Icons.Default.Home,
-                    label = context.getString(R.string.Main),
-                    route = MainScreen
-                ),
-                BottomNavigationItem(
-                    icon = Icons.Default.SportsEsports,
-                    label = context.getString(R.string.Play),
-                    route = PlayScreen
-                ),
-                BottomNavigationItem(
-                    icon = Icons.Default.Info,
-                    label = context.getString(R.string.Info),
-                    route = InfoScreen
-                )
-            )
-        }
-    }
 
     val userViewModel: UserViewModel = hiltViewModel()
     val userState by userViewModel.uiState.collectAsStateWithLifecycle()
@@ -125,21 +100,21 @@ fun HomeNav(
     val socialState by socialViewModel.uiState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val windowState by rememberWindowState()
-    var selectedItem by remember { mutableIntStateOf(2) }
+    var selectedItem by rememberSaveable { mutableIntStateOf(2) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            HomeBottomNavigationBar(
-                items = bottomNavigationItems,
+            HomeBottomBar(
+                items = homes,
                 selectedItem = selectedItem,
                 onItemClick = { newItem, lastItem ->
                     if (newItem != lastItem) {
-                        if (bottomNavigationItems[lastItem].route == SocialScreen)
+                        if (homes[lastItem].destination == SocialScreen)
                             socialViewModel.eventHandler(SocialIntent.ClearSocial)
-                        if (bottomNavigationItems[newItem].route == SocialScreen)
+                        if (homes[newItem].destination == SocialScreen)
                             socialViewModel.eventHandler(SocialIntent.LoadSocial(userState.userModel!!.groupId))
-                        navController.navToTab(bottomNavigationItems[newItem].route)
+                        navController.navToTab(homes[newItem].destination)
                         selectedItem = newItem
                     }
                 },
@@ -149,8 +124,8 @@ fun HomeNav(
             if (selectedItem == 2)
                 SmallFloatingActionButton(
                     onClick = onSettingsNavigation,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
@@ -160,8 +135,8 @@ fun HomeNav(
             else if (selectedItem == 1)
                 SmallFloatingActionButton(
                     onClick = { alertDisplay = true },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Logout,
@@ -169,23 +144,29 @@ fun HomeNav(
                     )
                 }
         },
+        topBar = {
+            if (selectedItem in listOf(1, 2, 3))
+                HomeTopBar(userModel = userState.userModel)
+        }
     ) {
-
 
         if (alertDisplay) {
             LogoutWindow(
                 modifier = Modifier.padding(it),
-                onConfirmButton = {
-                    onLogOutNavigation()
+                onConfirm = {
+                    authViewModel.eventHandler(AuthIntent.SignOut(
+                        { onLogOutNavigation() },
+                        { context.printTextInToast("Error in sign out, try again or reinstall the app") }
+                    ))
                 },
-                onDismissAction = {
+                onDismiss = {
                     alertDisplay = false
                 }
             )
         }
 
         if (userState.isLoading || socialState.isLoading)
-            LoadingWindow(windowState)
+            LoadingDialog(windowState)
 
         NavHost(
             navController = navController,
@@ -202,7 +183,7 @@ fun HomeNav(
                 SocialScreen(windowState, userState, socialState, userViewModel, socialViewModel)
             }
             composable<PlayScreen> {
-                PlayScreen(windowState, userState, userViewModel)
+                PlayScreen(windowState, userState, userViewModel, onGameNavigation)
             }
             composable<InfoScreen> {
                 InfoScreen(windowState, userState, userViewModel)

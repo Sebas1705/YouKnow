@@ -19,22 +19,73 @@ package es.sebas1705.youknow.core.utlis
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 
-object PreviewSettings{
+object PreviewSettings {
     const val WIDTH = 395
     const val HEIGHT = 855
 }
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-@Preview(showBackground = true, name = "Day", showSystemUi = false, locale = "en", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night", showSystemUi = false, locale = "es", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
+@Preview(
+    showBackground = true,
+    name = "Day",
+    showSystemUi = false,
+    locale = "en",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Night",
+    showSystemUi = false,
+    locale = "es",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
 annotation class UiModePreviews
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-@Preview(showBackground = true, name = "Day-en", showSystemUi = true, locale = "en", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night-en", showSystemUi = true, locale = "en", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
-@Preview(showBackground = true, name = "Day-es", showSystemUi = true, locale = "es", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night-es", showSystemUi = true, locale = "es", widthDp = PreviewSettings.WIDTH, heightDp = PreviewSettings.HEIGHT)
+@Preview(
+    showBackground = true,
+    name = "Day-en",
+    showSystemUi = true,
+    locale = "en",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Night-en",
+    showSystemUi = true,
+    locale = "en",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
+@Preview(
+    showBackground = true,
+    name = "Day-es",
+    showSystemUi = true,
+    locale = "es",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Night-es",
+    showSystemUi = true,
+    locale = "es",
+    widthDp = PreviewSettings.WIDTH,
+    heightDp = PreviewSettings.HEIGHT
+)
 annotation class LocalePreviews
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+@Preview(name = "Day")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+annotation class IComposablePreview
 

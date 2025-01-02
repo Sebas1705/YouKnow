@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Core -->
+    <string name="any">Any</string>
+    <!-- Type -->
+    <string name="type_multiple">Multiple choice</string>
+    <string name="type_boolean">True or False</string>
+    <!-- End -->
+    <!-- Difficulty -->
+    <string name="dif_easy">Easy</string>
+    <string name="dif_medium">Medium</string>
+    <string name="dif_hard">Hard</string>
+    <!-- End -->
+    <!-- Language -->
+    <string name="lan_en">English</string>
+    <string name="lan_es">Spanish</string>
+    <!-- End -->
+    <!-- Category -->
+    <string name="cat_general_knowledge">General Knowledge</string>
+    <string name="cat_entertainment_books">Entertainment: Books</string>
+    <string name="cat_entertainment_film">Entertainment: Film</string>
+    <string name="cat_entertainment_music">Entertainment: Music</string>
+    <string name="cat_entertainment_musicals_and_theatres">Entertainment: Musicals &amp; Theatres</string>
+    <string name="cat_entertainment_television">Entertainment: Television</string>
+    <string name="cat_entertainment_video_games">Entertainment: Video Games</string>
+    <string name="cat_entertainment_board_games">Entertainment: Board Games</string>
+    <string name="cat_science_and_nature">Science &amp; Nature</string>
+    <string name="cat_science_computers">Science: Computers</string>
+    <string name="cat_science_mathematics">Science: Mathematics</string>
+    <string name="cat_mythology">Mythology</string>
+    <string name="cat_sports">Sports</string>
+    <string name="cat_geography">Geography</string>
+    <string name="cat_history">History</string>
+    <string name="cat_politics">Politics</string>
+    <string name="cat_art">Art</string>
+    <string name="cat_celebrities">Celebrities</string>
+    <string name="cat_animals">Animals</string>
+    <string name="cat_vehicles">Vehicles</string>
+    <string name="cat_entertainment_comics">Entertainment: Comics</string>
+    <string name="cat_science_gadgets">Science: Gadgets</string>
+    <string name="cat_entertainment_japanese_anime_and_manga">Entertainment: Japanese Anime &amp; Manga</string>
+    <string name="cat_entertainment_cartoon_and_animations">Entertainment: Cartoon &amp; Animations</string>
+    <!-- End -->
+
     <!-- Application -->
     <string name="app_name" translatable="false">You Know?</string>
     <string name="web_client_id" translatable="false">445608778208-u91a5dbmgj8ija5g4p25oa61o8ip779r.apps.googleusercontent.com</string>
@@ -92,6 +134,59 @@
     <string name="credits">Credits</string>
     <string name="points">Points</string>
     <string name="delete_account">Delete account</string>
+    <string name="Ranking">Ranking</string>
+    <string name="game_out_title">Exit game</string>
+    <string name="game_out_body">Do you wanna to exit this game? (You\'ll lost all progress in this game)</string>
 
+    <!-- Game Screens -->
+    <string name="mystery_number">Mystery number</string>
+    <string name="quiz">Quiz</string>
+    <string name="word_pass">Word-Pass</string>
+    <string name="families">Families</string>
+    <string name="mode_title">Selection Mode</string>
+    <string name="survival">Survival</string>
+    <string name="time_attack">Time attack</string>
+    <string name="aleatory">Aleatory</string>
+    <string name="custom">Custom</string>
+    <string name="error_loading_questions">Error loading questions</string>
+    <string name="finished_title">Finish game</string>
+    <string name="mode">Mode:</string>
+    <string name="corrects_answers">Corrects:</string>
+    <string name="incorrect_answers">Incorrect:</string>
+    <string name="total_answers">Total:</string>
+    <string name="lives">Lives:</string>
+    <string name="restart_game">Restart game</string>
+    <string name="out_game">Out Game</string>
+    <string name="custom_title">Custom Mode</string>
+    <string name="num_questions">Question number:</string>
+    <string name="type">Type</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="category">Category</string>
+    <string name="start_game">Start game</string>
+    <string name="select_option">Select an option</string>
+    <string name="error_loading_number">Error loading number</string>
+    <string name="mystery_title">Mystery Number</string>
+    <string name="remaining_time">Remaining Time:</string>
+    <string name="minus_plus">+/-</string>
+    <string name="try_number">Try</string>
+    <string name="incorrect_number">"Try again: "</string>
+    <string name="greather">Greather</string>
+    <string name="smaller">Smaller</string>
+    <string name="range">"Range: "</string>
+    <string name="families_game">Select which isn\'t in family</string>
+    <string name="first_letter">First letter</string>
+    <string name="between_letter">Between letter</string>
+    <string name="last_letter">Last letter</string>
+    <string name="firewheel">Firewheel</string>
+    <string name="try_word">Try</string>
+    <string name="games">Games</string>
+    <string name="You">You</string>
+    <string name="leader">Leader</string>
+    <string name="view_profile">View profile</string>
+    <string name="leading_content">Leading Content</string>
+    <string name="trailing_content">Trailing content</string>
+    <string name="previous_definition">Previous definition</string>
+    <string name="next_definition">Next Definition</string>
+    <string name="error_loading_data">"There was a problem, reset the game please or attempt the posibles errors: "</string>
 
 </resources>

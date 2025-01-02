@@ -1,11 +1,4 @@
 package es.sebas1705.youknow.data.firebase.firestore.repository
-
-import es.sebas1705.youknow.core.utlis.FlowResponse
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,6 +15,12 @@ import kotlinx.coroutines.flow.Flow
  * limitations under the License.
  *
  */
+
+import es.sebas1705.youknow.core.utlis.alias.FlowResponse
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
+import es.sebas1705.youknow.data.model.ResponseState
+import es.sebas1705.youknow.domain.model.UserModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository that will handle the Firestore operations.
@@ -91,6 +90,21 @@ interface FirestoreRepository {
         userId: String,
         oldCredits: Int,
         addCredits: Int
+    ): FlowResponse<Int>
+
+    /**
+     * Add points to a user
+     *
+     * @param userId [String]: Id of the user to add the points
+     * @param addPoints [Int]: Points to add
+     * @param oldPoints [Int]: Old points of the user
+     *
+     * @return [FlowResponse]<[Int]>: Flow with the response of the operation
+     */
+    fun addPointsToUser(
+        userId: String,
+        addPoints: Int,
+        oldPoints: Int
     ): FlowResponse<Int>
 
     /**

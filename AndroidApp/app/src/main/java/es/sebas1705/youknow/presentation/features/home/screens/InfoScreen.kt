@@ -18,10 +18,12 @@ package es.sebas1705.youknow.presentation.features.home.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.R
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.ApplyBack
 import es.sebas1705.youknow.presentation.features.home.viewmodels.UserState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.UserViewModel
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -54,11 +56,15 @@ fun InfoScreen(
  */
 @Composable
 private fun InfoDesign(
+    windowState: WindowState = WindowState.default()
 ) {
     ApplyBack(
-        R.drawable.back_portrait_empty
+        windowState.backFill
     ) {
-
+        Title(
+            text = "Info (Coming soon)",
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 
 }

@@ -77,4 +77,18 @@ data class WindowState(
         else if (widthType == SizeType.MEDIUM || heightType == SizeType.MEDIUM) mediumOpt
         else compactOpt
     }
+
+    fun <T> widthFilter(
+        compactOpt: T,
+        mediumOpt: T,
+        expandedOpt: T
+    ): T = (if (isPortrait) heightType else widthType)
+        .filter(compactOpt, mediumOpt, expandedOpt)
+
+    fun <T> heightFilter(
+        compactOpt: T,
+        mediumOpt: T,
+        expandedOpt: T
+    ): T = (if (isPortrait) widthType else heightType)
+        .filter(compactOpt, mediumOpt, expandedOpt)
 }

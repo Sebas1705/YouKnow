@@ -16,11 +16,13 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log
  *
  */
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.presentation.composables.CustomTextFieldEmail
-import es.sebas1705.youknow.presentation.composables.CustomTextFieldPassword
-import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
+import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
+import es.sebas1705.youknow.core.composables.textfields.IPasswordTextField
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 
 /**
  * Composable that contains the email and password fields customized with the [CustomTextFieldEmail] and [CustomTextFieldPassword] composable.
@@ -40,21 +42,20 @@ import es.sebas1705.youknow.presentation.composables.Spacers.SimpleSpacer
  * @since 1.0.0
  */
 @Composable
-fun EmailAndPassFields(
+fun ColumnScope.EmailAndPassFields(
     fieldsModifier: Modifier = Modifier,
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
-
-    CustomTextFieldEmail(
+    IEmailTextField(
         modifier = fieldsModifier,
         value = email,
         onValueChange = onEmailChange
     )
-    SimpleSpacer()
-    CustomTextFieldPassword(
+    IVerSpacer(height = SmallPadding)
+    IPasswordTextField(
         modifier = fieldsModifier,
         value = password,
         onValueChange = onPasswordChange

@@ -19,6 +19,8 @@ package es.sebas1705.youknow.presentation.features.home.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -31,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -45,20 +46,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
+import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
+import es.sebas1705.youknow.core.composables.cards.IResumeCard
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CustomIconButton
-import es.sebas1705.youknow.presentation.composables.CustomIconTextButton
-import es.sebas1705.youknow.presentation.composables.InfoCard
-import es.sebas1705.youknow.presentation.composables.SimpleOutlinedTextField
-import es.sebas1705.youknow.presentation.composables.Title
-import es.sebas1705.youknow.presentation.features.app.windows.LoadingWindow
 import es.sebas1705.youknow.presentation.features.home.viewmodels.ProfileIntent
 import es.sebas1705.youknow.presentation.features.home.viewmodels.ProfileState
 import es.sebas1705.youknow.presentation.features.home.viewmodels.ProfileViewModel
@@ -118,8 +120,8 @@ private fun ProfileDesign(
     var nickname by remember { mutableStateOf(user?.nickName ?: "") }
 
     ApplyBack(windowState.backEmpty) {
-        if (userState.isLoading) LoadingWindow(windowState)
-        if (profileState.isLoading) LoadingWindow(windowState)
+        if (userState.isLoading || profileState.isLoading)
+            LoadingDialog(windowState)
         if (photoWindow) UrlRequestWindow(
             windowState,
             onConfirmButton = {
@@ -136,7 +138,7 @@ private fun ProfileDesign(
         if (nickWindow) NickWindow(
             nickname = nickname,
             firebaseId = user?.firebaseId ?: "",
-            onConfirmButton = {
+            onConfirm = {
                 nickWindow = false
                 profileViewModel?.eventHandler(
                     ProfileIntent.ChangeNickname(
@@ -145,7 +147,7 @@ private fun ProfileDesign(
                     )
                 )
             },
-            onDismissAction = { nickWindow = false }
+            onDismiss = { nickWindow = false }
         )
 
         LazyColumn(
@@ -153,10 +155,17 @@ private fun ProfileDesign(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            stickyHeader {
+            item {
                 val imageModifier = Modifier
-                    .fillMaxWidth()
-                    .height(windowState.heightDp / 3)
+                    .height(windowState.heightFilter(200.dp, 250.dp, 300.dp))
+                    .padding(
+                        end = SmallPadding,
+                        bottom = MediumPadding,
+                        start = SmallPadding,
+                        top = SmallestPadding
+                    )
+                    .background(MaterialTheme.colorScheme.surface)
+                    .border(3.dp, MaterialTheme.colorScheme.secondary)
                     .clickable(onClick = { photoWindow = true })
                 if (user != null && user.photoUrl != null) AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -165,18 +174,14 @@ private fun ProfileDesign(
                         .build(),
                     placeholder = painterResource(R.drawable.sign_user),
                     contentDescription = stringResource(R.string.Profile),
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Fit,
                     modifier = imageModifier
                 )
                 else Image(
                     painter = painterResource(R.drawable.sign_user),
                     contentDescription = stringResource(R.string.Profile),
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Fit,
                     modifier = imageModifier
-                )
-                HorizontalDivider(
-                    thickness = SmallPadding,
-                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
 
@@ -194,7 +199,7 @@ private fun ProfileDesign(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    SimpleOutlinedTextField(
+                    IOutlinedTextField(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(windowState.widthType.filter(0.6f, 0.4f, 0.3f))
@@ -204,11 +209,11 @@ private fun ProfileDesign(
                         onValueChange = { nickname = it },
                         placeholder = stringResource(R.string.nickname),
                     )
-                    CustomIconButton(
+                    IStandardIconButton(
                         onClick = { nickWindow = true },
-                        icon = Icons.Filled.Save,
-                        modifierButton = Modifier.fillMaxHeight(),
-                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = stringResource(R.string.nickname),
+                        modifier = Modifier.fillMaxHeight(),
+                        imageVector = Icons.Filled.Save,
                     )
                 }
             }
@@ -222,7 +227,8 @@ private fun ProfileDesign(
             }
 
             item {
-                InfoCard(
+                IResumeCard(
+                    title = stringResource(R.string.user_data_title),
                     titlesValues = mapOf(
                         stringResource(R.string.email) to user?.email.toString(),
                         stringResource(R.string.firebase_id) to user?.firebaseId.toString(),
@@ -237,14 +243,13 @@ private fun ProfileDesign(
             }
 
             item {
-                CustomIconTextButton(
+                IOutlinedButton(
+                    onClick = {},
+                    label = stringResource(R.string.delete_account),
                     modifier = Modifier
                         .fillMaxWidth(windowState.widthType.filter(0.8f, 0.7f, 0.6f))
                         .padding(vertical = MediumPadding),
-                    text = stringResource(R.string.delete_account),
                     imageVector = Icons.Filled.Delete,
-                    onClick = {},
-                    contentColor = MaterialTheme.colorScheme.tertiary
                 )
             }
         }

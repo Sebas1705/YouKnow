@@ -29,11 +29,12 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.youknow.core.composables.cards.IResumeCard
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.firebase.authentication.config.ProviderAuth
 import es.sebas1705.youknow.domain.model.UserModel
-import es.sebas1705.youknow.presentation.composables.InfoCard
-import es.sebas1705.youknow.presentation.composables.InfoDialog
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 @Composable
@@ -53,8 +54,16 @@ fun UserInfoWindow(
         credits = 11111,
         friends = emptyList()
     ) else userModel
-    InfoDialog(
+
+    IDialog(
+        onDismissRequest = onDismiss,
         modifier = modifier,
+        dismissButton = {
+            ITextButton(
+                onClick = onDismiss,
+                label = stringResource(R.string.dismiss),
+            )
+        },
         title = {
             if (user.photoUrl != null) AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -71,8 +80,9 @@ fun UserInfoWindow(
                 modifier = modifier.fillMaxWidth(0.35f)
             )
         },
-        body = {
-            InfoCard(
+        text = {
+            IResumeCard(
+                title = "",
                 titlesValues = mapOf(
                     stringResource(R.string.nickname) to user.nickName,
                     stringResource(R.string.points) to user.points.toString(),
@@ -80,8 +90,7 @@ fun UserInfoWindow(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
             )
-        },
-        onDismiss = onDismiss
+        }
     )
 }
 

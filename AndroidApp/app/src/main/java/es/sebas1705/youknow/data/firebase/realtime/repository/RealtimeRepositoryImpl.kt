@@ -21,7 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import es.sebas1705.youknow.core.classes.managers.TaskFlowManager
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
@@ -30,8 +30,8 @@ import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.data.firebase.realtime.jsons.GroupJson
 import es.sebas1705.youknow.data.firebase.realtime.jsons.MessageJson
 import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.GroupModel
-import es.sebas1705.youknow.domain.model.MessageModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.domain.model.social.MessageModel
 import javax.inject.Inject
 
 /**

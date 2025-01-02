@@ -23,9 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,9 +35,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.CustomOutlinedTextField
-import es.sebas1705.youknow.presentation.composables.RequestDialog
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -59,19 +57,21 @@ fun UrlRequestWindow(
     val context = LocalContext.current
     var photoUrl by remember { mutableStateOf("") }
 
-    RequestDialog(
-        confirmButton = {
-            Button(onClick = { onConfirmButton(photoUrl) }) {
-                Text(text = stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismissAction) {
-                Text(text = stringResource(R.string.dismiss))
-            }
-        },
+    IDialog(
         onDismissRequest = onDismissAction,
+        confirmButton = {
+            ITextButton(
+                onClick = { onConfirmButton(photoUrl) },
+                label = stringResource(R.string.confirm)
+            )
+        },
         modifier = modifier,
+        dismissButton = {
+            ITextButton(
+                onClick = onDismissAction,
+                label = stringResource(R.string.dismiss)
+            )
+        },
         title = {
             Image(
                 painter = painterResource(R.drawable.sign_user),
@@ -81,21 +81,15 @@ fun UrlRequestWindow(
                     .fillMaxHeight(0.3f)
             )
         },
-        body = {
-            CustomOutlinedTextField(
+        text = {
+            IOutlinedTextField(
                 value = photoUrl,
                 onValueChange = { photoUrl = it },
                 label = stringResource(R.string.url_photo),
                 placeholder = stringResource(R.string.url_photo),
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Link,
-                        contentDescription = "Url linked image"
-                    )
-                }
+                leadingIcon = Icons.Filled.Link to {}
             )
-        },
+        }
     )
 }
 

@@ -27,6 +27,14 @@ import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreReposito
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.domain.usecases.*
+import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
+import es.sebas1705.youknow.domain.usecases.games.GenerateFamilies
+import es.sebas1705.youknow.domain.usecases.games.GenerateQuestionList
+import es.sebas1705.youknow.domain.usecases.games.GenerateRandomNumber
+import es.sebas1705.youknow.domain.usecases.games.GenerateWordPass
+import es.sebas1705.youknow.domain.usecases.games.MysteryNumberUsesCases
+import es.sebas1705.youknow.domain.usecases.games.QuizUsesCases
+import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.LogEvent
 import es.sebas1705.youknow.domain.usecases.logs.SetUserProperty
@@ -40,6 +48,7 @@ import es.sebas1705.youknow.domain.usecases.social.SendMessage
 import es.sebas1705.youknow.domain.usecases.social.SetGroupsListener
 import es.sebas1705.youknow.domain.usecases.social.SetMessagesListener
 import es.sebas1705.youknow.domain.usecases.user.AddCreditsToUser
+import es.sebas1705.youknow.domain.usecases.user.AddPointsToUser
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.ChangeNicknameToUser
 import es.sebas1705.youknow.domain.usecases.user.ChangePhotoToUser
@@ -110,6 +119,7 @@ object DomainModule {
         realtimeRepository: RealtimeRepository
     ): UserUsesCases = UserUsesCases(
         addCreditsToUser = AddCreditsToUser(firestoreRepository),
+        addPointsToUser = AddPointsToUser(firestoreRepository),
         containsUser = ContainsUser(firestoreRepository),
         getLoggedFromUser = GetLoggedFromUser(firestoreRepository),
         getUser = GetUser(firestoreRepository),
@@ -157,5 +167,33 @@ object DomainModule {
         removeGroup = RemoveGroup(realtimeRepository),
         setGroupsListener = SetGroupsListener(realtimeRepository),
         removeGroupsListener = RemoveGroupsListener(realtimeRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideQuizUsesCases(
+    ): QuizUsesCases = QuizUsesCases(
+        generateQuestionList = GenerateQuestionList()
+    )
+
+    @Provides
+    @Singleton
+    fun provideMysteryNumberUsesCases(
+    ): MysteryNumberUsesCases = MysteryNumberUsesCases(
+        generateRandomNumber = GenerateRandomNumber()
+    )
+
+    @Provides
+    @Singleton
+    fun provideFamiliesUsesCases(
+    ): FamiliesUsesCases = FamiliesUsesCases(
+        generateFamilies = GenerateFamilies()
+    )
+
+    @Provides
+    @Singleton
+    fun provideWordPassUsesCases(
+    ): WordPassUsesCases = WordPassUsesCases(
+        generateWordPass = GenerateWordPass()
     )
 }

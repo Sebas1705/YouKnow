@@ -16,11 +16,44 @@ package es.sebas1705.youknow.presentation.features.home.navigation
  *
  */
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
+import es.sebas1705.youknow.R
 
-@Serializable object MainScreen
-@Serializable object ProfileScreen
-@Serializable object SocialScreen
-@Serializable object PlayScreen
-@Serializable object InfoScreen
+data class HomeItem(
+    val strRes: Int,
+    val icon: ImageVector,
+    val destination: HomeScreens
+)
+
+val homes = listOf(
+    HomeItem(R.string.Social, Icons.Default.Public, HomeScreens.SocialScreen),
+    HomeItem(R.string.Profile, Icons.Default.Person, HomeScreens.ProfileScreen),
+    HomeItem(R.string.Main, Icons.Default.Home, HomeScreens.MainScreen),
+    HomeItem(R.string.Play, Icons.Default.SportsEsports, HomeScreens.PlayScreen),
+    HomeItem(R.string.Info, Icons.Default.Info, HomeScreens.InfoScreen),
+)
+
+interface HomeScreens {
+    @Serializable
+    object MainScreen : HomeScreens
+
+    @Serializable
+    object ProfileScreen : HomeScreens
+
+    @Serializable
+    object SocialScreen : HomeScreens
+
+    @Serializable
+    object PlayScreen : HomeScreens
+
+    @Serializable
+    object InfoScreen : HomeScreens
+}
 

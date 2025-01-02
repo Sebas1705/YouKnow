@@ -19,27 +19,22 @@ package es.sebas1705.youknow.presentation.features.home.screens.social.composabl
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
+import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.millisToFormatDate
-import es.sebas1705.youknow.domain.model.MessageModel
-import es.sebas1705.youknow.presentation.composables.CardHDivider
-import es.sebas1705.youknow.presentation.composables.CustomCard
+import es.sebas1705.youknow.core.utlis.extensions.primitives.millisToFormatDate
+import es.sebas1705.youknow.domain.model.social.MessageModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 @Composable
@@ -50,10 +45,10 @@ fun MessageCard(
 ) = Column(
     modifier = Modifier.fillMaxWidth()
 ) {
-    CustomCard(
+    IPrimaryCard(
         modifier = Modifier
             .fillMaxWidth(
-                windowState.widthType.filter(0.8f,0.6f,0.4f)
+                windowState.widthType.filter(0.8f, 0.6f, 0.4f)
             )
             .align(
                 if (isCurrentUser) Alignment.Start
@@ -80,7 +75,7 @@ fun MessageCard(
                     .padding(SmallPadding)
             )
         }
-        CardHDivider()
+        IHorDivider(modifier = Modifier.padding(horizontal = SmallestPadding))
         Text(
             text = messageModel.text,
             style = MaterialTheme.typography.bodyLarge,

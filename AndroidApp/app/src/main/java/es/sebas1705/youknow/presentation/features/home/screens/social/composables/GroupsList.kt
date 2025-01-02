@@ -16,25 +16,16 @@ package es.sebas1705.youknow.presentation.features.home.screens.social.composabl
  *
  */
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,24 +34,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
+import es.sebas1705.youknow.core.composables.buttons.icon.IFilledIconButton
+import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
+import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.reverseOne
-import es.sebas1705.youknow.domain.model.GroupModel
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
-import es.sebas1705.youknow.presentation.composables.CustomFilledButton
-import es.sebas1705.youknow.presentation.composables.CustomIconButton
-import es.sebas1705.youknow.presentation.composables.InteractiveCard
-import es.sebas1705.youknow.presentation.composables.SimpleOutlinedTextField
+import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.features.home.windows.CreateGroupWindow
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.SurfaceBorderWidth
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -102,11 +87,11 @@ fun GroupsList(
 
     if (alertDisplay) {
         CreateGroupWindow(
-            onConfirmButton = { name, description ->
+            onConfirm = { name, description ->
                 onGroupCreate(name, description)
                 alertDisplay = false
             },
-            onDismissAction = {
+            onDismiss = {
                 alertDisplay = false
             }
         )
@@ -117,7 +102,7 @@ fun GroupsList(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        CurvedBorderSurface(
+        IPrimarySurface (
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -127,7 +112,7 @@ fun GroupsList(
                     .padding(bottom = SmallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SimpleOutlinedTextField(
+                IOutlinedTextField(
                     modifier = Modifier
                         .padding(SmallPadding)
                         .weight(8f),
@@ -136,46 +121,37 @@ fun GroupsList(
                     label = "Search",
                     onValueChange = { search = it }
                 )
-                CustomIconButton(
+                IFilledIconButton(
                     onClick = { alertDisplay = true },
-                    icon = Icons.Filled.Add,
-                    modifierButton = Modifier
+                    contentDescription = "Create Group",
+                    modifier = Modifier
                         .padding(end = SmallPadding)
                         .weight(1f),
-                    modifierIcon = Modifier.fillMaxSize(),
-                    contentDescription = "Create Group",
-                    tint = MaterialTheme.colorScheme.primary
+                    imageVector = Icons.Filled.Add,
                 )
             }
         }
 
-        ApplyBack(
-            backId = windowState.backEmpty,
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+                .fillMaxSize()
+                .padding(top = SmallestPadding, bottom = SmallestPadding),
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = SmallestPadding, bottom = SmallestPadding),
-            ) {
-                items(groupsFilter.size) { index ->
-                    InteractiveCard(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(bottom = SmallPadding)
-                            .padding(horizontal = SmallestPadding),
-                        title = groupsFilter[index].name,
-                        subtitle = "${groupsFilter[index].members.size}/${Constants.MAX_GROUP}",
-                        buttons = {
-                            CustomFilledButton(
-                                text = "Join",
-                                onClick = { onGroupClick(groupsFilter[index]) },
-                                enabled = groupsFilter[index].members.size < Constants.MAX_GROUP
-                            )
-                        }
-                    )
-                }
+            items(groupsFilter.size) { index ->
+                IInteractiveCard(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = SmallPadding)
+                        .padding(horizontal = SmallestPadding),
+                    title = groupsFilter[index].name,
+                    subtitle = "${groupsFilter[index].members.size}/${Constants.MAX_GROUP}",
+                    buttons = {
+                        IFilledButton(
+                            label = "Join",
+                            onClick = { onGroupClick(groupsFilter[index]) },
+                            enabled = groupsFilter[index].members.size < Constants.MAX_GROUP
+                        )
+                    }
+                )
             }
         }
     }

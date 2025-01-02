@@ -16,11 +16,11 @@ package es.sebas1705.youknow.domain.usecases.user
  *
  */
 
-import es.sebas1705.youknow.core.utlis.catcher
+import es.sebas1705.youknow.core.utlis.extensions.types.catcher
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
-import es.sebas1705.youknow.domain.model.GroupModel
 import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.GroupModel
 
 class SetUserListener(
     private val firestoreRepository: FirestoreRepository
@@ -105,6 +105,19 @@ class AddCreditsToUser(
         onSuccess: (Int) -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.addCreditsToUser(user.firebaseId, user.credits, creditsToAdd)
+        .catcher(onLoading, onSuccess, onError)
+}
+
+class AddPointsToUser(
+    private val firestoreRepository: FirestoreRepository
+) {
+    suspend operator fun invoke(
+        user: UserModel,
+        pointsToAdd: Int,
+        onLoading: () -> Unit = {},
+        onSuccess: (Int) -> Unit,
+        onError: (String) -> Unit
+    ) = firestoreRepository.addPointsToUser(user.firebaseId, user.points, pointsToAdd)
         .catcher(onLoading, onSuccess, onError)
 }
 
@@ -231,6 +244,7 @@ data class UserUsesCases(
     val setGroupToUser: SetGroupToUser,
     val removeGroupToUser: RemoveGroupToUser,
     val addCreditsToUser: AddCreditsToUser,
+    val addPointsToUser: AddPointsToUser,
     val changePhotoToUser: ChangePhotoToUser,
     val changeNicknameToUser: ChangeNicknameToUser,
     //Getters:

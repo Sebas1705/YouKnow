@@ -19,8 +19,6 @@ package es.sebas1705.youknow.presentation.features.auth.windows
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.youknow.core.composables.dialogs.IDialog
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.composables.RequestDialog
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
-import es.sebas1705.youknow.presentation.ui.theme.dialogTextType
-import es.sebas1705.youknow.presentation.ui.theme.dialogTitleType
 
 /**
  * Composable that shows an AlertDialog with an error message.
@@ -52,29 +50,21 @@ fun ErrorInfoWindow(
     modifier: Modifier = Modifier,
     errorText: String,
     onConfirm: () -> Unit = {},
-) = RequestDialog(
+) = IDialog(
     confirmButton = {
-        Button(onClick = onConfirm) {
-            Text(
-                text = stringResource(R.string.confirm),
-                style = windowState.dialogTitleType()
-            )
-        }
+        ITextButton(
+            label = stringResource(R.string.confirm),
+            onClick = onConfirm,
+        )
     },
     dismissButton = {},
     onDismissRequest = {},
     modifier = modifier,
     title = {
-        Text(
-            text = stringResource(R.string.title_error),
-            style = windowState.dialogTitleType()
-        )
+        IText(stringResource(R.string.title_error))
     },
-    body = {
-        Text(
-            text = errorText,
-            style = windowState.dialogTextType(),
-        )
+    text = {
+        Text(errorText)
     }
 )
 

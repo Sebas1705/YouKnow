@@ -18,7 +18,7 @@ package es.sebas1705.youknow.data.firebase.authentication.repository
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseUser
-import es.sebas1705.youknow.core.utlis.FlowResponseNothing
+import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.data.model.ResponseState
 import kotlinx.coroutines.flow.Flow
 

@@ -6,8 +6,8 @@ import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.isImageUrl
-import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.primitives.isImageUrl
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

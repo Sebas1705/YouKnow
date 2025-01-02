@@ -31,7 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.presentation.composables.Spacers.VerticalSpacer
+import es.sebas1705.youknow.core.composables.spacers.IHorSpacer
 
 /**
  * Icons for navigation between chat and group.
@@ -54,7 +54,7 @@ fun IconsBar(
     Row(
         modifier = modifier,
     ) {
-        VerticalSpacer(5f)
+        IHorSpacer(5f)
         IconItem(
             modifier = Modifier
                 .fillMaxHeight()
@@ -64,7 +64,7 @@ fun IconsBar(
             imageVector = Icons.Default.Groups,
             contentDescription = "Group",
         )
-        VerticalSpacer(1f)
+        IHorSpacer(1f)
         IconItem(
             modifier = Modifier
                 .fillMaxHeight()
@@ -74,7 +74,7 @@ fun IconsBar(
             imageVector = Icons.Default.Forum,
             contentDescription = "Menu",
         )
-        VerticalSpacer(5f)
+        IHorSpacer(5f)
     }
 
 }

@@ -24,7 +24,7 @@ import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
@@ -67,7 +67,6 @@ class UserViewModel @Inject constructor(
         loadActual()
     }
 
-
     //Actions:
     private fun loadActual() = execute(Dispatchers.IO) {
         val firebaseUser = authUsesCases.getFirebaseUser()
@@ -102,9 +101,8 @@ class UserViewModel @Inject constructor(
                 stopLoading()
                 updateUi { it.copy(userModel = it.userModel?.copy(credits = newCredits)) }
             },
-            onError = { error ->
-                stopLoading()
-                execute { context.printTextInToast(error) }
+            onError = {
+                stopAndError(it, context::printTextInToast)
             }
         )
     }

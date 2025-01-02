@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,13 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
+import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
-import es.sebas1705.youknow.domain.model.MessageModel
-import es.sebas1705.youknow.presentation.composables.ApplyBack
-import es.sebas1705.youknow.presentation.composables.CurvedBorderSurface
-import es.sebas1705.youknow.presentation.composables.CustomIconButton
-import es.sebas1705.youknow.presentation.composables.SimpleOutlinedTextField
+import es.sebas1705.youknow.domain.model.social.MessageModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -92,7 +90,7 @@ fun Chat(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        CurvedBorderSurface(
+        IPrimarySurface(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -102,7 +100,7 @@ fun Chat(
                     .padding(bottom = SmallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SimpleOutlinedTextField(
+                IOutlinedTextField(
                     modifier = Modifier
                         .padding(SmallPadding)
                         .weight(8f),
@@ -111,46 +109,37 @@ fun Chat(
                     label = "Search",
                     onValueChange = { message = it }
                 )
-                CustomIconButton(
+                IStandardIconButton(
                     onClick = {
                         onMessageSend(message)
                         message = ""
                     },
-                    icon = Icons.AutoMirrored.Filled.Send,
-                    modifierButton = Modifier
+                    contentDescription = "Send",
+                    imageVector = Icons.AutoMirrored.Filled.Send,
+                    modifier = Modifier
                         .padding(end = SmallPadding)
                         .weight(1f),
-                    modifierIcon = Modifier.fillMaxSize(0.9f),
-                    contentDescription = "Send",
-                    tint = MaterialTheme.colorScheme.primary,
                     enabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH
                 )
             }
         }
 
-        ApplyBack(
-            backId = windowState.backEmpty,
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .padding(top = SmallestPadding, bottom = SmallestPadding),
+            state = lazyListState,
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = SmallestPadding, bottom = SmallestPadding),
-                state = lazyListState,
-            ) {
-                messageModels.sortedBy { it.time }.forEach {
-                    item {
-                        MessageCard(
-                            messageModel = it,
-                            isCurrentUser = it.authorId == firebaseId
-                        )
-                    }
+            messageModels.sortedBy { it.time }.forEach {
+                item {
+                    MessageCard(
+                        messageModel = it,
+                        isCurrentUser = it.authorId == firebaseId
+                    )
                 }
             }
         }
-
     }
 }
 
