@@ -19,16 +19,16 @@ package es.sebas1705.youknow.presentation.features.game.navigation
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.game.screens.families.FamiliesScreen
-import es.sebas1705.youknow.presentation.features.game.screens.mysterynumber.MysteryNumberScreen
-import es.sebas1705.youknow.presentation.features.game.screens.quiz.QuizScreen
-import es.sebas1705.youknow.presentation.features.game.screens.wordpass.WordPassScreen
-import es.sebas1705.youknow.presentation.features.game.windows.GameOutWindow
+import es.sebas1705.youknow.core.composables.dialogs.GameOutDialog
+import es.sebas1705.youknow.presentation.features.game.features.families.FamiliesScreen
+import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.MysteryNumberScreen
+import es.sebas1705.youknow.presentation.features.game.features.quiz.QuizScreen
+import es.sebas1705.youknow.presentation.features.game.features.wordpass.WordPassScreen
 
 /**
  * Home Navigation Composable that will handle the navigation between the different screens of the app.
@@ -47,18 +47,14 @@ import es.sebas1705.youknow.presentation.features.game.windows.GameOutWindow
 @Composable
 fun GameNav(
     windowState: WindowState,
-    startDestination: GameScreens,
+    game: GameItem,
     onOutGameNavigation: () -> Unit,
-    onSettingsNavigation: () -> Unit
 ) {
     var outFlag by rememberSaveable { mutableStateOf(false) }
-    var destination by rememberSaveable { mutableStateOf(startDestination) }
+    var destination by rememberSaveable { mutableIntStateOf(games.indexOf(game)) }
     BackHandler { outFlag = true }
 
-    val context = LocalContext.current
-
-    if (outFlag) GameOutWindow(
-        windowState = windowState,
+    if (outFlag) GameOutDialog(
         onConfirm = {
             outFlag = false
             onOutGameNavigation()
@@ -66,7 +62,7 @@ fun GameNav(
         onDismiss = { outFlag = false }
     )
 
-    when (destination) {
+    when (games[destination].destination) {
         is GameScreens.MysteryNumberScreen -> {
             MysteryNumberScreen(
                 windowState = windowState,

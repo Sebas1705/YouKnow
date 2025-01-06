@@ -17,27 +17,43 @@ package es.sebas1705.youknow.presentation.features.home.navigation
  */
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.outlined.Groups
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.ui.graphics.vector.ImageVector
-import kotlinx.serialization.Serializable
 import es.sebas1705.youknow.R
+import kotlinx.serialization.Serializable
 
 data class HomeItem(
     val strRes: Int,
-    val icon: ImageVector,
+    val iconUnselected: ImageVector,
+    val iconSelected: ImageVector,
     val destination: HomeScreens
 )
 
 val homes = listOf(
-    HomeItem(R.string.Social, Icons.Default.Public, HomeScreens.SocialScreen),
-    HomeItem(R.string.Profile, Icons.Default.Person, HomeScreens.ProfileScreen),
-    HomeItem(R.string.Main, Icons.Default.Home, HomeScreens.MainScreen),
-    HomeItem(R.string.Play, Icons.Default.SportsEsports, HomeScreens.PlayScreen),
-    HomeItem(R.string.Info, Icons.Default.Info, HomeScreens.InfoScreen),
+    HomeItem(R.string.Social, Icons.Outlined.Groups, Icons.Filled.Groups, HomeScreens.SocialScreen),
+    HomeItem(
+        R.string.Profile,
+        Icons.Outlined.Person,
+        Icons.Filled.Person,
+        HomeScreens.ProfileScreen
+    ),
+    HomeItem(R.string.Main, Icons.Outlined.Home, Icons.Filled.Home, HomeScreens.MainScreen),
+    HomeItem(
+        R.string.Play,
+        Icons.Outlined.SportsEsports,
+        Icons.Filled.SportsEsports,
+        HomeScreens.PlayScreen
+    ),
+    HomeItem(R.string.Info, Icons.Outlined.Info, Icons.Filled.Info, HomeScreens.InfoScreen),
 )
 
 interface HomeScreens {

@@ -108,16 +108,16 @@ data class RankingState(
 }
 
 /**
- * Sealed interface that represents the possible actions of the [SocialViewModel].
+ * Sealed interface that represents the possible actions of the [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialViewModel].
  *
- * @property SendMessage [SocialIntent]: Action to send a message to the global chat.
- * @property CreateGroup [SocialIntent]: Action to create a group.
- * @property JoinGroup [SocialIntent]: Action to join a group.
- * @property LoadSocial [SocialIntent]: Action to load the social data.
- * @property ClearSocial [SocialIntent]: Action to clear the social data.
+ * @property SendMessage [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to send a message to the global chat.
+ * @property CreateGroup [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to create a group.
+ * @property JoinGroup [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to join a group.
+ * @property LoadSocial [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to load the social data.
+ * @property ClearSocial [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to clear the social data.
  *
  * @see MVIBaseIntent
- * @see SocialViewModel
+ * @see es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialViewModel
  * @see SendMessage
  *
  * @author Sebastián Ramiro Entrerrios García

@@ -235,6 +235,18 @@ class GetUserByNickname(
     ) = firestoreRepository.getUserByNickname(nickname).catcher(onLoading, onSuccess, onError)
 }
 
+class DeleteDataUser(
+    private val firestoreRepository: FirestoreRepository
+) {
+    suspend operator fun invoke(
+        firebaseId: String,
+        onLoading: () -> Unit = {},
+        onEmptySuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) = firestoreRepository.deleteDataUser(firebaseId)
+        .catcher(onLoading, onEmptySuccess, onError)
+}
+
 data class UserUsesCases(
     //Setters:
     val setUserListener: SetUserListener,
@@ -247,6 +259,7 @@ data class UserUsesCases(
     val addPointsToUser: AddPointsToUser,
     val changePhotoToUser: ChangePhotoToUser,
     val changeNicknameToUser: ChangeNicknameToUser,
+    val deleteDataUser: DeleteDataUser,
     //Getters:
     val getUser: GetUser,
     val containsUser: ContainsUser,

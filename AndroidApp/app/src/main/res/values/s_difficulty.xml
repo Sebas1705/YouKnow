@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dif_easy">Easy</string>
+    <string name="dif_medium">Medium</string>
+    <string name="dif_hard">Hard</string>
+</resources>

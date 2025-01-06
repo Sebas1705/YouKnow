@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="user_not_found">User not found, restart the app</string>
+    <string name="Main">Home</string>
+    <string name="Profile">Profile</string>
+    <string name="Info">Info</string>
+    <string name="Play">Play</string>
+    <string name="Social">Social</string>
+    <string name="logout">Log out</string>
+    <string name="alertTitle">"Want to log out?"</string>
+    <string name="confirm">Confirm</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="titleCreateGroup">Create a group</string>
+    <string name="groupName">Group name</string>
+    <string name="groupDescription">Group description</string>
+    <string name="You">You</string>
+    <string name="leader">Leader</string>
+    <string name="view_profile">View profile</string>
+</resources>

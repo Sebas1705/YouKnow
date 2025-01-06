@@ -18,34 +18,25 @@ package es.sebas1705.youknow.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.extensions.composables.navAndPopUp
-import es.sebas1705.youknow.presentation.features.guide.GuideScreen
-import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
-import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsState
-import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsViewModel
 import es.sebas1705.youknow.presentation.features.auth.navigation.AuthNav
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 import es.sebas1705.youknow.presentation.features.game.navigation.GameNav
-import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens
-import es.sebas1705.youknow.presentation.features.game.screens.TriviaScreen
+import es.sebas1705.youknow.presentation.features.game.navigation.games
+import es.sebas1705.youknow.presentation.features.guide.GuideScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
+import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
 
 /**
  * Navigation for the app.
  *
- * @param startDestination [Any]: Start destination of the app.
- * @param settingsState [SettingsState]: State of the settings.
- * @param settingsViewModel [SettingsViewModel]: ViewModel of the settings.
+ * @param startDestination [AppGraph]: Start destination of the app.
  * @param windowState [WindowState]: State of the window.
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -53,100 +44,75 @@ import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
  */
 @Composable
 fun AppNav(
-    startDestination: AppScreens,
+    startDestination: AppGraph,
     windowState: WindowState,
 ) {
     // NavController:
     val appNavController = rememberNavController()
 
-    // ViewModel:
-    val authViewModel = hiltViewModel<AuthViewModel>()
+    //States:
+    var game by rememberSaveable { mutableIntStateOf(0) }
+    var destination by rememberSaveable { mutableIntStateOf(graph.indexOf(startDestination)) }
 
-    // States:
-    val authState by authViewModel.uiState.collectAsStateWithLifecycle()
-    var lastComposable by remember { mutableStateOf(startDestination) }
-    var gameComposable: GameScreens by remember { mutableStateOf(GameScreens.MysteryNumberScreen) }
-
-    // Context:
-    val context = LocalContext.current
-    var lastGame: GameScreens = GameScreens.MysteryNumberScreen
-
-    NavHost(navController = appNavController, startDestination = startDestination) {
-        composable<AppScreens.GuideScreen> {
+    //Body:
+    NavHost(navController = appNavController, startDestination = graph[destination]) {
+        composable<AppGraph.GuideScreen> {
             GuideScreen(
+                windowState,
                 onSuccessNavigation = {
                     appNavController.navigate(
-                        AppScreens.AuthNavigation
+                        AppGraph.AuthNavigation
                     )
                 }
             )
         }
-        composable<AppScreens.TriviaScreen> {
-            TriviaScreen(
-                onSuccessLogOutNavigation = {
-                    appNavController.navAndPopUp(AppScreens.AuthNavigation, AppScreens.TriviaScreen)
-                },
-                onErrorButton = {
-                    appNavController.navigate(AppScreens.TriviaScreen)
-                }
-            )
-        }
-        composable<AppScreens.SettingsScreen> {
+        composable<AppGraph.SettingsScreen> {
             SettingsScreen(
                 windowState,
                 onBack = {
-                    appNavController.navAndPopUp(lastComposable, AppScreens.SettingsScreen)
+                    appNavController.navAndPopUp(AppGraph.HomeNavigation, AppGraph.SettingsScreen)
                 }
             )
         }
-        composable<AppScreens.AuthNavigation> {
+        composable<AppGraph.AuthNavigation> {
             AuthNav(
                 windowState,
-                authState,
-                authViewModel,
                 toHomeNav = {
                     appNavController.navAndPopUp(
-                        AppScreens.HomeNavigation,
-                        AppScreens.AuthNavigation
+                        AppGraph.HomeNavigation,
+                        AppGraph.AuthNavigation
                     )
                 },
             )
         }
-        composable<AppScreens.HomeNavigation> {
+        composable<AppGraph.HomeNavigation> {
             HomeNav(
                 windowState = windowState,
-                authViewModel = authViewModel,
-                onLogOutNavigation = {
+                onAuthNav = {
                     appNavController.navAndPopUp(
-                        AppScreens.AuthNavigation,
-                        AppScreens.HomeNavigation
+                        AppGraph.AuthNavigation,
+                        AppGraph.HomeNavigation
                     )
                 },
-                onSettingsNavigation = {
-                    lastComposable = AppScreens.HomeNavigation
-                    appNavController.navigate(AppScreens.SettingsScreen)
+                onSettingsNav = {
+                    appNavController.navigate(AppGraph.SettingsScreen)
                 },
-                onGameNavigation = { game ->
-                    lastGame = game
-                    lastComposable = AppScreens.HomeNavigation
-                    appNavController.navigate(AppScreens.GameNavigation)
+                onGameNav = {
+                    game = it
+                    appNavController.navigate(AppGraph.GameNavigation)
                 }
             )
         }
-        composable<AppScreens.GameNavigation> {
+        composable<AppGraph.GameNavigation> {
             GameNav(
                 windowState,
-                startDestination = lastGame,
+                games[game],
                 onOutGameNavigation = {
                     appNavController.navAndPopUp(
-                        AppScreens.HomeNavigation,
-                        AppScreens.GameNavigation
+                        AppGraph.HomeNavigation,
+                        AppGraph.GameNavigation
                     )
                 },
-                onSettingsNavigation = {
-                    lastComposable = AppScreens.GameNavigation
-                    appNavController.navigate(AppScreens.SettingsScreen)
-                }
             )
         }
     }

@@ -37,10 +37,10 @@ import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
-import es.sebas1705.youknow.presentation.navigation.AppScreens
-import es.sebas1705.youknow.presentation.navigation.AppScreens.AuthNavigation
-import es.sebas1705.youknow.presentation.navigation.AppScreens.GuideScreen
-import es.sebas1705.youknow.presentation.navigation.AppScreens.HomeNavigation
+import es.sebas1705.youknow.presentation.navigation.AppGraph
+import es.sebas1705.youknow.presentation.navigation.AppGraph.AuthNavigation
+import es.sebas1705.youknow.presentation.navigation.AppGraph.GuideScreen
+import es.sebas1705.youknow.presentation.navigation.AppGraph.HomeNavigation
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -89,21 +89,7 @@ class MainViewModel @Inject constructor(
         try {
             Log.i("MainViewModel", "Start chargeData")
             val time = System.currentTimeMillis()
-            execute(Dispatchers.IO) {
-                datastoreUsesCases.readFirstTime().collect { data ->
-                    updateUi {
-                        it.copy(
-                            startDestination =
-                            if (!data)
-                                GuideScreen
-                            else if (authUsesCases.getFirebaseUser() != null)
-                                HomeNavigation
-                            else
-                                AuthNavigation
-                        )
-                    }
-                }
-            }
+            setConnectivityCallback()
             execute(Dispatchers.IO) {
                 datastoreUsesCases.readAppVolume().collect { data ->
                     updateUi {
@@ -122,22 +108,34 @@ class MainViewModel @Inject constructor(
                     }
                 }
             }
-            setConnectivityCallback()
-            val millis = System.currentTimeMillis() - time
-            val millisLog = System.currentTimeMillis()
-            Log.i(
-                "MainViewModel",
-                "Finish chargeData $millis millis"
-            )
-            analyticsUsesCases.logEvent(
-                EventLog.ChargeTime,
-                Bundle().apply {
-                    putLong("Time (millis)", millis)
-                    putLong("TimeLog (millis)", System.currentTimeMillis() - millisLog)
+            execute(Dispatchers.IO) {
+                datastoreUsesCases.readFirstTime().collect { data ->
+                    val millis = System.currentTimeMillis() - time
+                    val millisLog = System.currentTimeMillis()
+                    Log.i(
+                        "MainViewModel",
+                        "Finish chargeData $millis millis"
+                    )
+                    analyticsUsesCases.logEvent(
+                        EventLog.ChargeTime,
+                        Bundle().apply {
+                            putLong("Time (millis)", millis)
+                            putLong("TimeLog (millis)", System.currentTimeMillis() - millisLog)
+                        }
+                    )
+                    updateUi {
+                        it.copy(
+                            startDestination =
+                            if (!data)
+                                GuideScreen
+                            else if (authUsesCases.getFirebaseUser() != null)
+                                HomeNavigation
+                            else
+                                AuthNavigation,
+                            isSplashVisible = false
+                        )
+                    }
                 }
-            )
-            updateUi {
-                it.copy(isSplashVisible = false)
             }
         } catch (e: Exception) {
             ctx.printTextInToast(
@@ -217,7 +215,7 @@ class MainViewModel @Inject constructor(
  * @since 1.0.0
  */
 data class MainState(
-    var startDestination: AppScreens,
+    var startDestination: AppGraph,
     var isSplashVisible: Boolean,
     var isNetworkAvailable: Boolean,
     var themeContrast: ThemeContrast,

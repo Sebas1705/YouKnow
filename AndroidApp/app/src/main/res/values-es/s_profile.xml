@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_title">Mi perfil</string>
+    <string name="url_photo">Foto URL</string>
+    <string name="invalid_url">La URL no corresponde a una imagen, prueba otra</string>
+    <string name="nickname">Nombre de usuario</string>
+    <string name="change_nickname_title">Cambiar nombre</string>
+    <string name="change_nickname_body">¿Seguro que quieres cambiar a </string>
+    <string name="change_nickname_body2"> o por completo a </string>
+    <string name="change_nickname_body3">\?</string>
+    <string name="firebase_id">FirebaseId</string>
+    <string name="delete_account">Borrar cuenta</string>
+    <string name="reset_password">Cambiar contraseña</string>
+    <string name="reset_password_text">¿Quieres cambiar la contraseña de la cuenta con email: </string>
+    <string name="delete_account_text">¿Estás seguro de eliminar los datos de tu usuario?</string>
+</resources>

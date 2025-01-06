@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_loading_number">Error cargando números</string>
+    <string name="mystery_title">Número misterioso</string>
+    <string name="minus_plus">+/-</string>
+    <string name="try_number">Intentar</string>
+    <string name="incorrect_number">"Intenta de nuevo: "</string>
+    <string name="greater">Mayor</string>
+    <string name="smaller">Menor</string>
+    <string name="range">"Rango: "</string>
+</resources>

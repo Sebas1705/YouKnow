@@ -56,14 +56,13 @@ fun MainComposable() {
     YouKnowTheme(
         themeContrast = mainState.themeContrast,
     ) {
-        if (mainState.isSplashVisible)
-            SplashScreen(windowState)
-        else {
-            if (mainState.isNetworkAvailable) AppNav(
+        when {
+            mainState.isSplashVisible -> SplashScreen(windowState)
+            !mainState.isNetworkAvailable -> NetworkErrorScreen(windowState)
+            else -> AppNav(
                 mainState.startDestination,
                 windowState
             )
-            else NetworkErrorScreen(windowState)
         }
     }
 }

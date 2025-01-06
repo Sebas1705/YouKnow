@@ -26,23 +26,33 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.youknow.core.utlis.IComposablePreview
+import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
 import es.sebas1705.youknow.presentation.ui.theme.IndicatorSize
+import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.PageIndicatorSeparator
+import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import kotlinx.coroutines.launch
 
 /**
@@ -71,27 +81,18 @@ fun GuideBottomBar(
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.primaryContainer)
-
+            .background(MaterialTheme.colorScheme.surfaceContainer)
     ) {
         HorizontalDivider(
-            modifier = Modifier
-                .padding(
-                    top = SmallestPadding,
-                    bottom = SmallestPadding / 2,
-                    start = SmallPadding,
-                    end = SmallPadding
-                )
-                .clip(MaterialTheme.shapes.small),
-            thickness = 3.dp,
-            color = MaterialTheme.colorScheme.secondary
+            modifier = Modifier,
+            thickness = OutlineThickness,
+            color = MaterialTheme.colorScheme.onSurface
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = SmallestPadding)
                 .padding(horizontal = MediumPadding)
-                .navigationBarsPadding(),
+                .padding(vertical = SmallestPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -135,5 +136,28 @@ fun GuideBottomBar(
                 )
             }
         }
+    }
+}
+
+@IComposablePreview
+@Composable
+fun Preview(){
+    val context = LocalContext.current
+    val pageList = context.generateGuidePages()
+    val next = stringResource(id = R.string.next)
+    val back = stringResource(id = R.string.back)
+    val start = stringResource(id = R.string.start)
+
+    val pagerState = rememberPagerState(initialPage = 0) { pageList.size }
+    val buttonState = remember {
+        derivedStateOf {
+            listOf(
+                if (pagerState.currentPage == 0) "" else back,
+                if (pagerState.currentPage < pageList.size - 1) next else start
+            )
+        }
+    }
+    YouKnowTheme {
+        GuideBottomBar(pageList.size, pagerState, buttonState) {}
     }
 }

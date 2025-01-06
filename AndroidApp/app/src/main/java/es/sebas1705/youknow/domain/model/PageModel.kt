@@ -16,20 +16,18 @@ package es.sebas1705.youknow.domain.model
  *
  */
 
-import androidx.annotation.DrawableRes
-
 /**
  * Model to represent a page
  *
  * @property title [String]: Title of the page
- * @property description [String]: Description of the page
- * @property image [Int]: Image of the page
+ * @property introduction [String]: Introduction of the page
+ * @property imagesAndDescription [List<Pair<Int, String>]: List of images and descriptions
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-data class PageModel (
+data class PageModel(
     val title: String,
-    val description: String,
-    @DrawableRes val image: Int
+    val introduction: String,
+    val imagesAndDescription: List<Pair<Int, String>>
 )

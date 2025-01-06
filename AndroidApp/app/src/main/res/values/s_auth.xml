@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_error">Incorrect email or passwords</string>
+    <!-- Log Screen -->
+    <string name="access">Access</string>
+    <string name="wanna_register">Create account?</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <!-- Menu Screen -->
+    <string name="initial_text">Much of questions\nFree on YouKnow</string>
+    <string name="sign_up">Sign up free</string>
+    <string name="google_log">Continue with Google</string>
+    <string name="email_log">Continue with Email</string>
+    <!-- Sign Screen -->
+    <string name="username">User name</string>
+    <string name="repeat">Repeat</string>
+    <string name="any_not_match">Emails or passwords not match</string>
+    <string name="signup">Create</string>
+    <string name="both">Both\n</string>
+    <!-- AuthViewModel -->
+    <string name="already_logged">You are already logged in other dispositive, please log out first from the other dispositive</string>
+    <string name="verify_email">Please verify your email</string>
+</resources>

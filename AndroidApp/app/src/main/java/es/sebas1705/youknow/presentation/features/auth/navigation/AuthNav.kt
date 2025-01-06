@@ -19,17 +19,13 @@ package es.sebas1705.youknow.presentation.features.auth.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.play.core.integrity.au
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.auth.screens.log.LogScreen
 import es.sebas1705.youknow.presentation.features.auth.screens.menu.MenuScreen
 import es.sebas1705.youknow.presentation.features.auth.screens.sign.SignScreen
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 
 /**
@@ -50,16 +46,10 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 @Composable
 fun AuthNav(
     windowState: WindowState,
-    authState: AuthState,
-    authViewModel: AuthViewModel,
     toHomeNav: () -> Unit,
 ) {
     // NavController:
     val authNavController = rememberNavController()
-
-    // Navigation functions:
-    val toSignNav = { authNavController.navigate(SignScreen) }
-    val toLogNav = { authNavController.navigate(LogScreen) }
 
     // Body:
     NavHost(
@@ -70,14 +60,31 @@ fun AuthNav(
         composable<MenuScreen> {
             MenuScreen(
                 windowState,
-                authState,
-                authViewModel,
-                toSignNav,
+                toSignNav = {
+                    authNavController.navigate(SignScreen)
+                },
                 toHomeNav,
-                toLogNav
+                toLogNav = {
+                    authNavController.navigate(LogScreen)
+                }
             )
         }
-        composable<LogScreen> { LogScreen(windowState, authState, authViewModel, toHomeNav, toSignNav) }
-        composable<SignScreen> { SignScreen(windowState, authState, authViewModel, toLogNav) }
+        composable<LogScreen> {
+            LogScreen(
+                windowState,
+                toHomeNav,
+                toSignNav = {
+                    authNavController.navigate(SignScreen)
+                }
+            )
+        }
+        composable<SignScreen> {
+            SignScreen(
+                windowState,
+                toLogNav = {
+                    authNavController.navigate(LogScreen)
+                }
+            )
+        }
     }
 }

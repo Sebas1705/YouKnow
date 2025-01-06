@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">Next</string>
+    <string name="start">Start!</string>
+    <string name="back">Back</string>
+    <string name="titlePage1">Welcome</string>
+    <string name="introPage1">
+        Welcome to YouKnow, the app where you can chat and play with your friends. Our goal is to provide you with a fun and educational experience where you can test your knowledge and learn something new every day. We hope you enjoy our app and join our community of players!\n
+        This app is a work in progress and any feedback to the creator is appreciated, thank you very much for your support.
+    </string>
+    <string name="des1Page1">
+        The idea behind YouKnow is a social app where you can play with your friends and compete in different quiz games. You can also chat with them and share your achievements and scores.
+    </string>
+    <string name="des2Page1">
+        YouKnow is a final year project from the Rey Juan Carlos University in Madrid, Spain. Created by the Computer Engineering student, Sebastián Ramiro Entrerrios García.
+    </string>
+    <string name="titlePage2">Operation and Features</string>
+    <string name="introPage2">
+        The development of this project is divided into several parts, first we have to differentiate the parts of an application:\n\n
+        - Frontend: It is responsible for the collection of data and the presentation of the same, structuring it in a way that is comfortable and easy for the user to understand and use following accessibility and design guidelines. Therefore, we can also distinguish the technologies and tools used:\n\n
+        \t* Programming language: Kotlin, a modern and secure programming language that runs on the Java virtual machine. It is 100% interoperable with Java and can be used anywhere Java is used. Why Kotlin over Java? Easy, when it comes to programming on Android, Kotlin is safer, more concise and more expressive than Java. In addition, it is fully compatible with Java, so you can use all your favorite Java libraries and still use the same development tools. In terms of performance, this does not vary from Java since both run on the JVM. Apart from the fact that Kotlin became Google\'s choice for Android application development.\n\n
+        \t* Framework: Jetpack Compose, a modern Android library that simplifies and accelerates user interface development. Jetpack Compose is an Android library that simplifies and accelerates user interface development. With Jetpack Compose, you can create user interfaces faster and easier than with traditional Android views. Jetpack Compose is an Android library that simplifies and accelerates user interface development. With Jetpack Compose, you can create user interfaces faster and easier than with traditional Android views. Using functional programming to create components and screens.\n\n
+        \t* Tools: Android Studio, the official integrated development environment (IDE) for Android app development.\n\n
+        - Backend: Responsible for providing services to the application, such as authentication, database, file storage, messaging, etc. In this case, Firebase has been used, a mobile and web application development platform developed by Google. Firebase provides a wide range of services, such as user authentication, real-time databases, file storage, cloud messaging, etc.\n\n
+    </string>
+    <string name="des1Page2">
+        In the social section, you can chat and create groups to share your achievements with other players. The goal is to encourage interaction between users and create a community of players who share their experiences and knowledge.
+    </string>
+    <string name="des2Page2">
+        In the games section, you can choose between several game modes, such as survival mode, time attack mode, random mode and custom mode. Each game mode has its own rules and challenges, so you can choose the one you like the most and test your skills and knowledge. But there are also several games available:\n\n
+        - Quiz: In this game, you will have to answer a series of multiple choice questions. Each question has several answer options, of which only one is correct. You will have a limited time to answer each question, so you will have to think quickly and choose the correct answer.\n\n
+        - Mystery Number: In this game, you will have to guess a secret number. You will have to guess the correct number in as few attempts as possible. Each time you make a guess, the game will tell you if the secret number is higher or lower than your guess, so you will have to use your logic and math skills to guess the correct number.\n\n
+        - Families: In this game, you will have to identify which element does not belong to a family. You will be shown several elements and you will have to choose which one is different from the rest. You will have a limited time to identify the incorrect element, so you will have to think quickly and choose the correct answer.\n\n
+        - Word-Pass: In this game, you will be shown a definition and you will have to guess the correct word. You will have a limited time to guess the word, so you will have to think fast and choose the correct answer.\n\n
+    </string>
+    <string name="titlePage3">Aid and development support</string>
+    <string name="introPage3">
+        Another goal of this project is to complete the application to a publishable version and for that, ways will be provided to provide feedback for the games such as questions, words, etc. or report bugs.
+    </string>
+    <string name="desPage3">
+        Thank you for your interest in YouKnow, we hope you enjoy our app and join our community of players. If you have any questions or suggestions, please feel free to contact us. We are here to help and support you on your journey of learning and having fun. Enjoy and keep growing with our quiz app!
+    </string>
+</resources>

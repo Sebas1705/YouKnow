@@ -36,18 +36,26 @@ import es.sebas1705.youknow.domain.model.PageModel
 fun Context.generateGuidePages() = listOf(
     PageModel(
         this.getString(R.string.titlePage1),
-        this.getString(R.string.desPage1),
-        R.drawable.back_boarding
+        this.getString(R.string.introPage1),
+        listOf(
+            R.drawable.icon to getString(R.string.des1Page1),
+            R.drawable.urjc to getString(R.string.des2Page1),
+        )
     ),
     PageModel(
         this.getString(R.string.titlePage2),
-        this.getString(R.string.desPage2),
-        R.drawable.back_boarding
+        this.getString(R.string.introPage2),
+        listOf(
+            R.drawable.logos_tools to getString(R.string.des1Page2),
+            R.drawable.games to getString(R.string.des2Page2),
+        )
     ),
     PageModel(
         this.getString(R.string.titlePage3),
-        this.getString(R.string.desPage3),
-        R.drawable.back_boarding
+        this.getString(R.string.introPage3),
+        listOf(
+            R.drawable.icon to getString(R.string.desPage3)
+        )
     )
 )
 

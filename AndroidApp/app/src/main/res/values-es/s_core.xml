@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">You Know?</string>
+    <string name="web_client_id" translatable="false">445608778208-u91a5dbmgj8ija5g4p25oa61o8ip779r.apps.googleusercontent.com</string>
+    <string name="any">Cualquiera</string>
+    <string name="icon_content">Icono de You Know</string>
+    <string name="back_arrow_content">Flecha hacia atrás</string>
+    <string name="connection_lost">Conexión perdida</string>
+    <string name="credits">Créditos</string>
+    <string name="points">Puntos</string>
+    <string name="leading_content">Contenido delantero</string>
+    <string name="trailing_content">Contenido trasero</string>
+    <!-- UserViewModel -->
+    <string name="user_not_logged">Usuario no cargado correctamente, prueba de nuevo o contacta con soporte</string>
+    <!-- MainViewModel -->
+    <string name="error_loading_data">Hubo un problema, reinicia la app o puede haber problemas: </string>
+    <!-- Game Screens -->
+    <string name="game_out_title">Salir del juego</string>
+    <string name="game_out_body">¿Estás seguro de salir? (Perderas todo el progreso del juego)</string>
+</resources>

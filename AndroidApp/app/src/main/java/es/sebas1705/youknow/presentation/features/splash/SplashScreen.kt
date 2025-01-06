@@ -21,7 +21,9 @@ import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.splash.design.SplashDesign
 
 /**
+ * Splash Screen of the application
  *
+ * @param windowState [WindowState]: the state of the window
  *
  * @author Sebastian Ramiro Entrerrios García
  * @since 1.0.0

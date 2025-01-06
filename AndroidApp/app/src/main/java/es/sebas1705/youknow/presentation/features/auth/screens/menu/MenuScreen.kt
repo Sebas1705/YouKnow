@@ -16,33 +16,15 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu
  *
  */
 
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.youknow.R
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthIntent
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
+import es.sebas1705.youknow.presentation.features.auth.screens.menu.design.MenuDesign
+import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuIntent
+import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuViewModel
 import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Menu Screen that will show the user the options to sign in, log in or log in with Google.
@@ -64,103 +46,20 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun MenuScreen(
     windowState: WindowState,
-    authState: AuthState,
-    authViewModel: AuthViewModel,
     toSignNav: () -> Unit,
     toHomeNav: () -> Unit,
     toLogNav: () -> Unit,
 ) {
-
-    val context = LocalContext.current
+    val menuViewModel: MenuViewModel = hiltViewModel()
+    val menuState by menuViewModel.uiState.collectAsStateWithLifecycle()
 
     MenuDesign(
         windowState,
-        authState,
+        menuState,
         onSignButtonAction = toSignNav,
         onEmailLogButtonAction = toLogNav,
         onGoogleLogButtonAction = {
-            authViewModel.eventHandler(
-                AuthIntent.SignWithGoogle(
-                    context,
-                    onSuccess = toHomeNav,
-                    onError = { Log.e("Google sign", "Failure for $it") }
-                )
-            )
+            menuViewModel.eventHandler(MenuIntent.SignWithGoogle(toHomeNav))
         }
     )
-}
-
-/**
- * Design of the Menu Screen.
- *
- * @param windowState [WindowState]: State of the window.
- * @param onSignButtonAction () -> Unit: Function to navigate to the Sign In Screen.
- * @param onEmailLogButtonAction () -> Unit: Function to navigate to the Log In Screen.
- * @param onGoogleLogButtonAction () -> Unit: Function to log in with Google.
- *
- * @see WindowState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-@Composable
-private fun MenuDesign(
-    windowState: WindowState = WindowState.default(),
-    authState: AuthState = AuthState.default(),
-    onSignButtonAction: () -> Unit = {},
-    onEmailLogButtonAction: () -> Unit = {},
-    onGoogleLogButtonAction: () -> Unit = {},
-) {
-
-    ApplyBack(
-        if (windowState.isPortrait) R.drawable.back_portrait_fill
-        else R.drawable.back_landscape_fill,
-    ) {
-        if (authState.isLoading) LoadingDialog(windowState)
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = LargePadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            IVerSpacer(0.4f)
-            Image(
-                painter = painterResource(id = R.drawable.icon),
-                contentDescription = stringResource(id = R.string.app_name),
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            )
-            IVerSpacer(0.2f)
-            Text(
-                text = stringResource(id = R.string.initial_text),
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
-            )
-            IVerSpacer(0.2f)
-            MenuButtons(
-                buttonsModifier = Modifier
-                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
-                onSignButtonAction = onSignButtonAction,
-                onEmailLogButtonAction = onEmailLogButtonAction,
-                onGoogleLogButtonAction = onGoogleLogButtonAction
-            )
-            IVerSpacer(0.7f)
-        }
-    }
-}
-
-/**
- * Preview of the [MenuScreen].
- *
- * @see MenuScreen
- */
-@UiModePreviews
-@Composable
-private fun MenuPreview() {
-    YouKnowTheme {
-        MenuDesign()
-    }
 }

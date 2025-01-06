@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeTitle
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -33,12 +34,13 @@ fun Title(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.displayLarge,
     color: Color = MaterialTheme.colorScheme.primary
-) = Text(
+) = IText(
     modifier = modifier,
     text = text,
     style = style.makeTitle(),
     color = color,
-    textAlign = TextAlign.Center
+    textAlign = TextAlign.Center,
+    overflow = TextOverflow.Ellipsis
 )
 
 @IComposablePreview

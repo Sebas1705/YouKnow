@@ -20,6 +20,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import es.sebas1705.youknow.core.utlis.IComposablePreview
+import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 @Composable
@@ -43,6 +45,12 @@ fun IExtendedFAB(
     modifier,
     containerColor = MaterialTheme.colorScheme.primaryContainer,
     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    elevation =  FloatingActionButtonDefaults.elevation(
+        defaultElevation = TonalElevation.Level5,
+        pressedElevation = TonalElevation.Level4,
+        focusedElevation = TonalElevation.Level5,
+        hoveredElevation = TonalElevation.Level5,
+    ),
     interactionSource = interactionSource,
     content = {
         if (imageVector != null)

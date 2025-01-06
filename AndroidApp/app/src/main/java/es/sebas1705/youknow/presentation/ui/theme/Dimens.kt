@@ -46,3 +46,5 @@ object TonalElevation {
 
 val OutlineThickness = 1.dp
 
+val gameBottomBarHeight = 64.dp
+

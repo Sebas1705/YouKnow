@@ -17,12 +17,12 @@ package es.sebas1705.youknow.presentation.features.auth.viewmodels/*
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
@@ -47,7 +47,7 @@ class AuthViewModel @Inject constructor(
     private val application: Application
 ) : MVIBaseViewModel<AuthState, AuthIntent>() {
 
-    private val context = application.applicationContext
+    private val ctx = application.applicationContext
 
     override fun initState(): AuthState = AuthState.default()
 
@@ -65,14 +65,15 @@ class AuthViewModel @Inject constructor(
     private fun signInEmailAction(
         intent: AuthIntent.SignInWithEmail
     ) = execute(Dispatchers.IO) {
-        authUsesCases.signInEmailUser(intent.email,
+        authUsesCases.signInEmailUser(
+            intent.email,
             intent.password,
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
                     userUsesCases.getLoggedFromUser(firebaseId, onSuccess = { logged ->
                         if (logged) stopAndError(
-                            context.getString(R.string.already_logged), intent.onError
+                            ctx.getString(R.string.already_logged), intent.onError
                         )
                         else {
                             val user = authUsesCases.getFirebaseUser()
@@ -88,7 +89,7 @@ class AuthViewModel @Inject constructor(
                                         onError = { stopAndError(it, intent.onError) })
                                 }
                             } else stopAndError(
-                                context.getString(R.string.verify_email), intent.onError
+                                ctx.getString(R.string.verify_email), intent.onError
                             )
                         }
                     }, onError = { stopAndError(it, intent.onError) })
@@ -130,43 +131,38 @@ class AuthViewModel @Inject constructor(
                     onEmptySuccess = {
                         stopLoading()
                         userUsesCases.removeUserListener()
-                        execute(action = intent.onSuccess)
                     },
-                    onError = { stopAndError(it, intent.onError) })
+                    onError = { stopAndError(it, ctx::printTextInToast) })
             }
-        }, onError = { stopAndError(it, intent.onError) })
+        }, onError = { stopAndError(it, ctx::printTextInToast) })
     }
 
     private fun authWithGoogle(
         intent: AuthIntent.SignWithGoogle
     ) = execute(Dispatchers.IO) {
-        authUsesCases.signGoogle(intent.context,
+        authUsesCases.signGoogle(ctx,
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
-                Log.d("Google sign", "Firebase id: $firebaseId")
                 execute(Dispatchers.IO) {
                     userUsesCases.containsUser(firebaseId, onSuccess = { wasLogged ->
-                        Log.d("Google sign", "Was logged: $wasLogged")
                         if (wasLogged) execute(Dispatchers.IO) {
                             userUsesCases.setLoggedToUser(firebaseId, true, onEmptySuccess = {
-                                Log.d("Google sign", "Logged")
                                 stopLoading()
                                 execute(action = intent.onSuccess)
-                            }, onError = { stopAndError(it, intent.onError) })
+                            }, onError = { stopAndError(it, ctx::printTextInToast) })
                         }
                         else execute(Dispatchers.IO) {
                             userUsesCases.saveUser(userModel = UserModel.newGoogleUser(authUsesCases.getFirebaseUser()!!),
                                 onEmptySuccess = {
-                                    Log.d("Google sign", "Saved")
                                     stopLoading()
                                     execute(action = intent.onSuccess)
                                 },
-                                onError = { stopAndError(it, intent.onError) })
+                                onError = { stopAndError(it, ctx::printTextInToast) })
                         }
-                    }, onError = { stopAndError(it, intent.onError) })
+                    }, onError = { stopAndError(it, ctx::printTextInToast) })
                 }
             },
-            onError = { stopAndError(it, intent.onError) })
+            onError = { stopAndError(it, ctx::printTextInToast) })
     }
 
     private fun sendForgotPassword(
@@ -175,7 +171,7 @@ class AuthViewModel @Inject constructor(
         authUsesCases.sendForgotPassword(intent.email,
             onLoading = { startLoading() },
             onEmptySuccess = { stopLoading() },
-            onError = { stopAndError(it, intent.onError) }
+            onError = { stopAndError(it, ctx::printTextInToast) }
         )
     }
 
@@ -264,14 +260,9 @@ sealed interface AuthIntent : MVIBaseIntent {
     /**
      * Intent associated with the sign out process.
      *
-     * @param onSuccess () -> Unit: Action to perform when the sign out is successful.
-     * @param onError (String) -> Unit: Action to perform when the sign out fails.
-     *
      * @see AuthIntent
      */
-    data class SignOut(
-        val onSuccess: () -> Unit, val onError: (String) -> Unit
-    ) : AuthIntent
+    data object SignOut : AuthIntent
 
     /**
      * Intent associated with the authentication process with Google.
@@ -283,7 +274,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      * @see AuthIntent
      */
     data class SignWithGoogle(
-        val context: Context, val onSuccess: () -> Unit, val onError: (String) -> Unit
+        val onSuccess: () -> Unit
     ) : AuthIntent
 
     /**
@@ -294,7 +285,7 @@ sealed interface AuthIntent : MVIBaseIntent {
      * @see AuthIntent
      */
     data class SendForgotPassword(
-        val email: String, val onError: (String) -> Unit
+        val email: String
     ) : AuthIntent
 
 }

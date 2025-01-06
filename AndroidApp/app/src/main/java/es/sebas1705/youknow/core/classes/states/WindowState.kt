@@ -82,13 +82,13 @@ data class WindowState(
         compactOpt: T,
         mediumOpt: T,
         expandedOpt: T
-    ): T = (if (isPortrait) heightType else widthType)
+    ): T = widthType
         .filter(compactOpt, mediumOpt, expandedOpt)
 
     fun <T> heightFilter(
         compactOpt: T,
         mediumOpt: T,
         expandedOpt: T
-    ): T = (if (isPortrait) widthType else heightType)
+    ): T = heightType
         .filter(compactOpt, mediumOpt, expandedOpt)
 }

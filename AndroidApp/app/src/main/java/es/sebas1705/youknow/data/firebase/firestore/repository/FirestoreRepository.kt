@@ -186,6 +186,17 @@ interface FirestoreRepository {
         nickname: String
     ): FlowResponse<UserModel>
 
+    /**
+     * Delete the data of a user
+     *
+     * @param firebaseId [String]: Id of the user to delete the data
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun deleteDataUser(
+        firebaseId: String
+    ): FlowResponseNothing
+
     // Listeners:
     /**
      * Set a listener to get the user data

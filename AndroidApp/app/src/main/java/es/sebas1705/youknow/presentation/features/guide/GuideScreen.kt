@@ -34,10 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
 import es.sebas1705.youknow.core.composables.bottombars.GuideBottomBar
+import es.sebas1705.youknow.presentation.features.guide.design.GuideDesign
 import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideIntent
 import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
@@ -56,14 +58,17 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  */
 @Composable
 fun GuideScreen(
-    onSuccessNavigation: () -> Unit = {},
+    windowState: WindowState,
+    onSuccessNavigation: () -> Unit,
 ) {
     val guideViewModel: GuideViewModel = hiltViewModel()
-    val guideState by guideViewModel.uiState.collectAsStateWithLifecycle()
 
     GuideDesign(
-        onSuccessNavigation = onSuccessNavigation,
-        guideViewModel = guideViewModel
+        windowState = windowState,
+        onSuccessNavigation = {
+            guideViewModel.eventHandler(GuideIntent.SaveFirstTime)
+            onSuccessNavigation()
+        },
     )
 }
 

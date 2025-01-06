@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="volume">Volume</string>
+    <string name="contrast">Contrast</string>
+    <string name="low_contrast">Low</string>
+    <string name="medium_contrast">Medium</string>
+    <string name="high_contrast">High</string>
+    <string name="reset_defaults">Reset Settings</string>
+</resources>

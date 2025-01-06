@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">Siguiente</string>
+    <string name="start">Empezar!</string>
+    <string name="back">Atrás</string>
+    <string name="titlePage1">Bienvenida</string>
+    <string name="introPage1">
+        Bienvenidos a YouKnow, la aplicación en la que podrás chatear y jugar con tus amigos. Nuestro objetivo es proporcionarte una experiencia educativa y divertida, donde puedas poner a prueba tus conocimientos y aprender algo nuevo cada día. ¡Esperamos que disfrutes de nuestra aplicación y que te unas a nuestra comunidad de jugadores!
+        Esta aplicación es un proyecto en desarrollo y se agredece cualquier retroalimentación al creador, Muchas gracias por tu apoyo.
+    </string>
+    <string name="des1Page1">
+        La idea de YouKnow es una aplicacion social donde podrás jugar con tus amigos y competir en diferentes juegos de preguntas y respuestas. Además de poder chatear con ellos y compartir tus logros y puntuaciones.
+    </string>
+    <string name="des2Page1">
+        YouKnow es un proyecto de trabajo de fin de grado de la Universidad Rey Juan Carlos de Madrid, España. Creado por el estudiante de Ingeniería de Computadoras, Sebastián Ramiro Entrerrios García.
+    </string>
+    <string name="titlePage2">Funcionamiento y Características</string>
+    <string name="introPage2">
+        El desarrollo de este proyecto se divide en varias partes, primero tenemos que diferenciar las partes de una aplicación:\n\n
+        - Frontend: Se encarga de la recogida de datos y la presentación de los mismos estructurandolos de manera que al usuario le sea cómodo y sencillo de entender y utilizar siguiendo guías de accesibilidad y diseño. Por lo que a su vez podemos distinguir las tecnologías y herramientas usadas:\n\n
+        \t* Lenguaje de programación: Kotlin, un lenguaje de programación moderno y seguro que se ejecuta en la máquina virtual de Java. Es 100% interoperable con Java y se puede utilizar en cualquier lugar donde se use Java. ¿Por qué Kotlin antes que Java? Fácil, en cuanto a la programación en Android, Kotlin es más seguro, más conciso y más expresivo que Java. Además, es totalmente compatible con Java, por lo que puedes usar todas tus bibliotecas Java favoritas y seguir utilizando las mismas herramientas de desarrollo. En cuanto a rendimiento, este no varia a java ya que ambos se ejecutan en la JVM. A parte de que Kotlin se convirtió en la apuesta de Google para el desarrollo de aplicaciones Android.\n\n
+        \t* Framework: Jetpack compose, una biblioteca moderna de Android que simplifica y acelera el desarrollo de la interfaz de usuario. Jetpack Compose es una biblioteca de Android que simplifica y acelera el desarrollo de la interfaz de usuario. Con Jetpack Compose, puedes crear interfaces de usuario de manera más rápida y sencilla que con las vistas tradicionales de Android. Jetpack Compose es una biblioteca de Android que simplifica y acelera el desarrollo de la interfaz de usuario. Con Jetpack Compose, puedes crear interfaces de usuario de manera más rápida y sencilla que con las vistas tradicionales de Android. Usando la programación funcional para crear componentes y pantallas.\n\n
+        \t* Herramientas: Android Studio, el entorno de desarrollo integrado (IDE) oficial para el desarrollo de aplicaciones Android.\n\n
+        - Backend: Se encarga de proporcionar servicios a la aplicación, como puede ser la autenticación, la base de datos, el almacenamiento de archivos, la mensajería, etc. En este caso se ha utilizado Firebase, una plataforma de desarrollo de aplicaciones móviles y web desarrollada por Google. Firebase proporciona una amplia gama de servicios, como la autenticación de usuarios, bases de datos en tiempo real, almacenamiento de archivos, mensajería en la nube, etc. Firebase es una plataforma de desarrollo de aplicaciones móviles y web desarrollada por Google. Firebase proporciona una amplia gama de servicios, como la autenticación de usuarios, bases de datos en tiempo real, almacenamiento de archivos, mensajería en la nube, etc.\n\n
+    </string>
+    <string name="des1Page2">
+        En el apartado social, podrás chatear y crear grupos para compartir tus logros con otros jugadores. El objetivo es fomentar la interacción entre los usuarios y crear una comunidad de jugadores que comparten sus experiencias y conocimientos.
+    </string>
+    <string name="des2Page2">
+        En el apartado de juegos, podrás elegir entre varios modos de juego, como el modo de supervivencia, el modo de ataque de tiempo, el modo aleatorio y el modo personalizado. Cada modo de juego tiene sus propias reglas y desafíos, por lo que podrás elegir el que más te guste y poner a prueba tus habilidades y conocimientos. Pero de igual manera hay varios juegos disponibles:\n\n
+        - Preguntas y respuestas: En este juego, tendrás que responder a una serie de preguntas de opción múltiple. Cada pregunta tiene varias opciones de respuesta, de las cuales solo una es correcta. Tendrás un tiempo limitado para responder a cada pregunta, por lo que tendrás que pensar rápido y elegir la respuesta correcta.\n\n
+        - Número misterioso: En este juego, tendrás que adivinar un número secreto. Tendrás que adivinar el número correcto en el menor número de intentos posible. Cada vez que hagas una suposición, el juego te dirá si el número secreto es mayor o menor que tu suposición, por lo que tendrás que usar tu lógica y habilidades matemáticas para adivinar el número correcto.\n\n
+        - Familias: En este juego, tendrás que identificar qué elemento no pertenece a una familia. Se te mostrarán varios elementos y tendrás que elegir cuál de ellos es diferente al resto. Tendrás un tiempo limitado para identificar el elemento incorrecto, por lo que tendrás que pensar rápido y elegir la respuesta correcta.\n\n
+        - Pasa-palabras: En este juego, se te mostrará una definición y tendrás que adivinar la palabra correcta. Tendrás un tiempo limitado para adivinar la palabra, por lo que tendrás que pensar rápido y elegir la respuesta correcta.\n\n
+    </string>
+    <string name="titlePage3">Ayuda y apoyo al desarrollo</string>
+    <string name="introPage3">
+        Otro objetivo de este proyecto es completar la aplicación hasta una versión publicable y para eso se proporcionara formas de proporcionar feedback para los juegos como preguntas, palabras, etc o reportar errores.
+    </string>
+    <string name="desPage3">
+        Gracias por tu interés en YouKnow, esperamos que disfrutes de nuestra aplicación y que te unas a nuestra comunidad de jugadores. Si tienes alguna pregunta o sugerencia, no dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte y apoyarte en tu viaje de aprendizaje y diversión. ¡Disfruta y sigue creciendo con nuestra aplicación de preguntas!
+    </string>
+</resources>

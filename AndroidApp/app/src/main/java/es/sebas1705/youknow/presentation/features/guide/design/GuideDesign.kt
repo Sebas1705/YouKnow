@@ -16,9 +16,13 @@ package es.sebas1705.youknow.presentation.features.guide.design
  *
  */
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,38 +30,47 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.bottombars.GuideBottomBar
+import es.sebas1705.youknow.core.composables.divider.IVerDivider
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
+import es.sebas1705.youknow.core.composables.texts.IText
+import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
-import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideIntent
 import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Guide Screen.
  *
- * @param guideViewModel [es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel]: ViewModel of the Guide Screen.
+ * @param windowState [WindowState]: State of the window.
  * @param onSuccessNavigation () -> Unit: Function that will be called when the user finishes the guide.
  *
- * @see es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
+ * @see GuideViewModel
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @Composable
-private fun GuideDesign(
-    guideViewModel: GuideViewModel? = null,
+fun GuideDesign(
+    windowState: WindowState = WindowState.default(),
     onSuccessNavigation: () -> Unit = {},
 ) {
 
@@ -83,13 +96,12 @@ private fun GuideDesign(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             GuideBottomBar(pageList.size, pagerState, buttonState) {
-                guideViewModel?.eventHandler(GuideIntent.SaveFirstTime)
                 onSuccessNavigation()
             }
         }
     ) {
         ApplyBack(
-            backId = R.drawable.back_portrait_empty,
+            backId = windowState.backEmpty,
             paddingValues = it
         ) {
             HorizontalPager(
@@ -97,26 +109,83 @@ private fun GuideDesign(
                     .fillMaxSize()
                     .padding(top = MediumPadding),
                 state = pagerState
-            ) {
+            ) { pageIndex ->
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = pageList[it].title,
-                        modifier = Modifier.padding(horizontal = MediumPadding),
-                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onBackground
+                    var paddings = windowState
+                        .widthFilter(MediumPadding, LargePadding, HugePadding)
+                    TitleSurface(
+                        pageList[pageIndex].title,
+                        modifier = Modifier.padding(
+                            horizontal = paddings
+                        )
                     )
                     Spacer(modifier = Modifier.height(MediumPadding))
                     LazyColumn(
-                        Modifier.padding(horizontal = MediumPadding)
+                        Modifier.padding(horizontal = paddings)
                     ) {
                         item {
-                            Text(
-                                text = pageList[it].description,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onBackground
+                            IText(
+                                text = pageList[pageIndex].introduction,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                textAlign = TextAlign.Justify
                             )
+                        }
+
+                        pageList[pageIndex].imagesAndDescription.forEachIndexed { index, page ->
+
+                            item{
+                                IVerDivider(
+                                    modifier = Modifier.padding(horizontal = paddings),
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+
+                            item {
+                                Row(
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = paddings)
+                                ){
+                                    Image(
+                                        painter = painterResource(page.first),
+                                        contentDescription = null,
+                                    )
+                                }
+                            }
+
+                            item {
+                                IVerSpacer(
+                                    height =
+                                    windowState.heightFilter(
+                                        SmallestPadding,
+                                        SmallPadding,
+                                        MediumPadding
+                                    )
+                                )
+                            }
+
+                            item {
+                                IText(
+                                    text = page.second,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    textAlign = TextAlign.Justify
+                                )
+                            }
+
+                            item{
+                                IVerDivider(
+                                    modifier = Modifier.padding(horizontal = paddings),
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+
                         }
                     }
                 }

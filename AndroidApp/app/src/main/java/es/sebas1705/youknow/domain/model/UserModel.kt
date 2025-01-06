@@ -41,6 +41,20 @@ data class UserModel(
             credits = 1000,
             friends = emptyList(),
         )
+
+        fun default(): UserModel {
+            return UserModel(
+                firebaseId = "firebaseId",
+                email = "email",
+                nickName = "nickName",
+                photoUrl = "photoUrl",
+                credits = 0,
+                points = 0,
+                groupId = "groupId",
+                friends = emptyList(),
+                provider = ProviderAuth.EMAIL
+            )
+        }
     }
 
     /**

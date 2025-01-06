@@ -53,6 +53,7 @@ import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.ChangeNicknameToUser
 import es.sebas1705.youknow.domain.usecases.user.ChangePhotoToUser
 import es.sebas1705.youknow.domain.usecases.user.ContainsUser
+import es.sebas1705.youknow.domain.usecases.user.DeleteDataUser
 import es.sebas1705.youknow.domain.usecases.user.GetFirebaseUser
 import es.sebas1705.youknow.domain.usecases.user.GetLoggedFromUser
 import es.sebas1705.youknow.domain.usecases.user.GetUser
@@ -132,7 +133,8 @@ object DomainModule {
         changePhotoToUser = ChangePhotoToUser(firestoreRepository),
         changeNicknameToUser = ChangeNicknameToUser(firestoreRepository),
         getUserRanking = GetUserRanking(firestoreRepository),
-        getUserByNickname = GetUserByNickname(firestoreRepository)
+        getUserByNickname = GetUserByNickname(firestoreRepository),
+        deleteDataUser = DeleteDataUser(firestoreRepository)
     )
 
     @Provides

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_letter">Primera letra</string>
+    <string name="between_letter">Letra en medio</string>
+    <string name="last_letter">Última letra</string>
+    <string name="try_word">Intentar</string>
+    <string name="previous_definition">Definición anterior</string>
+    <string name="next_definition">Siguiente definición</string>
+    <string name="correct_response">Palabra correcta: </string>
+    <string name="guest_response">Adivina la palabra</string>
+</resources>

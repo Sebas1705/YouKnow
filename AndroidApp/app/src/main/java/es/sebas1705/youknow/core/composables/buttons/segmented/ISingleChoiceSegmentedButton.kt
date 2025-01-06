@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
@@ -79,9 +80,10 @@ fun ISingleChoiceSegmentedButton(
                 }
             },
             label = {
-                Text(
+                IText(
                     element.first,
-                    modifier = Modifier.padding(start = SmallestPadding)
+                    modifier = Modifier.padding(start = SmallestPadding),
+                    maxLines = 1
                 )
             }
         )

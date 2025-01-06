@@ -206,6 +206,13 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     )
 
+    override fun deleteDataUser(
+        firebaseId: String
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = { usersReference.document(firebaseId).delete() },
+        onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
     //Listeners:
     override fun setUserListener(
         firebaseId: String,
