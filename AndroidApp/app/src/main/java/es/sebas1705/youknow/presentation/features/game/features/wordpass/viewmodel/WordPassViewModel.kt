@@ -28,7 +28,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.enums.Difficulty
 import es.sebas1705.youknow.core.classes.enums.Letter
-import es.sebas1705.youknow.core.classes.enums.WordPassType
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
@@ -83,22 +82,42 @@ class WordPassViewModel @Inject constructor(
     private fun generateGame(
         intent: WordPassIntent.GenerateGame
     ) = execute(Dispatchers.IO) {
-        wordPassUsesCases.generateWordPass(
-            intent.numWords,
-            onLoading = { startLoading() },
-            onSuccess = { words ->
-                stopLoading()
-                updateUi {
-                    it.copy(
-                        words = words,
-                        status = WordPassStatus.RUNNING
-                    )
+        if (intent.wordPassMode == WordPassMode.FIRE_WHEEL)
+            wordPassUsesCases.generateWheelWordPass(
+                intent.difficulty,
+                onLoading = { startLoading() },
+                onSuccess = { words ->
+                    stopLoading()
+                    updateUi {
+                        it.copy(
+                            words = words,
+                            status = WordPassStatus.RUNNING
+                        )
+                    }
+                },
+                onError = { error ->
+                    stopAndError(error, ctx::printTextInToast)
                 }
-            },
-            onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
-            }
-        )
+            )
+        else
+            wordPassUsesCases.generateWordPass(
+                intent.numWords,
+                Letter.ANY,
+                intent.difficulty,
+                onLoading = { startLoading() },
+                onSuccess = { words ->
+                    stopLoading()
+                    updateUi {
+                        it.copy(
+                            words = words,
+                            status = WordPassStatus.RUNNING
+                        )
+                    }
+                },
+                onError = { error ->
+                    stopAndError(error, ctx::printTextInToast)
+                }
+            )
     }
 
 
@@ -131,8 +150,7 @@ class WordPassViewModel @Inject constructor(
         val last =
             (intent.wordPassState.actualWord + 1 == intent.wordPassState.words.size) or (!correct && intent.wordPassState.mode == WordPassMode.SURVIVAL && intent.wordPassState.lives - 1 <= 0)
         val pointsToAdd =
-            (word.difficulty.points * word.wordPassType.multiPoints * (intent.wordPassState.mode?.multiPoints
-                ?: 1.0)).toInt()
+            (word.difficulty.points * (intent.wordPassState.mode?.multiPoints ?: 1.0)).toInt()
         val buff =
             intent.wordPassState.correctAnswers / intent.wordPassState.words.size.toFloat()
         if (!correct)
@@ -268,7 +286,6 @@ sealed interface WordPassIntent : MVIBaseIntent {
 
     data class GenerateGame(
         val difficulty: Difficulty,
-        val wordPassType: WordPassType,
         val wordPassMode: WordPassMode,
         val numWords: Int,
     ) : WordPassIntent

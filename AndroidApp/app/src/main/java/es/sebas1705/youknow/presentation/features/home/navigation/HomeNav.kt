@@ -40,16 +40,16 @@ import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.extensions.composables.navToTab
-import es.sebas1705.youknow.presentation.features.home.features.info.InfoScreen
+import es.sebas1705.youknow.presentation.features.home.features.chat.ChatScreen
+import es.sebas1705.youknow.presentation.features.home.features.groups.GroupsScreen
 import es.sebas1705.youknow.presentation.features.home.features.main.MainScreen
 import es.sebas1705.youknow.presentation.features.home.features.play.PlayScreen
 import es.sebas1705.youknow.presentation.features.home.features.profile.ProfileScreen
-import es.sebas1705.youknow.presentation.features.home.features.social.SocialScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.InfoScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.ChatScreen
+import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.GroupsScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.MainScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.PlayScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.ProfileScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.SocialScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.composables.HomeBottomBar
 import es.sebas1705.youknow.presentation.features.home.navigation.composables.HomeTopBar
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeIntent
@@ -101,7 +101,7 @@ fun HomeNav(
                 )
             },
             topBar = {
-                if (selectedItem in listOf(1, 2, 3))
+                if (!windowState.isImeVisible)
                     HomeTopBar(
                         windowState,
                         user.points,
@@ -131,18 +131,14 @@ fun HomeNav(
                 composable<ProfileScreen> {
                     ProfileScreen(
                         windowState,
-                        user,
+                        homeState,
                         onAuthNav
                     )
                 }
-                composable<SocialScreen> {
-                    SocialScreen(
+                composable<ChatScreen> {
+                    ChatScreen(
                         windowState,
-                        user,
-                        homeState.infoUser,
-                        onUserInfoSearch = {
-                            homeViewModel.eventHandler(HomeIntent.GetUser(it))
-                        }
+                        homeState
                     )
                 }
                 composable<PlayScreen> {
@@ -151,9 +147,13 @@ fun HomeNav(
                         onGameNav
                     )
                 }
-                composable<InfoScreen> {
-                    InfoScreen(
-                        windowState
+                composable<GroupsScreen> {
+                    GroupsScreen(
+                        windowState,
+                        homeState,
+                        onUserInfoSearch = {
+                            homeViewModel.eventHandler(HomeIntent.GetUser(it))
+                        }
                     )
                 }
             }

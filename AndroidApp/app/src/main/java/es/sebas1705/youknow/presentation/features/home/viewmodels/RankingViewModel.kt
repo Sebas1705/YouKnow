@@ -108,16 +108,16 @@ data class RankingState(
 }
 
 /**
- * Sealed interface that represents the possible actions of the [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialViewModel].
+ * Sealed interface that represents the possible actions of the [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel].
  *
- * @property SendMessage [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to send a message to the global chat.
- * @property CreateGroup [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to create a group.
- * @property JoinGroup [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to join a group.
- * @property LoadSocial [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to load the social data.
- * @property ClearSocial [es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialIntent]: Action to clear the social data.
+ * @property SendMessage [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to send a message to the global chat.
+ * @property CreateGroup [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to create a group.
+ * @property JoinGroup [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to join a group.
+ * @property LoadSocial [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to load the social data.
+ * @property ClearSocial [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to clear the social data.
  *
  * @see MVIBaseIntent
- * @see es.sebas1705.youknow.presentation.features.home.features.social.viewmodel.SocialViewModel
+ * @see es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel
  * @see SendMessage
  *
  * @author Sebastián Ramiro Entrerrios García

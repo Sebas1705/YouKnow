@@ -2,71 +2,147 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "efcd58b69a53dd6a91cc6156b3ebf6d2",
+    "identityHash": "08ac8a313d0e376c71da0c832d26ac9f",
     "entities": [
       {
-        "tableName": "users_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`firebaseId` TEXT NOT NULL, `email` TEXT NOT NULL, `provider` INTEGER NOT NULL, `nickName` TEXT NOT NULL, `photoUrl` TEXT, `groupId` TEXT, `points` INTEGER NOT NULL, `credits` INTEGER NOT NULL, `friends` TEXT NOT NULL, PRIMARY KEY(`firebaseId`))",
+        "tableName": "questions_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`question` TEXT NOT NULL, `answers` TEXT NOT NULL, `correctAnswer` TEXT NOT NULL, `category` INTEGER NOT NULL, `language` INTEGER NOT NULL, `difficulty` INTEGER NOT NULL, `quizType` INTEGER NOT NULL, PRIMARY KEY(`question`))",
         "fields": [
           {
-            "fieldPath": "firebaseId",
-            "columnName": "firebaseId",
+            "fieldPath": "question",
+            "columnName": "question",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "email",
-            "columnName": "email",
+            "fieldPath": "answers",
+            "columnName": "answers",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "provider",
-            "columnName": "provider",
+            "fieldPath": "correctAnswer",
+            "columnName": "correctAnswer",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "nickName",
-            "columnName": "nickName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "photoUrl",
-            "columnName": "photoUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "groupId",
-            "columnName": "groupId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "points",
-            "columnName": "points",
+            "fieldPath": "language",
+            "columnName": "language",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "credits",
-            "columnName": "credits",
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "friends",
-            "columnName": "friends",
-            "affinity": "TEXT",
+            "fieldPath": "quizType",
+            "columnName": "quizType",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "firebaseId"
+            "question"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "families_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`answers` TEXT NOT NULL, `correctAnswer` TEXT NOT NULL, `category` INTEGER NOT NULL, `language` INTEGER NOT NULL, `difficulty` INTEGER NOT NULL, PRIMARY KEY(`answers`))",
+        "fields": [
+          {
+            "fieldPath": "answers",
+            "columnName": "answers",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correctAnswer",
+            "columnName": "correctAnswer",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "answers"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "word_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word` TEXT NOT NULL, `definitions` TEXT NOT NULL, `letter` INTEGER NOT NULL, `language` INTEGER NOT NULL, `difficulty` INTEGER NOT NULL, PRIMARY KEY(`word`))",
+        "fields": [
+          {
+            "fieldPath": "word",
+            "columnName": "word",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "definitions",
+            "columnName": "definitions",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "letter",
+            "columnName": "letter",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word"
           ]
         },
         "indices": [],
@@ -76,7 +152,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efcd58b69a53dd6a91cc6156b3ebf6d2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08ac8a313d0e376c71da0c832d26ac9f')"
     ]
   }
 }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.social.composables
+package es.sebas1705.youknow.presentation.features.home.features.chat.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

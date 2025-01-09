@@ -16,17 +16,19 @@ package es.sebas1705.youknow.data.local.database.repository
  *
  */
 
+import es.sebas1705.youknow.core.classes.enums.Category
+import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.Languages
+import es.sebas1705.youknow.core.classes.enums.Letter
+import es.sebas1705.youknow.core.classes.enums.QuizType
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
-import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
 import es.sebas1705.youknow.data.local.database.Database
-import es.sebas1705.youknow.data.local.database.config.SettingsDB
-import es.sebas1705.youknow.data.model.ErrorResponseType
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.flow
+import es.sebas1705.youknow.domain.model.games.FamiliesModel
+import es.sebas1705.youknow.domain.model.games.QuestionModel
+import es.sebas1705.youknow.domain.model.games.WordModel
 import javax.inject.Inject
 
 /**
@@ -47,50 +49,82 @@ class DatabaseRepositoryImpl @Inject constructor(
     override val repository: Repository = Repository.Database
 
     //Selects
-    override suspend fun getUser(
-        firebaseId: String
-    ): UserModel? {
-        val userEntity = database.userDao().getByID(firebaseId)
-        return userEntity?.toUserModel()
-    }
+    override suspend fun containsQuestion(
+        question: String
+    ): Boolean = database.questionDao().contains(question) > 0
 
-    override suspend fun containsUser(
-        firebaseId: String
-    ): Boolean {
-        return database.userDao().contains(firebaseId) > 0
-    }
+    override suspend fun containsFamilies(
+        answers: List<String>
+    ): Boolean = database.familiesDao().contains(answers) > 0
+
+    override suspend fun containsWord(
+        word: String
+    ): Boolean = database.wordDao().contains(word) > 0
+
+    override suspend fun getQuestions(
+        numOfQuestions: Int,
+        category: Category,
+        language: Languages,
+        difficulty: Difficulty,
+        quizType: QuizType
+    ): List<QuestionModel> = database.questionDao().getQuestions(
+        numOfQuestions,
+        category.ordinal,
+        language.ordinal,
+        difficulty.ordinal,
+        quizType.ordinal
+    ).map { it.toQuestionModel() }
+
+    override suspend fun getFamilies(
+        numOfFamilies: Int,
+        category: Category,
+        language: Languages,
+        difficulty: Difficulty
+    ): List<FamiliesModel> = database.familiesDao().getFamilies(
+        numOfFamilies,
+        category.ordinal,
+        language.ordinal,
+        difficulty.ordinal
+    ).map { it.toFamiliesModel() }
+
+    override suspend fun getWords(
+        numOfWord: Int,
+        letter: Letter,
+        language: Languages,
+        difficulty: Difficulty
+    ): List<WordModel> = database.wordDao().getWords(
+        numOfWord,
+        letter.ordinal,
+        language.ordinal,
+        difficulty.ordinal
+    ).map { it.toWordModel() }
 
     //Inserts
-    override suspend fun postOrUpdateUser(
-        userModel: UserModel
-    ) {
-        database.userDao().insertOrReplace(userModel.toUserEntity())
+    override suspend fun insertOrReplace(questionModel: QuestionModel) {
+        database.questionDao().insertOrReplace(questionModel.toQuestionEntity())
+    }
+
+    override suspend fun insertOrReplace(familiesModel: FamiliesModel) {
+        database.familiesDao().insertOrReplace(familiesModel.toFamiliesEntity())
+    }
+
+    override suspend fun insertOrReplace(wordModel: WordModel) {
+        database.wordDao().insertOrReplace(wordModel.toWordEntity())
     }
 
     //Updates
-    override suspend fun updateCreditsFromUser(
-        userId: String,
-        newCredits: Int
-    ): Boolean {
-        val rowsAffected = database.userDao().updateCreditsById(userId, newCredits)
-        return rowsAffected > 0
-    }
 
-    override suspend fun updateGroupFromUser(
-        userId: String,
-        groupId: String
-    ): Boolean {
-        val rowsAffected = database.userDao().updateGroupById(userId, groupId)
-        return rowsAffected > 0
-    }
 
     //Deletes
-    override suspend fun deleteUser(
-        userModel: UserModel
-    ): Boolean {
-        val rowsAffected = database.userDao().deleteById(userModel.firebaseId)
-        return rowsAffected > 0
+    override suspend fun deleteQuestion(question: String): Boolean {
+        return database.questionDao().deleteById(question) > 0
     }
 
+    override suspend fun deleteFamilies(answers: List<String>): Boolean {
+        return database.familiesDao().deleteById(answers) > 0
+    }
 
+    override suspend fun deleteWord(word: String): Boolean {
+        return database.wordDao().deleteById(word) > 0
+    }
 }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.social.composables
+package es.sebas1705.youknow.presentation.features.home.features.chat.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -33,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
@@ -42,6 +43,7 @@ import es.sebas1705.youknow.domain.model.social.MessageModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.R
 
 /**
  * Chat composable that will show the messages of the chat.
@@ -98,8 +100,8 @@ fun Chat(
                     .padding(bottom = SmallPadding)
                     .fillMaxWidth(),
                 value = message,
-                placeholder = "Search",
-                label = "Search",
+                placeholder = stringResource(R.string.Chat),
+                label = stringResource(R.string.Chat),
                 onValueChange = { message = it },
                 trailingIcon = Icons.AutoMirrored.Filled.Send to {
                     onMessageSend(message)
@@ -113,7 +115,7 @@ fun Chat(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(top = SmallestPadding, bottom = SmallestPadding),
+                .padding(top = SmallestPadding),
             state = lazyListState,
         ) {
             messageModels.sortedBy { it.time }.forEach {

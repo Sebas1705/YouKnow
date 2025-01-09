@@ -19,9 +19,13 @@ package es.sebas1705.youknow.data.local.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import es.sebas1705.youknow.data.local.database.daos.UserDao
-import es.sebas1705.youknow.data.local.database.entities.UserEntity
-import es.sebas1705.youknow.data.local.database.typeconverter.UserConverter
+import es.sebas1705.youknow.data.local.database.daos.FamiliesDao
+import es.sebas1705.youknow.data.local.database.daos.QuestionDao
+import es.sebas1705.youknow.data.local.database.daos.WordDao
+import es.sebas1705.youknow.data.local.database.entities.FamiliesEntity
+import es.sebas1705.youknow.data.local.database.entities.QuestionEntity
+import es.sebas1705.youknow.data.local.database.entities.WordEntity
+import es.sebas1705.youknow.data.local.database.typeconverter.Converter
 
 /**
  * Local database
@@ -31,12 +35,22 @@ import es.sebas1705.youknow.data.local.database.typeconverter.UserConverter
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@Database(entities = [UserEntity::class], version = 1)
-@TypeConverters(UserConverter::class)
+@Database(
+    entities = [
+        QuestionEntity::class,
+        FamiliesEntity::class,
+        WordEntity::class
+    ],
+    version = 1
+)
+@TypeConverters(Converter::class)
 abstract class Database : RoomDatabase() {
 
     //DAOs:
-    abstract fun userDao(): UserDao
+    abstract fun questionDao(): QuestionDao
 
+    abstract fun familiesDao(): FamiliesDao
+
+    abstract fun wordDao(): WordDao
 
 }

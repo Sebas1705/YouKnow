@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.WordPassType
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.design.WordPassDesign
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassIntent
@@ -51,7 +50,6 @@ fun WordPassScreen(
             wordPassViewModel.eventHandler(
                 WordPassIntent.GenerateGame(
                     Difficulty.ANY,
-                    WordPassType.ANY,
                     mode,
                     mode.numWords
                 )

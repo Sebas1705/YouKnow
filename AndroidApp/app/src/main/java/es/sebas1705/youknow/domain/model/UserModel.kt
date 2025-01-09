@@ -3,7 +3,6 @@ package es.sebas1705.youknow.domain.model
 import com.google.firebase.auth.FirebaseUser
 import es.sebas1705.youknow.data.firebase.authentication.config.ProviderAuth
 import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
-import es.sebas1705.youknow.data.local.database.entities.UserEntity
 
 data class UserModel(
     val firebaseId: String,
@@ -63,23 +62,6 @@ data class UserModel(
      * @return [UserDocument]: the user document
      */
     fun toUserDocument() = UserDocument(
-        email,
-        provider.ordinal,
-        nickName,
-        photoUrl,
-        groupId,
-        points,
-        credits,
-        friends
-    )
-
-    /**
-     * Transform the [UserModel] to a [UserEntity]
-     *
-     * @return [UserEntity]: the user entity
-     */
-    fun toUserEntity() = UserEntity(
-        firebaseId,
         email,
         provider.ordinal,
         nickName,

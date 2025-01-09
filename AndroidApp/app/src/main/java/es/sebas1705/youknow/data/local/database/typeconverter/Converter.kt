@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
-class UserConverter {
+class Converter {
     @TypeConverter
     fun fromStringList(value: List<String>): String {
         return Gson().toJson(value)

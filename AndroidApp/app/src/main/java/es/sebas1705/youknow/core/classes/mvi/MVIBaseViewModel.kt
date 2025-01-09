@@ -74,6 +74,11 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
         onInit()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("MVIBaseViewModel", "ViewModel cleared ${this::class.java.simpleName}")
+    }
+
     /**
      * Receive the intents from the composable
      */

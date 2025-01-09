@@ -20,6 +20,7 @@ import es.sebas1705.youknow.core.classes.enums.Category
 import es.sebas1705.youknow.core.classes.enums.Difficulty
 import es.sebas1705.youknow.core.classes.enums.Languages
 import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.data.local.database.entities.QuestionEntity
 
 /**
  * Model to represent a question
@@ -67,4 +68,14 @@ data class QuestionModel(
             )
         }
     }
+
+    fun toQuestionEntity() = QuestionEntity(
+        question,
+        answers,
+        correctAnswer,
+        category.ordinal,
+        language.ordinal,
+        difficulty.ordinal,
+        quizType.ordinal
+    )
 }

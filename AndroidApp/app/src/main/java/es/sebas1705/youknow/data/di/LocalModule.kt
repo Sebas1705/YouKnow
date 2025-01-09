@@ -21,14 +21,9 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.local.database.Database
-import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepositoryImpl
-import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.data.local.database.config.SettingsDB
-import es.sebas1705.youknow.data.local.database.daos.UserDao
 import javax.inject.Singleton
 
 /**
@@ -50,10 +45,4 @@ object LocalModule {
         Database::class.java,
         SettingsDB.DATABASE_NAME
     ).build()
-
-    @Provides
-    @Singleton
-    fun provideUserDao(
-        database: Database
-    ): UserDao = database.userDao()
 }

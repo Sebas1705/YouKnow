@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.social.composables
+package es.sebas1705.youknow.presentation.features.home.features.groups.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -45,6 +45,8 @@ import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeBold
 import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
+import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -65,10 +67,9 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Group(
-    firebaseId: String,
-    groupModel: GroupModel,
     windowState: WindowState = WindowState.default(),
-    admin: Boolean = true,
+    groupsState: GroupsState = GroupsState.default(),
+    homeState: HomeState = HomeState.default(),
     onOutButton: () -> Unit = {},
     onInfoButton: (String) -> Unit = {},
     onKickButton: (String) -> Unit = {},
@@ -90,7 +91,7 @@ fun Group(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = groupModel.name,
+                        text = groupsState.myGroup?.name.toString(),
                         style = MaterialTheme.typography.titleLarge.makeBold(),
                         modifier = Modifier
                             .padding(SmallestPadding)
@@ -111,7 +112,7 @@ fun Group(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = groupModel.description,
+                    text = groupsState.myGroup?.description.toString(),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -127,7 +128,7 @@ fun Group(
         ) {
             item {
                 IText(
-                    text = "Members (${groupModel.members.size}/${Constants.MAX_GROUP}):",
+                    text = "Members (${groupsState.myGroup?.members?.size.toString()}/${Constants.MAX_GROUP}):",
                     style = MaterialTheme.typography.titleMedium.makeBold(),
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier
@@ -136,13 +137,15 @@ fun Group(
                 )
             }
 
-            items(groupModel.members.size) { index ->
-                val member = groupModel.members[index]
+            items(groupsState.myGroup?.members?.size ?: 0) { index ->
+                val member = groupsState.myGroup?.members[index] ?: ""
                 val memberId = member.split("-")[0]
                 val memberName = member.split("-")[1]
+                val firebaseId = homeState.userModel?.firebaseId
+                val groupLeader = groupsState.myGroup?.leaderUID
                 IInteractiveCard(
                     title = if (firebaseId == memberId) stringResource(R.string.You) else memberName,
-                    subtitle = if (groupModel.leaderUID == memberId) "(${stringResource(R.string.leader)})" else "",
+                    subtitle = if (groupLeader == memberId) "(${stringResource(R.string.leader)})" else "",
                     buttons = {
                         if (firebaseId != memberId) IFilledIconButton(
                             onClick = { onInfoButton(memberId) },
@@ -150,7 +153,7 @@ fun Group(
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Search,
                         )
-                        if (admin && firebaseId != memberId) IFilledIconButton(
+                        if (groupLeader == firebaseId && firebaseId != memberId) IFilledIconButton(
                             onClick = { onKickButton(member) },
                             contentDescription = "Delete",
                             modifier = Modifier.padding(SmallestPadding),
@@ -168,15 +171,6 @@ fun Group(
 @Composable
 fun GroupPreview() {
     YouKnowTheme {
-        Group(
-            "",
-            GroupModel(
-                "Group 1",
-                "Description of the group 1",
-                listOf("Member 1", "Member 2", "Member 3", "Member 4", "Member 5"),
-                "Leader 1"
-            ),
-            admin = false
-        )
+        Group()
     }
 }

@@ -194,6 +194,18 @@ data class HomeState(
             firebaseUser = null,
             infoUser = null
         )
+
+        /**
+         * Default [HomeState] with user.
+         *
+         * @return [HomeState]
+         */
+        fun defaultWithUser() = HomeState(
+            isLoading = false,
+            userModel = UserModel.default(),
+            firebaseUser = null,
+            infoUser = null
+        )
     }
 }
 

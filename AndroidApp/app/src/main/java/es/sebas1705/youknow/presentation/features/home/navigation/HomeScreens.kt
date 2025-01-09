@@ -17,14 +17,14 @@ package es.sebas1705.youknow.presentation.features.home.navigation
  */
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,7 +39,12 @@ data class HomeItem(
 )
 
 val homes = listOf(
-    HomeItem(R.string.Social, Icons.Outlined.Groups, Icons.Filled.Groups, HomeScreens.SocialScreen),
+    HomeItem(
+        R.string.Chat,
+        Icons.AutoMirrored.Outlined.Chat,
+        Icons.AutoMirrored.Filled.Chat,
+        HomeScreens.ChatScreen
+    ),
     HomeItem(
         R.string.Profile,
         Icons.Outlined.Person,
@@ -53,7 +58,7 @@ val homes = listOf(
         Icons.Filled.SportsEsports,
         HomeScreens.PlayScreen
     ),
-    HomeItem(R.string.Info, Icons.Outlined.Info, Icons.Filled.Info, HomeScreens.InfoScreen),
+    HomeItem(R.string.Groups, Icons.Outlined.Groups, Icons.Filled.Groups, HomeScreens.GroupsScreen),
 )
 
 interface HomeScreens {
@@ -64,12 +69,12 @@ interface HomeScreens {
     object ProfileScreen : HomeScreens
 
     @Serializable
-    object SocialScreen : HomeScreens
+    object ChatScreen : HomeScreens
 
     @Serializable
     object PlayScreen : HomeScreens
 
     @Serializable
-    object InfoScreen : HomeScreens
+    object GroupsScreen : HomeScreens
 }
 

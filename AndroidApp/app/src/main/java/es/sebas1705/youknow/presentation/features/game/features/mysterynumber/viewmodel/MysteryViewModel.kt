@@ -92,9 +92,6 @@ class MysteryNumberViewModel @Inject constructor(
                         lives = intent.lives
                     )
                 }
-            },
-            onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
             }
         )
     }

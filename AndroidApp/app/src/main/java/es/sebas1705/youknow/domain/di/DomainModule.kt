@@ -25,13 +25,18 @@ import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsReposito
 import es.sebas1705.youknow.data.firebase.authentication.repository.AuthenticationRepository
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.domain.usecases.*
 import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
 import es.sebas1705.youknow.domain.usecases.games.GenerateFamilies
 import es.sebas1705.youknow.domain.usecases.games.GenerateQuestionList
 import es.sebas1705.youknow.domain.usecases.games.GenerateRandomNumber
+import es.sebas1705.youknow.domain.usecases.games.GenerateWheelWordPass
 import es.sebas1705.youknow.domain.usecases.games.GenerateWordPass
+import es.sebas1705.youknow.domain.usecases.games.InsertFamiliesList
+import es.sebas1705.youknow.domain.usecases.games.InsertQuestionList
+import es.sebas1705.youknow.domain.usecases.games.InsertWordPassList
 import es.sebas1705.youknow.domain.usecases.games.MysteryNumberUsesCases
 import es.sebas1705.youknow.domain.usecases.games.QuizUsesCases
 import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
@@ -174,8 +179,10 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideQuizUsesCases(
+        databaseRepository: DatabaseRepository
     ): QuizUsesCases = QuizUsesCases(
-        generateQuestionList = GenerateQuestionList()
+        generateQuestionList = GenerateQuestionList(databaseRepository),
+        insertQuestionList = InsertQuestionList(databaseRepository)
     )
 
     @Provides
@@ -188,14 +195,19 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideFamiliesUsesCases(
+        databaseRepository: DatabaseRepository
     ): FamiliesUsesCases = FamiliesUsesCases(
-        generateFamilies = GenerateFamilies()
+        generateFamilies = GenerateFamilies(databaseRepository),
+        insertFamiliesList = InsertFamiliesList(databaseRepository)
     )
 
     @Provides
     @Singleton
     fun provideWordPassUsesCases(
+        databaseRepository: DatabaseRepository
     ): WordPassUsesCases = WordPassUsesCases(
-        generateWordPass = GenerateWordPass()
+        generateWordPass = GenerateWordPass(databaseRepository),
+        generateWheelWordPass = GenerateWheelWordPass(databaseRepository),
+        insertWordPassList = InsertWordPassList(databaseRepository)
     )
 }

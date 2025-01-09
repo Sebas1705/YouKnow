@@ -19,13 +19,16 @@ package es.sebas1705.youknow.presentation.features.home.features.profile
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.presentation.features.home.features.profile.design.ProfileDesign
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileIntent
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileViewModel
+import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 
 /**
  * Profile Screen that shows the user's data.
@@ -36,43 +39,55 @@ import es.sebas1705.youknow.presentation.features.home.features.profile.viewmode
 @Composable
 fun ProfileScreen(
     windowState: WindowState,
-    userModel: UserModel,
+    homeState: HomeState,
     onAuthNav: () -> Unit,
 ) {
+    //Locals:
+    val ctx = LocalContext.current
     BackHandler {}
+
+    //ViewModel:
     val profileViewModel: ProfileViewModel = hiltViewModel()
+
+    //State:
     val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
     ProfileDesign(
         windowState,
         profileState,
-        userModel,
+        homeState,
         onLogout = {
             profileViewModel.eventHandler(ProfileIntent.SignOut)
             onAuthNav()
         },
-        onChangePhoto = {
-            profileViewModel.eventHandler(
-                ProfileIntent.ChangePhoto(
-                    userModel.firebaseId,
-                    it
+        onChangePhoto = { photo ->
+            homeState.userModel?.let { userModel ->
+                profileViewModel.eventHandler(
+                    ProfileIntent.ChangePhoto(
+                        userModel.firebaseId,
+                        photo
+                    )
                 )
-            )
+            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
         },
         onChangeNickname = {
-            profileViewModel.eventHandler(
-                ProfileIntent.ChangeNickname(
-                    userModel.firebaseId,
-                    it
+            homeState.userModel?.let { userModel ->
+                profileViewModel.eventHandler(
+                    ProfileIntent.ChangeNickname(
+                        userModel.firebaseId,
+                        it
+                    )
                 )
-            )
+            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
         },
         onChangePassword = {
-            profileViewModel.eventHandler(
-                ProfileIntent.SendPasswordChanger(
-                    userModel.email,
+            homeState.userModel?.let { userModel ->
+                profileViewModel.eventHandler(
+                    ProfileIntent.SendPasswordChanger(
+                        userModel.email,
+                    )
                 )
-            )
+            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
         }
     )
 }

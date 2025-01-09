@@ -3,6 +3,7 @@ package es.sebas1705.youknow.domain.model.games
 import es.sebas1705.youknow.core.classes.enums.Category
 import es.sebas1705.youknow.core.classes.enums.Difficulty
 import es.sebas1705.youknow.core.classes.enums.Languages
+import es.sebas1705.youknow.data.local.database.entities.FamiliesEntity
 
 data class FamiliesModel(
     val answers: List<String>,
@@ -22,4 +23,12 @@ data class FamiliesModel(
             )
         }
     }
+
+    fun toFamiliesEntity() = FamiliesEntity(
+        answers,
+        correctAnswer,
+        category.ordinal,
+        language.ordinal,
+        difficulty.ordinal
+    )
 }

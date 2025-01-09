@@ -1,4 +1,15 @@
 package es.sebas1705.youknow.data.local.database.repository
+
+import es.sebas1705.youknow.core.classes.enums.Category
+import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.Languages
+import es.sebas1705.youknow.core.classes.enums.Letter
+import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.data.local.database.entities.WordEntity
+import es.sebas1705.youknow.domain.model.games.FamiliesModel
+import es.sebas1705.youknow.domain.model.games.QuestionModel
+import es.sebas1705.youknow.domain.model.games.WordModel
+
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,10 +27,6 @@ package es.sebas1705.youknow.data.local.database.repository
  *
  */
 
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
-
 /**
  * Interface to represent the repository of the database
  *
@@ -29,18 +36,168 @@ import kotlinx.coroutines.flow.Flow
 interface DatabaseRepository {
 
     //Selects
-    suspend fun getUser(firebaseId: String): UserModel?
-    suspend fun containsUser(firebaseId: String): Boolean
+    /**
+     * Check if the question is in the database
+     *
+     * @param question [String]: Question to check
+     * @return [Boolean]: True if the question is in the database, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun containsQuestion(question: String): Boolean
+
+    /**
+     * Check if the answers are in the database
+     *
+     * @param answers [List]<[String]>: Answers to check
+     * @return [Boolean]: True if the answers are in the database, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun containsFamilies(answers: List<String>): Boolean
+
+    /**
+     * Check if the word is in the database
+     *
+     * @param word [String]: Word to check
+     * @return [Boolean]: True if the word is in the database, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun containsWord(word: String): Boolean
+
+    /**
+     * Get a list of questions
+     *
+     * @param numOfQuestions [Int]: Number of questions to get
+     * @param category [Category]: Category of the question
+     * @param language [Languages]: Language of the question
+     * @param difficulty [Difficulty]: Difficulty of the question
+     * @param quizType [QuizType]: Type of the question
+     * @return [List]<[QuestionModel]>: List of questions with the specific question
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun getQuestions(
+        numOfQuestions: Int,
+        category: Category,
+        language: Languages,
+        difficulty: Difficulty,
+        quizType: QuizType
+    ): List<QuestionModel>
+
+    /**
+     * Get a list of families
+     *
+     * @param numOfFamilies [Int]: Number of families to get
+     * @param category [Category]: Category of the families
+     * @param language [Languages]: Language of the families
+     * @param difficulty [Difficulty]: Difficulty of the families
+     *
+     * @return [List]<[QuestionModel]>: List of families with the specific answers
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun getFamilies(
+        numOfFamilies: Int,
+        category: Category,
+        language: Languages,
+        difficulty: Difficulty
+    ): List<FamiliesModel>
+
+    /**
+     * Get a list of words
+     *
+     * @param numOfWord [Int]: Number of words to get
+     * @param letter [Letter]: Letter of the word
+     * @param language [Languages]: Language of the word
+     * @param difficulty [Difficulty]: Difficulty of the word
+     *
+     * @return [List]<[WordEntity]>: List of words with the specific word
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun getWords(
+        numOfWord: Int,
+        letter: Letter,
+        language: Languages,
+        difficulty: Difficulty,
+    ): List<WordModel>
 
     //Inserts
-    suspend fun postOrUpdateUser(userModel: UserModel)
+    /**
+     * Insert or replace a question in the database
+     *
+     * @param questionModel [QuestionModel]: Question to insert or replace
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun insertOrReplace(questionModel: QuestionModel)
+
+    /**
+     * Insert or replace a list of answers in the database
+     *
+     * @param familiesModel [FamiliesModel]: Answers to insert or replace
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun insertOrReplace(familiesModel: FamiliesModel)
+
+    /**
+     * Insert a word in the database or replace it if it already exists
+     *
+     * @param wordModel [WordModel]: Word to insert or replace
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun insertOrReplace(wordModel: WordModel)
 
     //Updates
-    suspend fun updateCreditsFromUser(userId: String, credits: Int): Boolean
-    suspend fun updateGroupFromUser(userId: String, groupId: String): Boolean
 
     //Deletes
-    suspend fun deleteUser(userModel: UserModel): Boolean
+    /**
+     * Delete a question from the database
+     *
+     * @param question [String]: Question to delete
+     *
+     * @return [Boolean]: True if the question was deleted, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun deleteQuestion(question: String): Boolean
 
+    /**
+     * Delete a families from the database
+     *
+     * @param answers [List]<[String]>: Answers to delete
+     *
+     * @return [Boolean]: True if the answers were deleted, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun deleteFamilies(answers: List<String>): Boolean
+
+    /**
+     * Delete a word from the database
+     *
+     * @param word [String]: Word to delete
+     *
+     * @return [Boolean]: True if the word was deleted, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun deleteWord(word: String): Boolean
 
 }

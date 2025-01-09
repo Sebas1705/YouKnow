@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.social.composables
+package es.sebas1705.youknow.presentation.features.home.features.groups.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,6 +31,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -66,24 +68,12 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun GroupsList(
     windowState: WindowState = WindowState.default(),
-    groupModels: List<GroupModel> = (1..10).map { value ->
-        GroupModel(
-            name = "Group $value",
-            description = "Description $value",
-            members = (1..10).map { it.toString() },
-            leaderUID = value.toString()
-        )
-    },
+    groupsState: GroupsState = GroupsState.default(),
     onGroupClick: (GroupModel) -> Unit = {},
     onGroupCreate: (String, String) -> Unit = { _, _ -> }
 ) {
-    var alertDisplay by remember { mutableStateOf(false) }
-    var search by remember { mutableStateOf("") }
-    val groupsFilter by remember {
-        derivedStateOf {
-            groupModels.filter { search.isEmpty() || it.name.contains(search, ignoreCase = true) }
-        }
-    }
+    var alertDisplay by rememberSaveable { mutableStateOf(false) }
+    var search by rememberSaveable { mutableStateOf("") }
 
     if (alertDisplay) {
         CreateGroupDialog(
@@ -137,19 +127,20 @@ fun GroupsList(
                 .fillMaxSize()
                 .padding(top = SmallestPadding, bottom = SmallestPadding),
         ) {
-            items(groupsFilter.size) { index ->
+            val groups = groupsState.groups.filter { search.isEmpty() || it.name.contains(search, ignoreCase = true) }
+            items(groups.size) { index ->
                 IInteractiveCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = SmallPadding)
                         .padding(horizontal = SmallestPadding),
-                    title = groupsFilter[index].name,
-                    subtitle = "${groupsFilter[index].members.size}/${Constants.MAX_GROUP}",
+                    title = groups[index].name,
+                    subtitle = "${groups[index].members.size}/${Constants.MAX_GROUP}",
                     buttons = {
                         IFilledButton(
                             label = "Join",
-                            onClick = { onGroupClick(groupsFilter[index]) },
-                            enabled = groupsFilter[index].members.size < Constants.MAX_GROUP
+                            onClick = { onGroupClick(groups[index]) },
+                            enabled = groups[index].members.size < Constants.MAX_GROUP
                         )
                     }
                 )

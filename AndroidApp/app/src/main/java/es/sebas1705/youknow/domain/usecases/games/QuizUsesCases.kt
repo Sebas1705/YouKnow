@@ -20,12 +20,13 @@ import es.sebas1705.youknow.core.classes.enums.Category
 import es.sebas1705.youknow.core.classes.enums.Difficulty
 import es.sebas1705.youknow.core.classes.enums.Languages
 import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.domain.model.games.QuestionModel
 
 class GenerateQuestionList(
-
+    private val databaseRepository: DatabaseRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         numberQuestions: Int,
         category: Category,
         difficulty: Difficulty,
@@ -35,27 +36,40 @@ class GenerateQuestionList(
         onError: (String) -> Unit
     ) {
         onLoading()
-        val list =
-            listOf(listOf("Option A", "Option B", "Option C", "Option D"), listOf("True", "False"))
-        onSuccess(
-            (1..numberQuestions).map {
-                val index =
-                    if (quizType == QuizType.ANY) (0..1).random() else if (quizType == QuizType.MULTIPLE) 0 else 1
-                QuestionModel(
-                    "Question $it",
-                    list[index],
-                    list[index][0],
-                    if (category == Category.ANY) Category.entries.random() else category,
-                    Languages.EN,
-                    if (difficulty == Difficulty.ANY) Difficulty.entries.random() else difficulty,
-                    if (index == 0) QuizType.MULTIPLE else QuizType.BOOLEAN
-                )
-            }
+        val questions = databaseRepository.getQuestions(
+            numberQuestions,
+            category,
+            Languages.ANY,
+            difficulty,
+            quizType
         )
+        if (questions.isEmpty())
+            onError("No questions found")
+        else if (questions.size < numberQuestions)
+            onError("Not enough questions found")
+        else
+            onSuccess(questions)
+    }
+}
+
+class InsertQuestionList(
+    private val databaseRepository: DatabaseRepository
+) {
+    suspend operator fun invoke(
+        questions: List<QuestionModel>,
+        onLoading: () -> Unit = {},
+        onSuccess: () -> Unit
+    ) {
+        onLoading()
+        questions.forEach {
+            databaseRepository.insertOrReplace(it)
+        }
+        onSuccess()
     }
 }
 
 
 data class QuizUsesCases(
-    val generateQuestionList: GenerateQuestionList
+    val generateQuestionList: GenerateQuestionList,
+    val insertQuestionList: InsertQuestionList
 )

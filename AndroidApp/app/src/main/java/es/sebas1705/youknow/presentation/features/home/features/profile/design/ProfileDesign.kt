@@ -43,6 +43,7 @@ import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.presentation.features.home.features.profile.composables.LazyProfileItem
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileState
+import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
@@ -63,13 +64,13 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun ProfileDesign(
     windowState: WindowState = WindowState.default(),
     profileState: ProfileState = ProfileState.default(),
-    userModel: UserModel = UserModel.default(),
+    homeState: HomeState = HomeState.defaultWithUser(),
     onLogout: () -> Unit = {},
     onChangePhoto: (String) -> Unit = {},
     onChangeNickname: (String) -> Unit = {},
     onChangePassword: () -> Unit = {}
 ) {
-    var nickname by remember { mutableStateOf(userModel.nickName) }
+    var nickname by remember { mutableStateOf(homeState.userModel?.nickName ?: "") }
 
     //Flag:
     var changePhotoDialog by remember { mutableStateOf(false) }
@@ -104,7 +105,7 @@ fun ProfileDesign(
         )
         else if (changeNicknameDialog) NickDialog(
             nickname = nickname,
-            firebaseId = userModel.firebaseId,
+            firebaseId = homeState.userModel?.firebaseId ?: "",
             onConfirm = {
                 changeNicknameDialog = false
                 onChangeNickname(it)
@@ -113,7 +114,7 @@ fun ProfileDesign(
         )
         else if (changePassDialog)
             ResetPasswordDialog(
-                email = userModel.email,
+                email = homeState.userModel?.email ?: "",
                 windowState,
                 onConfirm = {
                     changePassDialog = false
@@ -131,7 +132,7 @@ fun ProfileDesign(
             item {
                 LazyProfileItem(
                     windowState = windowState,
-                    userModel = userModel,
+                    userModel = homeState.userModel ?: UserModel.default(),
                     nickname = nickname,
                     onChangeNickname = { nickname = it },
                     onChangeNicknameDialog = { changeNicknameDialog = true },
