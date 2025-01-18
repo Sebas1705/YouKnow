@@ -17,4 +17,8 @@
     <string name="leader">Leader</string>
     <string name="view_profile">View profile</string>
     <string name="not_in_group">You\'re not in a group</string>
+    <string name="chat_enabled">Chat enabled</string>
+    <string name="search_enabled">Search Enabled</string>
+    <string name="add_group">Add group</string>
+    <string name="search">Search</string>
 </resources>

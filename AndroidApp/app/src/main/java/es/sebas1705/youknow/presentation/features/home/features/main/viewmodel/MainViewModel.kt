@@ -22,7 +22,6 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -37,21 +36,35 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @HiltViewModel
-class RankingViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val userUsesCases: UserUsesCases,
     private val application: Application
-) : MVIBaseViewModel<RankingState, RankingIntent>() {
+) : MVIBaseViewModel<MainState, MainIntent>() {
 
-    override fun initState(): RankingState = RankingState.default()
+    override fun initState(): MainState = MainState.default()
 
-    override fun intentHandler(intent: RankingIntent) {
+    override fun intentHandler(intent: MainIntent) {
         when (intent) {
-            is RankingIntent.GetRanking -> getRanking()
+            is MainIntent.GetRanking -> getRanking()
+            is MainIntent.GetNews -> getNews()
         }
     }
 
     //Actions:
     private fun getRanking() = execute(Dispatchers.IO) {
+        userUsesCases.getUserRanking(
+            onLoading = { startLoading() },
+            onSuccess = { ranking ->
+                stopLoading()
+                updateUi { it.copy(ranking = ranking) }
+            },
+            onError = { error ->
+                stopAndError(error, application::printTextInToast)
+            }
+        )
+    }
+
+    private fun getNews() = execute(Dispatchers.IO) {
         userUsesCases.getUserRanking(
             onLoading = { startLoading() },
             onSuccess = { ranking ->
@@ -80,7 +93,7 @@ class RankingViewModel @Inject constructor(
 }
 
 /**
- * State of the [RankingViewModel] that will handle the data of the screen.
+ * State of the [MainViewModel] that will handle the data of the screen.
  *
  * @param isLoading [Boolean]: Flag to indicate if the screen is loading.
  *
@@ -89,18 +102,19 @@ class RankingViewModel @Inject constructor(
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-data class RankingState(
+data class MainState(
     val isLoading: Boolean,
-    val ranking: List<UserModel>
+    val news: List<Pair<String, String>>,
+    val ranking: List<Pair<String, Int>>,
 ) : MVIBaseState {
     companion object {
 
         /**
-         * Default state of the [RankingState].
+         * Default state of the [MainState].
          *
-         * @return [RankingState]: Default state.
+         * @return [MainState]: Default state.
          */
-        fun default() = RankingState(
+        fun default() = MainState(
             isLoading = false,
             ranking = emptyList()
         )
@@ -123,9 +137,11 @@ data class RankingState(
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-sealed interface RankingIntent : MVIBaseIntent {
+sealed interface MainIntent : MVIBaseIntent {
 
-    data object GetRanking : RankingIntent
+    data object GetRanking : MainIntent
+
+    data object GetNews : MainIntent
 }
 
 

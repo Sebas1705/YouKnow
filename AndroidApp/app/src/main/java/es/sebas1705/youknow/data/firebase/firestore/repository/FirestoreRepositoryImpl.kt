@@ -180,15 +180,18 @@ class FirestoreRepositoryImpl @Inject constructor(
         onSuccessListener = { ResponseState.Success(it.exists()) }
     )
 
-    override fun getUserRanking(): FlowResponse<List<UserModel>> = taskFlowManager.taskFlowProducer(
-        taskAction = { usersReference.orderBy(SettingsFS.USERS_CREDITS_FIELD).get() },
-        onSuccessListener = {
-            val users = it.documents.map { document ->
-                document.toObject(UserDocument::class.java)!!.toUserModel(document.id)
+    override fun getUserRanking(): FlowResponse<List<Pair<String, Int>>> =
+        taskFlowManager.taskFlowProducer(
+            taskAction = { usersReference.orderBy(SettingsFS.USERS_POINTS_FIELD).get() },
+            onSuccessListener = {
+                val users = it.documents.map { document ->
+                    document.toObject(UserDocument::class.java)!!.let {
+                        it.nickName to it.points
+                    }
+                }
+                ResponseState.Success(users)
             }
-            ResponseState.Success(users)
-        }
-    )
+        )
 
     override fun getUserByNickname(
         nickname: String

@@ -219,7 +219,7 @@ class GetUserRanking(
 ) {
     suspend operator fun invoke(
         onLoading: () -> Unit,
-        onSuccess: (List<UserModel>) -> Unit,
+        onSuccess: (List<Pair<String, Int>>) -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.getUserRanking().catcher(onLoading, onSuccess, onError)
 }

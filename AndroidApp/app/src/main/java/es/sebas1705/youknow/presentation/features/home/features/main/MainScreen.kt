@@ -24,8 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.home.features.main.design.MainDesign
-import es.sebas1705.youknow.presentation.features.home.viewmodels.RankingIntent
-import es.sebas1705.youknow.presentation.features.home.viewmodels.RankingViewModel
+import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainIntent
+import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainViewModel
 
 /**
  * Main Screen of the app.
@@ -40,17 +40,17 @@ fun MainScreen(
     windowState: WindowState,
     onSettingsNav: () -> Unit
 ) {
-    val rankingViewModel: RankingViewModel = hiltViewModel()
-    val rankingState by rankingViewModel.uiState.collectAsStateWithLifecycle()
+    val mainViewModel: MainViewModel = hiltViewModel()
+    val rankingState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(windowState) {
-        rankingViewModel.eventHandler(RankingIntent.GetRanking)
+        mainViewModel.eventHandler(MainIntent.GetRanking)
     }
 
     BackHandler {}
     MainDesign(
         windowState = windowState,
-        rankingState = rankingState,
+        mainState = rankingState,
         onSettingsNav
     )
 }

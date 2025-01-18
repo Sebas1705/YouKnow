@@ -16,24 +16,39 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.design
  *
  */
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
+import es.sebas1705.youknow.core.composables.buttons.fab.ISmallFAB
+import es.sebas1705.youknow.core.composables.dialogs.CreateGroupDialog
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.composables.dialogs.UserInfoDialog
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.textfields.IFilledTextField
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.features.home.features.groups.composables.Group
 import es.sebas1705.youknow.presentation.features.home.features.groups.composables.GroupsList
 import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -56,8 +71,23 @@ fun GroupsDesign(
     onUserInfoSearch: (String) -> Unit = {}
 ) {
     //States:
-    var infoDisplay by remember { mutableStateOf(false) }
-    var userInfoId by remember { mutableStateOf("") }
+    var infoDisplay by rememberSaveable { mutableStateOf(false) }
+    var showSearch by rememberSaveable { mutableStateOf(false) }
+    var createFlag by rememberSaveable { mutableStateOf(false) }
+    var userInfoId by rememberSaveable { mutableStateOf("") }
+    var search by rememberSaveable { mutableStateOf("") }
+
+    if (createFlag) {
+        CreateGroupDialog(
+            onConfirm = { name, description ->
+                groupCreator(name, description)
+                createFlag = false
+            },
+            onDismiss = {
+                createFlag = false
+            }
+        )
+    }
 
     ApplyBack(
         backId = windowState.backEmpty,
@@ -71,7 +101,7 @@ fun GroupsDesign(
             onDismiss = { infoDisplay = false }
         )
 
-        groupsState.myGroup?.let {
+        if (groupsState.myGroup != null) {
             Group(
                 windowState,
                 groupsState,
@@ -84,12 +114,47 @@ fun GroupsDesign(
                 },
                 onKickButton = onKickButton,
             )
-        } ?: GroupsList(
-            windowState,
-            groupsState,
-            onGroupClick = groupJoin,
-            onGroupCreate = groupCreator
-        )
+        } else {
+            GroupsList(
+                windowState,
+                groupsState,
+                onGroupClick = groupJoin,
+                searchFilter = search
+            )
+
+            if (showSearch) IFilledTextField(
+                modifier = Modifier
+                    .fillMaxWidth(windowState.widthFilter(0.8f, 0.6f, 0.5f))
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = MediumPadding),
+                value = search,
+                placeholder = stringResource(R.string.search),
+                leadingIcon = Icons.Filled.Cancel to {
+                    showSearch = !showSearch
+                },
+                onValueChange = { search = it }
+            )
+            else Column(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = MediumPadding, bottom = MediumPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ISmallFAB(
+                    onClick = { createFlag = !createFlag },
+                    contentDescription = stringResource(R.string.add_group),
+                    imageVector = Icons.Filled.Add,
+                    modifier = Modifier
+                        .padding(bottom = SmallPadding)
+                )
+                IFAB(
+                    onClick = { showSearch = !showSearch },
+                    contentDescription = stringResource(R.string.search_enabled),
+                    imageVector = Icons.Filled.Search,
+                )
+            }
+
+        }
     }
 
 }

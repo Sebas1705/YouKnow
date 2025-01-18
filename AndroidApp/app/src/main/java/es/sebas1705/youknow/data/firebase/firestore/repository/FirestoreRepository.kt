@@ -173,7 +173,7 @@ interface FirestoreRepository {
      *
      * @return [FlowResponse]<[List]<[UserModel]>>: Flow with the response of the operation
      */
-    fun getUserRanking(): FlowResponse<List<UserModel>>
+    fun getUserRanking(): FlowResponse<List<Pair<String, Int>>>
 
     /**
      * Get a user by nickname

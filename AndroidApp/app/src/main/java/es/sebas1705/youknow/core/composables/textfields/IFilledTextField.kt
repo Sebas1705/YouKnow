@@ -46,10 +46,12 @@ fun IFilledTextField(
     label: String? = null,
     placeholder: String? = null,
     enabled: Boolean = true,
-    readOnly: Boolean = true,
+    readOnly: Boolean = false,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     leadingIcon: Pair<ImageVector, () -> Unit>? = null,
+    leadingEnabled: Boolean = true,
     trailingIcon: Pair<ImageVector, () -> Unit>? = null,
+    trailingEnabled: Boolean = true,
     prefix: String? = null,
     suffix: String? = null,
     supportingText: String? = null,
@@ -75,7 +77,8 @@ fun IFilledTextField(
             IStandardIconButton(
                 onClick = it.second,
                 contentDescription = label ?: stringResource(R.string.leading_content),
-                imageVector = it.first
+                imageVector = it.first,
+                enabled = leadingEnabled
             )
         }
     },
@@ -84,7 +87,8 @@ fun IFilledTextField(
             IStandardIconButton(
                 onClick = it.second,
                 contentDescription = label ?: stringResource(R.string.trailing_content),
-                imageVector = it.first
+                imageVector = it.first,
+                enabled = trailingEnabled
             )
         }
     },

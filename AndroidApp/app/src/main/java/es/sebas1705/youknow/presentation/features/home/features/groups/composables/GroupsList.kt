@@ -17,31 +17,15 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.composab
  */
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.buttons.icon.IFilledIconButton
 import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
-import es.sebas1705.youknow.core.composables.dialogs.CreateGroupDialog
-import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.utlis.Constants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.social.GroupModel
@@ -70,81 +54,35 @@ fun GroupsList(
     windowState: WindowState = WindowState.default(),
     groupsState: GroupsState = GroupsState.default(),
     onGroupClick: (GroupModel) -> Unit = {},
-    onGroupCreate: (String, String) -> Unit = { _, _ -> }
+    searchFilter: String = "",
 ) {
-    var alertDisplay by rememberSaveable { mutableStateOf(false) }
-    var search by rememberSaveable { mutableStateOf("") }
-
-    if (alertDisplay) {
-        CreateGroupDialog(
-            onConfirm = { name, description ->
-                onGroupCreate(name, description)
-                alertDisplay = false
-            },
-            onDismiss = {
-                alertDisplay = false
-            }
-        )
-    }
-
-    Column(
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+            .fillMaxSize()
+            .padding(top = SmallestPadding, bottom = SmallestPadding),
     ) {
-        IPrimarySurface(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Row(
+        val groups = groupsState.groups.filter {
+            searchFilter.isEmpty() || it.name.contains(
+                searchFilter,
+                ignoreCase = true
+            )
+        }
+        items(groups.size) { index ->
+            IInteractiveCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = SmallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IOutlinedTextField(
-                    modifier = Modifier
-                        .padding(SmallPadding)
-                        .weight(8f),
-                    value = search,
-                    placeholder = "Search",
-                    label = "Search",
-                    onValueChange = { search = it }
-                )
-                IFilledIconButton(
-                    onClick = { alertDisplay = true },
-                    contentDescription = "Create Group",
-                    modifier = Modifier
-                        .padding(end = SmallPadding)
-                        .weight(1f),
-                    imageVector = Icons.Filled.Add,
-                )
-            }
-        }
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = SmallestPadding, bottom = SmallestPadding),
-        ) {
-            val groups = groupsState.groups.filter { search.isEmpty() || it.name.contains(search, ignoreCase = true) }
-            items(groups.size) { index ->
-                IInteractiveCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = SmallPadding)
-                        .padding(horizontal = SmallestPadding),
-                    title = groups[index].name,
-                    subtitle = "${groups[index].members.size}/${Constants.MAX_GROUP}",
-                    buttons = {
-                        IFilledButton(
-                            label = "Join",
-                            onClick = { onGroupClick(groups[index]) },
-                            enabled = groups[index].members.size < Constants.MAX_GROUP
-                        )
-                    }
-                )
-            }
+                    .padding(bottom = SmallPadding)
+                    .padding(horizontal = SmallestPadding),
+                title = groups[index].name,
+                subtitle = "${groups[index].members.size}/${Constants.MAX_GROUP}",
+                buttons = {
+                    IFilledButton(
+                        label = "Join",
+                        onClick = { onGroupClick(groups[index]) },
+                        enabled = groups[index].members.size < Constants.MAX_GROUP
+                    )
+                }
+            )
         }
     }
 }

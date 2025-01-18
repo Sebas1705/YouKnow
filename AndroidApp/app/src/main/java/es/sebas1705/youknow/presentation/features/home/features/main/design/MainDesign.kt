@@ -17,8 +17,11 @@ package es.sebas1705.youknow.presentation.features.home.features.main.design
  */
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -31,11 +34,14 @@ import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
+import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.home.viewmodels.RankingState
+import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
@@ -49,7 +55,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun MainDesign(
     windowState: WindowState = WindowState.default(),
-    rankingState: RankingState = RankingState.default(),
+    mainState: MainState = MainState.default(),
     onSettingsNav: () -> Unit = {}
 ) {
     ApplyBack(
@@ -61,20 +67,45 @@ fun MainDesign(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Title(stringResource(R.string.app_name))
+                Title(
+                    stringResource(R.string.Home),
+                    modifier = Modifier.padding(vertical = MediumPadding)
+                )
             }
 
             item {
-                Title(text = stringResource(id = R.string.Ranking))
+                IResumeCard(
+                    stringResource(R.string.New_Message),
+                    mainState.news.toMap(),
+                    modifier = Modifier.fillMaxWidth(
+                        windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                    )
+                )
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(
+                        windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                    )
+                ) {
+                    Spacer(Modifier.height(LargePadding))
+                    IHorDivider()
+                    Spacer(Modifier.height(SmallPadding))
+                    IHorDivider()
+                    Spacer(Modifier.height(LargePadding))
+                }
             }
 
             item {
                 IResumeCard(
                     stringResource(R.string.Ranking),
-                    rankingState.ranking.mapIndexed { index, user ->
-                        "${index + 1}º. ${user.nickName}" to user.points.toString()
+                    mainState.ranking.mapIndexed { index, user ->
+                        "${index + 1}º. ${user.first}" to user.second.toString()
                     }.toMap(),
-                    modifier = Modifier.fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(
+                        windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                    )
                 )
             }
         }

@@ -56,7 +56,7 @@ fun HomeBottomBar(
         .fillMaxWidth(),
     containerColor = MaterialTheme.colorScheme.surface,
     contentColor = MaterialTheme.colorScheme.onSurface,
-    tonalElevation = TonalElevation.Level5
+    tonalElevation = TonalElevation.Level0
 ) {
     items.forEachIndexed { index, item ->
         NavigationBarItem(
