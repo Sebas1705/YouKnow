@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.viewmodels
+package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
