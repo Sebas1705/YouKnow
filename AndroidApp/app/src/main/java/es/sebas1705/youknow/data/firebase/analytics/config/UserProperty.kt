@@ -30,8 +30,8 @@ package es.sebas1705.youknow.data.firebase.analytics.config
  * @since 1.0.0
  */
 sealed class UserProperty(val tag: String) {
-    object FavoriteCategory: UserProperty("favorite_category")
-    object FavoriteDifficulty: UserProperty("favorite_difficulty")
-    object FavoriteType: UserProperty("favorite_type")
-    object PlayerLevel: UserProperty("player_level")
+    data object FavoriteCategory : UserProperty("favorite_category")
+    data object FavoriteDifficulty : UserProperty("favorite_difficulty")
+    data object FavoriteType : UserProperty("favorite_type")
+    data object PlayerLevel : UserProperty("player_level")
 }

@@ -16,6 +16,8 @@ package es.sebas1705.youknow.core.composables.buttons.radio
  *
  */
 
+import android.content.Context
+import android.media.SoundPool
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -23,22 +25,58 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
+import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RADIO_BUTTON_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized radio button
+ *
+ * @param selected [Boolean]: Selected state
+ * @param modifier [Modifier]: Modifier
+ * @param enabled [Boolean]: Enabled
+ * @param interactionSource [MutableInteractionSource]: Interaction source
+ * @param onClick [() -> Unit]: Click action
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
+ * @param soundRes [Int]: Sound resource
+ * @param context [Context]: Context
+ * @param soundId [Int]: Sound id
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IRadioButton(
     selected: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    soundPool: Pair<SoundPool, Float>? = null,
+    soundRes: Int = RADIO_BUTTON_SOUND,
+    context: Context = LocalContext.current,
+    soundId: Int? = remember { soundPool?.first?.load(context, soundRes, PRIORITY_SOUND) }
 ) = RadioButton(
     selected = selected,
-    onClick = onClick,
+    onClick = {
+        soundPool?.first?.play(
+            soundId ?: 0,
+            soundPool.second,
+            soundPool.second,
+            PRIORITY_SOUND,
+            LOOP_N,
+            RATE
+        )
+        onClick?.invoke()
+    },
     modifier = modifier,
     enabled = enabled,
     colors = RadioButtonDefaults.colors(

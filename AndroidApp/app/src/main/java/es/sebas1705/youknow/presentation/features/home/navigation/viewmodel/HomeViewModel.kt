@@ -16,31 +16,23 @@ package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
  *
  */
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
-import com.google.firebase.auth.FirebaseUser
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
- * ViewModel for [HomeNav] that will handle the logic of the screen.
+ * ViewModel for HomeNav that will handle the logic of the screen.
  *
  * @param authUsesCases [AuthUsesCases]: UseCase to get the user's data.
  * @param userUsesCases [UserUsesCases]: UseCase to get the user's data.
  * @param application [Application]: Application context.
- *
- * @see MVIBaseViewModel
- * @see HiltViewModel
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -51,9 +43,6 @@ class HomeViewModel @Inject constructor(
     private val userUsesCases: UserUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<HomeState, HomeIntent>() {
-
-    @SuppressLint("StaticFieldLeak")
-    private val ctx: Context = application.applicationContext
 
     override fun initState(): HomeState = HomeState.default()
 
@@ -76,7 +65,10 @@ class HomeViewModel @Inject constructor(
     private fun loadActual() = execute(Dispatchers.IO) {
         val firebaseUser = authUsesCases.getFirebaseUser()
         if (firebaseUser == null)
-            stopAndError(ctx.getString(R.string.user_not_logged), ctx::printTextInToast)
+            stopAndError(
+                application.getString(R.string.user_not_logged),
+                application::printTextInToast
+            )
         else {
             updateUi { it.copy(firebaseUser = firebaseUser) }
             userUsesCases.setUserListener(
@@ -97,7 +89,7 @@ class HomeViewModel @Inject constructor(
         intent: HomeIntent.AddCredits
     ) = execute(Dispatchers.IO) {
         if (uiState.value.userModel == null)
-            execute { ctx.printTextInToast(ctx.getString(R.string.user_not_logged)) }
+            execute { application.printTextInToast(application.getString(R.string.user_not_logged)) }
         else userUsesCases.addCreditsToUser(
             uiState.value.userModel!!,
             intent.credits,
@@ -107,7 +99,7 @@ class HomeViewModel @Inject constructor(
                 updateUi { it.copy(userModel = it.userModel?.copy(credits = newCredits)) }
             },
             onError = {
-                stopAndError(it, ctx::printTextInToast)
+                stopAndError(it, application::printTextInToast)
             }
         )
     }
@@ -115,17 +107,24 @@ class HomeViewModel @Inject constructor(
     private fun getUser(
         intent: HomeIntent.GetUser
     ) = execute(Dispatchers.IO) {
-        userUsesCases.getUser(
-            intent.userId,
-            onLoading = { startLoading() },
-            onSuccess = { userModel ->
-                stopLoading()
-                updateUi { it.copy(infoUser = userModel) }
-            },
-            onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
-            }
-        )
+        if (_uiState.value.infoUsers.containsKey(intent.firebaseId).not()) {
+            Log.d("HomeViewModel", "User not caught")
+            userUsesCases.getUser(
+                intent.firebaseId,
+                onLoading = { startLoading() },
+                onSuccess = { userModel ->
+                    stopLoading()
+                    updateUi {
+                        val infoUsers = it.infoUsers.toMutableMap()
+                        infoUsers[userModel.firebaseId] = userModel
+                        it.copy(infoUsers = infoUsers)
+                    }
+                },
+                onError = { error ->
+                    stopAndError(error, application::printTextInToast)
+                }
+            )
+        }
     }
 
     private fun signOut(
@@ -140,9 +139,9 @@ class HomeViewModel @Inject constructor(
                         stopLoading()
                         userUsesCases.removeUserListener()
                     },
-                    onError = { stopAndError(it, ctx::printTextInToast) })
+                    onError = { stopAndError(it, application::printTextInToast) })
             }
-        }, onError = { stopAndError(it, ctx::printTextInToast) })
+        }, onError = { stopAndError(it, application::printTextInToast) })
     }
 
 
@@ -159,77 +158,4 @@ class HomeViewModel @Inject constructor(
         stopLoading()
         execute { onError(error) }
     }
-}
-
-/**
- * State for [HomeViewModel] that will handle the user's data.
- *
- * @property isLoading [Boolean]: If the screen is loading.
- * @property userModel [UserModel]: User's data.
- * @property firebaseUser [FirebaseUser]: Firebase user's data.
- * @property infoUser [UserModel]: User's data.
- *
- * @see MVIBaseState
- * @see UserModel
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class HomeState(
-    val isLoading: Boolean,
-    val userModel: UserModel?,
-    val firebaseUser: FirebaseUser?,
-    val infoUser: UserModel?
-) : MVIBaseState {
-    companion object {
-
-        /**
-         * Default [HomeState] with no user.
-         *
-         * @return [HomeState]
-         */
-        fun default() = HomeState(
-            isLoading = false,
-            userModel = null,
-            firebaseUser = null,
-            infoUser = null
-        )
-
-        /**
-         * Default [HomeState] with user.
-         *
-         * @return [HomeState]
-         */
-        fun defaultWithUser() = HomeState(
-            isLoading = false,
-            userModel = UserModel.default(),
-            firebaseUser = null,
-            infoUser = null
-        )
-    }
-}
-
-/**
- * Intent for [HomeViewModel].
- *
- * @see MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface HomeIntent : MVIBaseIntent {
-
-    object LoadActual : HomeIntent
-
-    object ClearActual : HomeIntent
-
-    data class AddCredits(
-        val credits: Int
-    ) : HomeIntent
-
-    data class GetUser(
-        val userId: String
-    ) : HomeIntent
-
-    data object SignOut : HomeIntent
 }

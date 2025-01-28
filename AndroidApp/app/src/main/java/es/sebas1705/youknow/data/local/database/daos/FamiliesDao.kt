@@ -26,8 +26,6 @@ import es.sebas1705.youknow.data.local.database.entities.QuestionEntity
 /**
  * Data Access Object to manage the families in the database
  *
- * @see Dao
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */

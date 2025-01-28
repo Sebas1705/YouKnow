@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.composable
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
@@ -36,13 +40,23 @@ import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
 import es.sebas1705.youknow.domain.model.games.QuestionModel
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizMode
 import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizStatus
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Finished state of the Quiz game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param quizState [QuizState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onRestartGame () -> Unit: Function to restart the game.
+ * @param onOutGame () -> Unit: Function to exit the game.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun Finished(
     windowState: WindowState = WindowState.default(),
@@ -53,13 +67,15 @@ fun Finished(
         questions = QuestionModel.defaultMultipleList(20),
         status = QuizStatus.FINISHED,
         isLoading = false,
-        numQuestions = 20,
         actualQuestion = 20,
         lives = 3,
+        languages = Languages.ANY
     ),
+    soundPool: Pair<SoundPool, Float>? = null,
     onRestartGame: () -> Unit = { },
     onOutGame: () -> Unit = { }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -78,7 +94,7 @@ fun Finished(
                 stringResource(id = R.string.total_answers) to quizState.questions.size.toString(),
             )
             if (quizState.mode == QuizMode.SURVIVAL) {
-                data.put(stringResource(id = R.string.lives), quizState.lives.toString())
+                data[stringResource(id = R.string.lives)] = quizState.lives.toString()
             }
             IResumeCard(
                 title = stringResource(R.string.finished_title),
@@ -90,6 +106,7 @@ fun Finished(
                 onClick = onRestartGame,
                 label = stringResource(id = R.string.restart_game),
                 imageVector = Icons.Filled.RestartAlt,
+                soundPool = soundPool
             )
 
             IVerSpacer(height = SmallPadding)
@@ -98,6 +115,7 @@ fun Finished(
                 onClick = onOutGame,
                 label = stringResource(id = R.string.out_game),
                 imageVector = Icons.Filled.Output,
+                soundPool = soundPool
             )
         }
     }

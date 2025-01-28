@@ -16,54 +16,59 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.lottie.IRawLottieAnimation
-import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Loading dialog
+ *
+ * @param windowState [WindowState]: Window state
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun LoadingDialog(
     windowState: WindowState = WindowState.default()
-) = IDialog(
-    modifier = Modifier
-        .fillMaxWidth(windowState.widthFilter(0.9f, 0.7f, 0.5f))
-        .fillMaxHeight(windowState.heightFilter(0.6f, 0.5f, 0.4f)),
-    title = {
-        IText(
-            stringResource(R.string.loading),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-        )
-    },
-    text = {
-        Box(
-            modifier = Modifier,
-            contentAlignment = Alignment.Center
-        ) {
-            IRawLottieAnimation(R.raw.loading)
-        }
-    },
-)
-
+) = Popup(
+    alignment = Alignment.Center,
+) {
+    IRawLottieAnimation(
+        R.raw.lottie_load_2,
+        modifier = Modifier
+            .size(
+                windowState.sizeFilter(
+                    150.dp,
+                    200.dp,
+                    250.dp
+                )
+            )
+    )
+}
 
 @UiModePreviews
 @Composable
 private fun Preview() = YouKnowTheme {
     YouKnowTheme {
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center,
         ) {
             LoadingDialog()
         }

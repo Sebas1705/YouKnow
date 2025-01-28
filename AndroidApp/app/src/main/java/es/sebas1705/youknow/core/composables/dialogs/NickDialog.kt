@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -29,15 +30,23 @@ import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
+ * Nick dialog
  *
+ * @param modifier [Modifier]: Modifier
+ * @param soundPool [Pair<SoundPool, Float>]: Sound pool
+ * @param nickname [String]: Nickname
+ * @param firebaseId [String]: Firebase id
+ * @param onConfirm ([String]) -> Unit: On confirm
+ * @param onDismiss () -> Unit: On dismiss
  *
- *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun NickDialog(
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
     nickname: String = "temp",
     firebaseId: String = "------",
     onConfirm: (String) -> Unit = {},
@@ -48,6 +57,7 @@ fun NickDialog(
         IFilledButton(
             label = stringResource(R.string.confirm),
             onClick = { onConfirm(nickname) },
+            soundPool = soundPool
         )
     },
     modifier = modifier,
@@ -55,20 +65,23 @@ fun NickDialog(
         IFilledButton(
             label = stringResource(R.string.dismiss),
             onClick = onDismiss,
+            soundPool = soundPool
         )
     },
     title = {
         IText(stringResource(R.string.change_nickname_title))
     },
     text = {
-        IText(stringResource(R.string.change_nickname_body)
-                + " "
-                + nickname
-                + " "
-                + stringResource(R.string.change_nickname_body2)
-                + " "
-                + nickname + "-" + firebaseId
-                + stringResource(R.string.change_nickname_body3))
+        IText(
+            stringResource(R.string.change_nickname_body)
+                    + " "
+                    + nickname
+                    + " "
+                    + stringResource(R.string.change_nickname_body2)
+                    + " "
+                    + nickname + "-" + firebaseId
+                    + stringResource(R.string.change_nickname_body3)
+        )
     }
 )
 

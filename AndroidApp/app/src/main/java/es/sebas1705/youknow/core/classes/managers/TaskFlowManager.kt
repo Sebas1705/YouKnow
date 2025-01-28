@@ -1,4 +1,5 @@
-package es.sebas1705.youknow.core.classes.managers/*
+package es.sebas1705.youknow.core.classes.managers
+/*
  * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,10 +28,13 @@ import kotlinx.coroutines.flow.callbackFlow
 /**
  * Class that will manage the task flow
  *
+ * @property classLogData [ClassLogData]: Class log data
+ * @property loggerAction (ClassLogData, String) -> Unit: Logger action
  * @property genericFailMessage [String]: Generic fail message
  * @property genericExMessage [String]: Generic exception message
  *
  * @since 1.0.0
+ * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 class TaskFlowManager(
@@ -45,9 +49,12 @@ class TaskFlowManager(
      *
      * @param assertChecker () -> String?: Function to check if the operation is valid
      * @param taskAction () -> Task<Q>: Function to get the data
-     * @param onSuccessListener (Task<Q>) -> ResponseState<T>: Function to handle the onCompleteListener
+     * @param onSuccessListener (Q) -> ResponseState<T>: Function to handle the onCompleteListener
      *
-     * @return [Flow]<[ResponseState]<Q>>: Flow with the response of the operation
+     * @return [Flow]<[ResponseState]<T>>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun <T, Q> taskFlowProducer(
         assertChecker: suspend () -> String? = { null },
@@ -87,6 +94,17 @@ class TaskFlowManager(
         }
     }
 
+    /**
+     * Function that will create a response
+     *
+     * @param responseType [ErrorResponseType]: Error response type
+     * @param message [String]: Message
+     *
+     * @return [ResponseState]<T>: Response state
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     fun createResponse(
         responseType: ErrorResponseType, message: String
     ) = ResponseState.Error(

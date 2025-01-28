@@ -24,11 +24,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Horizontal spacer
+ *
+ * @param weight [Float]: Weight
+ * @param height [Dp]: Height
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun ColumnScope.IVerSpacer(
     weight: Float? = null,

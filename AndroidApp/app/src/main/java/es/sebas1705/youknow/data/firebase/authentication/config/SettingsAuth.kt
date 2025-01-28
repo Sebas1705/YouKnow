@@ -4,7 +4,11 @@ package es.sebas1705.youknow.data.firebase.authentication.config
  * Settings of the authentication
  *
  * @property FILTER_BY_AUTHORIZED_ACCOUNTS [Boolean]: Filter by authorized accounts
- * @property ERROR_MESSAGE [String]: Error message
+ * @property ERROR_GENERIC_MESSAGE_EX [String]: Error message by exception
+ * @property ERROR_GENERIC_MESSAGE_FAIL [String]: Error message by failure listener
+ * @property NOT_LOGGED_USER [String]: Not logged user message
+ * @property USER_NOT_OUT [String]: User not logged out message
+ * @property WRONG_CREDENTIALS [String]: Wrong credentials message
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0

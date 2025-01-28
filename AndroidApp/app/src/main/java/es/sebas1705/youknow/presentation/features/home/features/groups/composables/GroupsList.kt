@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.composab
  *
  */
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.media.SoundPool
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
-import es.sebas1705.youknow.core.utlis.Constants
+import es.sebas1705.youknow.core.composables.ComposableConstants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
@@ -39,20 +39,20 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * The user can search for a group and join it.
  * The groups will be shown in a list.
  *
- * @param groupModels [List]<[GroupModel]>: List of groups to show.
- * @param onGroupClick (GroupModel) -> Unit: Function to join a group.
- *
- * @see GroupModel
- * @see CardGroup
+ * @param windowState [WindowState]: The state of the window.
+ * @param groupsState [GroupsState]: The state of the Groups Screen.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onGroupClick (GroupModel) -> Unit: The click on a group.
+ * @param searchFilter String: The search filter.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GroupsList(
     windowState: WindowState = WindowState.default(),
     groupsState: GroupsState = GroupsState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onGroupClick: (GroupModel) -> Unit = {},
     searchFilter: String = "",
 ) {
@@ -74,12 +74,13 @@ fun GroupsList(
                     .padding(bottom = SmallPadding)
                     .padding(horizontal = SmallestPadding),
                 title = groups[index].name,
-                subtitle = "${groups[index].members.size}/${Constants.MAX_GROUP}",
+                subtitle = "${groups[index].members.size}/${ComposableConstants.MAX_GROUP}",
                 buttons = {
                     IFilledButton(
                         label = "Join",
                         onClick = { onGroupClick(groups[index]) },
-                        enabled = groups[index].members.size < Constants.MAX_GROUP
+                        enabled = groups[index].members.size < ComposableConstants.MAX_GROUP,
+                        soundPool = soundPool
                     )
                 }
             )

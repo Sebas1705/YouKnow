@@ -27,13 +27,28 @@ import androidx.compose.ui.window.DialogProperties
 import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
 import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.IComposablePreview
+import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized dialog
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param onDismissRequest [() -> Unit]: On dismiss request
+ * @param confirmButton [() -> Unit]: Confirm button
+ * @param dismissButton [(() -> Unit)?]: Dismiss button
+ * @param icon [(() -> Unit)?]: Icon
+ * @param title [(() -> Unit)?]: Title
+ * @param text [(() -> Unit)?]: Text
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IDialog(
+    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
     confirmButton: @Composable () -> Unit = {},
-    modifier: Modifier = Modifier,
     dismissButton: @Composable (() -> Unit)? = null,
     icon: @Composable (() -> Unit)? = null,
     title: @Composable (() -> Unit)? = null,
@@ -46,10 +61,10 @@ fun IDialog(
     icon = icon,
     title = title,
     text = text,
-    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+    containerColor = MaterialTheme.colorScheme.background,
     iconContentColor = MaterialTheme.colorScheme.secondary,
-    titleContentColor = MaterialTheme.colorScheme.onSurface,
-    textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    titleContentColor = MaterialTheme.colorScheme.primary,
+    textContentColor = MaterialTheme.colorScheme.onBackground,
     properties = DialogProperties(
         dismissOnBackPress = true,
         dismissOnClickOutside = true,

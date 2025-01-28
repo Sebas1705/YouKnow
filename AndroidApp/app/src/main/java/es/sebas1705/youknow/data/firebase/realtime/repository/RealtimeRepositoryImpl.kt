@@ -29,6 +29,10 @@ import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsReposito
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.data.firebase.realtime.jsons.GroupJson
 import es.sebas1705.youknow.data.firebase.realtime.jsons.MessageJson
+import es.sebas1705.youknow.data.mappers.toGroupJson
+import es.sebas1705.youknow.data.mappers.toGroupModel
+import es.sebas1705.youknow.data.mappers.toMessageJson
+import es.sebas1705.youknow.data.mappers.toMessageModel
 import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.domain.model.social.MessageModel
@@ -38,9 +42,7 @@ import javax.inject.Inject
  * Realtime repository implementation
  *
  * @property database [FirebaseDatabase]: Firebase database
- *
- * @see es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
- * @see FirebaseDatabase
+ * @property analyticsRepository [AnalyticsRepository]: Analytics repository
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -80,9 +82,11 @@ class RealtimeRepositoryImpl @Inject constructor(
     )
 
     override fun addGroup(
-        value: GroupModel
+        groupModel: GroupModel
     ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
-        taskAction = { groupsReference.child(value.groupId).setValue(value.toGroupJson()) },
+        taskAction = {
+            groupsReference.child(groupModel.groupId).setValue(groupModel.toGroupJson())
+        },
         onSuccessListener = { ResponseState.EmptySuccess },
     )
 

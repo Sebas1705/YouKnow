@@ -16,11 +16,13 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.design.WordPassDesign
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassIntent
@@ -30,6 +32,8 @@ import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmod
  * Screen of the Mystery Number Game.
  *
  * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onOutGameNavigation () -> Unit: Function that will be called when the user wants to go out of the game.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -37,14 +41,25 @@ import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmod
 @Composable
 fun WordPassScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onOutGameNavigation: () -> Unit
 ) {
+    //ViewModel:
     val wordPassViewModel: WordPassViewModel = hiltViewModel()
+
+    //State:
     val wordPassState by wordPassViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Effects:
+    LaunchedEffect(Unit) {
+        wordPassViewModel.eventHandler(WordPassIntent.ReadLanguages)
+    }
+
+    //Body:
     WordPassDesign(
         windowState,
         wordPassState,
+        soundPool,
         onSelectMode = { mode ->
             wordPassViewModel.eventHandler(WordPassIntent.SelectMode(mode))
             wordPassViewModel.eventHandler(
@@ -56,18 +71,13 @@ fun WordPassScreen(
             )
         },
         onResponse = { response ->
-            wordPassViewModel.eventHandler(
-                WordPassIntent.Response(
-                    response,
-                    wordPassState
-                )
-            )
+            wordPassViewModel.eventHandler(WordPassIntent.Response(response))
         },
         onRestartGame = {
-            wordPassViewModel.eventHandler(WordPassIntent.ResetGame(wordPassState.points))
+            wordPassViewModel.eventHandler(WordPassIntent.ResetGame)
         },
         onOutGame = {
-            wordPassViewModel.eventHandler(WordPassIntent.OutGame(wordPassState.points) {
+            wordPassViewModel.eventHandler(WordPassIntent.OutGame {
                 onOutGameNavigation()
             })
         },

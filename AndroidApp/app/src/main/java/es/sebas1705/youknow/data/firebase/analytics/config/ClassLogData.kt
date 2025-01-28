@@ -21,6 +21,9 @@ package es.sebas1705.youknow.data.firebase.analytics.config
  *
  * @property layer [Layer]: Layer of the class
  * @property repository [Repository]: Repository of the class
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 interface ClassLogData {
     val layer: Layer

@@ -33,6 +33,21 @@ import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized filter chip
+ *
+ * @param onClick [() -> Unit]: On click
+ * @param selected [Boolean]: Selected
+ * @param label [String]: Label
+ * @param modifier [Modifier]: Modifier
+ * @param enabled [Boolean]: Enabled
+ * @param leadingIcon [ImageVector?]: Leading icon
+ * @param trailingIcon [ImageVector?]: Trailing icon
+ * @param interactionSource [MutableInteractionSource?]: Interaction source
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IInputChip(
     onClick: () -> Unit,

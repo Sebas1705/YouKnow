@@ -28,7 +28,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.classes.enums.theme.SizeType
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toDp
 
 /**

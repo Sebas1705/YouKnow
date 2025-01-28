@@ -16,23 +16,23 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.QuizType
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.game.features.quiz.design.QuizDesign
 import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizIntent
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizMode
 import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizViewModel
 
 /**
  * Screen of the Mystery Number Game.
  *
  * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onOutGameNavigation [Function]: Function to navigate to the previous screen.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -40,40 +40,36 @@ import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.Q
 @Composable
 fun QuizScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onOutGameNavigation: () -> Unit
 ) {
+    //ViewModel:
     val quizViewModel: QuizViewModel = hiltViewModel()
+
+    //State:
     val quizState by quizViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Effects:
+    LaunchedEffect(Unit) {
+        quizViewModel.eventHandler(QuizIntent.ReadLanguages)
+    }
+
+    //Body:
     QuizDesign(
         windowState,
         quizState,
+        soundPool,
         onSelectMode = { mode ->
             quizViewModel.eventHandler(QuizIntent.SelectMode(mode))
-            if (mode != QuizMode.CUSTOM) {
-                quizViewModel.eventHandler(
-                    QuizIntent.GenerateGame(
-                        Category.ANY,
-                        Difficulty.ANY,
-                        QuizType.ANY,
-                        mode.numQuestions
-                    )
-                )
-            }
         },
         onResponseQuestion = { response ->
-            quizViewModel.eventHandler(
-                QuizIntent.Response(
-                    response,
-                    quizState
-                )
-            )
+            quizViewModel.eventHandler(QuizIntent.Response(response))
         },
         onRestartGame = {
-            quizViewModel.eventHandler(QuizIntent.ResetGame(quizState.points))
+            quizViewModel.eventHandler(QuizIntent.ResetGame)
         },
         onOutGame = {
-            quizViewModel.eventHandler(QuizIntent.OutGame(quizState.points) {
+            quizViewModel.eventHandler(QuizIntent.OutGame {
                 onOutGameNavigation()
             })
         },

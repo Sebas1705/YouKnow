@@ -26,6 +26,16 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized bottom bar
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param content [RowScope.() -> Unit]: Content
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IBottomBar(
     modifier: Modifier = Modifier,

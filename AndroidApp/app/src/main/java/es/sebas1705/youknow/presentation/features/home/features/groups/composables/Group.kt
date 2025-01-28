@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.composab
  *
  */
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Output
@@ -41,7 +42,7 @@ import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
 import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
 import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.utlis.Constants
+import es.sebas1705.youknow.core.composables.ComposableConstants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeBold
 import es.sebas1705.youknow.domain.model.social.GroupModel
@@ -56,32 +57,41 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * The user can see the group information and the members of the group.
  * The user can add or delete members if it is the admin of the group.
  *
- * @param groupModel [GroupModel]: Group to show.
- * @param admin [Boolean]: If the user is the admin of the group.
- *
- * @see GroupModel
+ * @param windowState [WindowState]: The state of the window.
+ * @param homeState [HomeState]: The state of the home.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onOutButton () -> Unit: The out of the group.
+ * @param onInfoButton (String) -> Unit: The info of the user.
+ * @param onKickButton (String) -> Unit: The kick of the member.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Group(
     windowState: WindowState = WindowState.default(),
-    groupsState: GroupsState = GroupsState.default(),
     homeState: HomeState = HomeState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
+    groupModel: GroupModel = GroupModel(
+        name = "aaaaaaaaa",
+        description = "aaaaaaaaaaaaaa",
+        leaderUID = "aaaaaaaaaaaaa",
+        members = emptyList()
+    ),
     onOutButton: () -> Unit = {},
     onInfoButton: (String) -> Unit = {},
     onKickButton: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(top = SmallestPadding),
         verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IPrimarySurface(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.95f)
         ) {
             Column {
                 Row(
@@ -91,7 +101,7 @@ fun Group(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = groupsState.myGroup?.name.toString(),
+                        text = groupModel.name,
                         style = MaterialTheme.typography.titleLarge.makeBold(),
                         modifier = Modifier
                             .padding(SmallestPadding)
@@ -102,6 +112,7 @@ fun Group(
                         contentDescription = "Out",
                         modifier = Modifier.padding(SmallestPadding),
                         imageVector = Icons.Default.Output,
+                        soundPool = soundPool
                     )
                 }
                 IHorDivider(
@@ -112,7 +123,7 @@ fun Group(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = groupsState.myGroup?.description.toString(),
+                    text = groupModel.description,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -128,7 +139,7 @@ fun Group(
         ) {
             item {
                 IText(
-                    text = "Members (${groupsState.myGroup?.members?.size.toString()}/${Constants.MAX_GROUP}):",
+                    text = "Members (${groupModel.members.size}/${ComposableConstants.MAX_GROUP}):",
                     style = MaterialTheme.typography.titleMedium.makeBold(),
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier
@@ -137,12 +148,11 @@ fun Group(
                 )
             }
 
-            items(groupsState.myGroup?.members?.size ?: 0) { index ->
-                val member = groupsState.myGroup?.members[index] ?: ""
+            items(groupModel.members) { member ->
                 val memberId = member.split("-")[0]
                 val memberName = member.split("-")[1]
                 val firebaseId = homeState.userModel?.firebaseId
-                val groupLeader = groupsState.myGroup?.leaderUID
+                val groupLeader = groupModel.leaderUID
                 IInteractiveCard(
                     title = if (firebaseId == memberId) stringResource(R.string.You) else memberName,
                     subtitle = if (groupLeader == memberId) "(${stringResource(R.string.leader)})" else "",
@@ -152,12 +162,14 @@ fun Group(
                             contentDescription = stringResource(R.string.view_profile),
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Search,
+                            soundPool = soundPool
                         )
                         if (groupLeader == firebaseId && firebaseId != memberId) IFilledIconButton(
                             onClick = { onKickButton(member) },
                             contentDescription = "Delete",
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Delete,
+                            soundPool = soundPool
                         )
                     },
                     modifier = Modifier.padding(bottom = SmallPadding)

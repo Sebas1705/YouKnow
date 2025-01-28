@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.profile
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +41,7 @@ import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.Home
 fun ProfileScreen(
     windowState: WindowState,
     homeState: HomeState,
+    soundPool: Pair<SoundPool, Float>,
     onAuthNav: () -> Unit,
 ) {
     //Locals:
@@ -52,10 +54,12 @@ fun ProfileScreen(
     //State:
     val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Body:
     ProfileDesign(
         windowState,
         profileState,
         homeState,
+        soundPool,
         onLogout = {
             profileViewModel.eventHandler(ProfileIntent.SignOut)
             onAuthNav()

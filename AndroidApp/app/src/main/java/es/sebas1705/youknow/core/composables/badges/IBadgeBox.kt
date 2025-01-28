@@ -26,6 +26,17 @@ import es.sebas1705.youknow.core.composables.buttons.icon.IOutlinedIconButton
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized badge box
+ *
+ * @param text [String]: Text to show
+ * @param content [BoxScope.() -> Unit]: Content
+ * @param modifier [Modifier]: Modifier
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IBadgeBox(
     text: String,

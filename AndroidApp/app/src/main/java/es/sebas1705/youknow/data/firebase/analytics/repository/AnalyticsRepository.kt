@@ -17,13 +17,10 @@ package es.sebas1705.youknow.data.firebase.analytics.repository
  */
 
 import android.os.Bundle
-import com.google.firebase.database.core.Repo
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
-import es.sebas1705.youknow.data.firebase.analytics.config.Layer
-import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.config.UserProperty
-import es.sebas1705.youknow.domain.model.AnalyticsModel
+import es.sebas1705.youknow.domain.model.stats.AnalyticsModel
 
 /**
  * Repository interface to log events and set user properties
@@ -39,8 +36,8 @@ interface AnalyticsRepository {
      * @param event [EventLog]: Event to log
      * @param bundle [Bundle]: Bundle with the event data
      *
-     * @see EventLog
-     * @see Bundle
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun logEvent(event: EventLog, bundle: Bundle)
 
@@ -50,7 +47,8 @@ interface AnalyticsRepository {
      * @param classLogData [ClassLogData]: Class that logs the event
      * @param error [String]: Error message
      *
-     * @see ClassLogData
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun logError(classLogData: ClassLogData, error: String)
 
@@ -60,7 +58,8 @@ interface AnalyticsRepository {
      * @param property [UserProperty]: Property to set
      * @param value [String]: Value to set
      *
-     * @see UserProperty
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setUserProperty(property: UserProperty, value: String)
 
@@ -69,7 +68,8 @@ interface AnalyticsRepository {
      *
      * @param analyticsModel [AnalyticsModel]: Model with the event data
      *
-     * @see AnalyticsModel
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun sendEvent(analyticsModel: AnalyticsModel)
 

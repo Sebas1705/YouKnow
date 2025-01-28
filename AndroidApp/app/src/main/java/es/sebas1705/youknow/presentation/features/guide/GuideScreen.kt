@@ -16,42 +16,23 @@ package es.sebas1705.youknow.presentation.features.guide
  *
  */
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
-import es.sebas1705.youknow.core.composables.bottombars.GuideBottomBar
 import es.sebas1705.youknow.presentation.features.guide.design.GuideDesign
 import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideIntent
 import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Guide Screen that will show the user a guide of the app.
  * The user can navigate through the guide and start the app.
  *
+ * @param windowState [WindowState]: The state of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onSuccessNavigation () -> Unit: Function that will be called when the user finishes the guide.
- *
- * @see es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -59,15 +40,25 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun GuideScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onSuccessNavigation: () -> Unit,
 ) {
+    //ViewModel:
     val guideViewModel: GuideViewModel = hiltViewModel()
 
+    //State:
+    val guideState by guideViewModel.uiState.collectAsStateWithLifecycle()
+
+    //Body:
     GuideDesign(
-        windowState = windowState,
+        windowState,
+        guideState,
+        soundPool,
         onSuccessNavigation = {
             guideViewModel.eventHandler(GuideIntent.SaveFirstTime)
-            onSuccessNavigation()
+            guideViewModel.eventHandler(GuideIntent.FillData {
+                onSuccessNavigation()
+            })
         },
     )
 }

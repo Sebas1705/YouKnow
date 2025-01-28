@@ -16,20 +16,30 @@ package es.sebas1705.youknow.data.local.datastore.config
  *
  */
 
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS.APP_UI_CONTRAST
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS.FIRST_TIME
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS.GAME_LANGUAGE
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS.MUSIC_VOLUME
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS.SOUND_VOLUME
 
 /**
  * Default values for the data store
  *
  * @property FIRST_TIME [Boolean]: First time
- * @property APP_VOLUME [Float]: App volume
- * @property APP_Ui_CONTRAST [ThemeContrast]: App contrast
+ * @property MUSIC_VOLUME [Float]: App music volume
+ * @property SOUND_VOLUME [Float]: App sound volume
+ * @property APP_UI_CONTRAST [ThemeContrast]: App contrast
+ * @property GAME_LANGUAGE [Languages]: Game language
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 object DefaultValuesDS {
     const val FIRST_TIME = false
-    const val APP_VOLUME = 1.0f
+    const val MUSIC_VOLUME = 1.0f
+    const val SOUND_VOLUME = 1.0f
     val APP_UI_CONTRAST = ThemeContrast.Low
+    val GAME_LANGUAGE = Languages.EN
 }

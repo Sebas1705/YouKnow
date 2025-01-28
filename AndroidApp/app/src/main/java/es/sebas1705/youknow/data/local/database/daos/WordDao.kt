@@ -50,7 +50,6 @@ interface WordDao {
      * @param letter [Int]: letter of the word
      * @param language [Int]: language of the word
      * @param difficulty [Int]: difficulty of the word
-     * @param wordPassType [Int]: word pass type of the word
      *
      * @return [List]<[WordEntity]>: list of words with the specific word
      *

@@ -21,8 +21,41 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
 
+/**
+ * Make the text style bold
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with bold
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun TextStyle.makeBold(): TextStyle = this.copy(fontWeight = FontWeight.Bold)
 
+/**
+ * Make the text style italic
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with italic
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun TextStyle.makeItalic(): TextStyle = this.copy(fontStyle = FontStyle.Italic)
 
+/**
+ * Make the text style title
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with title
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun TextStyle.makeTitle(): TextStyle = this.copy(fontFamily = titleFontFamily)

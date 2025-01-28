@@ -16,8 +16,10 @@ package es.sebas1705.youknow.presentation.features.game.navigation
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,17 +31,16 @@ import es.sebas1705.youknow.presentation.features.game.features.families.Familie
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.MysteryNumberScreen
 import es.sebas1705.youknow.presentation.features.game.features.quiz.QuizScreen
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.WordPassScreen
+import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens.Companion.games
 
 /**
- * Home Navigation Composable that will handle the navigation between the different screens of the app.
- * It will also handle the bottom navigation bar and the floating action button.
- * It will also handle the back button to avoid the user to go back to the splash screen.
- * It will also handle the logout alert dialog.
+ * Navigation for the game.
  *
- * @param onLogOutNavigation () -> Unit: Function that will navigate to the logout screen.
- * @param onSettingsNavigation () -> Unit: Function that will navigate to the settings screen.
- *
- * @see BackHandler
+ * @param windowState [WindowState]: The state of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onMusicChange (Boolean) -> Unit: Function that will change the music.
+ * @param game [GameScreens.Companion.GameItem]: The game to navigate to.
+ * @param onOutGameNavigation () -> Unit: Function that will be called when the user wants to go out of the game.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -47,46 +48,63 @@ import es.sebas1705.youknow.presentation.features.game.features.wordpass.WordPas
 @Composable
 fun GameNav(
     windowState: WindowState,
-    game: GameItem,
+    soundPool: Pair<SoundPool, Float>,
+    onMusicChange: (Boolean) -> Unit,
+    game: GameScreens.Companion.GameItem,
     onOutGameNavigation: () -> Unit,
 ) {
-    var outFlag by rememberSaveable { mutableStateOf(false) }
-    var destination by rememberSaveable { mutableIntStateOf(games.indexOf(game)) }
-    BackHandler { outFlag = true }
+    //States:
+    val destination by rememberSaveable { mutableIntStateOf(games.indexOf(game)) }
 
+    //Flags:
+    var outFlag by rememberSaveable { mutableStateOf(false) }
+
+    //Local:
+    BackHandler { outFlag = true }
+    DisposableEffect(Unit) {
+        onMusicChange(false)
+        onDispose { onMusicChange(true) }
+    }
+
+    //Body:
     if (outFlag) GameOutDialog(
         onConfirm = {
             outFlag = false
             onOutGameNavigation()
         },
-        onDismiss = { outFlag = false }
+        onDismiss = { outFlag = false },
+        soundPool = soundPool,
     )
 
     when (games[destination].destination) {
         is GameScreens.MysteryNumberScreen -> {
             MysteryNumberScreen(
-                windowState = windowState,
+                windowState,
+                soundPool,
                 onOutGameNavigation
             )
         }
 
         is GameScreens.QuizScreen -> {
             QuizScreen(
-                windowState = windowState,
+                windowState,
+                soundPool,
                 onOutGameNavigation
             )
         }
 
         is GameScreens.WordPassScreen -> {
             WordPassScreen(
-                windowState = windowState,
+                windowState,
+                soundPool,
                 onOutGameNavigation
             )
         }
 
         is GameScreens.FamiliesScreen -> {
             FamiliesScreen(
-                windowState = windowState,
+                windowState,
+                soundPool,
                 onOutGameNavigation
             )
         }

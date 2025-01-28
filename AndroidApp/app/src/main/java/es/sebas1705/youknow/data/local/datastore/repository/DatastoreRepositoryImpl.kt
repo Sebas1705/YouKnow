@@ -18,7 +18,8 @@ package es.sebas1705.youknow.data.local.datastore.repository
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
@@ -34,9 +35,6 @@ import javax.inject.Inject
  *
  *  @property context [Context]: context of the app
  *
- *  @see es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
- *  @see Context
- *
  *  @author Sebastián Ramiro Entrerrios García
  *  @since 1.0.0
  */
@@ -49,72 +47,74 @@ class DatastoreRepositoryImpl @Inject constructor(
 
     private val datastore = context.dataStore
 
-    /**
-     * Save the first time the user opens the app
-     */
+
     override suspend fun saveFirstTime() {
         datastore.edit {
             it[KeysDS.FIRST_TIME] = true
         }
     }
 
-    /**
-     * Read if the user has opened the app for the first time
-     *
-     * @return a flow with the value of the first time
-     */
     override fun readFirstTime(): Flow<Boolean> {
         return datastore.data.map {
             it[KeysDS.FIRST_TIME] ?: DefaultValuesDS.FIRST_TIME
         }
     }
 
-    /**
-     * Save the volume of the app
-     *
-     * @param volume the volume of the app ranging from 0.0 to 1.0
-     */
-    override suspend fun saveAppVolume(volume: Float) {
+    override suspend fun saveMusicVolume(volume: Float) {
         require(volume in 0.0..1.0) {
             "Volume must be between 0.0 and 1.0 (Volume: $volume)"
         }
         datastore.edit {
-            it[KeysDS.APP_VOLUME] = volume
+            it[KeysDS.MUSIC_VOLUME] = volume
         }
     }
 
-    /**
-     * Read the volume of the app
-     *
-     * @return a flow with the volume of the app
-     */
-    override fun readAppVolume(): Flow<Float> {
+    override fun readMusicVolume(): Flow<Float> {
         return datastore.data.map {
-            it[KeysDS.APP_VOLUME] ?: DefaultValuesDS.APP_VOLUME
+            it[KeysDS.MUSIC_VOLUME] ?: DefaultValuesDS.MUSIC_VOLUME
         }
     }
 
-    /**
-     * Save the contrast of the app
-     *
-     * @param contrast the contrast of the app
-     */
+    override suspend fun saveSoundVolume(volume: Float) {
+        require(volume in 0.0..1.0) {
+            "Volume must be between 0.0 and 1.0 (Volume: $volume)"
+        }
+        datastore.edit {
+            it[KeysDS.SOUND_VOLUME] = volume
+        }
+    }
+
+    override fun readSoundVolume(): Flow<Float> {
+        return datastore.data.map {
+            it[KeysDS.SOUND_VOLUME] ?: DefaultValuesDS.SOUND_VOLUME
+        }
+    }
+
     override suspend fun saveAppContrast(contrast: ThemeContrast) {
         datastore.edit {
             it[KeysDS.APP_CONTRAST] = contrast.ordinal
         }
     }
 
-    /**
-     * Read the contrast of the app
-     *
-     * @return a flow with the contrast of the app ([ThemeContrast])
-     */
     override fun readAppContrast(): Flow<ThemeContrast> {
         return datastore.data.map {
             ThemeContrast.entries.find { contrast ->
                 contrast.ordinal == (it[KeysDS.APP_CONTRAST] ?: DefaultValuesDS.APP_UI_CONTRAST)
             } ?: ThemeContrast.Low
+        }
+    }
+
+    override suspend fun saveGameLanguage(language: Languages) {
+        datastore.edit {
+            it[KeysDS.GAME_LANGUAGE] = language.ordinal
+        }
+    }
+
+    override fun readGameLanguage(): Flow<Languages> {
+        return datastore.data.map {
+            Languages.entries.find { language ->
+                language.ordinal == (it[KeysDS.GAME_LANGUAGE] ?: DefaultValuesDS.GAME_LANGUAGE)
+            } ?: DefaultValuesDS.GAME_LANGUAGE
         }
     }
 

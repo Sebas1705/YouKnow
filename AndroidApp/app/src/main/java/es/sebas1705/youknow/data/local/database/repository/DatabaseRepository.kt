@@ -1,10 +1,10 @@
 package es.sebas1705.youknow.data.local.database.repository
 
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
-import es.sebas1705.youknow.core.classes.enums.Letter
-import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.data.local.database.entities.WordEntity
 import es.sebas1705.youknow.domain.model.games.FamiliesModel
 import es.sebas1705.youknow.domain.model.games.QuestionModel
@@ -30,8 +30,8 @@ import es.sebas1705.youknow.domain.model.games.WordModel
 /**
  * Interface to represent the repository of the database
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 interface DatabaseRepository {
 
@@ -40,6 +40,7 @@ interface DatabaseRepository {
      * Check if the question is in the database
      *
      * @param question [String]: Question to check
+     *
      * @return [Boolean]: True if the question is in the database, false otherwise
      *
      * @since 1.0.0
@@ -51,6 +52,7 @@ interface DatabaseRepository {
      * Check if the answers are in the database
      *
      * @param answers [List]<[String]>: Answers to check
+     *
      * @return [Boolean]: True if the answers are in the database, false otherwise
      *
      * @since 1.0.0
@@ -62,6 +64,7 @@ interface DatabaseRepository {
      * Check if the word is in the database
      *
      * @param word [String]: Word to check
+     *
      * @return [Boolean]: True if the word is in the database, false otherwise
      *
      * @since 1.0.0

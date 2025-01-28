@@ -24,6 +24,16 @@ import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized badge
+ *
+ * @param text [String]: Text to show
+ * @param modifier [Modifier]: Modifier
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IBadge(
     text: String,

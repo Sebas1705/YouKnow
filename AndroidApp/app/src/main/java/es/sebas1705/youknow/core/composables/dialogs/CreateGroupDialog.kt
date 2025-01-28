@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,14 +40,21 @@ import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
+ * Create group dialog
  *
+ * @param modifier [Modifier]: Modifier
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume
+ * @param onConfirm [Function2<String, String, Unit>]: On confirm
+ * @param onDismiss [Function0<Unit>]: On dismiss
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun CreateGroupDialog(
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: (String, String) -> Unit = { _, _ -> },
     onDismiss: () -> Unit = {}
 ) {
@@ -64,6 +72,7 @@ fun CreateGroupDialog(
                     else context.printTextInToast("Please fill all the fields")
                 },
                 label = "${stringResource(R.string.confirm)} (2000 ${stringResource(R.string.credits)})",
+                soundPool = soundPool
             )
         },
         modifier = modifier,
@@ -71,6 +80,7 @@ fun CreateGroupDialog(
             ITextButton(
                 onClick = onDismiss,
                 label = stringResource(R.string.dismiss),
+                soundPool = soundPool
             )
         },
         icon = null,
@@ -88,6 +98,7 @@ fun CreateGroupDialog(
                     label = stringResource(R.string.groupName),
                     placeholder = stringResource(R.string.groupName),
                     modifier = Modifier.fillMaxWidth(),
+                    soundPool = soundPool
                 )
                 IOutlinedTextField(
                     value = groupDescription,
@@ -95,6 +106,7 @@ fun CreateGroupDialog(
                     label = stringResource(R.string.groupDescription),
                     placeholder = stringResource(R.string.groupDescription),
                     modifier = Modifier.fillMaxWidth(),
+                    soundPool = soundPool
                 )
             }
         }

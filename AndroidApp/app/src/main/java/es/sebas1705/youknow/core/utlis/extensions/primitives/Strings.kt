@@ -1,12 +1,4 @@
 package es.sebas1705.youknow.core.utlis.extensions.primitives
-
-import android.util.Log
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import java.text.Normalizer
-import kotlin.text.startsWith
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,6 +16,25 @@ import kotlin.text.startsWith
  *
  */
 
+import android.util.Log
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
+import java.text.Normalizer
+
+/**
+ * Check if a string is an image url
+ *
+ * @receiver [String]: the string to check
+ *
+ * @return [Boolean]: true if the string is an image url, false otherwise
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun String.isImageUrl(): Boolean {
     var isImage = false
     try {
@@ -41,7 +52,34 @@ fun String.isImageUrl(): Boolean {
     return isImage
 }
 
+/**
+ * Normalize a string
+ *
+ * @receiver [String]: the string to normalize
+ *
+ * @return [String]: the string normalized
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun String.normalizeString(): String {
     val normalized = Normalizer.normalize(this, Normalizer.Form.NFD)
     return normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "").lowercase()
+}
+
+/**
+ * Decode a string from URL format using [URLDecoder.decode]
+ * and standard charset [StandardCharsets.UTF_8]
+ *
+ * @receiver [String] to decode
+ *
+ * @return [String] decoded
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+fun String.decodeUrl(): String {
+    return URLDecoder.decode(this, StandardCharsets.UTF_8.toString())
 }

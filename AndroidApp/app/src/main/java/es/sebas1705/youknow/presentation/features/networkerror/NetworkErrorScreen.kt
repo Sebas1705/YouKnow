@@ -23,6 +23,8 @@ import es.sebas1705.youknow.presentation.features.networkerror.design.NetworkErr
 /**
  * Screen to show when there is a network error.
  *
+ * @param windowState [WindowState]: the state of the window
+ *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
@@ -30,6 +32,7 @@ import es.sebas1705.youknow.presentation.features.networkerror.design.NetworkErr
 fun NetworkErrorScreen(
     windowState: WindowState
 ) {
+    //Body:
     NetworkErrorDesign(windowState)
 }
 

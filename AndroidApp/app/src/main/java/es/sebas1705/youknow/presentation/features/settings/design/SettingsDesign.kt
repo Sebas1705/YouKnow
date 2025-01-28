@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.settings.design
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,31 +28,35 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
 import es.sebas1705.youknow.core.composables.buttons.icon.IFilledTonalIconButton
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.extras.DropdownList
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.slider.ISlider
 import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
 import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.core.utlis.extensions.primitives.percentageFormat
 import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
@@ -60,15 +65,13 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 /**
  * Design of the Settings Screen.
  *
- * @param WindowState [WindowState]: State of the Window.
+ * @param windowState [WindowState]: State of the Window.
  * @param settingsState [SettingsState]: ViewModel for the Settings.
  * @param onBack () -> Unit: Function to go back to the previous screen.
- * @param onVolumeSlideBarChange (Float) -> Unit: Function to change the volume of the app.
+ * @param onMusicVolumeSlideBarChange (Float) -> Unit: Function to change the music volume of the app.
+ * @param onSoundVolumeSliderBarChange (Float) -> Unit: Function to change the sound volume of the app.
  * @param onContrastClick (ThemeContrast) -> Unit: Function to change the contrast of the theme.
  * @param onRestoreClick () -> Unit: Function to restore the default settings.
- *
- * @see WindowState
- * @see SettingsState
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -77,21 +80,33 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun SettingsDesign(
     windowState: WindowState = WindowState.default(),
     settingsState: SettingsState = SettingsState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onBack: () -> Unit = { },
-    onVolumeSlideBarChange: (Float) -> Unit = { },
+    onMusicVolumeSlideBarChange: (Float) -> Unit = { },
+    onSoundVolumeSliderBarChange: (Float) -> Unit = { },
     onContrastClick: (ThemeContrast) -> Unit = { },
+    onLanguageClick: (Languages) -> Unit = { },
     onRestoreClick: () -> Unit = { }
 ) {
+    //Local:
     BackHandler { onBack() }
 
-    var context = LocalContext.current
-    var volume by remember { mutableFloatStateOf(settingsState.volume) }
+    //States:
+    var music by rememberSaveable { mutableFloatStateOf(settingsState.musicVolume) }
+    var sound by rememberSaveable { mutableFloatStateOf(settingsState.soundVolume) }
 
+    //Effects:
+    LaunchedEffect(settingsState) {
+        music = settingsState.musicVolume
+        sound = settingsState.soundVolume
+    }
+
+    //Body:
     ApplyBack(
         backId = windowState.backFill
     ) {
 
-        if(settingsState.isLoading)
+        if (settingsState.isLoading)
             LoadingDialog(windowState)
 
         IFilledTonalIconButton(
@@ -101,7 +116,8 @@ fun SettingsDesign(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(MediumPadding)
-                .size(windowState.sizeFilter(48.dp, 56.dp, 64.dp))
+                .size(windowState.sizeFilter(48.dp, 56.dp, 64.dp)),
+            soundPool = soundPool
         )
         Column(
             modifier = Modifier
@@ -111,14 +127,14 @@ fun SettingsDesign(
             IVerSpacer(0.4f)
             TitleSurface(stringResource(R.string.settings_title))
             IVerSpacer(0.2f)
-            var titleStyle = windowState.heightType.filter(
+            val titleStyle = windowState.heightType.filter(
                 MaterialTheme.typography.titleMedium,
                 MaterialTheme.typography.headlineSmall,
                 MaterialTheme.typography.headlineLarge
             )
             IText(
-                text = stringResource(R.string.volume) +
-                        ": ${settingsState.volume.percentageFormat()}",
+                text = stringResource(R.string.music) +
+                        ": ${settingsState.musicVolume.percentageFormat()}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = titleStyle
             )
@@ -128,10 +144,30 @@ fun SettingsDesign(
                     .padding(vertical = MediumPadding)
                     .padding(horizontal = MediumPadding)
                     .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
-                value = volume,
-                onValueChange = { volume = it },
+                value = music,
+                onValueChange = { music = it },
                 onValueChangeFinished = {
-                    onVolumeSlideBarChange(volume) },
+                    onMusicVolumeSlideBarChange(music)
+                },
+                steps = 39,
+            )
+            IText(
+                text = stringResource(R.string.sound) +
+                        ": ${settingsState.soundVolume.percentageFormat()}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = titleStyle
+            )
+            ISlider(
+                modifier = Modifier
+                    .weight(windowState.heightType.filter(0.2f, 0.25f, 0.3f))
+                    .padding(vertical = MediumPadding)
+                    .padding(horizontal = MediumPadding)
+                    .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
+                value = sound,
+                onValueChange = { sound = it },
+                onValueChangeFinished = {
+                    onSoundVolumeSliderBarChange(sound)
+                },
                 steps = 39,
             )
             IText(
@@ -149,32 +185,64 @@ fun SettingsDesign(
                 IFilledButton(
                     label = stringResource(R.string.low_contrast),
                     onClick = { onContrastClick(ThemeContrast.Low) },
+                    soundPool = soundPool
                 )
                 IFilledButton(
                     label = stringResource(R.string.medium_contrast),
                     onClick = { onContrastClick(ThemeContrast.Medium) },
+                    soundPool = soundPool
                 )
                 IFilledButton(
                     label = stringResource(R.string.high_contrast),
                     onClick = { onContrastClick(ThemeContrast.High) },
+                    soundPool = soundPool
                 )
+            }
+            IVerSpacer(0.1f)
+            IText(
+                text = stringResource(R.string.Game_language) +
+                        ": ${settingsState.gameLanguage.name}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = titleStyle
+            )
+            DropdownList(
+                modifier = Modifier
+                    .fillMaxWidth(
+                        windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                    )
+                    .padding(vertical = MediumPadding),
+                valueRes = settingsState.gameLanguage.strRes,
+                onValueChange = { },
+                soundPool = soundPool
+            ) { onChanged ->
+                Languages.entries.forEach {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(it.strRes)) },
+                        onClick = {
+                            onChanged(it.strRes)
+                            val index = Languages.entries.indexOfFirst { option ->
+                                it == option
+                            }
+                            onLanguageClick(Languages.entries[index])
+                        },
+                        colors = MenuDefaults.itemColors(
+                            textColor = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                }
             }
             IVerSpacer(0.1f)
             IOutlinedButton(
                 label = stringResource(R.string.reset_defaults),
                 imageVector = Icons.Default.Restore,
-                onClick = onRestoreClick
+                onClick = onRestoreClick,
+                soundPool = soundPool
             )
             IVerSpacer(0.4f)
         }
     }
 }
 
-/**
- * Preview of the Settings Screen.
- *
- * @see SettingsDesign
- */
 @UiModePreviews
 @Composable
 private fun SettingsPreview() {

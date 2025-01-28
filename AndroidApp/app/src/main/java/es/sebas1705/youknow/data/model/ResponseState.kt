@@ -17,6 +17,13 @@ package es.sebas1705.youknow.data.model
  */
 
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
+import es.sebas1705.youknow.data.model.ResponseState.EmptySuccess
+import es.sebas1705.youknow.data.model.ResponseState.Error
+import es.sebas1705.youknow.data.model.ResponseState.Loading
+import es.sebas1705.youknow.data.model.ResponseState.Success
+import kotlin.Nothing
+import kotlin.String
+import kotlin.Unit
 
 
 /**
@@ -41,6 +48,9 @@ sealed class ResponseState<out T> {
      * @param onSuccess (T) -> Unit: Function to handle the success state
      * @param onEmptySuccess () -> Unit: Function to handle the empty success state
      * @param onError (Error) -> Unit: Function to handle the error state
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     suspend fun catcher(
         onLoading: suspend () -> Unit = {},
@@ -59,16 +69,18 @@ sealed class ResponseState<out T> {
     /**
      * Loading state
      *
-     * @see ResponseState
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
-    object Loading : ResponseState<Nothing>()
+    data object Loading : ResponseState<Nothing>()
 
     /**
      * Success state
      *
      * @param data [T]: Data of the response
      *
-     * @see ResponseState
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     data class Success<out T>(
         val data: T
@@ -77,7 +89,8 @@ sealed class ResponseState<out T> {
     /**
      * Empty success state
      *
-     * @see ResponseState
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     object EmptySuccess : ResponseState<Nothing>()
 
@@ -89,7 +102,8 @@ sealed class ResponseState<out T> {
      * @param message [String]: Message of the error
      * @param loggerAction (ClassLogData, String) -> Unit: Function to log the error
      *
-     * @see ResponseState
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     data class Error(
         val classLogData: ClassLogData,

@@ -18,6 +18,14 @@ package es.sebas1705.youknow.presentation.features.auth.navigation
 
 import kotlinx.serialization.Serializable
 
-@Serializable object MenuScreen
-@Serializable object LogScreen
-@Serializable object SignScreen
+interface AuthScreens {
+
+    @Serializable
+    object MenuScreen : AuthScreens
+
+    @Serializable
+    object LogScreen : AuthScreens
+
+    @Serializable
+    object SignScreen : AuthScreens
+}

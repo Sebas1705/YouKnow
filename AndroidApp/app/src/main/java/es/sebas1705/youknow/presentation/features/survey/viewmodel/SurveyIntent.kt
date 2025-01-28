@@ -1,0 +1,4 @@
+package es.sebas1705.youknow.presentation.features.survey.viewmodel
+
+class SurveyIntent {
+}

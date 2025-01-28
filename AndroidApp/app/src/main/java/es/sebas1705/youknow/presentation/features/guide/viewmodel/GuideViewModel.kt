@@ -16,12 +16,12 @@ package es.sebas1705.youknow.presentation.features.guide.viewmodel
  *
  */
 
-import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.FillUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,7 +40,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class GuideViewModel @Inject constructor(
-    private val datastoreUsesCases: DatastoreUsesCases
+    private val datastoreUsesCases: DatastoreUsesCases,
+    private val fillUsesCases: FillUsesCases
 ) : MVIBaseViewModel<GuideState, GuideIntent>() {
 
     override fun initState(): GuideState = GuideState.default()
@@ -48,6 +49,7 @@ class GuideViewModel @Inject constructor(
     override fun intentHandler(intent: GuideIntent) {
         when (intent) {
             is GuideIntent.SaveFirstTime -> saveFirstTime()
+            is GuideIntent.FillData -> fillData(intent)
         }
     }
 
@@ -60,51 +62,26 @@ class GuideViewModel @Inject constructor(
     }
 
     //Actions:
-    private fun saveFirstTime() {
-        execute(Dispatchers.IO) {
-            datastoreUsesCases.saveFirstTime()
-            updateUi { it.copy(firstTime = false) }
-        }
+    private fun saveFirstTime() = execute(Dispatchers.IO) {
+        datastoreUsesCases.saveFirstTime()
+        updateUi { it.copy(firstTime = false) }
     }
-}
 
-/**
- * State for Guide Screen that will handle the first time the app is opened.
- *
- * @property firstTime [Boolean]: Flag that indicates if it is the first time the app is opened.
- *
- * @see MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class GuideState(
-    val firstTime: Boolean
-) : MVIBaseState {
-    companion object {
-
-        /**
-         * Default state for Guide Screen.
-         *
-         * @return [GuideState]
-         */
-        fun default() = GuideState(
-            firstTime = true
-        )
+    private fun fillData(
+        intent: GuideIntent.FillData
+    ) = execute(Dispatchers.IO) {
+        updateUi { it.copy(isLoading = true) }
+        fillUsesCases.fillByDefaultWords()
+        fillUsesCases.fillByDefaultFamilies()
+        fillUsesCases.fillByDefaultQuestions()
+        updateUi { it.copy(isLoading = false) }
+        execute { intent.onSuccess() }
     }
+
 }
 
-/**
- * Sealed class that represents the possible intents for Guide Screen.
- *
- * @see MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface GuideIntent : MVIBaseIntent {
-    data object SaveFirstTime : GuideIntent
-}
+
+
 
 
 

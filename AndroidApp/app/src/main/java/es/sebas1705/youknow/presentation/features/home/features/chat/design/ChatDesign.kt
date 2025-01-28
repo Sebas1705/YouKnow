@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.chat.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,7 +42,6 @@ import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.presentation.features.home.features.chat.composables.Chat
 import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatState
-import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -51,11 +51,11 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * It will show the chat by default and the group options if the user wants to.
  * The user can send messages in the chat and join groups.
  *
- * @param chatState [ChatState]: State of the screen.
- *
- * @see ChatViewModel
- * @see ChatState
- * @see Chat
+ * @param windowState [WindowState]: The state of the window.
+ * @param chatState [ChatState]: The state of the Chat Screen.
+ * @param homeState [HomeState]: The state of the home.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param messageSender (String) -> Unit: The sender of the message.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -66,11 +66,16 @@ fun ChatDesign(
     windowState: WindowState = WindowState.default(),
     chatState: ChatState = ChatState.default(),
     homeState: HomeState = HomeState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     messageSender: (String) -> Unit = {},
 ) {
+    //States:
     var message by rememberSaveable { mutableStateOf("") }
+
+    //Flags:
     var showMessage by rememberSaveable { mutableStateOf(false) }
 
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty,
         modifier = Modifier
@@ -78,6 +83,7 @@ fun ChatDesign(
     ) {
         Chat(
             windowState = windowState,
+            soundPool = soundPool,
             firebaseId = homeState.userModel?.firebaseId ?: "",
             messageModels = chatState.chatGlobal
         )
@@ -95,7 +101,8 @@ fun ChatDesign(
             trailingIcon = Icons.AutoMirrored.Filled.Send to {
                 messageSender(message)
             },
-            trailingEnabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH
+            trailingEnabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH,
+            soundPool = soundPool
         )
         else ISmallFAB(
             onClick = { showMessage = !showMessage },
@@ -103,17 +110,12 @@ fun ChatDesign(
             imageVector = Icons.Filled.Edit,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = MediumPadding, bottom = MediumPadding)
+                .padding(end = MediumPadding, bottom = MediumPadding),
+            soundPool = soundPool
         )
     }
 }
 
-
-/**
- * Preview of the Social Screen.
- *
- * @see ChatDesign
- */
 @UiModePreviews
 @Composable
 private fun SocialPreview() {

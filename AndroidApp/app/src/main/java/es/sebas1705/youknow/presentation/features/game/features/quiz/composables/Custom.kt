@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.composable
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,6 @@ import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,11 +42,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
+import es.sebas1705.youknow.core.composables.buttons.radio.IRadioButton
 import es.sebas1705.youknow.core.composables.buttons.segmented.ISingleChoiceSegmentedButton
 import es.sebas1705.youknow.core.composables.extras.DropdownList
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
@@ -59,28 +60,42 @@ import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.Q
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Custom mode of the Quiz game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param quizState [QuizState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onStartGame ([Difficulty], [Category], [QuizType], [Int]) -> Unit: Function to start the game.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun Custom(
     windowState: WindowState = WindowState.default(),
     quizState: QuizState = QuizState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onStartGame: (Difficulty, Category, QuizType, Int) -> Unit = { _, _, _, _ -> }
 ) {
+    //Local:
+    val ctx = LocalContext.current
 
-    var ctx = LocalContext.current
-
-    var difficulty = rememberSaveable { mutableIntStateOf(Difficulty.EASY.ordinal) }
-    var difficultyEnum = Difficulty.entries[difficulty.intValue]
+    //States:
+    val difficulty = rememberSaveable { mutableIntStateOf(Difficulty.EASY.ordinal) }
+    val difficultyEnum = Difficulty.entries[difficulty.intValue]
     var category by rememberSaveable { mutableIntStateOf(Category.GENERAL_KNOWLEDGE.ordinal) }
-    var categoryEnum = Category.entries[category]
-    var quizType = rememberSaveable { mutableIntStateOf(QuizType.MULTIPLE.ordinal) }
-    var quizTypeEnum = QuizType.entries[quizType.intValue]
+    val categoryEnum = Category.entries[category]
+    val quizType = rememberSaveable { mutableIntStateOf(QuizType.MULTIPLE.ordinal) }
+    val quizTypeEnum = QuizType.entries[quizType.intValue]
     var numQuestions by rememberSaveable { mutableIntStateOf(10) }
-    var titleStyle = windowState.heightType.filter(
+    val titleStyle = windowState.heightType.filter(
         MaterialTheme.typography.titleSmall,
         MaterialTheme.typography.titleLarge,
         MaterialTheme.typography.headlineMedium
     )
 
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -134,9 +149,10 @@ fun Custom(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    RadioButton(
+                                    IRadioButton(
                                         selected = quizType.intValue == it.ordinal,
-                                        onClick = { quizType.intValue = it.ordinal }
+                                        onClick = { quizType.intValue = it.ordinal },
+                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -152,9 +168,10 @@ fun Custom(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    RadioButton(
+                                    IRadioButton(
                                         selected = quizType.intValue == it.ordinal,
-                                        onClick = { quizType.intValue = it.ordinal }
+                                        onClick = { quizType.intValue = it.ordinal },
+                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -189,7 +206,8 @@ fun Custom(
                                     true
                                 )
                             },
-                            selectedElement = difficulty
+                            selectedElement = difficulty,
+                            soundPool = soundPool
                         )
                     }
                 }
@@ -209,12 +227,13 @@ fun Custom(
                     valueRes = categoryEnum.strRes,
                     onValueChange = { s ->
                         category = Category.entries.indexOfFirst { ctx.getString(it.strRes) == s }
-                    }) { onChanged ->
+                    },
+                    soundPool = soundPool
+                ) { onChanged ->
                     Category.entries.forEach {
-                        val option = stringResource(it.strRes)
                         DropdownMenuItem(
                             text = { Text(stringResource(it.strRes)) },
-                            onClick = { onChanged(option) },
+                            onClick = { onChanged(it.strRes) },
                             colors = MenuDefaults.itemColors(
                                 textColor = MaterialTheme.colorScheme.primary
                             )
@@ -235,6 +254,7 @@ fun Custom(
                     },
                     label = stringResource(R.string.start_game),
                     imageVector = Icons.Filled.Start,
+                    soundPool = soundPool
                 )
                 MediumSpacer()
             }

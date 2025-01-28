@@ -16,9 +16,9 @@
     <string name="You">Tú</string>
     <string name="leader">Líder</string>
     <string name="view_profile">Ver perfil</string>
-    <string name="not_in_group">You\'re not in a group</string>
-    <string name="chat_enabled">Chat enabled</string>
-    <string name="search_enabled">Search Enabled</string>
-    <string name="add_group">Add group</string>
-    <string name="search">Search</string>
+    <string name="not_in_group">No estás en un grupo</string>
+    <string name="chat_enabled">Chat activado</string>
+    <string name="search_enabled">Busqueda activada</string>
+    <string name="add_group">Añadir grupo</string>
+    <string name="search">Buscar</string>
 </resources>

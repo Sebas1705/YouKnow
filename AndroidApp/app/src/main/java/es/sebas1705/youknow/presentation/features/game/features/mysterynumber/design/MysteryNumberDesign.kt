@@ -16,8 +16,11 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.d
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberStatus
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.utlis.UiModePreviews
@@ -25,58 +28,68 @@ import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.co
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.Finished
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.Running
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberMode
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberState
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberStatus
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.
  *
- * @see ApplyBack
- * @see Title
- *
  * @param windowState [WindowState]: State of the window.
+ * @param mysteryNumberState [MysteryNumberState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSelectMode ([MysteryNumberMode]) -> Unit: Function to select the game mode.
+ * @param onResponseNumber (Int, Float) -> Unit: Function to respond to the number.
+ * @param onRestartGame () -> Unit: Function to restart the game.
+ * @param onOutGame () -> Unit: Function to exit the game.
+ * @param onStartGame (Difficulty, Int) -> Unit: Function to start the game.
  *
  * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun MysteryNumberDesign(
     windowState: WindowState = WindowState.default(),
     mysteryNumberState: MysteryNumberState = MysteryNumberState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSelectMode: (MysteryNumberMode) -> Unit = { },
     onResponseNumber: (Int, Float) -> Unit = { _, _ -> },
     onRestartGame: () -> Unit = { },
     onOutGame: () -> Unit = { },
     onStartGame: (Difficulty, Int) -> Unit = { _, _ -> }
 ) {
+    //Body:
     if (mysteryNumberState.isLoading) LoadingDialog(windowState)
 
     when (mysteryNumberState.status) {
         MysteryNumberStatus.SELECTION_MODE -> SelectionMode(
             windowState,
+            soundPool,
             onSelectMode
         )
 
-        MysteryNumberStatus.CUSTOM -> Custom(windowState, onStartGame)
-        MysteryNumberStatus.RUNNING -> Running(windowState, mysteryNumberState, onResponseNumber)
+        MysteryNumberStatus.CUSTOM -> Custom(
+            windowState,
+            soundPool,
+            onStartGame
+        )
+
+        MysteryNumberStatus.RUNNING -> Running(
+            windowState,
+            mysteryNumberState,
+            soundPool,
+            onResponseNumber
+        )
+
         MysteryNumberStatus.FINISHED -> Finished(
             windowState,
             mysteryNumberState,
+            soundPool,
             onRestartGame,
             onOutGame
         )
     }
 }
 
-/**
- * Preview of the Mystery Number Game.
- *
- * @see UiModePreviews
- * @see MysteryNumberDesign
- *
- * @since 1.0.0
- */
 @UiModePreviews
 @Composable
 private fun MysteryNumberPreview() {

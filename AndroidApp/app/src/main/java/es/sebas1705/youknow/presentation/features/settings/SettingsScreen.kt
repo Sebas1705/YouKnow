@@ -16,13 +16,13 @@ package es.sebas1705.youknow.presentation.features.settings
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.presentation.features.settings.design.SettingsDesign
 import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsIntent
 import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsViewModel
@@ -31,9 +31,8 @@ import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsVie
  * Screen for the Settings of the app.
  *
  * @param windowState [WindowState]: State of the Settings.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onBack () -> Unit: Function to go back to the previous screen.
- *
- * @see SettingsDesign
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -41,8 +40,10 @@ import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsVie
 @Composable
 fun SettingsScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onBack: () -> Unit
 ) {
+
     //ViewModel:
     val settingsViewModel: SettingsViewModel = hiltViewModel()
 
@@ -54,23 +55,26 @@ fun SettingsScreen(
         settingsViewModel.eventHandler(SettingsIntent.ReadSettings)
     }
 
+    //Body:
     SettingsDesign(
         windowState,
         settingsState,
+        soundPool,
         onBack,
-        onVolumeSlideBarChange = {
-            settingsViewModel.eventHandler(SettingsIntent.ChangeVolume(it))
+        onMusicVolumeSlideBarChange = {
+            settingsViewModel.eventHandler(SettingsIntent.ChangeMusicVolume(it))
+        },
+        onSoundVolumeSliderBarChange = {
+            settingsViewModel.eventHandler(SettingsIntent.ChangeSoundVolume(it))
         },
         onContrastClick = {
             settingsViewModel.eventHandler(SettingsIntent.ChangeContrast(it))
         },
+        onLanguageClick = {
+            settingsViewModel.eventHandler(SettingsIntent.ChangeLanguage(it))
+        },
         onRestoreClick = {
-            settingsViewModel.eventHandler(
-                SettingsIntent.ChangeContrast(DefaultValuesDS.APP_UI_CONTRAST)
-            )
-            settingsViewModel.eventHandler(
-                SettingsIntent.ChangeVolume(DefaultValuesDS.APP_VOLUME)
-            )
+            settingsViewModel.eventHandler(SettingsIntent.RestoreSettings)
         }
     )
 }

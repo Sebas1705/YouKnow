@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.navigation
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,16 +29,21 @@ import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.extensions.composables.navAndPopUp
 import es.sebas1705.youknow.presentation.features.auth.navigation.AuthNav
 import es.sebas1705.youknow.presentation.features.game.navigation.GameNav
-import es.sebas1705.youknow.presentation.features.game.navigation.games
+import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens.Companion.games
 import es.sebas1705.youknow.presentation.features.guide.GuideScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
 import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
+import es.sebas1705.youknow.presentation.features.survey.SurveyScreen
+import es.sebas1705.youknow.presentation.navigation.AppGraph.Companion.graph
+import org.checkerframework.checker.units.qual.A
 
 /**
  * Navigation for the app.
  *
  * @param startDestination [AppGraph]: Start destination of the app.
  * @param windowState [WindowState]: State of the window.
+ * @param onMusicChange (Boolean) -> Unit: Function that will change the music.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -46,19 +52,22 @@ import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
 fun AppNav(
     startDestination: AppGraph,
     windowState: WindowState,
+    onMusicChange: (Boolean) -> Unit,
+    soundPool: Pair<SoundPool, Float>,
 ) {
     // NavController:
     val appNavController = rememberNavController()
 
     //States:
     var game by rememberSaveable { mutableIntStateOf(0) }
-    var destination by rememberSaveable { mutableIntStateOf(graph.indexOf(startDestination)) }
+    val destination by rememberSaveable { mutableIntStateOf(graph.indexOf(startDestination)) }
 
     //Body:
     NavHost(navController = appNavController, startDestination = graph[destination]) {
         composable<AppGraph.GuideScreen> {
             GuideScreen(
                 windowState,
+                soundPool,
                 onSuccessNavigation = {
                     appNavController.navigate(
                         AppGraph.AuthNavigation
@@ -69,25 +78,25 @@ fun AppNav(
         composable<AppGraph.SettingsScreen> {
             SettingsScreen(
                 windowState,
+                soundPool,
                 onBack = {
                     appNavController.navAndPopUp(AppGraph.HomeNavigation, AppGraph.SettingsScreen)
                 }
             )
         }
-        composable<AppGraph.AuthNavigation> {
-            AuthNav(
+        composable<AppGraph.SurveyScreen> {
+            SurveyScreen(
                 windowState,
-                toHomeNav = {
-                    appNavController.navAndPopUp(
-                        AppGraph.HomeNavigation,
-                        AppGraph.AuthNavigation
-                    )
+                soundPool,
+                onBack = {
+                    appNavController.navAndPopUp(AppGraph.HomeNavigation, AppGraph.SurveyScreen)
                 },
             )
         }
         composable<AppGraph.HomeNavigation> {
             HomeNav(
-                windowState = windowState,
+                windowState,
+                soundPool,
                 onAuthNav = {
                     appNavController.navAndPopUp(
                         AppGraph.AuthNavigation,
@@ -106,6 +115,8 @@ fun AppNav(
         composable<AppGraph.GameNavigation> {
             GameNav(
                 windowState,
+                soundPool,
+                onMusicChange,
                 games[game],
                 onOutGameNavigation = {
                     appNavController.navAndPopUp(

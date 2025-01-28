@@ -17,6 +17,8 @@ package es.sebas1705.youknow.data.firebase.authentication.repository
  */
 
 import android.content.Context
+import android.util.Log
+import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -42,22 +44,18 @@ import javax.inject.Inject
  * @property firebaseAuth [FirebaseAuth]: firebase authentication instance
  * @property analyticsRepository [AnalyticsRepository]: analytics repository
  *
- * @see AuthenticationRepository
- * @see CredentialManager
- * @see FirebaseAuth
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 class AuthenticationRepositoryImpl @Inject constructor(
-    private val credentialManager: CredentialManager,
     private val firebaseAuth: FirebaseAuth,
-    private val analyticsRepository: AnalyticsRepository
+    private val analyticsRepository: AnalyticsRepository,
 ) : AuthenticationRepository, ClassLogData {
 
     //Properties:
     override val layer = Layer.Data
     override val repository = Repository.Authentication
+    private var credentialManager: CredentialManager? = null
 
     //Managers:
     private val taskFlowManager = TaskFlowManager(
@@ -99,21 +97,33 @@ class AuthenticationRepositoryImpl @Inject constructor(
     )
 
     override suspend fun signWithGoogle(
-        context: Context
+        context: Context,
     ): FlowResponseNothing {
-        val credential = credentialManager.getCredential(
-            context,
-            context.getCredentialRequestGoogle
-        ).credential
+        credentialManager = CredentialManager.create(context)
+        var credential: Credential? = null
+        var error = ""
+        try {
+            credential = credentialManager!!.getCredential(
+                context,
+                context.getCredentialRequestGoogle
+            ).credential
+        } catch (e: Exception) {
+            Log.e("AuthenticationRepositoryImpl", "Error getting google credential: ", e)
+            error = e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL
+        }
         return taskFlowManager.taskFlowProducer(
             assertChecker = {
-                if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)
+                if (credential == null) error
+                else if (
+                    credential is CustomCredential &&
+                    credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                )
                     null
                 else SettingsAuth.WRONG_CREDENTIALS
             },
             taskAction = {
                 val googleIdTokenCredential =
-                    GoogleIdTokenCredential.createFrom(credential.data)
+                    GoogleIdTokenCredential.createFrom(credential!!.data)
                 val authCredential =
                     GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
                 firebaseAuth.signInWithCredential(authCredential)

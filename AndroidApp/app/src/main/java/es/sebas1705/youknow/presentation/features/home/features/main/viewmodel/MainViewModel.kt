@@ -22,6 +22,8 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.domain.model.social.NewModel
+import es.sebas1705.youknow.domain.usecases.social.NewsUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -29,8 +31,9 @@ import javax.inject.Inject
 /**
  * ViewModel that will handle the ranking screen.
  *
- * @see MVIBaseViewModel
- * @see HiltViewModel
+ * @param userUsesCases [UserUsesCases]: UseCase to get the user's data.
+ * @param newsUsesCases [NewsUsesCases]: UseCase to get the news.
+ * @param application [Application]: Application to get the context.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -38,6 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userUsesCases: UserUsesCases,
+    private val newsUsesCases: NewsUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<MainState, MainIntent>() {
 
@@ -65,11 +69,11 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getNews() = execute(Dispatchers.IO) {
-        userUsesCases.getUserRanking(
+        newsUsesCases.getNews(
             onLoading = { startLoading() },
-            onSuccess = { ranking ->
+            onSuccess = { news ->
                 stopLoading()
-                updateUi { it.copy(ranking = ranking) }
+                updateUi { it.copy(news = news) }
             },
             onError = { error ->
                 stopAndError(error, application::printTextInToast)
@@ -92,56 +96,8 @@ class MainViewModel @Inject constructor(
     }
 }
 
-/**
- * State of the [MainViewModel] that will handle the data of the screen.
- *
- * @param isLoading [Boolean]: Flag to indicate if the screen is loading.
- *
- * @see MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class MainState(
-    val isLoading: Boolean,
-    val news: List<Pair<String, String>>,
-    val ranking: List<Pair<String, Int>>,
-) : MVIBaseState {
-    companion object {
 
-        /**
-         * Default state of the [MainState].
-         *
-         * @return [MainState]: Default state.
-         */
-        fun default() = MainState(
-            isLoading = false,
-            ranking = emptyList()
-        )
-    }
-}
 
-/**
- * Sealed interface that represents the possible actions of the [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel].
- *
- * @property SendMessage [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to send a message to the global chat.
- * @property CreateGroup [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to create a group.
- * @property JoinGroup [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to join a group.
- * @property LoadSocial [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to load the social data.
- * @property ClearSocial [es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent]: Action to clear the social data.
- *
- * @see MVIBaseIntent
- * @see es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel
- * @see SendMessage
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface MainIntent : MVIBaseIntent {
 
-    data object GetRanking : MainIntent
-
-    data object GetNews : MainIntent
-}
 
 

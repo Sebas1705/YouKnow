@@ -28,6 +28,16 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Horizontal spacer
+ *
+ * @param weight [Float]: Weight
+ * @param width [Dp]: Width
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun RowScope.IHorSpacer(
     weight: Float? = null,

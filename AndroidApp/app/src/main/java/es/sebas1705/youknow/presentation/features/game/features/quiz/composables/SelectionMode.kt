@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.composable
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,25 +32,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.classes.enums.theme.SizeType
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesMode
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizMode
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Selection mode of the Quiz game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSelectMode ([QuizMode]) -> Unit: Function to select the game mode.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun SelectionMode(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSelectMode: (QuizMode) -> Unit = { }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -81,6 +94,7 @@ fun SelectionMode(
                         onClick = { onSelectMode(mode) },
                         label = stringResource(id = mode.strRes),
                         imageVector = mode.icon,
+                        soundPool = soundPool
                     )
                 }
             else
@@ -103,7 +117,8 @@ fun SelectionMode(
                             imageVector = mode1.icon,
                             modifier = Modifier
                                 .width(width)
-                                .fillMaxHeight(0.25f)
+                                .fillMaxHeight(0.25f),
+                            soundPool = soundPool
                         )
                         mode2?.let {
                             IFilledTonalButton(
@@ -112,7 +127,8 @@ fun SelectionMode(
                                 imageVector = it.icon,
                                 modifier = Modifier
                                     .width(width)
-                                    .fillMaxHeight(0.25f)
+                                    .fillMaxHeight(0.25f),
+                                soundPool = soundPool
                             )
                         }
                     }

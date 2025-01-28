@@ -20,9 +20,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepositoryImpl
 import es.sebas1705.youknow.data.apis.opendb.OpendbApi
-import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
 import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,6 +36,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApisModule {
 
+    /**
+     * Provides [OpendbApi] that is used to get the questions
+     *
+     * @return [OpendbApi]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideTriviaApiService(): OpendbApi {

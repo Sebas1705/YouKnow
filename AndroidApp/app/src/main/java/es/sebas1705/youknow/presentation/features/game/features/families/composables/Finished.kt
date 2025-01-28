@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.families.compos
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
@@ -35,19 +37,32 @@ import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesMode
 import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Finished screen of the Families game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param familiesState [FamiliesState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onRestartGame () -> Unit: Function to restart the game.
+ * @param onOutGame () -> Unit: Function to exit the game.
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun Finished(
     windowState: WindowState = WindowState.default(),
     familiesState: FamiliesState = FamiliesState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onRestartGame: () -> Unit = { },
     onOutGame: () -> Unit = { }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -56,7 +71,7 @@ fun Finished(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val data = mutableMapOf<String, String>(
+            val data = mutableMapOf(
                 stringResource(id = R.string.mode) to (stringResource(
                     familiesState.mode?.strRes ?: R.string.any
                 )),
@@ -66,7 +81,7 @@ fun Finished(
                 stringResource(id = R.string.total_answers) to familiesState.families.size.toString(),
             )
             if (familiesState.mode == FamiliesMode.SURVIVAL) {
-                data.put(stringResource(id = R.string.lives), familiesState.lives.toString())
+                data[stringResource(id = R.string.lives)] = familiesState.lives.toString()
             }
             IResumeCard(
                 title = stringResource(R.string.finished_title),
@@ -78,6 +93,7 @@ fun Finished(
                 onClick = onRestartGame,
                 label = stringResource(id = R.string.restart_game),
                 imageVector = Icons.Filled.RestartAlt,
+                soundPool = soundPool,
             )
 
             IVerSpacer(height = SmallPadding)
@@ -86,7 +102,8 @@ fun Finished(
                 onClick = onOutGame,
                 label = stringResource(id = R.string.out_game),
                 modifier = Modifier,
-                imageVector = Icons.Filled.Output
+                imageVector = Icons.Filled.Output,
+                soundPool = soundPool,
             )
         }
     }

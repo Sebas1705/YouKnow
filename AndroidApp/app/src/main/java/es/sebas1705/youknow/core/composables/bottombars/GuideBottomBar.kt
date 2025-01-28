@@ -16,13 +16,13 @@ package es.sebas1705.youknow.core.composables.bottombars
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
@@ -49,7 +48,6 @@ import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
 import es.sebas1705.youknow.presentation.ui.theme.IndicatorSize
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.PageIndicatorSeparator
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -77,6 +75,7 @@ fun GuideBottomBar(
     size: Int,
     pagerState: PagerState,
     buttonState: State<List<String>>,
+    soundPool: Pair<SoundPool, Float>?,
     onSuccess: () -> Unit
 ) {
     Column(
@@ -122,7 +121,8 @@ fun GuideBottomBar(
                             scope.launch {
                                 pagerState.animateScrollToPage(page = pagerState.currentPage - 1)
                             }
-                        }
+                        },
+                        soundPool = soundPool
                     )
                 }
                 IFilledButton(
@@ -132,7 +132,8 @@ fun GuideBottomBar(
                             if (pagerState.currentPage == size - 1) onSuccess()
                             else pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }
-                    }
+                    },
+                    soundPool = soundPool
                 )
             }
         }
@@ -158,6 +159,6 @@ fun Preview(){
         }
     }
     YouKnowTheme {
-        GuideBottomBar(pageList.size, pagerState, buttonState) {}
+        GuideBottomBar(pageList.size, pagerState, buttonState, null) {}
     }
 }

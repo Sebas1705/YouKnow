@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.main.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,30 +25,43 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
+import es.sebas1705.youknow.core.composables.cards.IOutlinedCard
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
 import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
+import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import java.util.Locale
 
 /**
  * Design of the Main Screen.
  *
- * @see ApplyBack
+ * @param windowState [WindowState]: The state of the window.
+ * @param homeState [HomeState]: The state of the Home Screen.
+ * @param mainState [MainState]: The state of the Main Screen.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSettingsNav () -> Unit: The navigation to the settings.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -55,9 +69,15 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun MainDesign(
     windowState: WindowState = WindowState.default(),
+    homeState: HomeState = HomeState.default(),
     mainState: MainState = MainState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSettingsNav: () -> Unit = {}
 ) {
+    //Local:
+    val language = Locale.getDefault().language
+
+    //Body:
     ApplyBack(
         windowState.backEmpty
     ) {
@@ -68,19 +88,92 @@ fun MainDesign(
         ) {
             item {
                 Title(
-                    stringResource(R.string.Home),
-                    modifier = Modifier.padding(vertical = MediumPadding)
+                    stringResource(R.string.New_Message),
+                    modifier = Modifier.padding(vertical = MediumPadding),
+                    style = windowState.widthFilter(
+                        MaterialTheme.typography.displaySmall,
+                        MaterialTheme.typography.displayMedium,
+                        MaterialTheme.typography.displayLarge
+                    )
                 )
             }
 
             item {
-                IResumeCard(
-                    stringResource(R.string.New_Message),
-                    mainState.news.toMap(),
+
+                val news = mainState.news.associate {
+                    if (language == "es") it.titleEs to it.bodyEs
+                    else it.titleEn to it.bodyEn
+                }
+                HorizontalPager(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = rememberPagerState(initialPage = 0) { mainState.news.size }
+                ) {
+                    val new = news.toList()[it]
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        IOutlinedCard(
+                            modifier = Modifier.fillMaxWidth(
+                                windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                            ),
+                        ) {
+                            Spacer(Modifier.height(LargePadding))
+                            Title(
+                                new.first,
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(MediumPadding))
+                            IText(
+                                new.second,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 25.sp)
+                            )
+                            Spacer(Modifier.height(LargePadding))
+                        }
+                    }
+                }
+            }
+
+            item {
+                Column(
                     modifier = Modifier.fillMaxWidth(
                         windowState.widthFilter(0.9f, 0.7f, 0.5f)
                     )
-                )
+                ) {
+                    Spacer(Modifier.height(LargePadding))
+                    IHorDivider()
+                    Spacer(Modifier.height(SmallPadding))
+                    IHorDivider()
+                    Spacer(Modifier.height(LargePadding))
+                }
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    IOutlinedCard(
+                        modifier = Modifier.fillMaxWidth(
+                            windowState.widthFilter(0.9f, 0.7f, 0.5f)
+                        ),
+                    ) {
+                        Spacer(Modifier.height(MediumPadding))
+                        Title(
+                            stringResource(R.string.info),
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(SmallPadding))
+
+                        Spacer(Modifier.height(MediumPadding))
+                    }
+                }
             }
 
             item {
@@ -101,12 +194,18 @@ fun MainDesign(
                 IResumeCard(
                     stringResource(R.string.Ranking),
                     mainState.ranking.mapIndexed { index, user ->
-                        "${index + 1}º. ${user.first}" to user.second.toString()
+                        val first =
+                            ("${index + 1}º. ${user.first}" + if (user.first == homeState.userModel?.nickName) " (${
+                                stringResource(R.string.You)
+                            })" else "")
+                        val second = "${user.second} ${stringResource(R.string.points)}"
+                        first to second
                     }.toMap(),
                     modifier = Modifier.fillMaxWidth(
                         windowState.widthFilter(0.9f, 0.7f, 0.5f)
                     )
                 )
+                Spacer(Modifier.height(LargePadding))
             }
         }
 
@@ -116,17 +215,13 @@ fun MainDesign(
             imageVector = Icons.Default.Settings,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = MediumPadding, bottom = MediumPadding)
+                .padding(end = MediumPadding, bottom = MediumPadding),
+            soundPool = soundPool
         )
     }
 
 }
 
-/**
- * Preview of the Main Screen.
- *
- * @see MainDesign
- */
 @UiModePreviews
 @Composable
 private fun MainPreview() {

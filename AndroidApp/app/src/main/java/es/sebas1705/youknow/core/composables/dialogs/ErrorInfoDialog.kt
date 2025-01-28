@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
@@ -33,6 +34,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Composable that shows an AlertDialog with an error message.
  *
  * @param modifier [Modifier]: Modifier to be applied to the composable.
+ * @param soundPool [Pair<SoundPool, Float>]: Pair of SoundPool and volume to play a sound when the dialog is shown.
  * @param errorText [String]: Error message to be shown.
  * @param onConfirm () -> Unit: Function to be executed when the confirm button is clicked.
  *
@@ -44,6 +46,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun ErrorInfoDialog(
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
     errorText: String,
     onConfirm: () -> Unit = {},
 ) = IDialog(
@@ -51,6 +54,7 @@ fun ErrorInfoDialog(
         ITextButton(
             label = stringResource(R.string.confirm),
             onClick = onConfirm,
+            soundPool = soundPool
         )
     },
     modifier = modifier,

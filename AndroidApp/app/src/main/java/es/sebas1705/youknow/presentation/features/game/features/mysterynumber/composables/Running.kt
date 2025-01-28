@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.c
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.Numbers
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
@@ -52,7 +55,6 @@ import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberMode
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
@@ -60,26 +62,30 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.presentation.ui.theme.gameBottomBarHeight
 import kotlinx.coroutines.delay
 
-enum class Numbers(val number: Int, val str: String) {
-    ONE(1, "1"),
-    TEN(10, "10"),
-    HUNDRED(100, "100"),
-    THOUSAND(1_000, "1K"),
-    TEN_THOUSAND(10_000, "10K"),
-    HUNDRED_THOUSAND(100_000, "100K")
-}
-
+/**
+ * Running mode of the Mystery Number game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param mysteryNumberState [MysteryNumberState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onResponseNumber ([Int], [Float]) -> Unit: Function to respond to the number.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios García
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
     mysteryNumberState: MysteryNumberState = MysteryNumberState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onResponseNumber: (Int, Float) -> Unit = { _, _ -> }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backFill
     ) {
-        if (mysteryNumberState.number.number == -2) {
+        if (mysteryNumberState.numberModel.number == -2) {
             Title(
                 modifier = Modifier.align(Alignment.Center),
                 text = stringResource(R.string.error_loading_number),
@@ -88,7 +94,7 @@ fun Running(
             return@ApplyBack
         }
         var time by rememberSaveable { mutableFloatStateOf(15f) }
-        val number = mysteryNumberState.number
+        val number = mysteryNumberState.numberModel
         var actualNumber by rememberSaveable { mutableIntStateOf(0) }
         var plus by rememberSaveable { mutableStateOf(true) }
         if (mysteryNumberState.mode == MysteryNumberMode.TIME_ATTACK) {
@@ -149,7 +155,8 @@ fun Running(
                                 if (actualNumber > 1_000_000) actualNumber = 1_000_000
                             },
                             label = (if (plus) "+" else "-") + Numbers.entries[it].str,
-                            modifier = Modifier.padding(SmallestPadding)
+                            modifier = Modifier.padding(SmallestPadding),
+                            soundPool = soundPool
                         )
                     }
                 }
@@ -160,14 +167,16 @@ fun Running(
                         plus = !plus
                     },
                     label = stringResource(R.string.minus_plus),
-                    modifier = Modifier.padding(SmallestPadding)
+                    modifier = Modifier.padding(SmallestPadding),
+                    soundPool = soundPool
                 )
                 IFilledButton(
                     onClick = {
                         onResponseNumber(actualNumber, time)
                     },
                     label = stringResource(R.string.try_number),
-                    modifier = Modifier.padding(MediumPadding)
+                    modifier = Modifier.padding(MediumPadding),
+                    soundPool = soundPool
                 )
             }
             stickyHeader {

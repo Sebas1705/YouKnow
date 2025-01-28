@@ -2,5 +2,6 @@
 <resources>
     <string name="Ranking">Ranking</string>
     <string name="Home">Home</string>
-    <string name="New_Message">NEWS MESSAGE</string>
+    <string name="New_Message">NEWS &amp; INFO</string>
+    <string name="info">Reports &amp; proposes</string>
 </resources>

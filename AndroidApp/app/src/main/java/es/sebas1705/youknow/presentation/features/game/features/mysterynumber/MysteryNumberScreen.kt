@@ -16,21 +16,22 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.enums.Difficulty
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.design.MysteryNumberDesign
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberIntent
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberMode
 import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberViewModel
 
 /**
  * Screen of the Mystery Number Game.
  *
  * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onOutGameNavigation () -> Unit: Function to exit the game.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -38,30 +39,28 @@ import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.vi
 @Composable
 fun MysteryNumberScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onOutGameNavigation: () -> Unit
 ) {
+    //ViewModel:
     val mysteryNumberViewModel: MysteryNumberViewModel = hiltViewModel()
+
+    //State:
     val mysteryNumberState by mysteryNumberViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Body:
     MysteryNumberDesign(
         windowState,
         mysteryNumberState,
+        soundPool,
         onSelectMode = { mode ->
             mysteryNumberViewModel.eventHandler(MysteryNumberIntent.SelectMode(mode))
-            if (mode != MysteryNumberMode.CUSTOM)
-                mysteryNumberViewModel.eventHandler(
-                    MysteryNumberIntent.GenerateGame(
-                        Difficulty.ANY,
-                        mode.lives
-                    )
-                )
         },
         onResponseNumber = { response, time ->
             mysteryNumberViewModel.eventHandler(
                 MysteryNumberIntent.Response(
                     response,
-                    time,
-                    mysteryNumberState
+                    time
                 )
             )
         },
@@ -69,7 +68,7 @@ fun MysteryNumberScreen(
             mysteryNumberViewModel.eventHandler(MysteryNumberIntent.ResetGame)
         },
         onOutGame = {
-            mysteryNumberViewModel.eventHandler(MysteryNumberIntent.OutGame(mysteryNumberState.points) {
+            mysteryNumberViewModel.eventHandler(MysteryNumberIntent.OutGame {
                 onOutGameNavigation()
             })
         },

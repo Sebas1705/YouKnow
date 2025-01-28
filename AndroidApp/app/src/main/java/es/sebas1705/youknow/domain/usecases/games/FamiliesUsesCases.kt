@@ -16,12 +16,20 @@ package es.sebas1705.youknow.domain.usecases.games
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.domain.model.games.FamiliesModel
 
+/**
+ * Use case to generate families
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to get families
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GenerateFamilies(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -29,6 +37,7 @@ class GenerateFamilies(
         numFamilies: Int,
         category: Category,
         difficulty: Difficulty,
+        languages: Languages,
         onLoading: () -> Unit,
         onSuccess: (List<FamiliesModel>) -> Unit,
         onError: (String) -> Unit
@@ -37,7 +46,7 @@ class GenerateFamilies(
         val families = databaseRepository.getFamilies(
             numFamilies,
             category,
-            Languages.ANY,
+            languages,
             difficulty
         )
         if (families.isEmpty())
@@ -49,6 +58,14 @@ class GenerateFamilies(
     }
 }
 
+/**
+ * Use case to insert families list
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to insert families
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class InsertFamiliesList(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -65,6 +82,15 @@ class InsertFamiliesList(
     }
 }
 
+/**
+ * Use cases for families
+ *
+ * @property generateFamilies [GenerateFamilies]: Use case to generate families
+ * @property insertFamiliesList [InsertFamiliesList]: Use case to insert families list
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class FamiliesUsesCases(
     val generateFamilies: GenerateFamilies,
     val insertFamiliesList: InsertFamiliesList

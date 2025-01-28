@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeItalic
@@ -28,10 +29,22 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Title surface
+ *
+ * @param text [String]: Text
+ * @param modifier [Modifier]: Modifier
+ * @param textAlign [TextAlign]: Text align
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun TitleSurface(
     text: String,
     modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Center
 ) {
     IPrimaryCard(
         modifier = modifier
@@ -45,7 +58,8 @@ fun TitleSurface(
             modifier = Modifier.padding(
                 vertical = SmallPadding,
                 horizontal = MediumPadding
-            )
+            ),
+            textAlign = textAlign
         )
     }
 }

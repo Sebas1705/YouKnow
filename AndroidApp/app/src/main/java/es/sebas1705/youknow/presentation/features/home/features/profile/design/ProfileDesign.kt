@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -40,7 +41,7 @@ import es.sebas1705.youknow.core.composables.dialogs.ResetPasswordDialog
 import es.sebas1705.youknow.core.composables.dialogs.UrlRequestDialog
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 import es.sebas1705.youknow.presentation.features.home.features.profile.composables.LazyProfileItem
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileState
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
@@ -51,10 +52,13 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Design of the Profile Screen. It shows the user's data.
  *
  * @param windowState [WindowState]: State of the window.
- * @param userState [UserState]: State of the Home Screen.
  * @param profileState [ProfileState]: State of the Profile Screen.
- * @param onChangePhoto (String) -> Unit: Function to change the user's photo.
- * @param onChangeNickname (String) -> Unit: Function to change the user's nickname.
+ * @param homeState [HomeState]: State of the Home Screen.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onLogout [Function0<Unit>]: Function that will be called when the user wants to logout.
+ * @param onChangePhoto [(String) -> Unit]: Function that will be called when the user wants to change the photo.
+ * @param onChangeNickname [(String) -> Unit]: Function that will be called when the user wants to change the nickname.
+ * @param onChangePassword [Function0<Unit>]: Function that will be called when the user wants to change the password.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -65,11 +69,13 @@ fun ProfileDesign(
     windowState: WindowState = WindowState.default(),
     profileState: ProfileState = ProfileState.default(),
     homeState: HomeState = HomeState.defaultWithUser(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onLogout: () -> Unit = {},
     onChangePhoto: (String) -> Unit = {},
     onChangeNickname: (String) -> Unit = {},
     onChangePassword: () -> Unit = {}
 ) {
+    //State:
     var nickname by remember { mutableStateOf(homeState.userModel?.nickName ?: "") }
 
     //Flag:
@@ -78,6 +84,7 @@ fun ProfileDesign(
     var changePassDialog by remember { mutableStateOf(false) }
     var signOutDialog by remember { mutableStateOf(false) }
 
+    //Body:
     ApplyBack(
         backId = windowState.backFill,
         modifier = Modifier.fillMaxSize()
@@ -93,15 +100,17 @@ fun ProfileDesign(
                 },
                 onDismiss = {
                     signOutDialog = false
-                }
+                },
+                soundPool = soundPool
             )
         else if (changePhotoDialog) UrlRequestDialog(
-            windowState,
+            windowState = windowState,
             onConfirmButton = {
                 changePhotoDialog = false
                 onChangePhoto(it)
             },
-            onDismissAction = { changePhotoDialog = false }
+            onDismissAction = { changePhotoDialog = false },
+            soundPool = soundPool
         )
         else if (changeNicknameDialog) NickDialog(
             nickname = nickname,
@@ -110,11 +119,13 @@ fun ProfileDesign(
                 changeNicknameDialog = false
                 onChangeNickname(it)
             },
-            onDismiss = { changeNicknameDialog = false }
+            onDismiss = { changeNicknameDialog = false },
+            soundPool = soundPool
         )
         else if (changePassDialog)
             ResetPasswordDialog(
                 email = homeState.userModel?.email ?: "",
+                soundPool = soundPool,
                 windowState,
                 onConfirm = {
                     changePassDialog = false
@@ -133,6 +144,7 @@ fun ProfileDesign(
                 LazyProfileItem(
                     windowState = windowState,
                     userModel = homeState.userModel ?: UserModel.default(),
+                    soundPool = soundPool,
                     nickname = nickname,
                     onChangeNickname = { nickname = it },
                     onChangeNicknameDialog = { changeNicknameDialog = true },
@@ -148,7 +160,8 @@ fun ProfileDesign(
             imageVector = Icons.AutoMirrored.Filled.Logout,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = MediumPadding, bottom = MediumPadding)
+                .padding(end = MediumPadding, bottom = MediumPadding),
+            soundPool = soundPool
         )
     }
 }

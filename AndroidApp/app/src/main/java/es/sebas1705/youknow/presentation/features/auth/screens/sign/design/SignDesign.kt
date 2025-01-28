@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.sign.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,14 +28,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
+import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.dialogs.ErrorInfoDialog
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
@@ -51,6 +57,11 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 /**
  * Main Design of the SignScreen.
  *
+ * @param windowState [WindowState]: State of the window.
+ * @param signState [SignState]: State of the Sign Screen.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSignButtonAction (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit: Function to sign in.
+ *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
@@ -58,11 +69,13 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun SignDesign(
     windowState: WindowState = WindowState.default(),
     signState: SignState = SignState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSignButtonAction: (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit = { e, p, n, o -> }
 ) {
 
     //Locals:
     val keyboard = LocalSoftwareKeyboardController.current
+    val ctx = LocalContext.current
 
     //Texts:
     val defaultErrorText = stringResource(id = R.string.login_error)
@@ -78,6 +91,7 @@ fun SignDesign(
     var passwordRepeat by rememberSaveable { mutableStateOf("") }
     var userName by rememberSaveable { mutableStateOf("") }
     var error by rememberSaveable { mutableStateOf(defaultErrorText) }
+    val errorSound = remember { soundPool?.first?.load(ctx, R.raw.sound_lose, PRIORITY_SOUND) }
 
     //Flags:
     var errorFlag by rememberSaveable { mutableStateOf(false) }
@@ -85,6 +99,7 @@ fun SignDesign(
     //Actions:
     val activateError: (String) -> Unit = { error = it; errorFlag = true }
 
+    //Body:
     ApplyBack(
         windowState.backFill
     ) {
@@ -94,7 +109,8 @@ fun SignDesign(
         else if (errorFlag) {
             ErrorInfoDialog(
                 errorText = error,
-                onConfirm = { errorFlag = false }
+                onConfirm = { errorFlag = false },
+                soundPool = soundPool
             )
         }
 
@@ -122,7 +138,7 @@ fun SignDesign(
                     TitleSurface(text = stringResource(id = R.string.signup))
                     IVerSpacer(height = HugePadding)
                     SignField(
-                        fieldsModifier = Modifier
+                        modifier = Modifier
                             .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
                         userName = userName,
                         onUserNameChange = { userName = it },
@@ -133,7 +149,8 @@ fun SignDesign(
                         password = password,
                         onPasswordChange = { password = it },
                         passwordRepeat = passwordRepeat,
-                        onPasswordRepeatChange = { passwordRepeat = it }
+                        onPasswordRepeatChange = { passwordRepeat = it },
+                        soundPool = soundPool
                     )
                     IVerSpacer(height = MediumPadding)
                     IFilledButton(
@@ -149,9 +166,20 @@ fun SignDesign(
                                     email != emailRepeat -> emailText
                                     else -> passwordText
                                 }
+                                soundPool?.let {
+                                    it.first.play(
+                                        errorSound ?: 0,
+                                        it.second,
+                                        it.second,
+                                        PRIORITY_SOUND,
+                                        LOOP_N,
+                                        RATE
+                                    )
+                                }
                                 activateError("$notMatchErrorText ($who)")
                             }
-                        }
+                        },
+                        soundPool = soundPool
                     )
                 }
             }
@@ -159,11 +187,6 @@ fun SignDesign(
     }
 }
 
-/**
- * Preview of the Sign Screen.
- *
- * @see SignDesign
- */
 @UiModePreviews
 @Composable
 private fun SignPreview() {

@@ -28,7 +28,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
- * Module to provide all the repositories of the data layer
+ * Module to provide firebase dependencies
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -37,20 +37,54 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
+    /**
+     * Provides [FirebaseAnalytics] that is used to track events
+     *
+     * @param application [Application]: Application
+     *
+     * @return [FirebaseAnalytics]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideFirebaseAnalytics(
         application: Application
     ): FirebaseAnalytics = FirebaseAnalytics.getInstance(application)
 
+    /**
+     * Provides [FirebaseAuth] that is used to manage the authentication
+     *
+     * @return [FirebaseAuth]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+    /**
+     * Provides [FirebaseDatabase] that is used to manage the realtime database
+     *
+     * @return [FirebaseDatabase]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideFirebaseRealtime(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
+    /**
+     * Provides [FirebaseFirestore] that is used to manage the firestore database
+     *
+     * @return [FirebaseFirestore]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideFirestoreFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()

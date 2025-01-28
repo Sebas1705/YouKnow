@@ -17,24 +17,15 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
  */
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material.icons.filled.DashboardCustomize
-import androidx.compose.material.icons.filled.HourglassBottom
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.ui.graphics.vector.ImageVector
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.QuizType
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.model.games.QuestionModel
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.games.QuizUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
@@ -46,12 +37,11 @@ import javax.inject.Inject
  * ViewModel for Quiz Screen that will decide the start destination of the app
  * depending on the user's state and the first time the app is opened.
  *
+ * @param quizUsesCases [QuizUsesCases]: UseCases for the Quiz.
  * @param userUsesCases [UserUsesCases]: UseCases for the user.
+ * @param authUsesCases [AuthUsesCases]: UseCases for the Auth.
  * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
- *
- * @see MVIBaseViewModel
- * @see HiltViewModel
- * @see UserUsesCases
+ * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -61,25 +51,32 @@ class QuizViewModel @Inject constructor(
     private val quizUsesCases: QuizUsesCases,
     private val userUsesCases: UserUsesCases,
     private val authUsesCases: AuthUsesCases,
+    private val datastoreUsesCases: DatastoreUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<QuizState, QuizIntent>() {
-
-    private val ctx: Context = application.applicationContext
 
     override fun initState(): QuizState = QuizState.default()
 
     override fun intentHandler(intent: QuizIntent) {
         when (intent) {
+            is QuizIntent.ReadLanguages -> readLanguages()
             is QuizIntent.GenerateGame -> generateGame(intent)
-            is QuizIntent.ResetGame -> resetGame(intent)
+            is QuizIntent.ResetGame -> resetGame()
             is QuizIntent.SelectMode -> selectMode(intent)
             is QuizIntent.Response -> response(intent)
             is QuizIntent.OutGame -> outGame(intent)
         }
     }
 
-
     //Actions:
+    private fun readLanguages() = execute(Dispatchers.IO) {
+        datastoreUsesCases.readGameLanguage().collect {
+            updateUi {
+                it.copy(languages = it.languages)
+            }
+        }
+    }
+
     private fun generateGame(
         intent: QuizIntent.GenerateGame
     ) = execute(Dispatchers.IO) {
@@ -87,6 +84,7 @@ class QuizViewModel @Inject constructor(
             intent.numQuestions,
             intent.category,
             intent.difficulty,
+            _uiState.value.languages,
             intent.quizType,
             onLoading = { startLoading() },
             onSuccess = { questions ->
@@ -99,18 +97,19 @@ class QuizViewModel @Inject constructor(
                 updateUi {
                     it.copy(
                         questions = questionsShuffled,
-                        status = QuizStatus.RUNNING
+                        status = QuizStatus.RUNNING,
+                        mode = QuizMode.CUSTOM,
                     )
                 }
             },
             onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
+                stopAndError(error, application::printTextInToast)
             }
         )
     }
 
 
-    private fun resetGame(intent: QuizIntent.ResetGame) = addPointsAndCredits(intent.points) {
+    private fun resetGame() = addPointsAndCredits(_uiState.value.points) {
         updateUi {
             QuizState.default()
         }
@@ -119,14 +118,39 @@ class QuizViewModel @Inject constructor(
     private fun selectMode(
         intent: QuizIntent.SelectMode
     ) {
-        updateUi {
+        if (intent.quizMode != QuizMode.CUSTOM)
+            execute(Dispatchers.IO) {
+                quizUsesCases.generateQuestionList(
+                    intent.quizMode.numQuestions,
+                    Category.ANY,
+                    Difficulty.ANY,
+                    _uiState.value.languages,
+                    QuizType.ANY,
+                    onLoading = { startLoading() },
+                    onSuccess = { questions ->
+                        val questionsShuffled = questions.map { question ->
+                            question.copy(
+                                answers = question.answers.shuffled()
+                            )
+                        }
+                        stopLoading()
+                        updateUi {
+                            it.copy(
+                                mode = intent.quizMode,
+                                status = QuizStatus.RUNNING,
+                                questions = questionsShuffled,
+                            )
+                        }
+                    },
+                    onError = { error ->
+                        stopAndError(error, application::printTextInToast)
+                    }
+                )
+            }
+        else updateUi {
             it.copy(
                 mode = intent.quizMode,
-                status = if (intent.quizMode == QuizMode.CUSTOM)
-                    QuizStatus.CUSTOM
-                else
-                    QuizStatus.SELECTION_MODE,
-                numQuestions = intent.quizMode.numQuestions
+                status = QuizStatus.CUSTOM
             )
         }
     }
@@ -134,28 +158,32 @@ class QuizViewModel @Inject constructor(
     private fun response(
         intent: QuizIntent.Response
     ) {
-        val question = intent.quizState.questions[intent.quizState.actualQuestion]
+        val state = _uiState.value
+        val question = state.questions[state.actualQuestion]
         val correct = intent.response == question.correctAnswer
+        //Last: last question or no lives left
         val last =
-            (intent.quizState.actualQuestion + 1 == intent.quizState.questions.size) or (!correct && intent.quizState.mode == QuizMode.SURVIVAL && intent.quizState.lives - 1 <= 0)
-        val pointsToAdd =
-            (question.difficulty.points * question.quizType.multiPoints * (intent.quizState.mode?.multiPoints
-                ?: 1.0)).toInt()
-        val buff = intent.quizState.correctAnswers / intent.quizState.questions.size.toFloat()
+            (state.actualQuestion + 1 == state.questions.size) or (!correct && state.mode == QuizMode.SURVIVAL && state.lives - 1 <= 0)
+        //Points: difficulty * quizType * mode
+        val quizPoints = (if (correct) 1 else 0) *
+                (question.difficulty.points * question.quizType.multiPoints * (state.mode?.multiPoints
+                    ?: 1.0)).toInt()
+        //Buff: correct answers / total questions
+        val buff = state.correctAnswers / state.questions.size.toFloat()
         updateUi {
             it.copy(
                 status = if (last) QuizStatus.FINISHED else QuizStatus.RUNNING,
-                points = if (correct) it.points + (pointsToAdd * (if (last) buff else 1f)).toInt() else it.points,
+                points = it.points + quizPoints + ((it.points + quizPoints) * (if (last) buff else 0f)).toInt(),
                 actualQuestion = it.actualQuestion + 1,
-                correctAnswers = if (correct) it.correctAnswers + 1 else it.correctAnswers,
-                lives = if (correct) it.lives else it.lives - 1
+                correctAnswers = it.correctAnswers + (if (correct) 1 else 0),
+                lives = it.lives - (if (correct) 0 else 1)
             )
         }
     }
 
     private fun outGame(
         intent: QuizIntent.OutGame
-    ) = addPointsAndCredits(intent.points, intent.onSuccess)
+    ) = addPointsAndCredits(_uiState.value.points, intent.onSuccess)
 
 
     //Privates:
@@ -186,19 +214,19 @@ class QuizViewModel @Inject constructor(
                                         }
                                     },
                                     onError = { error ->
-                                        stopAndError(error, ctx::printTextInToast)
+                                        stopAndError(error, application::printTextInToast)
                                     }
                                 )
                             }
                         },
                         onError = { error ->
-                            stopAndError(error, ctx::printTextInToast)
+                            stopAndError(error, application::printTextInToast)
                         }
                     )
                 }
             },
             onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
+                stopAndError(error, application::printTextInToast)
             }
         )
     }
@@ -217,100 +245,3 @@ class QuizViewModel @Inject constructor(
         execute { onError(error) }
     }
 }
-
-/**
- * Data class that represents the state of the Quiz Screen.
- *
- * @param isLoading [Boolean]: Flag that indicates if the screen is loading.
- *
- * @see MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class QuizState(
-    var isLoading: Boolean,
-    var numQuestions: Int,
-    var actualQuestion: Int,
-    var points: Int,
-    var correctAnswers: Int,
-    var lives: Int,
-    var questions: List<QuestionModel>,
-    var status: QuizStatus,
-    var mode: QuizMode?
-) : MVIBaseState {
-
-    companion object {
-        /**
-         * Default state of the Quiz Screen.
-         *
-         * @return [QuizState]: Default state of the Quiz Screen.
-         */
-        fun default() = QuizState(
-            isLoading = false,
-            numQuestions = 0,
-            actualQuestion = 0,
-            points = 0,
-            correctAnswers = 0,
-            lives = 3,
-            questions = emptyList(),
-            status = QuizStatus.SELECTION_MODE,
-            mode = null
-        )
-    }
-}
-
-/**
- * Sealed interface that represents the possible intents of the Quiz Screen.
- *
- *
- * @see MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface QuizIntent : MVIBaseIntent {
-
-    data class GenerateGame(
-        val category: Category,
-        val difficulty: Difficulty,
-        val quizType: QuizType,
-        val numQuestions: Int,
-    ) : QuizIntent
-
-    data class ResetGame(
-        val points: Int,
-    ) : QuizIntent
-
-    data class SelectMode(val quizMode: QuizMode) : QuizIntent
-
-    data class Response(
-        val response: String,
-        val quizState: QuizState
-    ) : QuizIntent
-
-    data class OutGame(
-        val points: Int,
-        val onSuccess: () -> Unit
-    ) : QuizIntent
-}
-
-enum class QuizStatus {
-    SELECTION_MODE,
-    CUSTOM,
-    RUNNING,
-    FINISHED
-}
-
-enum class QuizMode(
-    val strRes: Int,
-    val icon: ImageVector,
-    val numQuestions: Int,
-    val multiPoints: Double
-) {
-    SURVIVAL(R.string.survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    TIME_ATTACK(R.string.time_attack, Icons.Filled.HourglassBottom, 20, 1.2),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 10, 1.0),
-    CUSTOM(R.string.custom, Icons.Filled.DashboardCustomize, 0, 0.75)
-}
-

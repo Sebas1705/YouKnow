@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log.composable
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,7 +33,7 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  * @param onEmailChange (String) -> Unit: action to be executed when the email field changes
  * @param onPasswordChange (String) -> Unit: action to be executed when the password field changes
  * @param modifier Modifier: modifier to be applied to the fields
- *
+ * @param soundPool Pair<SoundPool, Float>: sound pool to play sounds
  *
  * @author: Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -44,16 +45,19 @@ fun ColumnScope.EmailAndPassFields(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
 ) {
     IEmailTextField(
         modifier = modifier,
         value = email,
-        onValueChange = onEmailChange
+        onValueChange = onEmailChange,
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IPasswordTextField(
         modifier = modifier,
         value = password,
-        onValueChange = onPasswordChange
+        onValueChange = onPasswordChange,
+        soundPool = soundPool
     )
 }

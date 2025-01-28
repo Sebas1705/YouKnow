@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.main
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,11 +27,15 @@ import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.home.features.main.design.MainDesign
 import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainIntent
 import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainViewModel
+import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 
 /**
  * Main Screen of the app.
  *
- * @see es.sebas1705.youknow.presentation.features.home.features.main.design.MainDesign
+ * @param windowState [WindowState]: The state of the window.
+ * @param homeState [HomeState]: The state of the Home Screen.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSettingsNav () -> Unit: The navigation to the settings.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -38,19 +43,31 @@ import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.M
 @Composable
 fun MainScreen(
     windowState: WindowState,
+    homeState: HomeState,
+    soundPool: Pair<SoundPool, Float>,
     onSettingsNav: () -> Unit
 ) {
+    //ViewModel:
     val mainViewModel: MainViewModel = hiltViewModel()
-    val rankingState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
+    //State:
+    val mainState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+    //Effects:
     LaunchedEffect(windowState) {
         mainViewModel.eventHandler(MainIntent.GetRanking)
+        mainViewModel.eventHandler(MainIntent.GetNews)
     }
 
+    //Local:
     BackHandler {}
+
+    //Body:
     MainDesign(
-        windowState = windowState,
-        mainState = rankingState,
+        windowState,
+        homeState,
+        mainState,
+        soundPool,
         onSettingsNav
     )
 }

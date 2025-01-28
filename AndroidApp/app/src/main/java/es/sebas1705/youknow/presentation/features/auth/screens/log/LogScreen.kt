@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +39,7 @@ import es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel.Log
 @Composable
 fun LogScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     toHomeNav: () -> Unit,
     toSignNav: () -> Unit
 ) {
@@ -48,10 +50,11 @@ fun LogScreen(
     //State:
     val logState by logViewModel.uiState.collectAsStateWithLifecycle()
 
-    //Design:
+    //Body:
     LogDesign(
         windowState,
         logState,
+        soundPool,
         onRegisterButton = toSignNav,
         onPasswordForgot = {
             logViewModel.eventHandler(LogIntent.SendForgotPassword(it))

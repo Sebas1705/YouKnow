@@ -19,11 +19,17 @@ package es.sebas1705.youknow.core.utlis
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * Settings for the preview
+ */
 object PreviewSettings {
     const val WIDTH = 395
     const val HEIGHT = 855
 }
 
+/**
+ * Annotation to create a preview with the different UI modes
+ */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Preview(
@@ -45,6 +51,9 @@ object PreviewSettings {
 )
 annotation class UiModePreviews
 
+/**
+ * Annotation to create a preview with the different locales
+ */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Preview(
@@ -83,6 +92,9 @@ annotation class UiModePreviews
 )
 annotation class LocalePreviews
 
+/**
+ * Annotation to create a preview with the different locales and UI modes
+ */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Preview(name = "Day")

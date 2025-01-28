@@ -16,12 +16,15 @@ package es.sebas1705.youknow.presentation.features.home.features.chat
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.presentation.features.home.features.chat.design.ChatDesign
@@ -29,16 +32,15 @@ import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.C
 import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatState
 import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
-import es.sebas1705.youknow.R
 
 /**
  * Social Screen that will show the chat and group options.
  * It will show the chat by default and the group options if the user wants to.
  * The user can send messages in the chat and join groups.
  *
- * @see ChatViewModel
- * @see ChatState
- * @see ChatDesign
+ * @param windowState [WindowState]: The state of the window.
+ * @param homeState [HomeState]: The state of the home.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -46,7 +48,8 @@ import es.sebas1705.youknow.R
 @Composable
 fun ChatScreen(
     windowState: WindowState,
-    homeState: HomeState
+    homeState: HomeState,
+    soundPool: Pair<SoundPool, Float>
 ) {
     //Locals:
     val ctx = LocalContext.current
@@ -58,12 +61,17 @@ fun ChatScreen(
     //State:
     val chatState: ChatState by chatViewModel.uiState.collectAsStateWithLifecycle()
 
-    chatViewModel.eventHandler(ChatIntent.LoadChat)
+    //Effects:
+    LaunchedEffect(Unit) {
+        chatViewModel.eventHandler(ChatIntent.LoadChat)
+    }
 
+    //Body:
     ChatDesign(
         windowState,
         chatState,
         homeState,
+        soundPool,
         messageSender = { message ->
             homeState.userModel?.let {
                 chatViewModel.eventHandler(ChatIntent.SendMessage(message, it))

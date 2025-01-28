@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 /**
  * Base class for the MVIBaseViewModel
  *
- * @param S [es.sebas1705.youknow.core.classes.mvi.MVIBaseState]: State of the viewModel
- * @param I [es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent]: Intent of the viewModel
+ * @param S [MVIBaseState]: State of the viewModel
+ * @param I [MVIBaseIntent]: Intent of the viewModel
  *
  * @property initialState [S]: Initial state of the viewModel
  * @property uiState [MutableStateFlow]<[S]>: UiState for the composable
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel() {
 
     private val initialState: S by lazy { initState() }
-    private val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initialState) }
+    protected val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initialState) }
     val uiState
         get() = _uiState
             .stateIn(
@@ -55,16 +55,27 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
      * Initial state of the viewModel
      *
      * @return [S]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     protected abstract fun initState(): S
 
     /**
      * Handle the intents from the composable
+     *
+     * @param intent [I]: Intent from the composable
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     protected abstract fun intentHandler(intent: I)
 
     /**
      * Actions to be executed when the viewModel is initialized
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     protected open fun onInit() {
         Log.d("MVIBaseViewModel", "ViewModel initialized ${this::class.java.simpleName}")
@@ -81,6 +92,11 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
 
     /**
      * Receive the intents from the composable
+     *
+     * @param intent [I]: Intent from the composable
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun eventHandler(intent: I) {
         intentHandler(intent)
@@ -90,6 +106,9 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
      * Update the uiState
      *
      * @param handler [suspend] (intent: S) -> S: handler to update the uiState
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     protected fun updateUi(
         handler: suspend (intent: S) -> S,
@@ -102,6 +121,9 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
      *
      * @param dispatcher [CoroutineDispatcher]: dispatcher to execute the action
      * @param action [suspend] (): Unit: action to be executed
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     protected fun execute(
         dispatcher: CoroutineDispatcher = Dispatchers.Main,

@@ -17,10 +17,8 @@ package es.sebas1705.youknow.data.firebase.realtime.repository
  */
 
 import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
-import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.domain.model.social.MessageModel
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository interface to write and read data from the realtime database
@@ -36,10 +34,10 @@ interface RealtimeRepository {
      *
      * @param value [MessageModel]: Message to add
      *
-     * @return [Flow] with the response of the operation
+     * @return [FlowResponseNothing] with the response of the operation
      *
-     * @see MessageModel
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun addMessageToGlobalChat(value: MessageModel): FlowResponseNothing
 
@@ -48,22 +46,22 @@ interface RealtimeRepository {
      *
      * @param groupModel [GroupModel]: Group to add
      *
-     * @return [Flow] with the response of the operation
+     * @return [FlowResponseNothing] with the response of the operation
      *
-     * @see GroupModel
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun addGroup(groupModel: GroupModel): FlowResponseNothing
 
     /**
      * Delete a group from the database
      *
-     * @param groupModel [GroupModel]: Group to delete
+     * @param groupId [String]: Group to delete
      *
-     * @return [Flow] with the response of the operation
+     * @return [FlowResponseNothing] with the response of the operation
      *
-     * @see GroupModel
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun removeGroup(groupId: String): FlowResponseNothing
 
@@ -73,9 +71,10 @@ interface RealtimeRepository {
      * @param groupId [String]: Group id
      * @param newMembersList [List]<[String]>: New members list
      *
-     * @return [Flow] with the response of the operation
+     * @return [FlowResponseNothing] with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun changeMembersToGroup(
         groupId: String,
@@ -88,9 +87,10 @@ interface RealtimeRepository {
      * @param groupId [String]: Group id
      * @param newMembersList [List]<[String]>: New members list
      *
-     * @return [Flow] with the response of the operation
+     * @return [FlowResponseNothing] with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun pushMembersToGroup(
         groupId: String,
@@ -101,10 +101,11 @@ interface RealtimeRepository {
     /**
      * Get the messages from the global chat
      *
-     * @return [Flow] with the [ResponseState] of the [List]<[MessageModel]>
+     * @property onDataChange ([List]<[MessageModel]) -> [Unit]: Function to execute when the data changes
+     * @property onCancelled ([String]) -> [Unit]: Function to execute when the data is cancelled
      *
-     * @see MessageModel
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setMessagesListener(
         onDataChange: (List<MessageModel>) -> Unit,
@@ -114,10 +115,11 @@ interface RealtimeRepository {
     /**
      * Get the groups from the database
      *
-     * @return [Flow] with the [ResponseState] of the [List]<[GroupModel]>
+     * @property onDataChange ([List]<[GroupModel]) -> [Unit]: Function to execute when the data changes
+     * @property onCancelled ([String]) -> [Unit]: Function to execute when the data is cancelled
      *
-     * @see GroupModel
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setGroupsListener(
         onDataChange: (List<GroupModel>) -> Unit,
@@ -128,11 +130,17 @@ interface RealtimeRepository {
     //Removes Listeners:
     /**
      * Remove the listener from the messages
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun removeMessagesListener()
 
     /**
      * Remove the listener from the groups
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun removeGroupsListener()
 

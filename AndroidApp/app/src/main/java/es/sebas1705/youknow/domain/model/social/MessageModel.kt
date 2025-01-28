@@ -16,8 +16,6 @@ package es.sebas1705.youknow.domain.model.social
  *
  */
 
-import es.sebas1705.youknow.data.firebase.realtime.jsons.MessageJson
-
 /**
  * Model to represent a message
  *
@@ -35,17 +33,6 @@ data class MessageModel(
     val authorId: String,
     val authorName: String,
 ) {
-    /**
-     * Convert the message to a MessageJson
-     *
-     * @return [MessageJson]: Message converted to MessageJson
-     */
-    fun toMessageJson(): MessageJson {
-        return MessageJson(
-            text = this.text,
-            authorName = this.authorName
-        )
-    }
 
     /**
      * Get the message id

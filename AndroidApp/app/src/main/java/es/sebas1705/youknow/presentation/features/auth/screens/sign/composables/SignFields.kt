@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.sign.composables
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -34,7 +35,7 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  * It will show a form with username, email and password fields.
  * The email and password fields will be repeated.
  *
- * @param fieldsModifier [Modifier]: Modifier for the fields.
+ * @param modifier [Modifier]: Modifier for the fields.
  * @param userName [String]: Username of the user.
  * @param onUserNameChange (String) -> Unit: Function to handle the username change.
  * @param email [String]: Email of the user.
@@ -45,13 +46,14 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  * @param onPasswordChange (String) -> Unit: Function to handle the password change.
  * @param passwordRepeat [String]: Repeat password of the user.
  * @param onPasswordRepeatChange (String) -> Unit: Function to handle the repeat password change.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @Composable
 fun ColumnScope.SignField(
-    fieldsModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     userName: String,
     onUserNameChange: (String) -> Unit,
     email: String,
@@ -61,7 +63,8 @@ fun ColumnScope.SignField(
     password: String,
     onPasswordChange: (String) -> Unit,
     passwordRepeat: String,
-    onPasswordRepeatChange: (String) -> Unit
+    onPasswordRepeatChange: (String) -> Unit,
+    soundPool: Pair<SoundPool, Float>? = null,
 ) {
     //Texts:
     val userNameText = stringResource(id = R.string.username)
@@ -71,39 +74,44 @@ fun ColumnScope.SignField(
 
     //Fields:
     IOutlinedTextField(
-        modifier = fieldsModifier,
+        modifier = modifier,
         value = userName,
         onValueChange = onUserNameChange,
         label = userNameText,
         placeholder = userNameText,
-        leadingIcon = Icons.Filled.Person to { }
+        leadingIcon = Icons.Filled.Person to { },
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IEmailTextField(
-        modifier = fieldsModifier,
+        modifier = modifier,
         value = email,
         onValueChange = onEmailChange,
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IEmailTextField(
-        modifier = fieldsModifier,
+        modifier = modifier,
         value = emailRepeat,
         onValueChange = onEmailRepeatChange,
         label = "$repeatText $emailText",
-        placeholder = "$repeatText $emailText"
+        placeholder = "$repeatText $emailText",
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IPasswordTextField(
-        modifier = fieldsModifier,
+        modifier = modifier,
         value = password,
-        onValueChange = onPasswordChange
+        onValueChange = onPasswordChange,
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IPasswordTextField(
-        modifier = fieldsModifier,
+        modifier = modifier,
         value = passwordRepeat,
         onValueChange = onPasswordRepeatChange,
         label = "$repeatText $passwordText",
-        placeholder = "$repeatText $passwordText"
+        placeholder = "$repeatText $passwordText",
+        soundPool = soundPool
     )
 }

@@ -29,13 +29,23 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Primary surface
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param content [Composable]: Content
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IPrimarySurface(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) = Surface(
     modifier = modifier,
-    color = MaterialTheme.colorScheme.primaryContainer,
+    color = MaterialTheme.colorScheme.surfaceContainer,
     shape = MaterialTheme.shapes.medium,
     border = BorderStroke(OutlineThickness, MaterialTheme.colorScheme.primary),
     content = content

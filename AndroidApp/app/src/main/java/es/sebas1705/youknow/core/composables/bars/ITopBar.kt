@@ -28,6 +28,19 @@ import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized top bar
+ *
+ * @param title [Composable]: Title
+ * @param modifier [Modifier]: Modifier
+ * @param navigationIcon [Composable]: Navigation icon
+ * @param actions [RowScope.() -> Unit]: Actions
+ * @param scrollBehavior [TopAppBarScrollBehavior]: Scroll behavior
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ITopBar(

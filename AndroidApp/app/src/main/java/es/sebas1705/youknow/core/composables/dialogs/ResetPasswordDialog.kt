@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Composable that displays a dialog to recover the password.
  *
  * @param email [String]: Email to be displayed in the dialog.
+ * @param soundPool [Pair<SoundPool, Float>]: Pair of SoundPool and volume to play sounds.
  * @param windowState [WindowState]: State of the window.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
@@ -48,6 +50,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun ResetPasswordDialog(
     email: String,
+    soundPool: Pair<SoundPool, Float>? = null,
     windowState: WindowState = WindowState.default(),
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
@@ -56,7 +59,8 @@ fun ResetPasswordDialog(
     confirmButton = {
         ITextButton(
             onClick = onConfirm,
-            label = stringResource(R.string.confirm)
+            label = stringResource(R.string.confirm),
+            soundPool = soundPool
         )
     },
     modifier = Modifier
@@ -64,7 +68,8 @@ fun ResetPasswordDialog(
     dismissButton = {
         ITextButton(
             onClick = onDismiss,
-            label = stringResource(R.string.dismiss)
+            label = stringResource(R.string.dismiss),
+            soundPool = soundPool
         )
     },
     icon = null,

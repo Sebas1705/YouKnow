@@ -16,26 +16,35 @@ package es.sebas1705.youknow.core.composables.textfields
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mail
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Email text field
+ *
+ * @param value [String]: Value
+ * @param onValueChange [Function1<String, Unit]: On value change
+ * @param modifier [Modifier]: Modifier
+ * @param enabled [Boolean]: Enabled
+ * @param readOnly [Boolean]: Read only
+ * @param isError [Boolean]: Is error
+ * @param label [String]: Label
+ * @param placeholder [String]: Placeholder
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IEmailTextField(
     value: String,
@@ -46,18 +55,20 @@ fun IEmailTextField(
     isError: Boolean = false,
     label: String = stringResource(R.string.email),
     placeholder: String = stringResource(R.string.email),
+    soundPool: Pair<SoundPool, Float>? = null
 ) = IOutlinedTextField(
-        value,
-        onValueChange,
-        modifier,
-        label,
-        placeholder,
-        enabled,
-        readOnly,
-        leadingIcon = Icons.Filled.Mail to {},
-        isError = isError,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-    )
+    value,
+    onValueChange,
+    modifier,
+    label,
+    placeholder,
+    enabled,
+    readOnly,
+    leadingIcon = Icons.Filled.Mail to {},
+    isError = isError,
+    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+    soundPool = soundPool
+)
 
 
 @IComposablePreview

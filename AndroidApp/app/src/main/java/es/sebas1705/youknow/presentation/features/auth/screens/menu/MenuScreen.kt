@@ -16,15 +16,16 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.presentation.features.auth.screens.menu.design.MenuDesign
 import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuIntent
 import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuViewModel
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 
 /**
  * Menu Screen that will show the user the options to sign in, log in or log in with Google.
@@ -32,13 +33,9 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
  * The user will be able to log in with Google.
  *
  * @param windowState [WindowState]: State of the window.
- * @param authViewModel [AuthViewModel]: ViewModel for the Auth Screen.
  * @param toSignNav () -> Unit: Function to navigate to the Sign In Screen.
  * @param toHomeNav () -> Unit: Function to navigate to the Home Screen.
  * @param toLogNav () -> Unit: Function to navigate to the Log In Screen.
- *
- * @see AuthViewModel
- * @see WindowState
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -46,20 +43,29 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 @Composable
 fun MenuScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     toSignNav: () -> Unit,
     toHomeNav: () -> Unit,
     toLogNav: () -> Unit,
 ) {
+    //Local:
+    val context = LocalContext.current
+
+    //View Model:
     val menuViewModel: MenuViewModel = hiltViewModel()
+
+    //State:
     val menuState by menuViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Body:
     MenuDesign(
         windowState,
         menuState,
+        soundPool,
         onSignButtonAction = toSignNav,
         onEmailLogButtonAction = toLogNav,
         onGoogleLogButtonAction = {
-            menuViewModel.eventHandler(MenuIntent.SignWithGoogle(toHomeNav))
+            menuViewModel.eventHandler(MenuIntent.SignWithGoogle(context, toHomeNav))
         }
     )
 }

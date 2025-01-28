@@ -28,17 +28,20 @@ package es.sebas1705.youknow.data.firebase.analytics.config
  * @property Realtime [Repository]: the Realtime repository.
  * @property Database [Repository]: the Database repository.
  * @property Datastore [Repository]: the Datastore repository.
+ * @property Files [Repository]: the Files repository.
+ * @property None [Repository]: the None repository.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 sealed class Repository(val tag: String) {
-    object Opendb : Repository("OpenDB")
-    object Analytics : Repository("Analytics")
-    object Authentication : Repository("Authentication")
-    object Firestore : Repository("Firestore")
-    object Realtime : Repository("Realtime")
-    object Database : Repository("Database")
-    object Datastore : Repository("Datastore")
-    object None : Repository("")
+    data object Opendb : Repository("OpenDB")
+    data object Analytics : Repository("Analytics")
+    data object Authentication : Repository("Authentication")
+    data object Firestore : Repository("Firestore")
+    data object Realtime : Repository("Realtime")
+    data object Database : Repository("Database")
+    data object Datastore : Repository("Datastore")
+    data object Files : Repository("Files")
+    data object None : Repository("")
 }

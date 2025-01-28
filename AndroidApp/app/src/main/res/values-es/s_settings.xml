@@ -7,4 +7,7 @@
     <string name="medium_contrast">Medio</string>
     <string name="high_contrast">Alto</string>
     <string name="reset_defaults">Restaurar ajustes</string>
+    <string name="Game_language">Game language</string>
+    <string name="music">Volumen música</string>
+    <string name="sound">Volumen sonido</string>
 </resources>

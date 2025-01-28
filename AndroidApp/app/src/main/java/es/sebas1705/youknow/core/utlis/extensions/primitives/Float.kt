@@ -39,6 +39,7 @@ fun Float.twoDecimalFormat(): String = String.format("%.2f", this)
  * @return [String]: the number formatted
  *
  * @since 1.0.0
+ * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 @SuppressLint("DefaultLocale")

@@ -1,8 +1,4 @@
 package es.sebas1705.youknow.data.firebase.firestore.documents
-
-import es.sebas1705.youknow.data.firebase.authentication.config.ProviderAuth
-import es.sebas1705.youknow.domain.model.UserModel
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -44,18 +40,5 @@ data class UserDocument(
     val groupId: String? = null,
     val points: Int = 0,
     val credits: Int = 0,
-    val friends: List<String> = emptyList(),
     val logged: Boolean = false
-) {
-    fun toUserModel(firebaseId: String) = UserModel(
-        firebaseId = firebaseId,
-        email = email,
-        provider = ProviderAuth.entries[provider],
-        nickName = nickName,
-        photoUrl = photoUrl,
-        groupId = groupId,
-        points = points,
-        credits = credits,
-        friends = friends
-    )
-}
+)

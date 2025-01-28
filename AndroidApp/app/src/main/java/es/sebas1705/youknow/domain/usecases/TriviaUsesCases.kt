@@ -24,19 +24,14 @@ import es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
  *
  * @param opendbRepository [OpendbRepository] repository to get the questions
  *
- * @return [ResponseOpendbDto] with the 10 random questions
- *
- * @see OpendbRepository
- * @see ResponseOpendbDto
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 class GetTriviaTenQuestions(
-    private val opendbRepository : OpendbRepository
+    private val opendbRepository: OpendbRepository
 ) {
 
-    suspend operator fun invoke() : ResponseOpendbDto {
+    suspend operator fun invoke(): ResponseOpendbDto {
         return opendbRepository.getTenRandomQuestions()
     }
 
@@ -47,11 +42,9 @@ class GetTriviaTenQuestions(
  *
  * @property getTriviaTenQuestions [GetTriviaTenQuestions]: use case to get 10 random questions
  *
- * @see GetTriviaTenQuestions
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 data class TriviaUsesCases(
-    val getTriviaTenQuestions : GetTriviaTenQuestions
+    val getTriviaTenQuestions: GetTriviaTenQuestions
 )

@@ -18,8 +18,16 @@ package es.sebas1705.youknow.domain.usecases.social
 
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 
+/**
+ * Use case to create a group
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to create the group
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class CreateGroup(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -45,6 +53,14 @@ class CreateGroup(
     }
 }
 
+/**
+ * Use case to remove a group
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to remove the group
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class RemoveGroup(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -62,6 +78,14 @@ class RemoveGroup(
     }
 }
 
+/**
+ * Use case to set a listener to get groups
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to get groups
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SetGroupsListener(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -76,6 +100,14 @@ class SetGroupsListener(
     }
 }
 
+/**
+ * Use case to remove the listener to get groups
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to remove the listener
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class RemoveGroupsListener(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -84,7 +116,17 @@ class RemoveGroupsListener(
     }
 }
 
-
+/**
+ * Use cases for the groups
+ *
+ * @property createGroup [CreateGroup]: Use case to create a group
+ * @property removeGroup [RemoveGroup]: Use case to remove a group
+ * @property setGroupsListener [SetGroupsListener]: Use case to set a listener to get groups
+ * @property removeGroupsListener [RemoveGroupsListener]: Use case to remove the listener to get groups
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class GroupUsesCases(
     val createGroup: CreateGroup,
     val removeGroup: RemoveGroup,

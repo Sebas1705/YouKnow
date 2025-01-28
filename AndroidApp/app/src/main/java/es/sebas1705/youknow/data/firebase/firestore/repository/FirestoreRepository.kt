@@ -18,9 +18,8 @@ package es.sebas1705.youknow.data.firebase.firestore.repository
 
 import es.sebas1705.youknow.core.utlis.alias.FlowResponse
 import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
-import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
-import kotlinx.coroutines.flow.Flow
+import es.sebas1705.youknow.domain.model.social.NewModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 
 /**
  * Repository that will handle the Firestore operations.
@@ -35,7 +34,7 @@ interface FirestoreRepository {
      *
      * @param userModel [UserModel]: User to save
      *
-     * @return [Flow]<[ResponseState]<Nothing>>: Flow with the response of the operation
+     * @return [FlowResponseNothing]: Flow with the response of the operation
      */
     fun saveUser(
         userModel: UserModel
@@ -47,7 +46,10 @@ interface FirestoreRepository {
      *
      * @param userId [String]: Id of the user to get
      *
-     * @return [Flow]<[ResponseState]<[UserModel]>>: Flow with the response of the operation
+     * @return [FlowResponse]<[UserModel]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun getUser(
         userId: String
@@ -56,10 +58,13 @@ interface FirestoreRepository {
     /**
      * Set the logged status of a user
      *
-     * @param userId [String]: Id of the user to set the logged status
+     * @param firebaseId [String]: Id of the user to set the logged status
      * @param logged [Boolean]: Logged status to set
      *
-     * @return [Flow]<[ResponseState]<Nothing>>: Flow with the response of the operation
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setLoggedToUser(
         firebaseId: String,
@@ -72,6 +77,9 @@ interface FirestoreRepository {
      * @param userId [String]: Id of the user to get the logged status
      *
      * @return [FlowResponse]<[Boolean]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun getLoggedFromUser(
         userId: String
@@ -85,6 +93,9 @@ interface FirestoreRepository {
      * @param addCredits [Int]: Credits to add
      *
      * @return [FlowResponse]<[Int]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun addCreditsToUser(
         userId: String,
@@ -100,6 +111,9 @@ interface FirestoreRepository {
      * @param oldPoints [Int]: Old points of the user
      *
      * @return [FlowResponse]<[Int]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun addPointsToUser(
         userId: String,
@@ -114,6 +128,9 @@ interface FirestoreRepository {
      * @param groupId [String]: Id of the group to set
      *
      * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setGroupToUser(
         firebaseId: String,
@@ -126,6 +143,9 @@ interface FirestoreRepository {
      * @param firebaseId [String]: Id of the user to remove the group
      *
      * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun removeGroupFromUser(
         firebaseId: String
@@ -138,6 +158,9 @@ interface FirestoreRepository {
      * @param photoUrl [String]: Url of the new photo
      *
      * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun changePhotoToUser(
         firebaseId: String,
@@ -151,6 +174,9 @@ interface FirestoreRepository {
      * @param nickname [String]: New nickname
      *
      * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun changeNicknameToUser(
         firebaseId: String,
@@ -163,6 +189,9 @@ interface FirestoreRepository {
      * @param firebaseId [String]: Id of the user to get the group
      *
      * @return [FlowResponse]<[Boolean]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun containsUser(
         firebaseId: String
@@ -171,7 +200,10 @@ interface FirestoreRepository {
     /**
      * Get the ranking of the users
      *
-     * @return [FlowResponse]<[List]<[UserModel]>>: Flow with the response of the operation
+     * @return [FlowResponse]<[List]<[Pair]<[String],[Int]>>>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun getUserRanking(): FlowResponse<List<Pair<String, Int>>>
 
@@ -181,6 +213,9 @@ interface FirestoreRepository {
      * @param nickname [String]: Nickname of the user to get
      *
      * @return [FlowResponse]<[UserModel]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun getUserByNickname(
         nickname: String
@@ -192,17 +227,35 @@ interface FirestoreRepository {
      * @param firebaseId [String]: Id of the user to delete the data
      *
      * @return [FlowResponseNothing]: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun deleteDataUser(
         firebaseId: String
     ): FlowResponseNothing
+
+
+    /**
+     * Get the news
+     *
+     * @return [FlowResponse]<[List]<[NewModel]>>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    fun getNews(): FlowResponse<List<NewModel>>
+
 
     // Listeners:
     /**
      * Set a listener to get the user data
      *
      * @param firebaseId [String]: Id of the user to listen
-     * @param onDataChange [(UserModel) -> Unit]: Function to call when the data changes
+     * @param onDataChange [([UserModel]) -> [Unit]]: Function to call when the data changes
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun setUserListener(
         firebaseId: String,
@@ -211,6 +264,9 @@ interface FirestoreRepository {
 
     /**
      * Remove the listener of the user data
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun removeUserListener()
 }

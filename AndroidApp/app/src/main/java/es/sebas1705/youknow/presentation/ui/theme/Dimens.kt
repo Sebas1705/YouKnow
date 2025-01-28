@@ -18,11 +18,20 @@ package es.sebas1705.youknow.presentation.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+/**
+ * Page sizes
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 val IndicatorSize = 14.dp
 val PageIndicatorSeparator = 5.dp
 
 /**
  * Custom paddings to be used in the app.
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 object Paddings {
     val SmallestPadding = 6.dp
@@ -44,7 +53,9 @@ object TonalElevation {
     val Level5 = 12.dp
 }
 
+/**
+ * Custom dimens to be used in the app.
+ */
 val OutlineThickness = 1.dp
-
 val gameBottomBarHeight = 64.dp
 

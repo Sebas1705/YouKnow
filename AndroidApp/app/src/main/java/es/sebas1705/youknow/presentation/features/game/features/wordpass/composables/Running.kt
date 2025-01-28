@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.compos
  *
  */
 
-import android.annotation.SuppressLint
+import android.media.SoundPool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -43,9 +43,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
 import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
@@ -57,7 +58,6 @@ import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.numerables.toViewList
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassMode
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassState
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
@@ -65,12 +65,23 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.presentation.ui.theme.gameBottomBarHeight
 
+/**
+ * Screen of the Word Pass Game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param wordPassState [WordPassState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onResponse (String) -> Unit: Function that will be called when the user responds to the game.
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @OptIn(ExperimentalFoundationApi::class)
-@SuppressLint("SourceLockedOrientationActivity")
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
     wordPassState: WordPassState = WordPassState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onResponse: (String) -> Unit = { }
 ) {
     ApplyBack(
@@ -108,6 +119,7 @@ fun Running(
                         .padding(MediumPadding)
                         .border(OutlineThickness, color, MaterialTheme.shapes.small),
                     text = word.toMoultedString(),
+                    textAlign = TextAlign.Justify
                 )
             }
             item {
@@ -124,11 +136,13 @@ fun Running(
                         onValueChange = { response = it },
                         label = stringResource(R.string.guest_response),
                         placeholder = stringResource(R.string.guest_response),
-                        modifier = Modifier.fillMaxWidth(0.6f)
+                        modifier = Modifier.fillMaxWidth(0.6f),
+                        soundPool = soundPool
                     )
                     ITextButton(
                         onClick = { onResponse(response) },
                         label = stringResource(R.string.try_word),
+                        soundPool = soundPool
                     )
                 }
             }
@@ -148,9 +162,11 @@ fun Running(
                         onClick = {
                             definition =
                                 definitions[(definitions.indexOf(definition) - 1).coerceAtLeast(0)]
-                        }
+                        },
+                        soundPool = soundPool
                     )
                     Title(
+                        modifier = Modifier.fillMaxWidth(0.7f),
                         text = definition,
                         style = MaterialTheme.typography.bodyMedium,
                     )
@@ -162,7 +178,8 @@ fun Running(
                                 definitions[(definitions.indexOf(definition) + 1).coerceAtMost(
                                     definitions.size - 1
                                 )]
-                        }
+                        },
+                        soundPool = soundPool
                     )
 
                 }

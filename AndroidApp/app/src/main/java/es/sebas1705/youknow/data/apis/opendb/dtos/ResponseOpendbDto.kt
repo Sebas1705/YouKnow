@@ -22,9 +22,7 @@ import com.google.gson.annotations.SerializedName
  * DTO to represent a response from the Opentbd API
  *
  * @property responseCode [Int]: Response code of the API
- * @property questionOpendbDtos [List]<[es.sebas1705.youknow.data.apis.opendb.dtos.QuestionOpendbDto]>: List of questions
- *
- * @see es.sebas1705.youknow.data.apis.opendb.dtos.QuestionOpendbDto
+ * @property questionOpendbDtos [List]<[QuestionOpendbDto]>: List of questions
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0

@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu.composables
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -33,7 +34,7 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 /**
  * Composable that contains the buttons to navigate to the Sign Up, Google Log In and Email Log In screens.
  *
- * @param buttonsModifier [Modifier]: Modifier to apply to the buttons.
+ * @param modifier [Modifier]: Modifier to apply to the buttons.
  * @param onSignButtonAction () -> Unit: Function to navigate to the Sign Up screen.
  * @param onEmailLogButtonAction () -> Unit: Function to navigate to the Email Log In screen.
  * @param onGoogleLogButtonAction () -> Unit: Function to navigate to the Google Log In screen.
@@ -43,28 +44,32 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  */
 @Composable
 fun ColumnScope.MenuButtons(
-    buttonsModifier: Modifier,
+    modifier: Modifier,
+    soundPool: Pair<SoundPool, Float>?,
     onSignButtonAction: () -> Unit,
     onEmailLogButtonAction: () -> Unit,
     onGoogleLogButtonAction: () -> Unit,
 ) {
     IFilledTonalButton(
-        modifier = buttonsModifier.height(48.dp),
+        modifier = modifier.height(48.dp),
         label = stringResource(id = R.string.sign_up),
-        onClick = onSignButtonAction
+        onClick = onSignButtonAction,
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
-        modifier = buttonsModifier.height(48.dp),
+        modifier = modifier.height(48.dp),
         label = stringResource(id = R.string.google_log),
         imageResource = R.drawable.google,
-        onClick = onGoogleLogButtonAction
+        onClick = onGoogleLogButtonAction,
+        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
-        modifier = buttonsModifier.height(48.dp),
+        modifier = modifier.height(48.dp),
         label = stringResource(id = R.string.email_log),
         imageVector = Icons.Default.Email,
-        onClick = onEmailLogButtonAction
+        onClick = onEmailLogButtonAction,
+        soundPool = soundPool
     )
 }

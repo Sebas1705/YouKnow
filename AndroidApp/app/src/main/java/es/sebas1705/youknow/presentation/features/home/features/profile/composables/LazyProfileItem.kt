@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.composa
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,7 +47,7 @@ import es.sebas1705.youknow.core.composables.cards.IResumeCard
 import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 
@@ -55,6 +56,7 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  *
  * @param windowState [WindowState]: State of the window.
  * @param userModel [UserModel]: User's data.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param nickname [String]: User's nickname.
  * @param onChangeNickname (String) -> Unit: Function to change the user's nickname.
  * @param onChangeNicknameDialog () -> Unit: Function to show the dialog to change the user's nickname.
@@ -62,12 +64,14 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
  * @param onChangePassDialog () -> Unit: Function to show the dialog to change the user's password.
  *
  * @since 1.0.0
+ * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun LazyProfileItem(
     windowState: WindowState = WindowState.default(),
     userModel: UserModel = UserModel.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     nickname: String = "",
     onChangeNickname: (String) -> Unit = {},
     onChangeNicknameDialog: () -> Unit = {},
@@ -121,7 +125,8 @@ fun LazyProfileItem(
         label = stringResource(R.string.nickname),
         onValueChange = onChangeNickname,
         placeholder = stringResource(R.string.nickname),
-        trailingIcon = Icons.Filled.Save to onChangeNicknameDialog
+        trailingIcon = Icons.Filled.Save to onChangeNicknameDialog,
+        soundPool = soundPool
     )
     IHorDivider(
         modifier = Modifier
@@ -154,5 +159,6 @@ fun LazyProfileItem(
             .fillMaxWidth(width)
             .padding(bottom = SmallPadding),
         imageVector = Icons.Filled.Password,
+        soundPool = soundPool
     )
 }

@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.families.compos
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,24 +32,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.classes.enums.theme.SizeType
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesMode
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Selection mode screen of the Families game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onSelectMode ([FamiliesMode]) -> Unit: Function to select the mode of the game.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun SelectionMode(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSelectMode: (FamiliesMode) -> Unit = { }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -80,14 +93,15 @@ fun SelectionMode(
                         onClick = { onSelectMode(mode) },
                         label = stringResource(id = mode.strRes),
                         imageVector = mode.icon,
+                        soundPool = soundPool
                     )
                 }
             else
-                items(FamiliesMode.entries.size) {
-                    if (it % 2 != 0)
+                items(FamiliesMode.entries.size) { families ->
+                    if (families % 2 != 0)
                         return@items
-                    val mode1 = FamiliesMode.entries[it]
-                    val mode2 = FamiliesMode.entries.getOrNull(it + 1)
+                    val mode1 = FamiliesMode.entries[families]
+                    val mode2 = FamiliesMode.entries.getOrNull(families + 1)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement =
@@ -102,7 +116,8 @@ fun SelectionMode(
                             imageVector = mode1.icon,
                             modifier = Modifier
                                 .width(width)
-                                .fillMaxHeight(0.25f)
+                                .fillMaxHeight(0.25f),
+                            soundPool = soundPool
                         )
                         mode2?.let {
                             IFilledTonalButton(
@@ -111,11 +126,12 @@ fun SelectionMode(
                                 imageVector = it.icon,
                                 modifier = Modifier
                                     .width(width)
-                                    .fillMaxHeight(0.25f)
+                                    .fillMaxHeight(0.25f),
+                                soundPool = soundPool
                             )
                         }
                     }
-                    if(it != FamiliesMode.entries.size - 1 && it != FamiliesMode.entries.size - 2) {
+                    if(families != FamiliesMode.entries.size - 1 && families != FamiliesMode.entries.size - 2) {
                         Spacer(modifier = Modifier.height(MediumPadding))
                     }
                 }

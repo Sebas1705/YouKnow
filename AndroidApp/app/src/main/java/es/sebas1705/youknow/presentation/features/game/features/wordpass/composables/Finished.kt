@@ -16,8 +16,8 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.compos
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -31,24 +31,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassMode
 import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Finished composable
+ *
+ * @param windowState WindowState
+ * @param wordPassState WordPassState
+ * @param soundPool Pair<SoundPool, Float>?
+ * @param onRestartGame Function0<Unit>
+ * @param onOutGame Function0<Unit>
+ *
+ * @since 1.0.0
+ * @author Sebastian Ramiro Entrerrios Garcia
+ */
 @Composable
 fun Finished(
     windowState: WindowState = WindowState.default(),
     wordPassState: WordPassState = WordPassState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onRestartGame: () -> Unit = { },
     onOutGame: () -> Unit = { }
 ) {
@@ -61,7 +72,7 @@ fun Finished(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                val data = mutableMapOf<String, String>(
+                val data = mutableMapOf(
                     stringResource(id = R.string.mode) to (stringResource(
                         wordPassState.mode?.strRes ?: R.string.any
                     )),
@@ -71,7 +82,7 @@ fun Finished(
                     stringResource(id = R.string.total_answers) to wordPassState.words.size.toString(),
                 )
                 if (wordPassState.mode == WordPassMode.SURVIVAL) {
-                    data.put(stringResource(id = R.string.lives), wordPassState.lives.toString())
+                    data[stringResource(id = R.string.lives)] = wordPassState.lives.toString()
                 }
                 IResumeCard(
                     title = stringResource(R.string.finished_title),
@@ -85,6 +96,7 @@ fun Finished(
                     onClick = onRestartGame,
                     label = stringResource(id = R.string.restart_game),
                     imageVector = Icons.Filled.RestartAlt,
+                    soundPool = soundPool
                 )
             }
 
@@ -97,6 +109,7 @@ fun Finished(
                     onClick = onOutGame,
                     label = stringResource(id = R.string.out_game),
                     imageVector = Icons.Filled.Output,
+                    soundPool = soundPool
                 )
             }
         }

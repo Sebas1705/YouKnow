@@ -37,12 +37,23 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized resume card
+ *
+ * @param title [String]: Title
+ * @param titlesValues [Map<String, String>]: Titles and values
+ * @param modifier [Modifier]: Modifier
+ * @param imageVector [Triple<ImageVector,String,()->Unit>]: Image vector
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IResumeCard(
     title: String,
     titlesValues: Map<String, String>,
-    imageVector: Triple<ImageVector,String,()->Unit>? = null,
     modifier: Modifier = Modifier,
+    imageVector: Triple<ImageVector, String, () -> Unit>? = null,
 ) = IPrimaryCard(modifier) {
     Row(
         modifier = Modifier
@@ -58,7 +69,7 @@ fun IResumeCard(
                 top = SmallestPadding
             )
         )
-        imageVector?.let{
+        imageVector?.let {
             IStandardIconButton(
                 imageVector = it.first,
                 contentDescription = it.second,

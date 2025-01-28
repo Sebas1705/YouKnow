@@ -33,12 +33,23 @@ import es.sebas1705.youknow.core.utlis.extensions.composables.makeBold
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized interactive card
+ *
+ * @param title [String]: Title
+ * @param modifier [Modifier]: Modifier
+ * @param subtitle [String]: Subtitle
+ * @param buttons [RowScope.() -> Unit]: Buttons
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IInteractiveCard(
     title: String,
+    modifier: Modifier = Modifier,
     subtitle: String = "",
     buttons: @Composable RowScope.() -> Unit,
-    modifier: Modifier = Modifier
 ) = IPrimaryCard(modifier) {
     Row(
         modifier = Modifier

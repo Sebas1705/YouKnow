@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,14 +28,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
+import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.dialogs.ErrorInfoDialog
 import es.sebas1705.youknow.core.composables.dialogs.ForgotPasswordDialog
@@ -66,12 +72,14 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun LogDesign(
     windowState: WindowState = WindowState.default(),
     logState: LogState = LogState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onRegisterButton: () -> Unit = {},
     onPasswordForgot: (String) -> Unit = {},
     onLoginButton: (email: String, pass: String, onError: (String) -> Unit) -> Unit = { e, p, o -> }
 ) {
 
     //Locals:
+    val ctx = LocalContext.current
     val keyboard = LocalSoftwareKeyboardController.current
 
     //Texts:
@@ -81,11 +89,13 @@ fun LogDesign(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var error by rememberSaveable { mutableStateOf(defaultError) }
+    val errorSound = remember { soundPool?.first?.load(ctx, R.raw.sound_lose, PRIORITY_SOUND) }
 
     //Flags:
     var errorFlag by rememberSaveable { mutableStateOf(false) }
     var passwordFlag by rememberSaveable { mutableStateOf(false) }
 
+    //Body:
     ApplyBack(
         windowState.backFill
     ) {
@@ -95,7 +105,8 @@ fun LogDesign(
         else if (errorFlag)
             ErrorInfoDialog(
                 errorText = error,
-                onConfirm = { errorFlag = false }
+                onConfirm = { errorFlag = false },
+                soundPool = soundPool
             )
         else if (passwordFlag)
             ForgotPasswordDialog(
@@ -106,7 +117,8 @@ fun LogDesign(
                 onDismiss = {
                     keyboard?.hide()
                     passwordFlag = false
-                }
+                },
+                soundPool = soundPool
             )
 
         //Body:
@@ -134,9 +146,11 @@ fun LogDesign(
                         password = password,
                         onEmailChange = { email = it },
                         onPasswordChange = { password = it },
+                        soundPool = soundPool
                     )
                     IVerSpacer(height = SmallestPadding)
                     ForgotAndRegisterButtons(
+                        soundPool = soundPool,
                         onForgotButton = {
                             keyboard?.hide()
                             passwordFlag = true
@@ -152,11 +166,22 @@ fun LogDesign(
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()
-                            onLoginButton(email, password) {
-                                error = it
+                            onLoginButton(email, password) { s ->
+                                soundPool?.let {
+                                    it.first.play(
+                                        errorSound ?: 0,
+                                        it.second,
+                                        it.second,
+                                        PRIORITY_SOUND,
+                                        LOOP_N,
+                                        RATE
+                                    )
+                                }
+                                error = s
                                 errorFlag = true
                             }
-                        }
+                        },
+                        soundPool = soundPool
                     )
                     IVerSpacer(if (windowState.isImeVisible) 0.2f else 0.7f)
                 }

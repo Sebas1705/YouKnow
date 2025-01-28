@@ -16,11 +16,10 @@ package es.sebas1705.youknow.domain.model.games
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
-import es.sebas1705.youknow.core.classes.enums.QuizType
-import es.sebas1705.youknow.data.local.database.entities.QuestionEntity
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 
 /**
  * Model to represent a question
@@ -33,6 +32,8 @@ import es.sebas1705.youknow.data.local.database.entities.QuestionEntity
  * @property difficulty [Difficulty]: Difficulty of the question
  * @property quizType [QuizType]: Type of the question
  *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 data class QuestionModel(
     val question: String,
@@ -68,14 +69,4 @@ data class QuestionModel(
             )
         }
     }
-
-    fun toQuestionEntity() = QuestionEntity(
-        question,
-        answers,
-        correctAnswer,
-        category.ordinal,
-        language.ordinal,
-        difficulty.ordinal,
-        quizType.ordinal
-    )
 }

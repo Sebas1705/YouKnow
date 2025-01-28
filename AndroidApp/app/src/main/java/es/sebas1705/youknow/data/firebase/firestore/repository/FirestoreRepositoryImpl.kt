@@ -26,22 +26,28 @@ import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
+import es.sebas1705.youknow.data.firebase.firestore.documents.NewDocument
 import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
+import es.sebas1705.youknow.data.mappers.toNewModel
+import es.sebas1705.youknow.data.mappers.toUserDocument
+import es.sebas1705.youknow.data.mappers.toUserModel
 import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
-import es.sebas1705.youknow.domain.model.UserModel
+import es.sebas1705.youknow.domain.model.social.NewModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 import javax.inject.Inject
 
 /**
  * Implementation of FirestoreRepository.
  *
- * @see es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
+ * @property firestore [FirebaseFirestore]: Firestore instance
+ * @property analyticsRepository [AnalyticsRepository]: Analytics repository
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 class FirestoreRepositoryImpl @Inject constructor(
-    firestore: FirebaseFirestore,
+    val firestore: FirebaseFirestore,
     val analyticsRepository: AnalyticsRepository
 ) : FirestoreRepository, ClassLogData {
 
@@ -62,6 +68,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     //References:
     private val usersReference = firestore.collection(SettingsFS.USERS_COLLECTION_NAME)
+    private val newsReference = firestore.collection(SettingsFS.NEWS_COLLECTION_NAME)
 
     override fun saveUser(
         userModel: UserModel,
@@ -87,11 +94,11 @@ class FirestoreRepositoryImpl @Inject constructor(
     )
 
     override fun setLoggedToUser(
-        userId: String,
+        firebaseId: String,
         logged: Boolean
     ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
         taskAction = {
-            usersReference.document(userId).update(SettingsFS.USERS_LOGGED_FIELD, logged)
+            usersReference.document(firebaseId).update(SettingsFS.USERS_LOGGED_FIELD, logged)
         },
         onSuccessListener = { ResponseState.EmptySuccess }
     )
@@ -183,12 +190,12 @@ class FirestoreRepositoryImpl @Inject constructor(
     override fun getUserRanking(): FlowResponse<List<Pair<String, Int>>> =
         taskFlowManager.taskFlowProducer(
             taskAction = { usersReference.orderBy(SettingsFS.USERS_POINTS_FIELD).get() },
-            onSuccessListener = {
-                val users = it.documents.map { document ->
+            onSuccessListener = { snapshot ->
+                val users = snapshot.documents.map { document ->
                     document.toObject(UserDocument::class.java)!!.let {
                         it.nickName to it.points
                     }
-                }
+                }.reversed()
                 ResponseState.Success(users)
             }
         )
@@ -214,6 +221,16 @@ class FirestoreRepositoryImpl @Inject constructor(
     ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
         taskAction = { usersReference.document(firebaseId).delete() },
         onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
+    override fun getNews(): FlowResponse<List<NewModel>> = taskFlowManager.taskFlowProducer(
+        taskAction = { newsReference.get() },
+        onSuccessListener = {
+            val news = it.documents.map { document ->
+                document.toObject(NewDocument::class.java)!!.toNewModel()
+            }
+            ResponseState.Success(news)
+        }
     )
 
     //Listeners:

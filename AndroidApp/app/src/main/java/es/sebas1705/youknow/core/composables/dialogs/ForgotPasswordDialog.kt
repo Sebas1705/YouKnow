@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Composable that displays a dialog to recover the password.
  *
  * @param modifier [Modifier]: Modifier to be applied to the dialog.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
@@ -50,6 +52,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun ForgotPasswordDialog(
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: (String) -> Unit = {},
     onDismiss: () -> Unit = {}
 ) {
@@ -60,17 +63,18 @@ fun ForgotPasswordDialog(
         confirmButton = {
             ITextButton(
                 onClick = { onConfirm(email) },
-                label = stringResource(R.string.confirm)
+                label = stringResource(R.string.confirm),
+                soundPool = soundPool
             )
         },
         modifier = modifier,
         dismissButton = {
             ITextButton(
                 onClick = onDismiss,
-                label = stringResource(R.string.dismiss)
+                label = stringResource(R.string.dismiss),
+                soundPool = soundPool
             )
         },
-        icon = null,
         title = {
             IText(stringResource(R.string.enter_email))
         },
@@ -78,7 +82,8 @@ fun ForgotPasswordDialog(
             IEmailTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
-                onValueChange = { email = it }
+                onValueChange = { email = it },
+                soundPool = soundPool
             )
         }
     )

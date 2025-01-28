@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 
 private val lowContrastLightScheme = lightColorScheme(
     primary = primaryLightLowContrast,
@@ -261,8 +261,6 @@ private val highContrastDarkColorScheme = darkColorScheme(
  * @param darkTheme whether the theme should be dark or light.
  * @param themeContrast the contrast level of the theme.
  * @param content the content of the theme.
- *
- * @see ThemeContrast
  *
  * @author: Sebastián Ramiro Entrerrios García
  * @since 1.0.0

@@ -31,6 +31,18 @@ import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Raw lottie animation
+ *
+ * @param rawRes [Int]: Raw res
+ * @param modifier [Modifier]: Modifier
+ * @param iterations [Int]: Iterations
+ * @param contentScale [ContentScale]: Content scale
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IRawLottieAnimation(
     rawRes: Int,
@@ -54,7 +66,7 @@ fun IRawLottieAnimation(
 @Composable
 private fun Preview() = YouKnowTheme {
     IRawLottieAnimation(
-        rawRes = R.raw.loading,
+        rawRes = R.raw.lottie_load_1,
         modifier = Modifier
             .height(400.dp)
             .width(400.dp),

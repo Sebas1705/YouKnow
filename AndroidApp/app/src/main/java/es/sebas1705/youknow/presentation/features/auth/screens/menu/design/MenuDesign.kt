@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,19 +59,19 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun MenuDesign(
     windowState: WindowState = WindowState.default(),
     menuState: MenuState = MenuState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSignButtonAction: () -> Unit = {},
     onEmailLogButtonAction: () -> Unit = {},
     onGoogleLogButtonAction: () -> Unit = {},
 ) {
 
+    //Body:
     ApplyBack(
         windowState.backFill
     ) {
-        //Dialogs:
         if (menuState.isLoading)
             LoadingDialog(windowState)
 
-        //Body:
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -94,8 +95,9 @@ fun MenuDesign(
             )
             IVerSpacer(0.2f)
             MenuButtons(
-                buttonsModifier = Modifier
+                modifier = Modifier
                     .fillMaxWidth(windowState.widthType.filter(1f, 0.8f, 0.6f)),
+                soundPool = soundPool,
                 onSignButtonAction = onSignButtonAction,
                 onEmailLogButtonAction = onEmailLogButtonAction,
                 onGoogleLogButtonAction = onGoogleLogButtonAction
@@ -105,11 +107,6 @@ fun MenuDesign(
     }
 }
 
-/**
- * Preview of the [MenuScreen].
- *
- * @see MenuScreen
- */
 @UiModePreviews
 @Composable
 private fun MenuPreview() {

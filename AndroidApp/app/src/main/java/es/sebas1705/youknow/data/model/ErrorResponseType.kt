@@ -31,11 +31,11 @@ package es.sebas1705.youknow.data.model
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-sealed class ErrorResponseType(val tag: String){
-    object BadRequest: ErrorResponseType("Bad request error")
-    object InternalError: ErrorResponseType("Internal error")
-    object NotFound: ErrorResponseType("Not found error")
-    object Unauthorized: ErrorResponseType("Unauthorized error")
-    object Forbidden: ErrorResponseType("Forbidden error")
-    object Conflict: ErrorResponseType("Conflict error")
+sealed class ErrorResponseType(val tag: String) {
+    data object BadRequest : ErrorResponseType("Bad request error")
+    data object InternalError : ErrorResponseType("Internal error")
+    data object NotFound : ErrorResponseType("Not found error")
+    data object Unauthorized : ErrorResponseType("Unauthorized error")
+    data object Forbidden : ErrorResponseType("Forbidden error")
+    data object Conflict : ErrorResponseType("Conflict error")
 }

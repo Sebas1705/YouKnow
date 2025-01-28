@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log.composable
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
 /**
  * Component that contains the forgot password and wanna register buttons
  *
+ * @param soundPool [Pair<SoundPool, Float>]: sound pool to play sounds
  * @param onForgotButton () -> Unit: action to be executed when the forgot password button is clicked
  * @param onRegisterButton () -> Unit: action to be executed when the wanna register button is clicked
  *
@@ -39,6 +41,7 @@ import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
  */
 @Composable
 fun ForgotAndRegisterButtons(
+    soundPool: Pair<SoundPool, Float>? = null,
     onForgotButton: () -> Unit,
     onRegisterButton: () -> Unit
 ) {
@@ -47,7 +50,8 @@ fun ForgotAndRegisterButtons(
     ) {
         ITextButton(
             label = stringResource(id = R.string.forgot_password),
-            onClick = onForgotButton
+            onClick = onForgotButton,
+            soundPool = soundPool
         )
         VerticalDivider(
             modifier = Modifier.height(30.dp),
@@ -55,7 +59,8 @@ fun ForgotAndRegisterButtons(
         )
         ITextButton(
             label = stringResource(id = R.string.wanna_register),
-            onClick = onRegisterButton
+            onClick = onRegisterButton,
+            soundPool = soundPool
         )
     }
 }

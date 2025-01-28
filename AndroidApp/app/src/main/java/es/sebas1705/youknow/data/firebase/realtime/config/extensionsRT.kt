@@ -25,8 +25,6 @@ import kotlin.reflect.full.memberProperties
  *
  * @return [Boolean]: True if the object is savable, false otherwise
  *
- * @see SettingsRT
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */

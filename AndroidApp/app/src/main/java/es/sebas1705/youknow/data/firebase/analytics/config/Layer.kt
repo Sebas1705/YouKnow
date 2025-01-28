@@ -30,8 +30,8 @@ package es.sebas1705.youknow.data.firebase.analytics.config
  * @since 1.0.0
  */
 sealed class Layer(val tag: String) {
-    object Data : Layer("Data")
-    object Domain : Layer("Domain")
-    object Presentation : Layer("Presentation")
-    object Core : Layer("Core")
+    data object Data : Layer("Data")
+    data object Domain : Layer("Domain")
+    data object Presentation : Layer("Presentation")
+    data object Core : Layer("Core")
 }

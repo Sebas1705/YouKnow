@@ -27,6 +27,22 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * ISlider
+ *
+ * @param value [Float]: Value
+ * @param onValueChange [(Float) -> Unit]: On value change
+ * @param modifier [Modifier]: Modifier
+ * @param enabled [Boolean]: Enabled
+ * @param valueRange [ClosedFloatingPointRange<Float>]: Value range
+ * @param steps [Int]: Steps
+ * @param onValueChangeFinished [(() -> Unit)?]: On value change finished
+ * @param interactionSource [MutableInteractionSource]: Interaction source
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun ISlider(
     value: Float,

@@ -27,7 +27,24 @@ import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreReposito
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
-import es.sebas1705.youknow.domain.usecases.*
+import es.sebas1705.youknow.data.local.files.repository.FileRepository
+import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.FillByDefaultFamilies
+import es.sebas1705.youknow.domain.usecases.FillByDefaultQuestions
+import es.sebas1705.youknow.domain.usecases.FillByDefaultWords
+import es.sebas1705.youknow.domain.usecases.FillUsesCases
+import es.sebas1705.youknow.domain.usecases.GetTriviaTenQuestions
+import es.sebas1705.youknow.domain.usecases.ReadAppContrast
+import es.sebas1705.youknow.domain.usecases.ReadFirstTime
+import es.sebas1705.youknow.domain.usecases.ReadGameLanguage
+import es.sebas1705.youknow.domain.usecases.ReadMusicVolume
+import es.sebas1705.youknow.domain.usecases.ReadSoundVolume
+import es.sebas1705.youknow.domain.usecases.SaveAppContrast
+import es.sebas1705.youknow.domain.usecases.SaveFirstTime
+import es.sebas1705.youknow.domain.usecases.SaveGameLanguage
+import es.sebas1705.youknow.domain.usecases.SaveMusicVolume
+import es.sebas1705.youknow.domain.usecases.SaveSoundVolume
+import es.sebas1705.youknow.domain.usecases.TriviaUsesCases
 import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
 import es.sebas1705.youknow.domain.usecases.games.GenerateFamilies
 import es.sebas1705.youknow.domain.usecases.games.GenerateQuestionList
@@ -45,7 +62,9 @@ import es.sebas1705.youknow.domain.usecases.logs.LogEvent
 import es.sebas1705.youknow.domain.usecases.logs.SetUserProperty
 import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
 import es.sebas1705.youknow.domain.usecases.social.CreateGroup
+import es.sebas1705.youknow.domain.usecases.social.GetNews
 import es.sebas1705.youknow.domain.usecases.social.GroupUsesCases
+import es.sebas1705.youknow.domain.usecases.social.NewsUsesCases
 import es.sebas1705.youknow.domain.usecases.social.RemoveGroup
 import es.sebas1705.youknow.domain.usecases.social.RemoveGroupsListener
 import es.sebas1705.youknow.domain.usecases.social.RemoveMessagesListener
@@ -88,6 +107,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DomainModule {
 
+    /**
+     * Function to provide datastore use cases
+     *
+     * @param datastoreRepository [DatastoreRepository]: Repository to access to the datastore
+     *
+     * @return [DatastoreUsesCases]: Use cases of the datastore
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideAppEntryUseCases(
@@ -95,12 +124,26 @@ object DomainModule {
     ): DatastoreUsesCases = DatastoreUsesCases(
         readFirstTime = ReadFirstTime(datastoreRepository),
         saveFirstTime = SaveFirstTime(datastoreRepository),
-        readAppVolume = ReadAppVolume(datastoreRepository),
-        saveAppVolume = SaveAppVolume(datastoreRepository),
+        readMusicVolume = ReadMusicVolume(datastoreRepository),
+        saveMusicVolume = SaveMusicVolume(datastoreRepository),
+        readSoundVolume = ReadSoundVolume(datastoreRepository),
+        saveSoundVolume = SaveSoundVolume(datastoreRepository),
         readAppContrast = ReadAppContrast(datastoreRepository),
-        saveAppContrast = SaveAppContrast(datastoreRepository)
+        saveAppContrast = SaveAppContrast(datastoreRepository),
+        readGameLanguage = ReadGameLanguage(datastoreRepository),
+        saveGameLanguage = SaveGameLanguage(datastoreRepository)
     )
 
+    /**
+     * Function to provide opendb use cases
+     *
+     * @param opendbRepository [OpendbRepository]: Repository to access to the opendb api
+     *
+     * @return [TriviaUsesCases]: Use cases of the trivia
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideTriviaRepositoryUsesCases(
@@ -109,6 +152,16 @@ object DomainModule {
         getTriviaTenQuestions = GetTriviaTenQuestions(opendbRepository)
     )
 
+    /**
+     * Function to provide analytics use cases
+     *
+     * @param analyticsRepository [AnalyticsRepository]: Repository to access to the analytics
+     *
+     * @return [AnalyticsUsesCases]: Use cases of the analytics
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideAnalyticsUsesCases(
@@ -118,6 +171,17 @@ object DomainModule {
         setUserProperty = SetUserProperty(analyticsRepository)
     )
 
+    /**
+     * Function to provide user use cases
+     *
+     * @param firestoreRepository [FirestoreRepository]: Repository to access to the firestore
+     * @param realtimeRepository [RealtimeRepository]: Repository to access to the realtime database
+     *
+     * @return [UserUsesCases]: Use cases of the user
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideUserUsesCases(
@@ -142,6 +206,16 @@ object DomainModule {
         deleteDataUser = DeleteDataUser(firestoreRepository)
     )
 
+    /**
+     * Function to provide authentication use cases
+     *
+     * @param authenticationRepository [AuthenticationRepository]: Repository to access to the authentication
+     *
+     * @return [AuthUsesCases]: Use cases of the authentication
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideAuthUsesCases(
@@ -155,6 +229,16 @@ object DomainModule {
         signUpEmailUser = SignUpEmailUser(authenticationRepository)
     )
 
+    /**
+     * Function to provide chat use cases
+     *
+     * @param realtimeRepository [RealtimeRepository]: Repository to access to the realtime database
+     *
+     * @return [ChatUsesCases]: Use cases of the chat
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideChatUsesCases(
@@ -165,6 +249,16 @@ object DomainModule {
         removeMessagesListener = RemoveMessagesListener(realtimeRepository)
     )
 
+    /**
+     * Function to provide group use cases
+     *
+     * @param realtimeRepository [RealtimeRepository]: Repository to access to the realtime database
+     *
+     * @return [GroupUsesCases]: Use cases of the group
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideGroupUsesCases(
@@ -176,6 +270,16 @@ object DomainModule {
         removeGroupsListener = RemoveGroupsListener(realtimeRepository)
     )
 
+    /**
+     * Function to provide quiz use cases
+     *
+     * @param databaseRepository [DatabaseRepository]: Repository to access to the database
+     *
+     * @return [QuizUsesCases]: Use cases of the quiz
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideQuizUsesCases(
@@ -185,6 +289,14 @@ object DomainModule {
         insertQuestionList = InsertQuestionList(databaseRepository)
     )
 
+    /**
+     * Function to provide mystery number use cases
+     *
+     * @return [MysteryNumberUsesCases]: Use cases of the mystery number
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideMysteryNumberUsesCases(
@@ -192,6 +304,16 @@ object DomainModule {
         generateRandomNumber = GenerateRandomNumber()
     )
 
+    /**
+     * Function to provide families use cases
+     *
+     * @param databaseRepository [DatabaseRepository]: Repository to access to the database
+     *
+     * @return [FamiliesUsesCases]: Use cases of the families
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideFamiliesUsesCases(
@@ -201,6 +323,16 @@ object DomainModule {
         insertFamiliesList = InsertFamiliesList(databaseRepository)
     )
 
+    /**
+     * Function to provide word pass use cases
+     *
+     * @param databaseRepository [DatabaseRepository]: Repository to access to the database
+     *
+     * @return [WordPassUsesCases]: Use cases of the word pass
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideWordPassUsesCases(
@@ -209,5 +341,45 @@ object DomainModule {
         generateWordPass = GenerateWordPass(databaseRepository),
         generateWheelWordPass = GenerateWheelWordPass(databaseRepository),
         insertWordPassList = InsertWordPassList(databaseRepository)
+    )
+
+    /**
+     * Function to provide fill use cases
+     *
+     * @param fileRepository [FileRepository]: Repository to access to the files
+     * @param databaseRepository [DatabaseRepository]: Repository to access to the database
+     *
+     * @return [FillUsesCases]: Use cases of the fill
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    @Provides
+    @Singleton
+    fun provideFillUsesCases(
+        fileRepository: FileRepository,
+        databaseRepository: DatabaseRepository
+    ): FillUsesCases = FillUsesCases(
+        fillByDefaultFamilies = FillByDefaultFamilies(fileRepository, databaseRepository),
+        fillByDefaultQuestions = FillByDefaultQuestions(fileRepository, databaseRepository),
+        fillByDefaultWords = FillByDefaultWords(fileRepository, databaseRepository)
+    )
+
+    /**
+     * Function to provide news use cases
+     *
+     * @param firestoreRepository [FirestoreRepository]: Repository to access to the firestore
+     *
+     * @return [NewsUsesCases]: Use cases of the news
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    @Provides
+    @Singleton
+    fun provideNewUsesCases(
+        firestoreRepository: FirestoreRepository
+    ): NewsUsesCases = NewsUsesCases(
+        getNews = GetNews(firestoreRepository)
     )
 }

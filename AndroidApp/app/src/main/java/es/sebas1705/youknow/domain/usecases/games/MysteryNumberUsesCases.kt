@@ -16,9 +16,15 @@ package es.sebas1705.youknow.domain.usecases.games
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.domain.model.games.NumberModel
 
+/**
+ * Use case to generate a random number
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GenerateRandomNumber {
     operator fun invoke(
         difficulty: Difficulty,
@@ -42,6 +48,14 @@ class GenerateRandomNumber {
     }
 }
 
+/**
+ * Use cases for the mystery number game
+ *
+ * @property generateRandomNumber [GenerateRandomNumber]: Use case to generate a random number
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class MysteryNumberUsesCases(
     val generateRandomNumber: GenerateRandomNumber
 )

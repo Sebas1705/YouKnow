@@ -1,4 +1,5 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel/*
+package es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel
+/*
  * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,8 +48,6 @@ class LogViewModel @Inject constructor(
     private val application: Application
 ) : MVIBaseViewModel<LogState, LogIntent>() {
 
-    private val ctx = application.applicationContext
-
     override fun initState(): LogState = LogState.default()
 
     override fun intentHandler(intent: LogIntent) {
@@ -70,7 +69,7 @@ class LogViewModel @Inject constructor(
                 execute(Dispatchers.IO) {
                     userUsesCases.getLoggedFromUser(firebaseId, onSuccess = { logged ->
                         if (logged) stopAndError(
-                            ctx.getString(R.string.already_logged), intent.onError
+                            application.getString(R.string.already_logged), intent.onError
                         )
                         else {
                             val user = authUsesCases.getFirebaseUser()
@@ -86,7 +85,7 @@ class LogViewModel @Inject constructor(
                                         onError = { stopAndError(it, intent.onError) })
                                 }
                             } else stopAndError(
-                                ctx.getString(R.string.verify_email), intent.onError
+                                application.getString(R.string.verify_email), intent.onError
                             )
                         }
                     }, onError = { stopAndError(it, intent.onError) })
@@ -101,7 +100,7 @@ class LogViewModel @Inject constructor(
         authUsesCases.sendForgotPassword(intent.email,
             onLoading = { startLoading() },
             onEmptySuccess = { stopLoading() },
-            onError = { stopAndError(it, ctx::printTextInToast) }
+            onError = { stopAndError(it, application::printTextInToast) }
         )
     }
 
@@ -121,62 +120,5 @@ class LogViewModel @Inject constructor(
     }
 }
 
-/**
- * Data class that represents the state of the Log Screen.
- *
- * @param isLoading [Boolean]: Loading state of the Log Screen.
- *
- * @see MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class LogState(
-    val isLoading: Boolean
-) : MVIBaseState {
-    companion object {
-        fun default() = LogState(
-            isLoading = false
-        )
-    }
-}
 
-/**
- * Sealed interface that represents the possible actions that can be performed in the Log Screen.
- *
- * @see MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface LogIntent : MVIBaseIntent {
 
-    /**
-     * Intent associated with the sign in process with email.
-     *
-     * @param email [String]: Email to authenticate.
-     * @param password [String]: Password to authenticate.
-     * @param onSuccess () -> Unit: Action to perform when the authentication is successful.
-     * @param onError (String) -> Unit: Action to perform when the authentication fails.
-     *
-     * @see LogIntent
-     */
-    data class SignInWithEmail(
-        val email: String,
-        val password: String,
-        val onSuccess: () -> Unit,
-        val onError: (String) -> Unit
-    ) : LogIntent
-
-    /**
-     * Intent associated with the send forgot password process.
-     *
-     * @param email [String]: Email to send the forgot password.
-     *
-     * @see LogIntent
-     */
-    data class SendForgotPassword(
-        val email: String
-    ) : LogIntent
-
-}

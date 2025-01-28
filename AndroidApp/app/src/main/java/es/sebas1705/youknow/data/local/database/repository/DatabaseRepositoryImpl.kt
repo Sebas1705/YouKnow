@@ -16,16 +16,22 @@ package es.sebas1705.youknow.data.local.database.repository
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
-import es.sebas1705.youknow.core.classes.enums.Letter
-import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.local.database.Database
+import es.sebas1705.youknow.data.mappers.toFamiliesEntity
+import es.sebas1705.youknow.data.mappers.toFamiliesModel
+import es.sebas1705.youknow.data.mappers.toQuestionEntity
+import es.sebas1705.youknow.data.mappers.toQuestionModel
+import es.sebas1705.youknow.data.mappers.toWordEntity
+import es.sebas1705.youknow.data.mappers.toWordModel
 import es.sebas1705.youknow.domain.model.games.FamiliesModel
 import es.sebas1705.youknow.domain.model.games.QuestionModel
 import es.sebas1705.youknow.domain.model.games.WordModel
@@ -34,11 +40,11 @@ import javax.inject.Inject
 /**
  * Class to represent the repository of the database
  *
- * @see DatabaseRepository
- * @see ClassLogData
+ * @property database [Database]: Database
+ * @property analyticsRepository [AnalyticsRepository]: Analytics repository
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 class DatabaseRepositoryImpl @Inject constructor(
     private val database: Database,

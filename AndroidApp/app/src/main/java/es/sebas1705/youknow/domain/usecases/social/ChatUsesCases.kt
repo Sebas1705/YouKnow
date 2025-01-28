@@ -19,6 +19,14 @@ package es.sebas1705.youknow.domain.usecases.social
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.domain.model.social.MessageModel
 
+/**
+ * Use case to send a message
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to send the message
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SendMessage(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -44,6 +52,14 @@ class SendMessage(
     }
 }
 
+/**
+ * Use case to set a listener to get messages
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to get messages
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SetMessagesListener(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -58,6 +74,14 @@ class SetMessagesListener(
     }
 }
 
+/**
+ * Use case to remove the listener to get messages
+ *
+ * @property realtimeRepository [RealtimeRepository]: repository to remove the listener
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class RemoveMessagesListener(
     private val realtimeRepository: RealtimeRepository
 ) {
@@ -66,7 +90,16 @@ class RemoveMessagesListener(
     }
 }
 
-
+/**
+ * Data class to group the chat use cases
+ *
+ * @param sendMessage [SendMessage]: use case to send a message
+ * @param setMessagesListener [SetMessagesListener]: use case to set a listener to get messages
+ * @param removeMessagesListener [RemoveMessagesListener]: use case to remove the listener to get messages
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class ChatUsesCases(
     val sendMessage: SendMessage,
     val setMessagesListener: SetMessagesListener,

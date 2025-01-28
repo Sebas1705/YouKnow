@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.compos
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,23 +32,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
 import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.classes.enums.theme.SizeType
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesMode
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassMode
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * SelectionMode composable
+ *
+ * @param windowState WindowState
+ * @param soundPool Pair<SoundPool, Float>?
+ * @param onSelectMode Function1<WordPassMode, Unit>
+ *
+ * @since 1.0.0
+ * @author Sebastian Ramiro Entrerrios Garcia
+ */
 @Composable
 fun SelectionMode(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSelectMode: (WordPassMode) -> Unit = { }
 ) {
     ApplyBack(
@@ -60,11 +72,13 @@ fun SelectionMode(
         ) {
             item {
                 Title(
-                    modifier = Modifier.padding(bottom = windowState.heightFilter(
-                        MediumPadding,
-                        LargePadding,
-                        HugePadding
-                    )),
+                    modifier = Modifier.padding(
+                        bottom = windowState.heightFilter(
+                            MediumPadding,
+                            LargePadding,
+                            HugePadding
+                        )
+                    ),
                     text = stringResource(id = R.string.mode_title)
                 )
             }
@@ -81,14 +95,15 @@ fun SelectionMode(
                         onClick = { onSelectMode(mode) },
                         label = stringResource(id = mode.strRes),
                         imageVector = mode.icon,
+                        soundPool = soundPool
                     )
                 }
             else
-                items(WordPassMode.entries.size) {
-                    if (it % 2 != 0)
+                items(WordPassMode.entries.size) { wordPassMode ->
+                    if (wordPassMode % 2 != 0)
                         return@items
-                    val mode1 = WordPassMode.entries[it]
-                    val mode2 = WordPassMode.entries.getOrNull(it + 1)
+                    val mode1 = WordPassMode.entries[wordPassMode]
+                    val mode2 = WordPassMode.entries.getOrNull(wordPassMode + 1)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement =
@@ -103,7 +118,8 @@ fun SelectionMode(
                             imageVector = mode1.icon,
                             modifier = Modifier
                                 .width(width)
-                                .fillMaxHeight(0.25f)
+                                .fillMaxHeight(0.25f),
+                            soundPool = soundPool
                         )
                         mode2?.let {
                             IFilledTonalButton(
@@ -112,11 +128,12 @@ fun SelectionMode(
                                 imageVector = it.icon,
                                 modifier = Modifier
                                     .width(width)
-                                    .fillMaxHeight(0.25f)
+                                    .fillMaxHeight(0.25f),
+                                soundPool = soundPool
                             )
                         }
                     }
-                    if(it != FamiliesMode.entries.size - 1 && it != FamiliesMode.entries.size - 2) {
+                    if (wordPassMode != FamiliesMode.entries.size - 1 && wordPassMode != FamiliesMode.entries.size - 2) {
                         Spacer(modifier = Modifier.height(MediumPadding))
                     }
                 }

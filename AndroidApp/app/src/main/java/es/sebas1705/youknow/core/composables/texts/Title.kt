@@ -17,7 +17,6 @@ package es.sebas1705.youknow.core.composables.texts
  */
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,18 +27,32 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeTitle
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Title
+ *
+ * @param text [String]: Text
+ * @param modifier [Modifier]: Modifier
+ * @param style [TextStyle]: Style
+ * @param color [Color]: Color
+ * @param textAlign [TextAlign]: Text align
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun Title(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.displayLarge,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.primary,
+    textAlign: TextAlign = TextAlign.Center
 ) = IText(
     modifier = modifier,
     text = text,
     style = style.makeTitle(),
     color = color,
-    textAlign = TextAlign.Center,
+    textAlign = textAlign,
     overflow = TextOverflow.Ellipsis
 )
 

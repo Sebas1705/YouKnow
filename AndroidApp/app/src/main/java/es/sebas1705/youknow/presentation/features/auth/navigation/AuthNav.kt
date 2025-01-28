@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.navigation
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,10 +24,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.presentation.features.auth.navigation.AuthScreens.LogScreen
+import es.sebas1705.youknow.presentation.features.auth.navigation.AuthScreens.MenuScreen
+import es.sebas1705.youknow.presentation.features.auth.navigation.AuthScreens.SignScreen
 import es.sebas1705.youknow.presentation.features.auth.screens.log.LogScreen
 import es.sebas1705.youknow.presentation.features.auth.screens.menu.MenuScreen
 import es.sebas1705.youknow.presentation.features.auth.screens.sign.SignScreen
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 
 /**
  * Navigation for the Auth feature.
@@ -34,18 +37,13 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
  * @param windowState [WindowState]: State of the window.
  * @param toHomeNav () -> Unit: Function to navigate to the Home feature.
  *
- * @see WindowState
- * @see AuthViewModel
- * @see SignScreen
- * @see LogScreen
- * @see MenuScreen
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @Composable
 fun AuthNav(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     toHomeNav: () -> Unit,
 ) {
     // NavController:
@@ -60,6 +58,7 @@ fun AuthNav(
         composable<MenuScreen> {
             MenuScreen(
                 windowState,
+                soundPool,
                 toSignNav = {
                     authNavController.navigate(SignScreen)
                 },
@@ -72,6 +71,7 @@ fun AuthNav(
         composable<LogScreen> {
             LogScreen(
                 windowState,
+                soundPool,
                 toHomeNav,
                 toSignNav = {
                     authNavController.navigate(SignScreen)
@@ -81,6 +81,7 @@ fun AuthNav(
         composable<SignScreen> {
             SignScreen(
                 windowState,
+                soundPool,
                 toLogNav = {
                     authNavController.navigate(LogScreen)
                 }

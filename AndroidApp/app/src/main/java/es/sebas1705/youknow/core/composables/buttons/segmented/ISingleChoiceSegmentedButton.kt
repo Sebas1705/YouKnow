@@ -16,6 +16,8 @@ package es.sebas1705.youknow.core.composables.buttons.segmented
  *
  */
 
+import android.content.Context
+import android.media.SoundPool
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,7 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,23 +34,56 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
+import es.sebas1705.youknow.core.composables.ComposableConstants.NAV_BUTTON_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized single choice segmented button
+ *
+ * @param elements [List<Triple<String, ImageVector?, Boolean>]: Elements
+ * @param selectedElement [MutableState<Int>]: Selected element
+ * @param modifier [Modifier]: Modifier
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
+ * @param soundRes [Int]: Sound resource
+ * @param context [Context]: Context
+ * @param soundId [Int]: Sound id
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun ISingleChoiceSegmentedButton(
     elements: List<Triple<String, ImageVector?, Boolean>>,
     selectedElement: MutableState<Int>,
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
+    soundRes: Int = NAV_BUTTON_SOUND,
+    context: Context = LocalContext.current,
+    soundId: Int? = remember { soundPool?.first?.load(context, soundRes, PRIORITY_SOUND) }
 ) = SingleChoiceSegmentedButtonRow(modifier) {
     elements.forEachIndexed { index, element ->
         val selected = index == selectedElement.value
         SegmentedButton(
             selected = selected,
-            onClick = { selectedElement.value = index },
+            onClick = {
+                soundPool?.first?.play(
+                    soundId ?: 0,
+                    soundPool.second,
+                    soundPool.second,
+                    PRIORITY_SOUND,
+                    LOOP_N,
+                    RATE
+                )
+                selectedElement.value = index
+            },
             shape = SegmentedButtonDefaults.itemShape(index, elements.size),
             enabled = element.third,
             colors = SegmentedButtonDefaults.colors(

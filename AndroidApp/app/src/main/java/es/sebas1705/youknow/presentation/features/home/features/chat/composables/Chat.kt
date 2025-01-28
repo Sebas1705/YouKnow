@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.chat.composable
  *
  */
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,18 +38,18 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * The user can send messages in the chat.
  * The messages will be shown in a list.
  *
- * @param messageModels [List]<[MessageModel]>: List of messages to show in the chat.
- * @param onMessageSend (String) -> Unit: Function to send a message.
- *
- * @see MessageModel
+ * @param windowState [WindowState]: The state of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param firebaseId String: The firebase id of the user.
+ * @param messageModels List<MessageModel>: The list of messages.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Chat(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     firebaseId: String = "",
     messageModels: List<MessageModel> = (1..10).map {
         MessageModel(

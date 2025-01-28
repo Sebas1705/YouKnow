@@ -37,6 +37,17 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Message card that will show the message information.
+ * The user can see the message information.
+ *
+ * @param messageModel [MessageModel]: The message model.
+ * @param isCurrentUser Boolean: If the message is from the current user.
+ * @param windowState [WindowState]: The state of the window.
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
 @Composable
 fun MessageCard(
     messageModel: MessageModel,

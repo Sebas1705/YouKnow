@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Composable that displays a dialog to recover the password.
  *
  * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
@@ -47,6 +49,7 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun DeleteAccountDialog(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
 ) = IDialog(
@@ -54,7 +57,8 @@ fun DeleteAccountDialog(
     confirmButton = {
         ITextButton(
             onClick = onConfirm,
-            label = stringResource(R.string.confirm)
+            label = stringResource(R.string.confirm),
+            soundPool = soundPool
         )
     },
     modifier = Modifier
@@ -62,7 +66,8 @@ fun DeleteAccountDialog(
     dismissButton = {
         ITextButton(
             onClick = onDismiss,
-            label = stringResource(R.string.dismiss)
+            label = stringResource(R.string.dismiss),
+            soundPool = soundPool
         )
     },
     title = {
@@ -71,7 +76,7 @@ fun DeleteAccountDialog(
     text = {
         IText(
             stringResource(R.string.delete_account_text),
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Justify,
         )
     }
 )

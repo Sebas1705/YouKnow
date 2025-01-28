@@ -32,12 +32,12 @@ package es.sebas1705.youknow.data.firebase.analytics.config
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-sealed class EventLog(val tag: String){
-    object Error: EventLog("error")
-    object FirstTime: EventLog("first_time")
-    object SignUp: EventLog("sign_up")
-    object SignIn: EventLog("sign_in")
-    object SignOut: EventLog("sign_out")
-    object SignInGoogle: EventLog("sign_in_google")
-    object ChargeTime: EventLog("charge_time")
+sealed class EventLog(val tag: String) {
+    data object Error : EventLog("error")
+    data object FirstTime : EventLog("first_time")
+    data object SignUp : EventLog("sign_up")
+    data object SignIn : EventLog("sign_in")
+    data object SignOut : EventLog("sign_out")
+    data object SignInGoogle : EventLog("sign_in_google")
+    data object ChargeTime : EventLog("charge_time")
 }

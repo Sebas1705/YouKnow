@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.guide.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.bottombars.GuideBottomBar
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.composables.divider.IVerDivider
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
@@ -49,7 +51,7 @@ import es.sebas1705.youknow.core.composables.texts.IText
 import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
-import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
+import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
@@ -61,9 +63,8 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Design of the Guide Screen.
  *
  * @param windowState [WindowState]: State of the window.
+ * @param guideState [GuideState]: State of the guide.
  * @param onSuccessNavigation () -> Unit: Function that will be called when the user finishes the guide.
- *
- * @see GuideViewModel
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -71,12 +72,15 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 @Composable
 fun GuideDesign(
     windowState: WindowState = WindowState.default(),
+    guideState: GuideState = GuideState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSuccessNavigation: () -> Unit = {},
 ) {
+    //Local:
+    val ctx = LocalContext.current
 
     //String readers:
-    val context = LocalContext.current
-    val pageList = context.generateGuidePages()
+    val pageList = ctx.generateGuidePages()
     val next = stringResource(id = R.string.next)
     val back = stringResource(id = R.string.back)
     val start = stringResource(id = R.string.start)
@@ -92,10 +96,14 @@ fun GuideDesign(
         }
     }
 
+    //Body:
+    if(guideState.isLoading)
+        LoadingDialog(windowState)
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            GuideBottomBar(pageList.size, pagerState, buttonState) {
+            GuideBottomBar(pageList.size, pagerState, buttonState, soundPool) {
                 onSuccessNavigation()
             }
         }
@@ -115,7 +123,7 @@ fun GuideDesign(
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    var paddings = windowState
+                    val paddings = windowState
                         .widthFilter(MediumPadding, LargePadding, HugePadding)
                     TitleSurface(
                         pageList[pageIndex].title,
@@ -136,7 +144,7 @@ fun GuideDesign(
                             )
                         }
 
-                        pageList[pageIndex].imagesAndDescription.forEachIndexed { index, page ->
+                        pageList[pageIndex].imagesAndDescription.forEachIndexed { _, page ->
 
                             item{
                                 IVerDivider(

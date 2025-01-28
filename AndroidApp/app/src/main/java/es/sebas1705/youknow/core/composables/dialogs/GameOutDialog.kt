@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -31,12 +32,18 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 /**
  * Dialog that will be shown when the game is over.
  *
+ * @param modifier [Modifier]: Modifier to be applied to the dialog.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
+ * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
+ *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 @Composable
 fun GameOutDialog(
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm : () -> Unit = {},
     onDismiss : () -> Unit = {},
 ) = IDialog(
@@ -45,13 +52,15 @@ fun GameOutDialog(
         ITextButton(
             onClick = onConfirm,
             label = stringResource(R.string.confirm),
+            soundPool = soundPool
         )
     },
-    modifier,
+    modifier = modifier,
     dismissButton = {
         ITextButton(
             onClick = onDismiss,
             label = stringResource(R.string.dismiss),
+            soundPool = soundPool
         )
     },
     icon = null,

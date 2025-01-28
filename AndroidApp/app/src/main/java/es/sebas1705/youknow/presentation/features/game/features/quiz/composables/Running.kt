@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.composable
  *
  */
 
+import android.media.SoundPool
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -43,10 +44,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
 import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
@@ -55,7 +58,6 @@ import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizMode
 import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
@@ -63,13 +65,26 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.presentation.ui.theme.gameBottomBarHeight
 import kotlinx.coroutines.delay
 
+/**
+ * Running of the Quiz game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param quizState [QuizState]: State of the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onResponseQuestion ([String]) -> Unit: Function to respond to the question.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios García
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
     quizState: QuizState = QuizState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onResponseQuestion: (String) -> Unit = { }
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backFill
     ) {
@@ -108,7 +123,8 @@ fun Running(
                     modifier = Modifier
                         .padding(MediumPadding)
                         .border(1.dp, color, MaterialTheme.shapes.small),
-                    text = question.question
+                    text = question.question,
+                    textAlign = TextAlign.Justify
                 )
             }
             item {
@@ -118,7 +134,6 @@ fun Running(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val answers = question.answers
-                    Log.i("Running", "answers: $answers")
                     if (question.quizType == QuizType.BOOLEAN) {
                         IOutlinedButton(
                             onClick = { onResponseQuestion(answers[0]) },
@@ -126,6 +141,7 @@ fun Running(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                                 .padding(SmallestPadding),
+                            soundPool = soundPool
                         )
                         IOutlinedButton(
                             onClick = { onResponseQuestion(answers[1]) },
@@ -133,6 +149,7 @@ fun Running(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                                 .padding(SmallestPadding),
+                            soundPool = soundPool
                         )
                     } else {
                         Row(
@@ -146,6 +163,7 @@ fun Running(
                                     .fillMaxHeight()
                                     .weight(1f)
                                     .padding(SmallestPadding),
+                                soundPool = soundPool
                             )
                             IOutlinedButton(
                                 onClick = { onResponseQuestion(answers[1]) },
@@ -154,6 +172,7 @@ fun Running(
                                     .fillMaxHeight()
                                     .weight(1f)
                                     .padding(SmallestPadding),
+                                soundPool = soundPool
                             )
                         }
                         Row(
@@ -167,6 +186,7 @@ fun Running(
                                     .fillMaxHeight()
                                     .weight(1f)
                                     .padding(SmallestPadding),
+                                soundPool = soundPool
                             )
                             IOutlinedButton(
                                 onClick = { onResponseQuestion(answers[3]) },
@@ -175,6 +195,7 @@ fun Running(
                                     .fillMaxHeight()
                                     .weight(1f)
                                     .padding(SmallestPadding),
+                                soundPool = soundPool
                             )
                         }
                     }

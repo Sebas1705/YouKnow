@@ -19,8 +19,6 @@ package es.sebas1705.youknow.data.firebase.authentication.repository
 import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
-import es.sebas1705.youknow.data.model.ResponseState
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository interface to authenticate the user
@@ -31,16 +29,16 @@ import kotlinx.coroutines.flow.Flow
 interface AuthenticationRepository {
 
     //Tasks:
-
     /**
      * Sign up with email and password
      *
      * @param email [String]: Email to sign up
      * @param password [String]: Password to sign up
      *
-     * @return [Flow]<[ResponseState]>: with the response of the operation
+     * @return [FlowResponseNothing]: with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun signUpWithEmail(
         email: String,
@@ -53,9 +51,10 @@ interface AuthenticationRepository {
      * @param email [String]: Email to sign in
      * @param password [String]: Password to sign in
      *
-     * @return [Flow]<[ResponseState]>: with the response of the operation
+     * @return [FlowResponseNothing]: with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun signInWithEmail(
         email: String,
@@ -67,9 +66,10 @@ interface AuthenticationRepository {
      *
      * @param context [Context]: Context to sign in
      *
-     * @return [Flow]<[ResponseState]>: with the response of the operation
+     * @return [FlowResponseNothing]: with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     suspend fun signWithGoogle(
         context: Context
@@ -80,9 +80,10 @@ interface AuthenticationRepository {
      *
      * @param email [String]: Email to send the forgot password email
      *
-     * @return [Flow]<[ResponseState]>: with the response of the operation
+     * @return [FlowResponseNothing]: with the response of the operation
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun sendForgotPassword(email: String): FlowResponseNothing
 
@@ -93,7 +94,8 @@ interface AuthenticationRepository {
      *
      * @return [Boolean] with the result
      *
-     * @see Flow
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun signOut(): Boolean
 
@@ -101,6 +103,9 @@ interface AuthenticationRepository {
      * Check if the user is logged
      *
      * @return [Boolean] with the result
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun isUserLogged(): Boolean
 
@@ -109,7 +114,8 @@ interface AuthenticationRepository {
      *
      * @return [FirebaseUser] with the current user
      *
-     * @see FirebaseUser
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     fun getCurrentUser(): FirebaseUser?
 

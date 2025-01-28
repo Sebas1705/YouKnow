@@ -38,14 +38,17 @@ interface OpendbApi {
      * @param encode [String]: Text to encode the URL
      *
      * @return [ResponseOpendbDto]: Response from the API
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
     @GET("api.php")
     suspend fun getTrivia(
-        @Query("amount") amount : Int,
-        @Query("category") category : Int? = null,
-        @Query("difficulty") difficulty : String? = null,
-        @Query("type") type : String? = null,
-        @Query("encode") encode : String? = null
+        @Query("amount") amount: Int,
+        @Query("category") category: Int? = null,
+        @Query("difficulty") difficulty: String? = null,
+        @Query("type") type: String? = null,
+        @Query("encode") encode: String? = null
     ): ResponseOpendbDto
 
 }

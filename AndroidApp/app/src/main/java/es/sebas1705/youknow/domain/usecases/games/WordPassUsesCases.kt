@@ -16,19 +16,27 @@ package es.sebas1705.youknow.domain.usecases.games
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
-import es.sebas1705.youknow.core.classes.enums.Letter
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.domain.model.games.WordModel
-import kotlin.collections.forEach
 
+/**
+ * Use case to generate a word pass
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to get words
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GenerateWordPass(
     private val databaseRepository: DatabaseRepository
 ) {
     suspend operator fun invoke(
         numFamilies: Int,
         letter: Letter,
+        languages: Languages,
         difficulty: Difficulty,
         onLoading: () -> Unit,
         onSuccess: (List<WordModel>) -> Unit,
@@ -38,7 +46,7 @@ class GenerateWordPass(
         val words = databaseRepository.getWords(
             numFamilies,
             letter,
-            Languages.ANY,
+            languages,
             difficulty,
         )
         if (words.isEmpty())
@@ -50,6 +58,14 @@ class GenerateWordPass(
     }
 }
 
+/**
+ * Use case to generate a word pass for the wheel
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to get words
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GenerateWheelWordPass(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -77,6 +93,14 @@ class GenerateWheelWordPass(
     }
 }
 
+/**
+ * Use case to insert a list of words
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to insert words
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class InsertWordPassList(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -93,6 +117,16 @@ class InsertWordPassList(
     }
 }
 
+/**
+ * Use cases for the word pass game
+ *
+ * @property generateWordPass [GenerateWordPass]: Use case to generate a word pass
+ * @property generateWheelWordPass [GenerateWheelWordPass]: Use case to generate a word pass for the wheel
+ * @property insertWordPassList [InsertWordPassList]: Use case to insert a list of words
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class WordPassUsesCases(
     val generateWordPass: GenerateWordPass,
     val generateWheelWordPass: GenerateWheelWordPass,

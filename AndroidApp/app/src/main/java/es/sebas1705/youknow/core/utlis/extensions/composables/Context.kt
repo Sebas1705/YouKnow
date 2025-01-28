@@ -17,9 +17,10 @@ package es.sebas1705.youknow.core.utlis.extensions.composables
  */
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.widget.Toast
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.domain.model.PageModel
+import es.sebas1705.youknow.domain.model.ui.PageModel
 
 /**
  * Generate a list of [PageModel] to use in the guide
@@ -73,4 +74,10 @@ fun Context.generateGuidePages() = listOf(
  */
 fun Context.printTextInToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.playSound(soundRes: Int) {
+    val mp = MediaPlayer.create(this, soundRes)
+
+    mp.start()
 }

@@ -16,6 +16,8 @@ package es.sebas1705.youknow.core.composables.buttons.segmented
  *
  */
 
+import android.content.Context
+import android.media.SoundPool
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -33,22 +35,53 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
+import es.sebas1705.youknow.core.composables.ComposableConstants.NAV_BUTTON_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized multi choice segmented button
+ *
+ * @param elements [List<Triple<String, ImageVector?, Boolean>>]: Elements
+ * @param selectedElements [SnapshotStateList<Int>]: Selected elements
+ * @param modifier [Modifier]: Modifier
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
+ * @param soundRes [Int]: Sound resource
+ * @param context [Context]: Context
+ * @param soundId [Int]: Sound id
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IMultiChoiceSegmentedButton(
     elements: List<Triple<String, ImageVector?, Boolean>>,
     selectedElements: SnapshotStateList<Int>,
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
+    soundRes: Int = NAV_BUTTON_SOUND,
+    context: Context = LocalContext.current,
+    soundId: Int? = remember { soundPool?.first?.load(context, soundRes, PRIORITY_SOUND) }
 ) = MultiChoiceSegmentedButtonRow(modifier) {
     elements.forEachIndexed { index, element ->
         val checked = index in selectedElements
         SegmentedButton(
             checked = checked,
             onCheckedChange = {
+                soundPool?.first?.play(
+                    soundId ?: 0,
+                    soundPool.second,
+                    soundPool.second,
+                    PRIORITY_SOUND,
+                    LOOP_N,
+                    RATE
+                )
                 if (index in selectedElements) {
                     selectedElements.remove(index)
                 } else {
@@ -97,7 +130,7 @@ fun IMultiChoiceSegmentedButton(
 @IComposablePreview
 @Composable
 private fun Preview() = YouKnowTheme {
-    var selectedElements = remember { mutableStateListOf<Int>(0) }
+    val selectedElements = remember { mutableStateListOf(0) }
     IMultiChoiceSegmentedButton(
         elements = listOf(
             Triple("Add", Icons.Default.Add, true),

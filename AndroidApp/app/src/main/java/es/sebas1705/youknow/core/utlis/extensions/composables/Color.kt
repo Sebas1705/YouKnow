@@ -1,7 +1,4 @@
 package es.sebas1705.youknow.core.utlis.extensions.composables
-
-import androidx.compose.ui.graphics.Color
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,4 +16,17 @@ import androidx.compose.ui.graphics.Color
  *
  */
 
+import androidx.compose.ui.graphics.Color
+
+/**
+ * Disabled color
+ *
+ * @receiver [Color]: Color
+ *
+ * @return [Color]: Disabled color
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 fun Color.disabled(): Color = copy(alpha = 0.38f)

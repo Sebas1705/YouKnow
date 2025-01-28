@@ -22,16 +22,13 @@ import com.google.firebase.analytics.logEvent
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
 import es.sebas1705.youknow.data.firebase.analytics.config.UserProperty
-import es.sebas1705.youknow.domain.model.AnalyticsModel
+import es.sebas1705.youknow.domain.model.stats.AnalyticsModel
 import javax.inject.Inject
 
 /**
  * Analytics repository implementation
  *
  * @property firebaseAnalytics [FirebaseAnalytics]: firebase analytics instance
- *
- * @see es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
- * @see FirebaseAnalytics
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0

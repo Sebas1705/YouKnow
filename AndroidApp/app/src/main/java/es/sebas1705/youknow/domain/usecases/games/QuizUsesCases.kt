@@ -16,13 +16,21 @@ package es.sebas1705.youknow.domain.usecases.games
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Languages
-import es.sebas1705.youknow.core.classes.enums.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.domain.model.games.QuestionModel
 
+/**
+ * Use case to generate a list of questions
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to get questions
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GenerateQuestionList(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -30,6 +38,7 @@ class GenerateQuestionList(
         numberQuestions: Int,
         category: Category,
         difficulty: Difficulty,
+        languages: Languages,
         quizType: QuizType,
         onLoading: () -> Unit = {},
         onSuccess: (List<QuestionModel>) -> Unit,
@@ -39,7 +48,7 @@ class GenerateQuestionList(
         val questions = databaseRepository.getQuestions(
             numberQuestions,
             category,
-            Languages.ANY,
+            languages,
             difficulty,
             quizType
         )
@@ -52,6 +61,14 @@ class GenerateQuestionList(
     }
 }
 
+/**
+ * Use case to insert a list of questions
+ *
+ * @param databaseRepository [DatabaseRepository]: Repository to insert questions
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class InsertQuestionList(
     private val databaseRepository: DatabaseRepository
 ) {
@@ -68,7 +85,15 @@ class InsertQuestionList(
     }
 }
 
-
+/**
+ * Use cases for the quiz game
+ *
+ * @property generateQuestionList [GenerateQuestionList]: Use case to generate a list of questions
+ * @property insertQuestionList [InsertQuestionList]: Use case to insert a list of questions
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class QuizUsesCases(
     val generateQuestionList: GenerateQuestionList,
     val insertQuestionList: InsertQuestionList

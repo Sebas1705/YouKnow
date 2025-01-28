@@ -31,36 +31,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import es.sebas1705.youknow.R
 import kotlinx.serialization.Serializable
 
-data class HomeItem(
-    val strRes: Int,
-    val iconUnselected: ImageVector,
-    val iconSelected: ImageVector,
-    val destination: HomeScreens
-)
-
-val homes = listOf(
-    HomeItem(
-        R.string.Chat,
-        Icons.AutoMirrored.Outlined.Chat,
-        Icons.AutoMirrored.Filled.Chat,
-        HomeScreens.ChatScreen
-    ),
-    HomeItem(
-        R.string.Profile,
-        Icons.Outlined.Person,
-        Icons.Filled.Person,
-        HomeScreens.ProfileScreen
-    ),
-    HomeItem(R.string.Main, Icons.Outlined.Home, Icons.Filled.Home, HomeScreens.MainScreen),
-    HomeItem(
-        R.string.Play,
-        Icons.Outlined.SportsEsports,
-        Icons.Filled.SportsEsports,
-        HomeScreens.PlayScreen
-    ),
-    HomeItem(R.string.Groups, Icons.Outlined.Groups, Icons.Filled.Groups, HomeScreens.GroupsScreen),
-)
-
+/**
+ * Screens of the Home.
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 interface HomeScreens {
     @Serializable
     object MainScreen : HomeScreens
@@ -76,5 +52,46 @@ interface HomeScreens {
 
     @Serializable
     object GroupsScreen : HomeScreens
+
+    companion object {
+
+        /**
+         * Data class to represent the items of the Home.
+         */
+        data class HomeItem(
+            val strRes: Int,
+            val iconUnselected: ImageVector,
+            val iconSelected: ImageVector,
+            val destination: HomeScreens
+        )
+
+        val homes = listOf(
+            HomeItem(
+                R.string.Chat,
+                Icons.AutoMirrored.Outlined.Chat,
+                Icons.AutoMirrored.Filled.Chat,
+                ChatScreen
+            ),
+            HomeItem(
+                R.string.Profile,
+                Icons.Outlined.Person,
+                Icons.Filled.Person,
+                ProfileScreen
+            ),
+            HomeItem(R.string.Main, Icons.Outlined.Home, Icons.Filled.Home, MainScreen),
+            HomeItem(
+                R.string.Play,
+                Icons.Outlined.SportsEsports,
+                Icons.Filled.SportsEsports,
+                PlayScreen
+            ),
+            HomeItem(
+                R.string.Groups,
+                Icons.Outlined.Groups,
+                Icons.Filled.Groups,
+                GroupsScreen
+            ),
+        )
+    }
 }
 

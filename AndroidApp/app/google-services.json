@@ -52,11 +52,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "875884945428-ahfjb5e8rudldo8ugsg0252nm68cmaka.apps.googleusercontent.com",
+          "client_id": "875884945428-p6kk3ha8nmtne7k6o69eth7vg3gi934p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "es.sebas1705.youknow.debug",
-            "certificate_hash": "7154fbc7867f62657ad2d2bc1527572792861d4b"
+            "certificate_hash": "798ee910b968612974f10fc32b4787ad571da623"
           }
         },
         {

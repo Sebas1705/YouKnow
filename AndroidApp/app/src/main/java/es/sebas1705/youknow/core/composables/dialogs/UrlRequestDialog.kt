@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -41,15 +42,23 @@ import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
+ * Dialog to request a URL.
  *
+ * @param modifier [Modifier]: Modifier to be applied to the dialog.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param windowState [WindowState]: State of the window.
+ * @param onConfirmButton [Function1<String, Unit]: Function to be executed when the user confirms the dialog.
+ * @param onDismissAction [Function0<Unit>]: Function to be executed when the user dismisses the dialog.
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun UrlRequestDialog(
-    windowState: WindowState = WindowState.default(),
     modifier: Modifier = Modifier,
+    soundPool: Pair<SoundPool, Float>? = null,
+    windowState: WindowState = WindowState.default(),
     onConfirmButton: (String) -> Unit = {},
     onDismissAction: () -> Unit = {}
 ) {
@@ -61,14 +70,16 @@ fun UrlRequestDialog(
         confirmButton = {
             ITextButton(
                 onClick = { onConfirmButton(photoUrl) },
-                label = stringResource(R.string.confirm)
+                label = stringResource(R.string.confirm),
+                soundPool = soundPool
             )
         },
         modifier = modifier,
         dismissButton = {
             ITextButton(
                 onClick = onDismissAction,
-                label = stringResource(R.string.dismiss)
+                label = stringResource(R.string.dismiss),
+                soundPool = soundPool
             )
         },
         title = {
@@ -86,7 +97,8 @@ fun UrlRequestDialog(
                 onValueChange = { photoUrl = it },
                 label = stringResource(R.string.url_photo),
                 placeholder = stringResource(R.string.url_photo),
-                leadingIcon = Icons.Filled.Link to {}
+                leadingIcon = Icons.Filled.Link to {},
+                soundPool = soundPool,
             )
         }
     )

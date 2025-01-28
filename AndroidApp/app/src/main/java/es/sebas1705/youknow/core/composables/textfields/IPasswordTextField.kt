@@ -16,6 +16,7 @@ package es.sebas1705.youknow.core.composables.textfields
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Visibility
@@ -33,6 +34,22 @@ import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Password text field
+ *
+ * @param value [String]: Value
+ * @param onValueChange [Function1<String, Unit]: On value change
+ * @param modifier [Modifier]: Modifier
+ * @param enabled [Boolean]: Enabled
+ * @param readOnly [Boolean]: Read only
+ * @param isError [Boolean]: Is error
+ * @param label [String]: Label
+ * @param placeholder [String]: Placeholder
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IPasswordTextField(
     value: String,
@@ -43,6 +60,7 @@ fun IPasswordTextField(
     isError: Boolean = false,
     label: String = stringResource(R.string.password),
     placeholder: String = stringResource(R.string.password),
+    soundPool: Pair<SoundPool, Float>? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     IOutlinedTextField(
@@ -58,7 +76,8 @@ fun IPasswordTextField(
         (if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff) to
                 { passwordVisible = !passwordVisible },
         isError = isError,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        soundPool = soundPool
     )
 }
 

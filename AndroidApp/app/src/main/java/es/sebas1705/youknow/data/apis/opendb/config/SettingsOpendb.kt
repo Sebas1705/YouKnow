@@ -16,6 +16,9 @@ package es.sebas1705.youknow.data.apis.opendb.config
  *
  */
 
+import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_BASE_URL
+import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_ENCODE_TEXT
+import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_RESPONSE_EXAMPLE
 import es.sebas1705.youknow.data.apis.opendb.dtos.QuestionOpendbDto
 import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
 
@@ -26,8 +29,6 @@ import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
  * @property TRIVIA_ENCODE_TEXT [String]: Text to encode the URL
  * @property TRIVIA_RESPONSE_EXAMPLE [ResponseOpendbDto]: Example of a response from the API
  *
- * @see ResponseOpendbDto
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
@@ -37,19 +38,15 @@ object SettingsOpendb {
 
     val TRIVIA_RESPONSE_EXAMPLE = ResponseOpendbDto(
         0,
-        mutableListOf<QuestionOpendbDto>().apply {
-            repeat(10) {
-                add(
-                    QuestionOpendbDto(
-                        "General Knowledge",
-                        "hey",
-                        "Easy",
-                        listOf("1", "2", "3"),
-                        "HelloWorld",
-                        "URL"
-                    )
-                )
-            }
+        (1..10).map {
+            QuestionOpendbDto(
+                "General Knowledge",
+                "hey",
+                "Easy",
+                listOf("1", "2", "3"),
+                "HelloWorld",
+                "URL"
+            )
         }
     )
 }

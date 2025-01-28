@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Ranking">Clasificación</string>
-    <string name="Home">Home</string>
-    <string name="New_Message">NEWS MESSAGE</string>
+    <string name="Home">Casa</string>
+    <string name="New_Message">Noticias e información</string>
+    <string name="info">Reportes y propuestas</string>
 </resources>

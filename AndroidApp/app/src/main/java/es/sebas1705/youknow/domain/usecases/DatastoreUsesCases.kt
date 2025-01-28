@@ -16,7 +16,8 @@ package es.sebas1705.youknow.domain.usecases
  *
  */
 
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
+import es.sebas1705.youknow.core.classes.enums.games.Languages
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -24,10 +25,6 @@ import kotlinx.coroutines.flow.Flow
  * Use case to read if the app is being opened for the first time
  *
  * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
- *
- * @return [Flow] with a [Boolean] value indicating if the app is being opened for the first time
- *
- * @see DatastoreRepository
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -45,8 +42,6 @@ class ReadFirstTime(
  *
  * @param datastoreRepository [DatastoreRepository]: repository to save the preferences
  *
- * @see DatastoreRepository
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
@@ -59,34 +54,30 @@ class SaveFirstTime(
 }
 
 /**
- * Use case to read the app volume
+ * Use case to read the music volume
  *
  * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
- *
- * @see DatastoreRepository
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-class ReadAppVolume(
+class ReadMusicVolume(
     private val datastoreRepository: DatastoreRepository
 ) {
     operator fun invoke(): Flow<Float> {
-        return datastoreRepository.readAppVolume()
+        return datastoreRepository.readMusicVolume()
     }
 }
 
 /**
- * Use case to save the app volume
+ * Use case to save the music volume
  *
  * @param datastoreRepository [DatastoreRepository]: repository to save the preferences
- *
- * @see DatastoreRepository
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-class SaveAppVolume(
+class SaveMusicVolume(
     private val datastoreRepository: DatastoreRepository
 ) {
     suspend operator fun invoke(
@@ -97,7 +88,50 @@ class SaveAppVolume(
     ) {
         try {
             onLoading()
-            datastoreRepository.saveAppVolume(volume)
+            datastoreRepository.saveMusicVolume(volume)
+            onSuccess()
+        } catch (e: Exception) {
+            onError(e.message.toString())
+        }
+    }
+}
+
+/**
+ * Use case to read the sound volume
+ *
+ * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+class ReadSoundVolume(
+    private val datastoreRepository: DatastoreRepository
+) {
+    operator fun invoke(): Flow<Float> {
+        return datastoreRepository.readSoundVolume()
+    }
+}
+
+/**
+ * Use case to save the sound volume
+ *
+ * @param datastoreRepository [DatastoreRepository]: repository to save the preferences
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+class SaveSoundVolume(
+    private val datastoreRepository: DatastoreRepository
+) {
+    suspend operator fun invoke(
+        volume: Float,
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            onLoading()
+            datastoreRepository.saveSoundVolume(volume)
             onSuccess()
         } catch (e: Exception) {
             onError(e.message.toString())
@@ -109,9 +143,6 @@ class SaveAppVolume(
  * Use case to read the app contrast
  *
  * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
- *
- * @see DatastoreRepository
- * @see ThemeContrast
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -128,9 +159,6 @@ class ReadAppContrast(
  * Use case to save the app contrast
  *
  * @param datastoreRepository [DatastoreRepository]: repository to save the preferences
- *
- * @see DatastoreRepository
- * @see ThemeContrast
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -155,21 +183,61 @@ class SaveAppContrast(
 }
 
 /**
+ * Use case to read the game language
+ *
+ * @param datastoreRepository [DatastoreRepository]: repository to get the preferences
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+class ReadGameLanguage(
+    private val datastoreRepository: DatastoreRepository
+) {
+    operator fun invoke(): Flow<Languages> {
+        return datastoreRepository.readGameLanguage()
+    }
+}
+
+/**
+ * Use case to save the game language
+ *
+ * @param datastoreRepository [DatastoreRepository]: repository to save the preferences
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+class SaveGameLanguage(
+    private val datastoreRepository: DatastoreRepository
+) {
+    suspend operator fun invoke(
+        languages: Languages,
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            onLoading()
+            datastoreRepository.saveGameLanguage(languages)
+            onSuccess()
+        } catch (e: Exception) {
+            onError(e.message.toString())
+        }
+    }
+}
+
+/**
  * Data class that contains all the use cases related to the Datastore
  *
  * @property readFirstTime [ReadFirstTime]: use case to read if the app is being opened for the first time
  * @property saveFirstTime [SaveFirstTime]: use case to save that the app is not being opened for the first time
- * @property readAppVolume [ReadAppVolume]: use case to read the app volume
- * @property saveAppVolume [SaveAppVolume]: use case to save the app volume
+ * @property readMusicVolume [ReadMusicVolume]: use case to read the music volume
+ * @property saveMusicVolume [SaveMusicVolume]: use case to save the music volume
+ * @property readSoundVolume [ReadSoundVolume]: use case to read the sound volume
+ * @property saveSoundVolume [SaveSoundVolume]: use case to save the sound volume
  * @property readAppContrast [ReadAppContrast]: use case to read the app contrast
  * @property saveAppContrast [SaveAppContrast]: use case to save the app contrast
- *
- * @see ReadFirstTime
- * @see SaveFirstTime
- * @see ReadAppVolume
- * @see SaveAppVolume
- * @see ReadAppContrast
- * @see SaveAppContrast
+ * @property readGameLanguage [ReadGameLanguage]: use case to read the game language
+ * @property saveGameLanguage [SaveGameLanguage]: use case to save the game language
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -177,8 +245,12 @@ class SaveAppContrast(
 data class DatastoreUsesCases(
     val readFirstTime: ReadFirstTime,
     val saveFirstTime: SaveFirstTime,
-    val readAppVolume: ReadAppVolume,
-    val saveAppVolume: SaveAppVolume,
+    val readMusicVolume: ReadMusicVolume,
+    val saveMusicVolume: SaveMusicVolume,
+    val readSoundVolume: ReadSoundVolume,
+    val saveSoundVolume: SaveSoundVolume,
     val readAppContrast: ReadAppContrast,
-    val saveAppContrast: SaveAppContrast
+    val saveAppContrast: SaveAppContrast,
+    val readGameLanguage: ReadGameLanguage,
+    val saveGameLanguage: SaveGameLanguage
 )

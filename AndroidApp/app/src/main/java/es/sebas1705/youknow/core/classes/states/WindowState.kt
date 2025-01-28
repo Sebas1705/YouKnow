@@ -19,24 +19,21 @@ package es.sebas1705.youknow.core.classes.states
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.theme.SizeType
+import es.sebas1705.youknow.core.classes.enums.theme.SizeType
 import es.sebas1705.youknow.core.utlis.PreviewSettings
 
 /**
  * Data class that represents the state of window and its properties for design purposes.
  *
- * @param widthDp Dp: Width of the window.
- * @param heightDp Dp: Height of the window.
- * @param widthType SizeType: Type of the width.
- * @param heightType SizeType: Type of the height.
- * @param isImeVisible Boolean: True if the IME is visible, false otherwise.
- * @param isPortrait Boolean: True if the window is in portrait mode, false otherwise.
- * @param backFill Int: Resource of the background image for the fill state.
- * @param backEmpty Int: Resource of the background image for the empty state.
- * @param isLandscapeAndIme Boolean: True if the window is in landscape mode and the IME is visible, false otherwise.
- *
- * @see es.sebas1705.youknow.core.classes.theme.SizeType
- * @see Dp
+ * @property widthDp Dp: Width of the window.
+ * @property heightDp Dp: Height of the window.
+ * @property widthType SizeType: Type of the width.
+ * @property heightType SizeType: Type of the height.
+ * @property isImeVisible Boolean: True if the IME is visible, false otherwise.
+ * @property isPortrait Boolean: True if the window is in portrait mode, false otherwise.
+ * @property backFill Int: Resource of the background image for the fill state.
+ * @property backEmpty Int: Resource of the background image for the empty state.
+ * @property isLandscapeAndIme Boolean: True if the window is in landscape mode and the IME is visible, false otherwise.
  *
  * @author: Sebastián Ramiro Entrerrios García
  * @since 1.0.0

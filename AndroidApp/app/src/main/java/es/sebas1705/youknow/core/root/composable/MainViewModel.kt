@@ -16,9 +16,7 @@ package es.sebas1705.youknow.core.root.composable
  *
  */
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
@@ -27,16 +25,18 @@ import android.os.Bundle
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
+import es.sebas1705.youknow.core.root.composable.MainIntent.ChargeData
+import es.sebas1705.youknow.core.root.composable.MainIntent.FinishSplashScreen
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
+import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import es.sebas1705.youknow.presentation.navigation.AppGraph
 import es.sebas1705.youknow.presentation.navigation.AppGraph.AuthNavigation
 import es.sebas1705.youknow.presentation.navigation.AppGraph.GuideScreen
@@ -45,36 +45,31 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
- * ViewModel for Main Screen that will decide the start destination of the app
- * depending on the user's state and the first time the app is opened.
+ * ViewModel of the Main Screen.
  *
- * @param userUsesCases [UserUsesCases]: UseCases for the user.
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
+ * @param authUsesCases [AuthUsesCases]: Use cases of the authentication.
+ * @param datastoreUsesCases [DatastoreUsesCases]: Use cases of the Datastore.
+ * @param analyticsUsesCases [AnalyticsUsesCases]: Use cases of the Analytics.
+ * @param application [Application]: Application
  *
- * @see MVIBaseViewModel
- * @see HiltViewModel
- * @see UserUsesCases
- *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val authUsesCases: AuthUsesCases,
     private val datastoreUsesCases: DatastoreUsesCases,
     private val analyticsUsesCases: AnalyticsUsesCases,
-    application: Application
+    private val application: Application
 ) : MVIBaseViewModel<MainState, MainIntent>() {
-
-    @SuppressLint("StaticFieldLeak")
-    private val ctx: Context = application.applicationContext
 
     override fun initState(): MainState = MainState.default()
 
     override fun intentHandler(intent: MainIntent) {
         when (intent) {
-            is MainIntent.ChargeData -> chargeData()
-            is MainIntent.FinishSplashScreen -> finishSlashScreen()
+            is ChargeData -> chargeData()
+            is FinishSplashScreen -> finishSlashScreen()
         }
     }
 
@@ -91,10 +86,19 @@ class MainViewModel @Inject constructor(
             val time = System.currentTimeMillis()
             setConnectivityCallback()
             execute(Dispatchers.IO) {
-                datastoreUsesCases.readAppVolume().collect { data ->
+                datastoreUsesCases.readMusicVolume().collect { data ->
                     updateUi {
                         it.copy(
-                            volume = data
+                            musicVolume = data
+                        )
+                    }
+                }
+            }
+            execute(Dispatchers.IO) {
+                datastoreUsesCases.readSoundVolume().collect { data ->
+                    updateUi {
+                        it.copy(
+                            soundVolume = data
                         )
                     }
                 }
@@ -138,8 +142,8 @@ class MainViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            ctx.printTextInToast(
-                ctx.getString(R.string.error_loading_data)
+            application.printTextInToast(
+                application.getString(R.string.error_loading_data)
                         + e.message.toString()
             )
         }
@@ -164,7 +168,7 @@ class MainViewModel @Inject constructor(
      * @see [ConnectivityManager.NetworkCallback]
      */
     private fun setConnectivityCallback() {
-        val connectivityManager = ctx.getSystemService(ConnectivityManager::class.java)
+        val connectivityManager = application.getSystemService(ConnectivityManager::class.java)
         val activeNetwork = connectivityManager.activeNetwork
         val isConnected = activeNetwork != null
 
@@ -207,7 +211,11 @@ class MainViewModel @Inject constructor(
  * Data class that represents the state of the Main Screen.
  *
  * @param startDestination [Any]: Start destination of the app.
- * @param isMainScreenVisible [Boolean]: Visibility of the Main Screen.
+ * @param isSplashVisible [Boolean]: Indicates if the splash screen is visible.
+ * @param isNetworkAvailable [Boolean]: Indicates if the network is available.
+ * @param themeContrast [ThemeContrast]: Theme contrast of the app.
+ * @param musicVolume [Float]: Music volume of the app.
+ * @param soundVolume [Float]: Sound volume of the app.
  *
  * @see MVIBaseState
  *
@@ -219,7 +227,8 @@ data class MainState(
     var isSplashVisible: Boolean,
     var isNetworkAvailable: Boolean,
     var themeContrast: ThemeContrast,
-    var volume: Float
+    var musicVolume: Float,
+    var soundVolume: Float
 ) : MVIBaseState {
     companion object {
 
@@ -232,8 +241,9 @@ data class MainState(
             startDestination = AuthNavigation,
             isSplashVisible = true,
             isNetworkAvailable = true,
-            themeContrast = ThemeContrast.Low,
-            volume = 1.0f
+            themeContrast = DefaultValuesDS.APP_UI_CONTRAST,
+            musicVolume = DefaultValuesDS.MUSIC_VOLUME,
+            soundVolume = DefaultValuesDS.SOUND_VOLUME
         )
     }
 }

@@ -17,23 +17,15 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmo
  */
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Difficulty
-import es.sebas1705.youknow.core.classes.enums.Letter
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.core.utlis.extensions.primitives.normalizeString
-import es.sebas1705.youknow.domain.model.games.WordModel
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
@@ -45,12 +37,11 @@ import javax.inject.Inject
  * ViewModel for WordPass Screen that will decide the start destination of the app
  * depending on the user's state and the first time the app is opened.
  *
+ * @param wordPassUsesCases [WordPassUsesCases]: UseCases for the WordPass game.
  * @param userUsesCases [UserUsesCases]: UseCases for the user.
+ * @param authUsesCases [AuthUsesCases]: UseCases for the Auth.
  * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
- *
- * @see MVIBaseViewModel
- * @see HiltViewModel
- * @see UserUsesCases
+ * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -60,17 +51,17 @@ class WordPassViewModel @Inject constructor(
     private val wordPassUsesCases: WordPassUsesCases,
     private val userUsesCases: UserUsesCases,
     private val authUsesCases: AuthUsesCases,
+    private val datastoreUsesCases: DatastoreUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<WordPassState, WordPassIntent>() {
-
-    private val ctx: Context = application.applicationContext
 
     override fun initState(): WordPassState = WordPassState.default()
 
     override fun intentHandler(intent: WordPassIntent) {
         when (intent) {
+            is WordPassIntent.ReadLanguages -> readLanguages()
             is WordPassIntent.GenerateGame -> generateGame(intent)
-            is WordPassIntent.ResetGame -> resetGame(intent)
+            is WordPassIntent.ResetGame -> resetGame()
             is WordPassIntent.SelectMode -> selectMode(intent)
             is WordPassIntent.Response -> response(intent)
             is WordPassIntent.OutGame -> outGame(intent)
@@ -79,6 +70,14 @@ class WordPassViewModel @Inject constructor(
 
 
     //Actions:
+    private fun readLanguages() = execute(Dispatchers.IO) {
+        datastoreUsesCases.readGameLanguage().collect {
+            updateUi {
+                it.copy(languages = it.languages)
+            }
+        }
+    }
+
     private fun generateGame(
         intent: WordPassIntent.GenerateGame
     ) = execute(Dispatchers.IO) {
@@ -96,13 +95,14 @@ class WordPassViewModel @Inject constructor(
                     }
                 },
                 onError = { error ->
-                    stopAndError(error, ctx::printTextInToast)
+                    stopAndError(error, application::printTextInToast)
                 }
             )
         else
             wordPassUsesCases.generateWordPass(
                 intent.numWords,
                 Letter.ANY,
+                _uiState.value.languages,
                 intent.difficulty,
                 onLoading = { startLoading() },
                 onSuccess = { words ->
@@ -115,13 +115,13 @@ class WordPassViewModel @Inject constructor(
                     }
                 },
                 onError = { error ->
-                    stopAndError(error, ctx::printTextInToast)
+                    stopAndError(error, application::printTextInToast)
                 }
             )
     }
 
 
-    private fun resetGame(intent: WordPassIntent.ResetGame) = addPointsAndCredits(intent.points) {
+    private fun resetGame() = addPointsAndCredits(_uiState.value.points) {
         updateUi {
             WordPassState.default()
         }
@@ -132,8 +132,7 @@ class WordPassViewModel @Inject constructor(
     ) {
         updateUi {
             it.copy(
-                mode = intent.wordPassMode,
-                numWords = intent.wordPassMode.numWords
+                mode = intent.wordPassMode
             )
         }
     }
@@ -141,34 +140,34 @@ class WordPassViewModel @Inject constructor(
     private fun response(
         intent: WordPassIntent.Response
     ) {
-        val word = intent.wordPassState.words[intent.wordPassState.actualWord]
-        Log.i(
-            "WordPassViewModel",
-            "Word: ${word.word.normalizeString()} - Response: ${intent.response.normalizeString()}"
-        )
+        val state = _uiState.value
+        val word = state.words[state.actualWord]
         val correct = intent.response.normalizeString() == word.word.normalizeString()
+        //Last: last word or no lives left
         val last =
-            (intent.wordPassState.actualWord + 1 == intent.wordPassState.words.size) or (!correct && intent.wordPassState.mode == WordPassMode.SURVIVAL && intent.wordPassState.lives - 1 <= 0)
-        val pointsToAdd =
-            (word.difficulty.points * (intent.wordPassState.mode?.multiPoints ?: 1.0)).toInt()
+            (state.actualWord + 1 == state.words.size) or (!correct && state.mode == WordPassMode.SURVIVAL && state.lives - 1 <= 0)
+        //Points: word points * mode multiplier
+        val wordPoints = (if (correct) 1 else 0) *
+                (word.difficulty.points * (state.mode?.multiPoints ?: 1.0)).toInt()
+        //Buff: correct answers / total words
         val buff =
-            intent.wordPassState.correctAnswers / intent.wordPassState.words.size.toFloat()
+            state.correctAnswers / state.words.size.toFloat()
         if (!correct)
-            ctx.printTextInToast("${ctx.getString(R.string.correct_response)}${word.word}")
+            application.printTextInToast("${application.getString(R.string.correct_response)}${word.word}")
         updateUi {
             it.copy(
                 status = if (last) WordPassStatus.FINISHED else WordPassStatus.RUNNING,
-                points = if (correct) it.points + (pointsToAdd * (if (last) buff else 1f)).toInt() else it.points,
+                points = it.points + wordPoints + ((it.points + wordPoints) * (if (last) buff else 0f)).toInt(),
                 actualWord = it.actualWord + 1,
-                correctAnswers = if (correct) it.correctAnswers + 1 else it.correctAnswers,
-                lives = if (correct) it.lives else it.lives - 1
+                correctAnswers = it.correctAnswers + (if (correct) 1 else 0),
+                lives = it.lives - (if (correct) 0 else 1)
             )
         }
     }
 
     private fun outGame(
         intent: WordPassIntent.OutGame
-    ) = addPointsAndCredits(intent.points, intent.onSuccess)
+    ) = addPointsAndCredits(_uiState.value.points, intent.onSuccess)
 
 
     //Privates:
@@ -199,19 +198,19 @@ class WordPassViewModel @Inject constructor(
                                         }
                                     },
                                     onError = { error ->
-                                        stopAndError(error, ctx::printTextInToast)
+                                        stopAndError(error, application::printTextInToast)
                                     }
                                 )
                             }
                         },
                         onError = { error ->
-                            stopAndError(error, ctx::printTextInToast)
+                            stopAndError(error, application::printTextInToast)
                         }
                     )
                 }
             },
             onError = { error ->
-                stopAndError(error, ctx::printTextInToast)
+                stopAndError(error, application::printTextInToast)
             }
         )
     }
@@ -231,99 +230,9 @@ class WordPassViewModel @Inject constructor(
     }
 }
 
-/**
- * Data class that represents the state of the WordPass Screen.
- *
- * @param isLoading [Boolean]: Flag that indicates if the screen is loading.
- *
- * @see MVIBaseState
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class WordPassState(
-    var isLoading: Boolean,
-    var numWords: Int,
-    var actualWord: Int,
-    var points: Int,
-    var correctAnswers: Int,
-    var lives: Int,
-    var words: List<WordModel>,
-    var status: WordPassStatus,
-    var mode: WordPassMode?
-) : MVIBaseState {
 
-    companion object {
-        /**
-         * Default state of the WordPass Screen.
-         *
-         * @return [WordPassState]: Default state of the WordPass Screen.
-         */
-        fun default() = WordPassState(
-            isLoading = false,
-            numWords = 0,
-            actualWord = 0,
-            points = 0,
-            correctAnswers = 0,
-            lives = 3,
-            words = emptyList(),
-            status = WordPassStatus.SELECTION_MODE,
-            mode = null
-        )
-    }
-}
 
-/**
- * Sealed interface that represents the possible intents of the WordPass Screen.
- *
- *
- * @see MVIBaseIntent
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface WordPassIntent : MVIBaseIntent {
 
-    data class GenerateGame(
-        val difficulty: Difficulty,
-        val wordPassMode: WordPassMode,
-        val numWords: Int,
-    ) : WordPassIntent
 
-    data class ResetGame(
-        val points: Int,
-    ) : WordPassIntent
-
-    data class SelectMode(
-        val wordPassMode: WordPassMode
-    ) : WordPassIntent
-
-    data class Response(
-        val response: String,
-        val wordPassState: WordPassState
-    ) : WordPassIntent
-
-    data class OutGame(
-        val points: Int,
-        val onSuccess: () -> Unit
-    ) : WordPassIntent
-}
-
-enum class WordPassStatus {
-    SELECTION_MODE,
-    RUNNING,
-    FINISHED
-}
-
-enum class WordPassMode(
-    val strRes: Int,
-    val icon: ImageVector,
-    val numWords: Int,
-    val multiPoints: Double
-) {
-    SURVIVAL(R.string.survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    FIRE_WHEEL(R.string.fire_wheel, Icons.Filled.Settings, Letter.entries.size, 5.0),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 20, 1.0)
-}
 
 

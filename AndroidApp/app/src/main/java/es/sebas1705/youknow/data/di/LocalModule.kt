@@ -36,6 +36,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object LocalModule {
 
+    /**
+     * Provides [Database] that is used to manage the local database
+     *
+     * @param application [Application]: Application
+     *
+     * @return [Database]
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
     @Provides
     @Singleton
     fun provideLocalDatabase(

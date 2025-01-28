@@ -17,17 +17,14 @@ package es.sebas1705.youknow.data.apis.opendb.repository
  */
 
 import es.sebas1705.youknow.data.apis.opendb.OpendbApi
-import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
 import es.sebas1705.youknow.data.apis.opendb.config.SettingsOpendb.TRIVIA_ENCODE_TEXT
+import es.sebas1705.youknow.data.apis.opendb.dtos.ResponseOpendbDto
 import javax.inject.Inject
 
 /**
  * Trivia repository implementation
  *
  * @property opendbApi [OpendbApi]: Opentbd API service
- *
- * @see es.sebas1705.youknow.data.apis.opendb.repository.OpendbRepository
- * @see OpendbApi
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -41,8 +38,8 @@ class OpendbRepositoryImpl @Inject constructor(
         category: Int?,
         difficulty: String?,
         type: String?,
-        encode : String?
-    ) : ResponseOpendbDto {
+        encode: String?
+    ): ResponseOpendbDto {
         return opendbApi.getTrivia(
             amount,
             category,
@@ -54,7 +51,7 @@ class OpendbRepositoryImpl @Inject constructor(
 
 
     override suspend fun getTenRandomQuestions(): ResponseOpendbDto {
-        return opendbApi.getTrivia(10,encode = TRIVIA_ENCODE_TEXT)
+        return opendbApi.getTrivia(10, encode = TRIVIA_ENCODE_TEXT)
     }
 
 

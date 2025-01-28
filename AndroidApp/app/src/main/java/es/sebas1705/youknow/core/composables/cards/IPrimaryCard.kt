@@ -31,6 +31,15 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized primary card
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param content [ColumnScope.() -> Unit]: Content
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IPrimaryCard(
     modifier: Modifier = Modifier,

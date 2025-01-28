@@ -25,6 +25,16 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.core.utlis.extensions.composables.makeTitle
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Subtitle
+ *
+ * @param text [String]: Text
+ * @param modifier [Modifier]: Modifier
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun Subtitle(
     text: String,

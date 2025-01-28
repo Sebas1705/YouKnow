@@ -23,12 +23,10 @@ import javax.inject.Inject
 /**
  * Service to handle the Firebase Messaging Service
  *
- * @constructor Create empty My Firebase Messaging Service
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-class MyFirebaseMessagingService @Inject constructor(): FirebaseMessagingService(){
+class MyFirebaseMessagingService @Inject constructor() : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -40,9 +38,10 @@ class MyFirebaseMessagingService @Inject constructor(): FirebaseMessagingService
      *
      * @param token [String]: token to send
      *
-     * @see Log
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
      */
-    private fun sendRegistrationToken(token: String){
+    private fun sendRegistrationToken(token: String) {
         Log.d("Token", token)
     }
 

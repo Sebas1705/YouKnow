@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.sign
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,8 +26,6 @@ import es.sebas1705.youknow.presentation.features.auth.screens.sign.design.SignD
 import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignIntent
 import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignState
 import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignViewModel
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthState
-import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 
 /**
  * Sign Screen that will allow the user to sign up or log in.
@@ -34,13 +33,7 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
  * If the user is not registered, it will allow the user to sign up.
  *
  * @param windowState [WindowState]: State of the window.
- * @param authViewModel [AuthViewModel]: ViewModel that will handle the authentication.
- * @param toLogNav () -> Unit: Function for navigation to the Log Screen.
- *
- * @see AuthViewModel
- * @see WindowState
- * @see SignDesign
- * @see AuthState
+ * @param toLogNav () -> Unit: Function to navigate to the Log Screen.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -48,15 +41,20 @@ import es.sebas1705.youknow.presentation.features.auth.viewmodels.AuthViewModel
 @Composable
 fun SignScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     toLogNav: () -> Unit,
 ) {
+    //ViewModel:
     val signViewModel: SignViewModel = hiltViewModel()
+
+    //State:
     val signState: SignState by signViewModel.uiState.collectAsStateWithLifecycle()
 
-    //Design:
+    //Body:
     SignDesign(
         windowState,
         signState,
+        soundPool,
         onSignButtonAction = { email, pass, nick, onError ->
             signViewModel.eventHandler(
                 SignIntent.SignUpWithEmail(

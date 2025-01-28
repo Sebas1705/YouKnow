@@ -25,6 +25,16 @@ import es.sebas1705.youknow.core.utlis.IComposablePreview
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Horizontal divider
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param color [Color]: Color
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 @Composable
 fun IHorDivider(
     modifier: Modifier = Modifier,

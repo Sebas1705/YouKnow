@@ -16,6 +16,10 @@ package es.sebas1705.youknow.data.local.files.repository
  *
  */
 
+import es.sebas1705.youknow.domain.model.games.FamiliesModel
+import es.sebas1705.youknow.domain.model.games.QuestionModel
+import es.sebas1705.youknow.domain.model.games.WordModel
+
 /**
  * Repository interface to write and read data from the files
  *
@@ -23,4 +27,35 @@ package es.sebas1705.youknow.data.local.files.repository
  * @author Sebastián Ramiro Entrerrios García
  */
 interface FileRepository {
+
+    /**
+     * Read the default families from the file
+     *
+     * @return [List]<[FamiliesModel]>: List of families
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun readDefaultBDFamilies(): List<FamiliesModel>
+
+    /**
+     * Read the default questions from the file
+     *
+     * @return [List]<[QuestionModel]>: List of questions
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun readDefaultBDQuestions(): List<QuestionModel>
+
+    /**
+     * Read the default words from the file
+     *
+     * @return [List]<[WordModel]>: List of words
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun readDefaultBDWords(): List<WordModel>
+
 }

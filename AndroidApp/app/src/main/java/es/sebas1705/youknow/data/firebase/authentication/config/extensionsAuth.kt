@@ -50,9 +50,8 @@ val Context.getCredentialRequestGoogle: GetCredentialRequest
  *
  * @receiver [FirebaseUser]
  *
- * @return [A]
+ * @return [ProviderAuth]
  *
- * @see A
  * @see FirebaseUser
  *
  * @author Sebastián Ramiro Entrerrios García

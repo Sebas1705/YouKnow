@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.play
  *
  */
 
+import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import es.sebas1705.youknow.core.classes.states.WindowState
@@ -25,7 +26,8 @@ import es.sebas1705.youknow.presentation.features.home.features.play.design.Play
  * Play Screen that will show the game to the user.
  *
  * @param windowState [WindowState]: The state of the window.
- * @param onGameNav (GameScreens) -> Unit: The navigation to the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onGameNav (Int) -> Unit: The navigation to the game.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -33,12 +35,17 @@ import es.sebas1705.youknow.presentation.features.home.features.play.design.Play
 @Composable
 fun PlayScreen(
     windowState: WindowState,
+    soundPool: Pair<SoundPool, Float>,
     onGameNav: (Int) -> Unit
 ) {
+    //Local:
     BackHandler {}
+
+    //Body:
     PlayDesign(
-        windowState = windowState,
-        onGameNav = onGameNav
+        windowState,
+        soundPool,
+        onGameNav
     )
 }
 

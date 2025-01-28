@@ -1,7 +1,4 @@
 package es.sebas1705.youknow.data.firebase.realtime.jsons
-
-import es.sebas1705.youknow.domain.model.social.GroupModel
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,18 +16,16 @@ import es.sebas1705.youknow.domain.model.social.GroupModel
  *
  */
 
+/**
+ * Data class to represent the group in Realtime Database
+ *
+ * @property description [String]: Description
+ * @property members [List]<[String]>: Members
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class GroupJson(
     val description: String = "",
     val members: List<String> = emptyList(),
-){
-
-    fun toGroupModel(groupId: String): GroupModel {
-        val groupData = groupId.split("-")
-        return GroupModel(
-            name = groupData[0],
-            description = this.description,
-            members = this.members,
-            leaderUID = groupData[1],
-        )
-    }
-}
+)

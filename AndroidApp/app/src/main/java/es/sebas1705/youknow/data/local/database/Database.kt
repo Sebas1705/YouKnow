@@ -30,10 +30,8 @@ import es.sebas1705.youknow.data.local.database.typeconverter.Converter
 /**
  * Local database
  *
- * @see Database
- *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @Database(
     entities = [

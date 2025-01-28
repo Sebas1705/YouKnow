@@ -21,15 +21,18 @@ package es.sebas1705.youknow.data.local.datastore.config
  *
  * @property USER_SETTINGS_DATASTORE [String]: User settings
  * @property FIRST_TIME_KEY [String]: First time
- * @property APP_VOLUME_KEY [String]: App volume
+ * @property MUSIC_VOLUME [String]: App music volume
+ * @property SOUND_VOLUME [String]: App sound volume
  * @property APP_CONTRAST_KEY [String]: App contrast
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-object SettingsDS{
+object SettingsDS {
     const val USER_SETTINGS_DATASTORE = "userSettings"
     const val FIRST_TIME_KEY = "firstTime"
-    const val APP_VOLUME_KEY = "appVolume"
+    const val MUSIC_VOLUME = "musicVolume"
+    const val SOUND_VOLUME = "soundVolume"
     const val APP_CONTRAST_KEY = "appContrast"
+    const val GAME_LANGUAGE_KEY = "gameLanguage"
 }

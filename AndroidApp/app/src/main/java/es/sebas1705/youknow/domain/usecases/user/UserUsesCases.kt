@@ -19,9 +19,17 @@ package es.sebas1705.youknow.domain.usecases.user
 import es.sebas1705.youknow.core.utlis.extensions.types.catcher
 import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
 import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
-import es.sebas1705.youknow.domain.model.UserModel
 import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 
+/**
+ * Use case to set a listener to get user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to get the user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SetUserListener(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -31,12 +39,28 @@ class SetUserListener(
     ) = firestoreRepository.setUserListener(firebaseId, onDataChange)
 }
 
+/**
+ * Use case to remove the listener to get user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to remove the listener
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class RemoveUserListener(
     private val firestoreRepository: FirestoreRepository
 ) {
     operator fun invoke() = firestoreRepository.removeUserListener()
 }
 
+/**
+ * Use case to save user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to save the user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SaveUser(
     private val firestoreRepository: FirestoreRepository,
 ) {
@@ -48,6 +72,14 @@ class SaveUser(
     ) = firestoreRepository.saveUser(userModel).catcher(onLoading, onEmptySuccess, onError)
 }
 
+/**
+ * Use case to get user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to get the user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GetUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -59,7 +91,14 @@ class GetUser(
     ) = firestoreRepository.getUser(firebaseId).catcher(onLoading, onSuccess, onError)
 }
 
-
+/**
+ * Use case to check if user exists
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to check if user exists
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class ContainsUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -71,6 +110,14 @@ class ContainsUser(
     ) = firestoreRepository.containsUser(firebaseId).catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to get if user is logged
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to get if user is logged
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GetLoggedFromUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -82,6 +129,14 @@ class GetLoggedFromUser(
     ) = firestoreRepository.getLoggedFromUser(firebaseId).catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to set if user is logged
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to set if user is logged
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SetLoggedToUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -95,6 +150,14 @@ class SetLoggedToUser(
         .catcher(onLoading, onEmptySuccess, onError)
 }
 
+/**
+ * Use case to add credits to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to add credits to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class AddCreditsToUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -108,6 +171,14 @@ class AddCreditsToUser(
         .catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to add points to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to add points to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class AddPointsToUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -121,6 +192,15 @@ class AddPointsToUser(
         .catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to set a group to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to set a group to user
+ * @property realTimeRepository [RealtimeRepository]: repository to set a group to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class SetGroupToUser(
     private val firestoreRepository: FirestoreRepository,
     private val realTimeRepository: RealtimeRepository
@@ -160,6 +240,15 @@ class SetGroupToUser(
         )
 }
 
+/**
+ * Use case to remove a group to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to remove a group to user
+ * @property realTimeRepository [RealtimeRepository]: repository to remove a group to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class RemoveGroupToUser(
     private val firestoreRepository: FirestoreRepository,
     private val realTimeRepository: RealtimeRepository
@@ -188,6 +277,14 @@ class RemoveGroupToUser(
         )
 }
 
+/**
+ * Use case to change photo to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to change photo to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class ChangePhotoToUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -201,6 +298,14 @@ class ChangePhotoToUser(
         .catcher(onLoading, onEmptySuccess, onError)
 }
 
+/**
+ * Use case to change nickname to user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to change nickname to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class ChangeNicknameToUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -214,6 +319,14 @@ class ChangeNicknameToUser(
         .catcher(onLoading, onEmptySuccess, onError)
 }
 
+/**
+ * Use case to get user ranking
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to get user ranking
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GetUserRanking(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -224,6 +337,14 @@ class GetUserRanking(
     ) = firestoreRepository.getUserRanking().catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to get user by nickname
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to get user by nickname
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class GetUserByNickname(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -235,6 +356,14 @@ class GetUserByNickname(
     ) = firestoreRepository.getUserByNickname(nickname).catcher(onLoading, onSuccess, onError)
 }
 
+/**
+ * Use case to delete data user
+ *
+ * @property firestoreRepository [FirestoreRepository]: repository to delete data user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 class DeleteDataUser(
     private val firestoreRepository: FirestoreRepository
 ) {
@@ -247,6 +376,12 @@ class DeleteDataUser(
         .catcher(onLoading, onEmptySuccess, onError)
 }
 
+/**
+ * Use cases to user
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
 data class UserUsesCases(
     //Setters:
     val setUserListener: SetUserListener,

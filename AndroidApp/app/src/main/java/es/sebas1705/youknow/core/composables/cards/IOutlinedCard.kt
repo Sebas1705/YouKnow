@@ -32,6 +32,15 @@ import es.sebas1705.youknow.core.utlis.extensions.composables.disabled
 import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Personalized outlined card
+ *
+ * @param modifier [Modifier]: Modifier
+ * @param content [ColumnScope.() -> Unit]: Content
+ *
+ * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun IOutlinedCard(
     modifier: Modifier = Modifier,

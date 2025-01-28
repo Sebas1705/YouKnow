@@ -21,8 +21,6 @@ import kotlinx.serialization.Serializable
 /**
  * Screens of the app.
  *
- * @see Serializable
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
@@ -34,6 +32,9 @@ interface AppGraph {
     object SettingsScreen : AppGraph
 
     @Serializable
+    object SurveyScreen : AppGraph
+
+    @Serializable
     object AuthNavigation : AppGraph
 
     @Serializable
@@ -41,14 +42,19 @@ interface AppGraph {
 
     @Serializable
     object GameNavigation : AppGraph
+
+    companion object {
+        val graph = listOf(
+            GuideScreen,
+            SettingsScreen,
+            SurveyScreen,
+            AuthNavigation,
+            HomeNavigation,
+            GameNavigation
+        )
+    }
 }
 
-val graph = listOf(
-    AppGraph.GuideScreen,
-    AppGraph.SettingsScreen,
-    AppGraph.AuthNavigation,
-    AppGraph.HomeNavigation,
-    AppGraph.GameNavigation
-)
+
 
 

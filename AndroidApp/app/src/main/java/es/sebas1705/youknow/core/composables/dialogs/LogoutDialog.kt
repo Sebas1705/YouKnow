@@ -16,12 +16,11 @@ package es.sebas1705.youknow.core.composables.dialogs
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,39 +33,41 @@ import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
- * Composable that shows a dialog to confirm the logout action. Confirm must active log out process,
- * and dismiss must close the dialog inclusive you click outside the dialog or press back button.
+ * Composable that displays a dialog to log out.
  *
- * @param modifier [Modifier]: Modifier to be applied to the composable.
- * @param onConfirm () -> Unit: Action to be executed when the confirm button is clicked.
- * @param onDismiss () -> Unit: Action to be executed when the dismiss button or dismiss action is active.
+ * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
+ * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
  * @see AlertDialog
- * @see Button
- * @see Text
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 @Composable
 fun LogoutDialog(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
 ) = IDialog(
     onDismissRequest = onDismiss,
     modifier = Modifier
-        .fillMaxWidth(windowState.widthFilter(0.9f,0.7f,0.5f)),
+        .fillMaxWidth(windowState.widthFilter(0.9f, 0.7f, 0.5f)),
     confirmButton = {
         IFilledButton(
             label = stringResource(R.string.confirm),
             onClick = onConfirm,
+            soundPool = soundPool
         )
     },
     dismissButton = {
         IFilledButton(
             label = stringResource(R.string.dismiss),
             onClick = onDismiss,
+            soundPool = soundPool
         )
     },
     title = {

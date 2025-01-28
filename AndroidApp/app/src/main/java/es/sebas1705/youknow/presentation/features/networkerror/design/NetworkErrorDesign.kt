@@ -36,7 +36,9 @@ import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
+ * Design of the Network Error Screen.
  *
+ * @param windowState [WindowState]: the state of the window
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -45,15 +47,17 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun NetworkErrorDesign(
     windowState: WindowState = WindowState.default()
 ) {
+    //Body:
     ApplyBack(
         backId = windowState.backFill,
     ) {
         Column(
+            modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             IRawLottieAnimation(
-                rawRes = R.raw.connection_lost,
+                rawRes = R.raw.lottie_connection,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .fillMaxHeight(0.5f)
@@ -66,11 +70,6 @@ fun NetworkErrorDesign(
     }
 }
 
-/**
- * Preview of the Settings Screen.
- *
- * @see NetworkErrorDesign
- */
 @UiModePreviews
 @Composable
 private fun NetworkErrorPreview() {

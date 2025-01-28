@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,6 +56,14 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * Design of the Groups Screen.
  *
  * @param windowState [WindowState]: The state of the window.
+ * @param groupsState [GroupsState]: The state of the Groups Screen.
+ * @param homeState [HomeState]: The state of the home.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param groupCreator (String, String) -> Unit: The creation of a group.
+ * @param groupJoin (GroupModel) -> Unit: The join of a group.
+ * @param onGroupOutButton () -> Unit: The out of a group.
+ * @param onKickButton (String) -> Unit: The kick of a member.
+ * @param onUserInfoSearch (String) -> Unit: The search of the user info.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -64,6 +73,7 @@ fun GroupsDesign(
     windowState: WindowState = WindowState.default(),
     groupsState: GroupsState = GroupsState.default(),
     homeState: HomeState = HomeState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     groupCreator: (String, String) -> Unit = { _, _ -> },
     groupJoin: (GroupModel) -> Unit = {},
     onGroupOutButton: () -> Unit = {},
@@ -71,12 +81,15 @@ fun GroupsDesign(
     onUserInfoSearch: (String) -> Unit = {}
 ) {
     //States:
-    var infoDisplay by rememberSaveable { mutableStateOf(false) }
-    var showSearch by rememberSaveable { mutableStateOf(false) }
-    var createFlag by rememberSaveable { mutableStateOf(false) }
     var userInfoId by rememberSaveable { mutableStateOf("") }
     var search by rememberSaveable { mutableStateOf("") }
 
+    //Flags:
+    var infoDisplay by rememberSaveable { mutableStateOf(false) }
+    var showSearch by rememberSaveable { mutableStateOf(false) }
+    var createFlag by rememberSaveable { mutableStateOf(false) }
+
+    //Body:
     if (createFlag) {
         CreateGroupDialog(
             onConfirm = { name, description ->
@@ -85,7 +98,8 @@ fun GroupsDesign(
             },
             onDismiss = {
                 createFlag = false
-            }
+            },
+            soundPool = soundPool
         )
     }
 
@@ -94,18 +108,24 @@ fun GroupsDesign(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (groupsState.isLoading)
-            LoadingDialog()
-        else if (infoDisplay) UserInfoDialog(
-            userModel = homeState.infoUser,
-            onDismiss = { infoDisplay = false }
-        )
 
-        if (groupsState.myGroup != null) {
+        if (groupsState.isLoading)
+            LoadingDialog(windowState)
+        else if (infoDisplay && homeState.infoUsers.containsKey(userInfoId))
+            UserInfoDialog(
+                windowState,
+                userModel = homeState.infoUsers[userInfoId]!!,
+                onDismiss = { infoDisplay = false },
+                soundPool = soundPool
+            )
+
+        val myGroup = groupsState.groups.firstOrNull { it.groupId == homeState.userModel?.groupId }
+        if (myGroup != null) {
             Group(
                 windowState,
-                groupsState,
                 homeState,
+                soundPool,
+                groupModel = myGroup,
                 onOutButton = onGroupOutButton,
                 onInfoButton = {
                     onUserInfoSearch(it)
@@ -118,6 +138,7 @@ fun GroupsDesign(
             GroupsList(
                 windowState,
                 groupsState,
+                soundPool,
                 onGroupClick = groupJoin,
                 searchFilter = search
             )
@@ -132,7 +153,8 @@ fun GroupsDesign(
                 leadingIcon = Icons.Filled.Cancel to {
                     showSearch = !showSearch
                 },
-                onValueChange = { search = it }
+                onValueChange = { search = it },
+                soundPool = soundPool
             )
             else Column(
                 modifier = Modifier
@@ -145,12 +167,14 @@ fun GroupsDesign(
                     contentDescription = stringResource(R.string.add_group),
                     imageVector = Icons.Filled.Add,
                     modifier = Modifier
-                        .padding(bottom = SmallPadding)
+                        .padding(bottom = SmallPadding),
+                    soundPool = soundPool
                 )
                 IFAB(
                     onClick = { showSearch = !showSearch },
                     contentDescription = stringResource(R.string.search_enabled),
                     imageVector = Icons.Filled.Search,
+                    soundPool = soundPool
                 )
             }
 

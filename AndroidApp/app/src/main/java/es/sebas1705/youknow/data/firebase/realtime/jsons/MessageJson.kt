@@ -16,41 +16,16 @@ package es.sebas1705.youknow.data.firebase.realtime.jsons
  *
  */
 
-import es.sebas1705.youknow.domain.model.social.MessageModel
-
 /**
  * JSON representation of a message
  *
  * @property text [String]: Text of the message
  * @property authorName [String]: Name of the author
  *
- * @see MessageModel
- *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-data class MessageJson (
+data class MessageJson(
     val text: String = "",
     val authorName: String = "",
-) {
-
-
-    /**
-     * Convert the JSON representation to a [MessageModel]
-     *
-     * @param messageId [String]: Id of the message
-     *
-     * @return [MessageModel]: Message model
-     *
-     * @see MessageModel
-     */
-    fun toMessageModel(messageId: String): MessageModel {
-        val messageData = messageId.split("-")
-        return MessageModel(
-            text = this.text,
-            time = messageData[1].toLong(),
-            authorId = messageData[0],
-            authorName = this.authorName,
-        )
-    }
-}
+)

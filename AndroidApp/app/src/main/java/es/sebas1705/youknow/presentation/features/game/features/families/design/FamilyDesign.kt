@@ -16,9 +16,12 @@ package es.sebas1705.youknow.presentation.features.game.features.families.design
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
+import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesStatus
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.utlis.UiModePreviews
@@ -26,49 +29,45 @@ import es.sebas1705.youknow.presentation.features.game.features.families.composa
 import es.sebas1705.youknow.presentation.features.game.features.families.composables.Finished
 import es.sebas1705.youknow.presentation.features.game.features.families.composables.Running
 import es.sebas1705.youknow.presentation.features.game.features.families.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesMode
 import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesState
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesStatus
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.
  *
- * @see ApplyBack
- * @see Title
- *
  * @param windowState [WindowState]: State of the window.
+ * @param familiesState [FamiliesState]: State of the game.
+ * @param onSelectMode ([FamiliesMode]) -> Unit: Function to select the mode of the game.
+ * @param onResponseQuestion (String) -> Unit: Function to respond to the question.
+ * @param onRestartGame () -> Unit: Function to restart the game.
+ * @param onOutGame () -> Unit: Function to exit the game.
+ * @param onStartGame (Difficulty, Category, Int) -> Unit: Function to start the game.
  *
  * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios
  */
 @Composable
 fun FamiliesDesign(
     windowState: WindowState = WindowState.default(),
     familiesState: FamiliesState = FamiliesState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onSelectMode: (FamiliesMode) -> Unit = { },
     onResponseQuestion: (String) -> Unit = { },
     onRestartGame: () -> Unit = { },
     onOutGame: () -> Unit = { },
     onStartGame: (Difficulty, Category, Int) -> Unit = { _, _, _ -> }
 ) {
+    //Body:
     if (familiesState.isLoading) LoadingDialog(windowState)
 
     when (familiesState.status) {
-        FamiliesStatus.SELECTION_MODE -> SelectionMode(windowState, onSelectMode)
-        FamiliesStatus.CUSTOM -> Custom(windowState, onStartGame)
-        FamiliesStatus.RUNNING -> Running(windowState, familiesState, onResponseQuestion)
-        FamiliesStatus.FINISHED -> Finished(windowState, familiesState, onRestartGame, onOutGame)
+        FamiliesStatus.SELECTION_MODE -> SelectionMode(windowState, soundPool, onSelectMode)
+        FamiliesStatus.CUSTOM -> Custom(windowState, soundPool, onStartGame)
+        FamiliesStatus.RUNNING -> Running(windowState, familiesState, soundPool, onResponseQuestion)
+        FamiliesStatus.FINISHED -> Finished(windowState, familiesState, soundPool, onRestartGame, onOutGame)
     }
 }
 
-/**
- * Preview of the Mystery Number Game.
- *
- * @see UiModePreviews
- * @see FamiliesDesign
- *
- * @since 1.0.0
- */
 @UiModePreviews
 @Composable
 private fun FamiliesPreview() {

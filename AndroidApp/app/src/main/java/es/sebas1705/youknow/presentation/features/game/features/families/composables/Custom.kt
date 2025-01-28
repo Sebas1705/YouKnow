@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.game.features.families.compos
  *
  */
 
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,6 @@ import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,10 +43,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.Category
-import es.sebas1705.youknow.core.classes.enums.Difficulty
+import es.sebas1705.youknow.core.classes.enums.games.Category
+import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
+import es.sebas1705.youknow.core.composables.buttons.radio.IRadioButton
 import es.sebas1705.youknow.core.composables.extras.DropdownList
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.spacers.PaddingSpacers.MediumSpacer
@@ -56,24 +57,38 @@ import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
+/**
+ * Custom screen of the Families game.
+ *
+ * @param windowState [WindowState]: State of the window.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
+ * @param onStartGame (Difficulty, Category, Int) -> Unit: Function to start the game.
+ *
+ * @since 1.0.0
+ * @Author Sebastián Ramiro Entrerrios
+ */
 @Composable
 fun Custom(
     windowState: WindowState = WindowState.default(),
+    soundPool: Pair<SoundPool, Float>? = null,
     onStartGame: (Difficulty, Category, Int) -> Unit = { _, _, _ -> }
 ) {
+    //Local:
     val ctx = LocalContext.current
 
+    //States:
     var difficulty by rememberSaveable { mutableIntStateOf(Difficulty.EASY.ordinal) }
-    var difficultyEnum = Difficulty.entries[difficulty]
-    var category = rememberSaveable { mutableIntStateOf(Category.GENERAL_KNOWLEDGE.ordinal) }
-    var categoryEnum = Category.entries[category.intValue]
+    val difficultyEnum = Difficulty.entries[difficulty]
+    val category = rememberSaveable { mutableIntStateOf(Category.GENERAL_KNOWLEDGE.ordinal) }
+    val categoryEnum = Category.entries[category.intValue]
     var numQuestions by rememberSaveable { mutableIntStateOf(10) }
-    var titleStyle = windowState.heightType.filter(
+    val titleStyle = windowState.heightType.filter(
         MaterialTheme.typography.titleSmall,
         MaterialTheme.typography.titleLarge,
         MaterialTheme.typography.headlineMedium
     )
 
+    //Body:
     ApplyBack(
         backId = windowState.backEmpty
     ) {
@@ -127,9 +142,10 @@ fun Custom(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    RadioButton(
+                                    IRadioButton(
                                         selected = difficulty == it.ordinal,
-                                        onClick = { difficulty = it.ordinal }
+                                        onClick = { difficulty = it.ordinal },
+                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -145,9 +161,10 @@ fun Custom(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    RadioButton(
+                                    IRadioButton(
                                         selected = difficulty == it.ordinal,
-                                        onClick = { difficulty = it.ordinal }
+                                        onClick = { difficulty = it.ordinal },
+                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -174,15 +191,16 @@ fun Custom(
                     ),
                     valueRes = categoryEnum.strRes,
                     onValueChange = { s ->
-                        category.intValue = Category.entries.indexOfFirst { ctx.getString(it.strRes) == s }
-                    }
-                ){ onChanged ->
+                        category.intValue =
+                            Category.entries.indexOfFirst { ctx.getString(it.strRes) == s }
+                    },
+                    soundPool = soundPool
+                ) { onChanged ->
                     Category.entries.forEach {
-                        val option = stringResource(it.strRes)
                         DropdownMenuItem(
                             text = { Text(stringResource(it.strRes)) },
                             onClick = {
-                                onChanged(option)
+                                onChanged(it.strRes)
                             },
                             colors = MenuDefaults.itemColors(
                                 textColor = MaterialTheme.colorScheme.primary
@@ -196,7 +214,8 @@ fun Custom(
                 IOutlinedButton(
                     label = stringResource(R.string.start_game),
                     imageVector = Icons.Filled.Start,
-                    onClick = { onStartGame(difficultyEnum, categoryEnum, numQuestions) }
+                    onClick = { onStartGame(difficultyEnum, categoryEnum, numQuestions) },
+                    soundPool = soundPool
                 )
                 MediumSpacer()
             }

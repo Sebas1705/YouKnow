@@ -16,7 +16,6 @@ package es.sebas1705.youknow.data.firebase.realtime.config
  *
  */
 
-
 /**
  * Realtime references used in the app
  *
@@ -25,11 +24,11 @@ package es.sebas1705.youknow.data.firebase.realtime.config
  * @property GROUPS_REFERENCE [String]: Groups reference
  * @property MESSAGE_MAX_LENGTH [Int]: Max length of a message
  * @property MAX_MESSAGES_ON_GLOBAL_CHAT [Int]: Max messages on global chat
+ * @property ERROR_GENERIC_MESSAGE_EX [String]: Generic error message by exception
+ * @property ERROR_GENERIC_MESSAGE_FAIL [String]: Generic error message by failure listener
  *
- * @see es.sebas1705.youknow.data.firebase.realtime.config.isRealtimeSavable
- *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
 object SettingsRT {
     const val DEFAULT_REFERENCE = "default"

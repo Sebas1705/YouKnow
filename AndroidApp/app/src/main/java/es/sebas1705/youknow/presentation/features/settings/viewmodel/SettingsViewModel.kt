@@ -17,12 +17,9 @@ package es.sebas1705.youknow.presentation.features.settings.viewmodel
  */
 
 import android.app.Application
-import android.content.Context
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.classes.theme.ThemeContrast
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
 import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
@@ -33,12 +30,7 @@ import javax.inject.Inject
  * ViewModel for Settings Screen that will handle the UI logic and the data flow.
  *
  * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to handle the app settings.
- *
- * @see MVIBaseViewModel
- * @see HiltViewModel
- * @see SettingsState
- * @see SettingsIntent
- * @see DatastoreUsesCases
+ * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -49,8 +41,6 @@ class SettingsViewModel @Inject constructor(
     private val application: Application
 ) : MVIBaseViewModel<SettingsState, SettingsIntent>() {
 
-    private val ctx: Context = application.applicationContext
-
     override fun initState(): SettingsState = SettingsState.default()
 
     override fun intentHandler(
@@ -59,20 +49,87 @@ class SettingsViewModel @Inject constructor(
         when (intent) {
             is SettingsIntent.ReadSettings -> readSettings()
             is SettingsIntent.ChangeContrast -> changeContrast(intent)
-            is SettingsIntent.ChangeVolume -> changeVolume(intent)
+            is SettingsIntent.ChangeMusicVolume -> changeMusicVolume(intent)
+            is SettingsIntent.ChangeSoundVolume -> changeSoundVolume(intent)
+            is SettingsIntent.ChangeLanguage -> changeLanguage(intent)
+            is SettingsIntent.RestoreSettings -> restoreSettings()
         }
     }
 
     //Actions:
     private fun readSettings() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readAppVolume().collect {
-            updateUi { it.copy(volume = it.volume) }
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.readMusicVolume().collect { volume ->
+                Log.i("SettingsViewModel", "readSettings: $volume")
+                updateUi { it.copy(musicVolume = volume) }
+            }
         }
-        datastoreUsesCases.readAppContrast().collect {
-            updateUi { it.copy(themeContrast = it.themeContrast) }
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.readSoundVolume().collect { volume ->
+                Log.i("SettingsViewModel", "readSettings: $volume")
+                updateUi { it.copy(soundVolume = volume) }
+            }
+        }
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.readAppContrast().collect { contrast ->
+                Log.i("SettingsViewModel", "readSettings: $contrast")
+                updateUi { it.copy(themeContrast = contrast) }
+            }
+        }
+        execute(Dispatchers.IO) {
+            datastoreUsesCases.readGameLanguage().collect { language ->
+                Log.i("SettingsViewModel", "readSettings: $language")
+                updateUi { it.copy(gameLanguage = language) }
+            }
         }
     }
 
+    private fun restoreSettings() = execute(Dispatchers.IO) {
+        datastoreUsesCases.saveMusicVolume(
+            volume = DefaultValuesDS.MUSIC_VOLUME,
+            onLoading = { startLoading() },
+            onSuccess = {
+                updateUi { it.copy(musicVolume = DefaultValuesDS.MUSIC_VOLUME) }
+                execute(Dispatchers.IO) {
+                    datastoreUsesCases.saveAppContrast(
+                        themeContrast = DefaultValuesDS.APP_UI_CONTRAST,
+                        onLoading = {},
+                        onSuccess = {
+                            updateUi { it.copy(themeContrast = DefaultValuesDS.APP_UI_CONTRAST) }
+                            execute(Dispatchers.IO) {
+                                datastoreUsesCases.saveGameLanguage(
+                                    languages = DefaultValuesDS.GAME_LANGUAGE,
+                                    onLoading = {},
+                                    onSuccess = {
+                                        updateUi { it.copy(gameLanguage = DefaultValuesDS.GAME_LANGUAGE) }
+                                        execute(Dispatchers.IO) {
+                                            datastoreUsesCases.saveSoundVolume(
+                                                volume = DefaultValuesDS.SOUND_VOLUME,
+                                                onLoading = {},
+                                                onSuccess = {
+                                                    updateUi { it.copy(soundVolume = DefaultValuesDS.SOUND_VOLUME) }
+                                                    stopLoading()
+                                                },
+                                                onError = {
+                                                    stopAndError(
+                                                        it,
+                                                        application::printTextInToast
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    },
+                                    onError = { stopAndError(it, application::printTextInToast) }
+                                )
+                            }
+                        },
+                        onError = { stopAndError(it, application::printTextInToast) }
+                    )
+                }
+            },
+            onError = { stopAndError(it, application::printTextInToast) },
+        )
+    }
 
     private fun changeContrast(
         intent: SettingsIntent.ChangeContrast
@@ -84,21 +141,49 @@ class SettingsViewModel @Inject constructor(
                 updateUi { it.copy(themeContrast = intent.themeContrast) }
                 stopLoading()
             },
-            onError = { stopAndError(it, ctx::printTextInToast) }
+            onError = { stopAndError(it, application::printTextInToast) }
         )
     }
 
-    private fun changeVolume(
-        intent: SettingsIntent.ChangeVolume
+    private fun changeMusicVolume(
+        intent: SettingsIntent.ChangeMusicVolume
     ) = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveAppVolume(
+        datastoreUsesCases.saveMusicVolume(
             intent.volume,
             onLoading = { startLoading() },
             onSuccess = {
-                updateUi { it.copy(volume = intent.volume) }
+                updateUi { it.copy(musicVolume = intent.volume) }
                 stopLoading()
             },
-            onError = { stopAndError(it, ctx::printTextInToast) }
+            onError = { stopAndError(it, application::printTextInToast) }
+        )
+    }
+
+    private fun changeSoundVolume(
+        intent: SettingsIntent.ChangeSoundVolume
+    ) = execute(Dispatchers.IO) {
+        datastoreUsesCases.saveSoundVolume(
+            intent.volume,
+            onLoading = { startLoading() },
+            onSuccess = {
+                updateUi { it.copy(soundVolume = intent.volume) }
+                stopLoading()
+            },
+            onError = { stopAndError(it, application::printTextInToast) }
+        )
+    }
+
+    private fun changeLanguage(
+        intent: SettingsIntent.ChangeLanguage
+    ) = execute(Dispatchers.IO) {
+        datastoreUsesCases.saveGameLanguage(
+            intent.language,
+            onLoading = { startLoading() },
+            onSuccess = {
+                updateUi { it.copy(gameLanguage = intent.language) }
+                stopLoading()
+            },
+            onError = { stopAndError(it, application::printTextInToast) }
         )
     }
 
@@ -117,49 +202,5 @@ class SettingsViewModel @Inject constructor(
     }
 }
 
-/**
- * Data class that represents the state of the Settings Screen.
- *
- * @param themeContrast [ThemeContrast]: Theme contrast of the app.
- * @param volume [Float]: Volume of the app.
- *
- * @see MVIBaseState
- * @see ThemeContrast
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-data class SettingsState(
-    val isLoading: Boolean,
-    val themeContrast: ThemeContrast,
-    val volume: Float
-) : MVIBaseState {
-    companion object {
 
-        /**
-         * Default state of the Settings Screen.
-         *
-         * @return [SettingsState]: Default state of the Settings Screen.
-         */
-        fun default() = SettingsState(
-            isLoading = false,
-            themeContrast = DefaultValuesDS.APP_UI_CONTRAST,
-            volume = DefaultValuesDS.APP_VOLUME
-        )
-    }
-}
 
-/**
- * Sealed class that represents the possible intents of the Settings Screen.
- *
- * @see MVIBaseIntent
- * @see ThemeContrast
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-sealed interface SettingsIntent : MVIBaseIntent {
-    data object ReadSettings : SettingsIntent
-    data class ChangeContrast(val themeContrast: ThemeContrast) : SettingsIntent
-    data class ChangeVolume(val volume: Float) : SettingsIntent
-}
