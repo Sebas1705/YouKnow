@@ -17,6 +17,7 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.design
  */
 
 import android.media.SoundPool
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +44,11 @@ import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 import es.sebas1705.youknow.core.composables.dialogs.UserInfoDialog
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.textfields.IFilledTextField
+import es.sebas1705.youknow.core.composables.texts.IText
+import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.social.GroupModel
+import es.sebas1705.youknow.domain.model.social.UserModel
 import es.sebas1705.youknow.presentation.features.home.features.groups.composables.Group
 import es.sebas1705.youknow.presentation.features.home.features.groups.composables.GroupsList
 import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
@@ -78,7 +83,7 @@ fun GroupsDesign(
     groupJoin: (GroupModel) -> Unit = {},
     onGroupOutButton: () -> Unit = {},
     onKickButton: (String) -> Unit = {},
-    onUserInfoSearch: (String) -> Unit = {}
+    onUserInfoSearch: (List<String>) -> Unit = {}
 ) {
     //States:
     var userInfoId by rememberSaveable { mutableStateOf("") }
@@ -114,7 +119,7 @@ fun GroupsDesign(
         else if (infoDisplay && homeState.infoUsers.containsKey(userInfoId))
             UserInfoDialog(
                 windowState,
-                userModel = homeState.infoUsers[userInfoId]!!,
+                userModel = homeState.infoUsers[userInfoId]?: UserModel.default(),
                 onDismiss = { infoDisplay = false },
                 soundPool = soundPool
             )
@@ -128,19 +133,36 @@ fun GroupsDesign(
                 groupModel = myGroup,
                 onOutButton = onGroupOutButton,
                 onInfoButton = {
-                    onUserInfoSearch(it)
                     userInfoId = it
                     infoDisplay = true
                 },
                 onKickButton = onKickButton,
+                onUsersLoad = onUserInfoSearch
             )
         } else {
-            GroupsList(
+            val groups = groupsState.groups.filter {
+                search.isEmpty() || it.name.contains(
+                    search,
+                    ignoreCase = true
+                )
+            }
+            if(groups.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Title(
+                        text = stringResource(R.string.no_groups),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+            } else GroupsList(
                 windowState,
                 groupsState,
+                groups,
                 soundPool,
-                onGroupClick = groupJoin,
-                searchFilter = search
+                onGroupClick = groupJoin
             )
 
             if (showSearch) IFilledTextField(
@@ -177,10 +199,8 @@ fun GroupsDesign(
                     soundPool = soundPool
                 )
             }
-
         }
     }
-
 }
 
 @UiModePreviews

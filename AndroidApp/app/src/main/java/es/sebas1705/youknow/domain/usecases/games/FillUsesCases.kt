@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.domain.usecases
+package es.sebas1705.youknow.domain.usecases.games
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,6 +16,7 @@ package es.sebas1705.youknow.domain.usecases
  *
  */
 
+import android.util.Log
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.data.local.files.repository.FileRepository
 
@@ -32,9 +33,17 @@ class FillByDefaultFamilies(
     private val fileRepository: FileRepository,
     private val databaseRepository: DatabaseRepository
 ) {
-    suspend operator fun invoke() {
+    suspend operator fun invoke(
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        onLoading()
         val families = fileRepository.readDefaultBDFamilies()
+        Log.d("FillUsesCases", "invoke: $families")
         families.forEach { databaseRepository.insertOrReplace(it) }
+        if(families.isEmpty()) onError("Empty Families")
+        else onSuccess()
     }
 }
 
@@ -51,9 +60,17 @@ class FillByDefaultQuestions(
     private val fileRepository: FileRepository,
     private val databaseRepository: DatabaseRepository
 ) {
-    suspend operator fun invoke() {
+    suspend operator fun invoke(
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        onLoading()
         val questions = fileRepository.readDefaultBDQuestions()
+        Log.d("FillUsesCases", "invoke: $questions")
         questions.forEach { databaseRepository.insertOrReplace(it) }
+        if(questions.isEmpty()) onError("Empty Questions")
+        else onSuccess()
     }
 }
 
@@ -70,9 +87,17 @@ class FillByDefaultWords(
     private val fileRepository: FileRepository,
     private val databaseRepository: DatabaseRepository
 ) {
-    suspend operator fun invoke() {
+    suspend operator fun invoke(
+        onLoading: () -> Unit,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        onLoading()
         val words = fileRepository.readDefaultBDWords()
+        Log.d("FillUsesCases", "invoke: $words")
         words.forEach { databaseRepository.insertOrReplace(it) }
+        if(words.isEmpty()) onError("Empty words")
+        else onSuccess()
     }
 }
 

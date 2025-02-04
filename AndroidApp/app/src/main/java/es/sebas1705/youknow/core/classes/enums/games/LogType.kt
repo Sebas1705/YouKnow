@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
+package es.sebas1705.youknow.core.classes.enums.games
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,20 +16,15 @@ package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-
 /**
- * Sealed interface that represents the possible actions of the [MainViewModel].
+ * Enum class to define the type of log
  *
- * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
  */
-sealed interface MainIntent : MVIBaseIntent {
-
-    data object GetRanking : MainIntent
-
-    data object GetNews : MainIntent
-
-    data object RecreateGameDB : MainIntent
-
+enum class LogType {
+    INFO,
+    DEBUG,
+    ERROR,
+    WARNING
 }

@@ -1,7 +1,4 @@
-package es.sebas1705.youknow.presentation.features.survey.viewmodel
-
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-
+package es.sebas1705.youknow.core.utlis.extensions.types
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,23 +13,32 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
+import android.util.Log
+import es.sebas1705.youknow.core.classes.enums.games.LogType
+
 /**
- * State of the [SurveyViewModel]
+ * Extension function to log messages
  *
- * @property isLoading: Boolean to know if the survey is loading
+ * @receiver [Any]: the class that calls the function
+ *
+ * @param message [String]: the message to log
+ * @param logType [LogType]: the type of log
+ *
+ * @see LogType
  *
  * @since 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
-data class SurveyState(
-    val isLoading: Boolean,
-) : MVIBaseState {
-    companion object {
-        fun default() = SurveyState(
-            isLoading = false,
-        )
+fun Any.log(
+    message: String,
+    logType: LogType
+) {
+    when (logType) {
+        LogType.INFO -> Log.i(this::class.java.simpleName, message)
+        LogType.DEBUG -> Log.d(this::class.java.simpleName, message)
+        LogType.ERROR -> Log.e(this::class.java.simpleName, message)
+        LogType.WARNING -> Log.w(this::class.java.simpleName, message)
     }
 }

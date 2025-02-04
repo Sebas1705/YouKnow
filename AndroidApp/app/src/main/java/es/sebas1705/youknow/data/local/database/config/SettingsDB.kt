@@ -32,4 +32,5 @@ object SettingsDB {
     const val QUESTION_TABLE = "questions_table"
     const val FAMILIES_TABLE = "families_table"
     const val WORD_TABLE = "word_table"
+    const val SURVEY_TABLE = "survey_table"
 }

@@ -68,6 +68,9 @@ fun MainScreen(
         homeState,
         mainState,
         soundPool,
+        onReloadButton = {
+            mainViewModel.eventHandler(MainIntent.RecreateGameDB)
+        },
         onSettingsNav
     )
 }

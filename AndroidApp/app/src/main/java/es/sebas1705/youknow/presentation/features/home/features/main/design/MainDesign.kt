@@ -25,12 +25,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,9 +43,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import es.sebas1705.youknow.R
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
 import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
 import es.sebas1705.youknow.core.composables.cards.IOutlinedCard
 import es.sebas1705.youknow.core.composables.cards.IResumeCard
+import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.youknow.core.composables.dialogs.ReloadDialog
 import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.texts.IText
@@ -48,6 +56,7 @@ import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
 import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
+import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
@@ -72,17 +81,36 @@ fun MainDesign(
     homeState: HomeState = HomeState.default(),
     mainState: MainState = MainState.default(),
     soundPool: Pair<SoundPool, Float>? = null,
+    onReloadButton: () -> Unit = {},
     onSettingsNav: () -> Unit = {}
 ) {
     //Local:
     val language = Locale.getDefault().language
 
+    //State:
+    var reloadDialog by remember { mutableStateOf(false) }
+
     //Body:
     ApplyBack(
         windowState.backEmpty
     ) {
+        if (mainState.isLoading)
+            LoadingDialog(windowState)
+        else if (reloadDialog)
+            ReloadDialog(
+                windowState,
+                soundPool,
+                onConfirm = {
+                    reloadDialog = false
+                    onReloadButton()
+                },
+                onDismiss = { reloadDialog = false }
+            )
+
+        val listState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            state = listState,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -99,7 +127,6 @@ fun MainDesign(
             }
 
             item {
-
                 val news = mainState.news.associate {
                     if (language == "es") it.titleEs to it.bodyEs
                     else it.titleEn to it.bodyEn
@@ -170,7 +197,15 @@ fun MainDesign(
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(SmallPadding))
-
+                        Spacer(Modifier.height(SmallPadding))
+                        IFilledTonalButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = HugePadding),
+                            label = stringResource(R.string.reload),
+                            onClick = { reloadDialog = true },
+                            enabled = mainState.isLoading.not()
+                        )
                         Spacer(Modifier.height(MediumPadding))
                     }
                 }

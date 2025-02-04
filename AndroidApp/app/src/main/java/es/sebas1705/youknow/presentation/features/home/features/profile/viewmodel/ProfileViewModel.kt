@@ -97,14 +97,8 @@ class ProfileViewModel @Inject constructor(
         authUsesCases.signOut(
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
-                    userUsesCases.setLoggedToUser(firebaseId,
-                        false,
-                        onLoading = { startLoading() },
-                        onEmptySuccess = {
-                            stopLoading()
-                            userUsesCases.removeUserListener()
-                        },
-                        onError = { stopAndError(it, application::printTextInToast) })
+                    stopLoading()
+                    userUsesCases.removeUserListener()
                 }
             },
             onError = { stopAndError(it, application::printTextInToast) }

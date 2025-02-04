@@ -3,12 +3,13 @@ package es.sebas1705.youknow.data.local.database.repository
 import es.sebas1705.youknow.core.classes.enums.games.Category
 import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
 import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
 import es.sebas1705.youknow.data.local.database.entities.WordEntity
 import es.sebas1705.youknow.domain.model.games.FamiliesModel
 import es.sebas1705.youknow.domain.model.games.QuestionModel
 import es.sebas1705.youknow.domain.model.games.WordModel
+import es.sebas1705.youknow.domain.model.stats.SurveyModel
 
 /*
  * Copyright (C) 2022 The Android Open Source Project
@@ -73,6 +74,18 @@ interface DatabaseRepository {
     suspend fun containsWord(word: String): Boolean
 
     /**
+     * Check if the survey is in the database
+     *
+     * @param authorFirebaseId [String]: authorFirebaseId to check
+     *
+     * @return [Boolean]: True if the survey is in the database, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun containsSurvey(authorFirebaseId: String): Boolean
+
+    /**
      * Get a list of questions
      *
      * @param numOfQuestions [Int]: Number of questions to get
@@ -133,6 +146,18 @@ interface DatabaseRepository {
         difficulty: Difficulty,
     ): List<WordModel>
 
+    /**
+     * Get a survey with a specific authorFirebaseId
+     *
+     * @param authorFirebaseId [String]: authorFirebaseId of the survey
+     *
+     * @return [SurveyModel]: survey
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun getSurvey(authorFirebaseId: String): SurveyModel?
+
     //Inserts
     /**
      * Insert or replace a question in the database
@@ -163,6 +188,16 @@ interface DatabaseRepository {
      * @author Sebastián Ramiro Entrerrios García
      */
     suspend fun insertOrReplace(wordModel: WordModel)
+
+    /**
+     * Insert a survey in the database
+     *
+     * @param surveyModel [SurveyModel]: Survey to insert
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun insertOrReplace(surveyModel: SurveyModel)
 
     //Updates
 
@@ -202,5 +237,17 @@ interface DatabaseRepository {
      * @author Sebastián Ramiro Entrerrios García
      */
     suspend fun deleteWord(word: String): Boolean
+
+    /**
+     * Delete a survey from the database
+     *
+     * @param authorFirebaseId [String]: authorFirebaseId of the survey to delete
+     *
+     * @return [Boolean]: True if the survey was deleted, false otherwise
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    suspend fun deleteSurvey(authorFirebaseId: String): Boolean
 
 }

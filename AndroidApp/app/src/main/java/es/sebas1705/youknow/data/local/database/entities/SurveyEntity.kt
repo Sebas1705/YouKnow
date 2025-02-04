@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.domain.model.stats
+package es.sebas1705.youknow.data.local.database.entities
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,22 +16,25 @@ package es.sebas1705.youknow.domain.model.stats
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Languages
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import es.sebas1705.youknow.data.local.database.config.SettingsDB
 
 /**
- * SurveyModel is a data class that represents the survey model.
+ * SurveyEntity is a data class that represents the survey entity.
  *
  * @since 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
-data class SurveyModel(
+@Entity(tableName = SettingsDB.SURVEY_TABLE)
+data class SurveyEntity(
 
     /////User:
-    val authorFirebaseId: String,
+    @PrimaryKey val authorFirebaseId: String,
     val authorNickName: String,
     val authorAge: Int,
     val profession: String,
-    val language: Languages,
+    val language: Int,
     val androidKnowing: Int,
     val applicationsKnowing: Int,
     val gamesKnowing: Int,

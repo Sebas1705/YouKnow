@@ -36,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -96,8 +97,7 @@ fun Running(
             return@ApplyBack
         }
         val word = wordPassState.words[wordPassState.actualWord]
-        val definitions = word.definitions
-        var definition by rememberSaveable { mutableStateOf(definitions[0]) }
+        var definition by rememberSaveable { mutableIntStateOf(0) }
         val color = when (word.difficulty) {
             Difficulty.EASY -> Color.Green
             Difficulty.MEDIUM -> Color.Yellow
@@ -119,7 +119,12 @@ fun Running(
                         .padding(MediumPadding)
                         .border(OutlineThickness, color, MaterialTheme.shapes.small),
                     text = word.toMoultedString(),
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Center,
+                    textStyle = when {
+                        wordPassState.words[wordPassState.actualWord].word.length > 9 -> MaterialTheme.typography.titleMedium
+                        wordPassState.words[wordPassState.actualWord].word.length > 5 -> MaterialTheme.typography.headlineMedium
+                        else -> MaterialTheme.typography.displayMedium
+                    }
                 )
             }
             item {
@@ -140,7 +145,10 @@ fun Running(
                         soundPool = soundPool
                     )
                     ITextButton(
-                        onClick = { onResponse(response) },
+                        onClick = {
+                            onResponse(response)
+                            definition = 0
+                        },
                         label = stringResource(R.string.try_word),
                         soundPool = soundPool
                     )
@@ -160,24 +168,20 @@ fun Running(
                         imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
                         contentDescription = stringResource(R.string.previous_definition),
                         onClick = {
-                            definition =
-                                definitions[(definitions.indexOf(definition) - 1).coerceAtLeast(0)]
+                            definition = (definition - 1).coerceAtLeast(0)
                         },
                         soundPool = soundPool
                     )
                     Title(
                         modifier = Modifier.fillMaxWidth(0.7f),
-                        text = definition,
+                        text = word.definitions[definition],
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     IStandardIconButton(
                         imageVector = Icons.AutoMirrored.Filled.ArrowRight,
                         contentDescription = stringResource(R.string.next_definition),
                         onClick = {
-                            definition =
-                                definitions[(definitions.indexOf(definition) + 1).coerceAtMost(
-                                    definitions.size - 1
-                                )]
+                            definition = (definition + 1).coerceAtMost(word.definitions.size - 1)
                         },
                         soundPool = soundPool
                     )

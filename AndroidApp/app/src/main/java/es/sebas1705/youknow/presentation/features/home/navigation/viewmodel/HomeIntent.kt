@@ -36,8 +36,8 @@ sealed interface HomeIntent : MVIBaseIntent {
         val credits: Int
     ) : HomeIntent
 
-    data class GetUser(
-        val firebaseId: String
+    data class GetUsers(
+        val firebaseIds: List<String>
     ) : HomeIntent
 
     data object SignOut : HomeIntent

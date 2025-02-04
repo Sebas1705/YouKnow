@@ -21,4 +21,6 @@
     <string name="search_enabled">Search Enabled</string>
     <string name="add_group">Add group</string>
     <string name="search">Search</string>
+    <string name="no_groups">No groups found</string>
+    <string name="no_chats">No messages found</string>
 </resources>

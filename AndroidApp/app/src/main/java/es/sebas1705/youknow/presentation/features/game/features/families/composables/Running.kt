@@ -119,10 +119,15 @@ fun Running(
             item {
                 TitleSurface(
                     modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                        .fillMaxWidth(0.9f)
                         .padding(MediumPadding)
                         .border(1.dp, color, MaterialTheme.shapes.small),
-                    text = stringResource(R.string.families_game)
+                    text = stringResource(R.string.families_game),
+                    textStyle = windowState.widthFilter(
+                        MaterialTheme.typography.headlineMedium,
+                        MaterialTheme.typography.displaySmall,
+                        MaterialTheme.typography.displayLarge
+                    )
                 )
             }
             item {

@@ -25,8 +25,8 @@ import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
 import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesStatus
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
@@ -70,9 +70,9 @@ class FamiliesViewModel @Inject constructor(
 
     //Actions:
     private fun readLanguages() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readGameLanguage().collect {
+        datastoreUsesCases.readGameLanguage().collect { languages ->
             updateUi {
-                it.copy(languages = it.languages)
+                it.copy(languages = languages)
             }
         }
     }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.domain.usecases
+package es.sebas1705.youknow.domain.usecases.games
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

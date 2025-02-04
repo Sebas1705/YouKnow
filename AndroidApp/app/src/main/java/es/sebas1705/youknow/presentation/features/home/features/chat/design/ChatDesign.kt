@@ -17,7 +17,8 @@ package es.sebas1705.youknow.presentation.features.home.features.chat.design
  */
 
 import android.media.SoundPool
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +40,7 @@ import es.sebas1705.youknow.core.classes.states.WindowState
 import es.sebas1705.youknow.core.composables.buttons.fab.ISmallFAB
 import es.sebas1705.youknow.core.composables.layouts.ApplyBack
 import es.sebas1705.youknow.core.composables.textfields.IFilledTextField
+import es.sebas1705.youknow.core.composables.texts.Title
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.data.firebase.realtime.config.SettingsRT
 import es.sebas1705.youknow.presentation.features.home.features.chat.composables.Chat
@@ -60,7 +63,6 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatDesign(
     windowState: WindowState = WindowState.default(),
@@ -81,7 +83,18 @@ fun ChatDesign(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Chat(
+        if (chatState.chatGlobal.isEmpty()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Title(
+                    text = stringResource(R.string.no_chats),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+        } else Chat(
             windowState = windowState,
             soundPool = soundPool,
             firebaseId = homeState.userModel?.firebaseId ?: "",

@@ -48,7 +48,7 @@ fun GroupsScreen(
     windowState: WindowState,
     homeState: HomeState,
     soundPool: Pair<SoundPool, Float>,
-    onUserInfoSearch: (String) -> Unit,
+    onUserInfoSearch: (List<String>) -> Unit,
 ) {
     //Locals:
     val ctx = LocalContext.current

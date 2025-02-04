@@ -28,38 +28,31 @@ import es.sebas1705.youknow.data.firebase.realtime.repository.RealtimeRepository
 import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
 import es.sebas1705.youknow.data.local.datastore.repository.DatastoreRepository
 import es.sebas1705.youknow.data.local.files.repository.FileRepository
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.FillByDefaultFamilies
-import es.sebas1705.youknow.domain.usecases.FillByDefaultQuestions
-import es.sebas1705.youknow.domain.usecases.FillByDefaultWords
-import es.sebas1705.youknow.domain.usecases.FillUsesCases
-import es.sebas1705.youknow.domain.usecases.GetTriviaTenQuestions
-import es.sebas1705.youknow.domain.usecases.ReadAppContrast
-import es.sebas1705.youknow.domain.usecases.ReadFirstTime
-import es.sebas1705.youknow.domain.usecases.ReadGameLanguage
-import es.sebas1705.youknow.domain.usecases.ReadMusicVolume
-import es.sebas1705.youknow.domain.usecases.ReadSoundVolume
-import es.sebas1705.youknow.domain.usecases.SaveAppContrast
-import es.sebas1705.youknow.domain.usecases.SaveFirstTime
-import es.sebas1705.youknow.domain.usecases.SaveGameLanguage
-import es.sebas1705.youknow.domain.usecases.SaveMusicVolume
-import es.sebas1705.youknow.domain.usecases.SaveSoundVolume
-import es.sebas1705.youknow.domain.usecases.TriviaUsesCases
 import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
+import es.sebas1705.youknow.domain.usecases.games.FillByDefaultFamilies
+import es.sebas1705.youknow.domain.usecases.games.FillByDefaultQuestions
+import es.sebas1705.youknow.domain.usecases.games.FillByDefaultWords
+import es.sebas1705.youknow.domain.usecases.games.FillUsesCases
 import es.sebas1705.youknow.domain.usecases.games.GenerateFamilies
 import es.sebas1705.youknow.domain.usecases.games.GenerateQuestionList
 import es.sebas1705.youknow.domain.usecases.games.GenerateRandomNumber
 import es.sebas1705.youknow.domain.usecases.games.GenerateWheelWordPass
 import es.sebas1705.youknow.domain.usecases.games.GenerateWordPass
+import es.sebas1705.youknow.domain.usecases.games.GetTriviaTenQuestions
 import es.sebas1705.youknow.domain.usecases.games.InsertFamiliesList
 import es.sebas1705.youknow.domain.usecases.games.InsertQuestionList
 import es.sebas1705.youknow.domain.usecases.games.InsertWordPassList
 import es.sebas1705.youknow.domain.usecases.games.MysteryNumberUsesCases
 import es.sebas1705.youknow.domain.usecases.games.QuizUsesCases
+import es.sebas1705.youknow.domain.usecases.games.TriviaUsesCases
 import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
+import es.sebas1705.youknow.domain.usecases.logs.GetActualSurvey
+import es.sebas1705.youknow.domain.usecases.logs.GetAllSurveys
 import es.sebas1705.youknow.domain.usecases.logs.LogEvent
+import es.sebas1705.youknow.domain.usecases.logs.PublicSurvey
 import es.sebas1705.youknow.domain.usecases.logs.SetUserProperty
+import es.sebas1705.youknow.domain.usecases.logs.SurveyUsesCases
 import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
 import es.sebas1705.youknow.domain.usecases.social.CreateGroup
 import es.sebas1705.youknow.domain.usecases.social.GetNews
@@ -71,6 +64,17 @@ import es.sebas1705.youknow.domain.usecases.social.RemoveMessagesListener
 import es.sebas1705.youknow.domain.usecases.social.SendMessage
 import es.sebas1705.youknow.domain.usecases.social.SetGroupsListener
 import es.sebas1705.youknow.domain.usecases.social.SetMessagesListener
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.ReadAppContrast
+import es.sebas1705.youknow.domain.usecases.ui.ReadFirstTime
+import es.sebas1705.youknow.domain.usecases.ui.ReadGameLanguage
+import es.sebas1705.youknow.domain.usecases.ui.ReadMusicVolume
+import es.sebas1705.youknow.domain.usecases.ui.ReadSoundVolume
+import es.sebas1705.youknow.domain.usecases.ui.SaveAppContrast
+import es.sebas1705.youknow.domain.usecases.ui.SaveFirstTime
+import es.sebas1705.youknow.domain.usecases.ui.SaveGameLanguage
+import es.sebas1705.youknow.domain.usecases.ui.SaveMusicVolume
+import es.sebas1705.youknow.domain.usecases.ui.SaveSoundVolume
 import es.sebas1705.youknow.domain.usecases.user.AddCreditsToUser
 import es.sebas1705.youknow.domain.usecases.user.AddPointsToUser
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
@@ -79,7 +83,6 @@ import es.sebas1705.youknow.domain.usecases.user.ChangePhotoToUser
 import es.sebas1705.youknow.domain.usecases.user.ContainsUser
 import es.sebas1705.youknow.domain.usecases.user.DeleteDataUser
 import es.sebas1705.youknow.domain.usecases.user.GetFirebaseUser
-import es.sebas1705.youknow.domain.usecases.user.GetLoggedFromUser
 import es.sebas1705.youknow.domain.usecases.user.GetUser
 import es.sebas1705.youknow.domain.usecases.user.GetUserByNickname
 import es.sebas1705.youknow.domain.usecases.user.GetUserRanking
@@ -88,7 +91,6 @@ import es.sebas1705.youknow.domain.usecases.user.RemoveUserListener
 import es.sebas1705.youknow.domain.usecases.user.SaveUser
 import es.sebas1705.youknow.domain.usecases.user.SendForgotPassword
 import es.sebas1705.youknow.domain.usecases.user.SetGroupToUser
-import es.sebas1705.youknow.domain.usecases.user.SetLoggedToUser
 import es.sebas1705.youknow.domain.usecases.user.SetUserListener
 import es.sebas1705.youknow.domain.usecases.user.SignGoogle
 import es.sebas1705.youknow.domain.usecases.user.SignInEmailUser
@@ -191,12 +193,10 @@ object DomainModule {
         addCreditsToUser = AddCreditsToUser(firestoreRepository),
         addPointsToUser = AddPointsToUser(firestoreRepository),
         containsUser = ContainsUser(firestoreRepository),
-        getLoggedFromUser = GetLoggedFromUser(firestoreRepository),
         getUser = GetUser(firestoreRepository),
         saveUser = SaveUser(firestoreRepository),
         setGroupToUser = SetGroupToUser(firestoreRepository, realtimeRepository),
         removeGroupToUser = RemoveGroupToUser(firestoreRepository, realtimeRepository),
-        setLoggedToUser = SetLoggedToUser(firestoreRepository),
         setUserListener = SetUserListener(firestoreRepository),
         removeUserListener = RemoveUserListener(firestoreRepository),
         changePhotoToUser = ChangePhotoToUser(firestoreRepository),
@@ -381,5 +381,27 @@ object DomainModule {
         firestoreRepository: FirestoreRepository
     ): NewsUsesCases = NewsUsesCases(
         getNews = GetNews(firestoreRepository)
+    )
+
+    /**
+     * Function to provide survey use cases
+     *
+     * @param firestoreRepository [FirestoreRepository]: Repository to access to the firestore
+     * @param databaseRepository [DatabaseRepository]: Repository to access to the database
+     *
+     * @return [SurveyUsesCases]: Use cases of the survey
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    @Provides
+    @Singleton
+    fun provideSurveyUsesCases(
+        firestoreRepository: FirestoreRepository,
+        databaseRepository: DatabaseRepository
+    ): SurveyUsesCases = SurveyUsesCases(
+        publicSurvey = PublicSurvey(firestoreRepository, databaseRepository),
+        getActualSurvey = GetActualSurvey(firestoreRepository, databaseRepository),
+        getAllSurveys = GetAllSurveys(firestoreRepository),
     )
 }

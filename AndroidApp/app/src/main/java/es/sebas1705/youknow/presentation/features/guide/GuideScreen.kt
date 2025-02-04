@@ -55,8 +55,7 @@ fun GuideScreen(
         guideState,
         soundPool,
         onSuccessNavigation = {
-            guideViewModel.eventHandler(GuideIntent.SaveFirstTime)
-            guideViewModel.eventHandler(GuideIntent.FillData {
+            guideViewModel.eventHandler(GuideIntent.ChargeData {
                 onSuccessNavigation()
             })
         },

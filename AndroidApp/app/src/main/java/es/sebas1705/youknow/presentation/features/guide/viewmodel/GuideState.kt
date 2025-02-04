@@ -22,14 +22,12 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
  * State for Guide Screen that will handle the first time the app is opened.
  *
  * @property isLoading [Boolean]: Flag that indicates if the screen is loading data.
- * @property firstTime [Boolean]: Flag that indicates if it is the first time the app is opened.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
 data class GuideState(
-    val isLoading: Boolean,
-    val firstTime: Boolean
+    val isLoading: Boolean
 ) : MVIBaseState {
     companion object {
 
@@ -42,8 +40,7 @@ data class GuideState(
          * @author Sebastián Ramiro Entrerrios García
          */
         fun default() = GuideState(
-            isLoading = false,
-            firstTime = true
+            isLoading = false
         )
     }
 }

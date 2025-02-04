@@ -18,7 +18,12 @@ package es.sebas1705.youknow.presentation.features.survey
 
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.presentation.features.survey.design.SurveyDesign
+import es.sebas1705.youknow.presentation.features.survey.viewmodel.SurveyViewModel
 
 /**
  * Survey Screen of the app.
@@ -36,5 +41,17 @@ fun SurveyScreen(
     soundPool: Pair<SoundPool, Float>,
     onBack: () -> Unit
 ) {
+    //Viewmodel:
+    val surveyViewModel: SurveyViewModel = hiltViewModel()
 
+    //State:
+    val surveyState by surveyViewModel.uiState.collectAsStateWithLifecycle()
+
+    //Body:
+    SurveyDesign(
+        windowState,
+        surveyState,
+        soundPool,
+        onBack
+    )
 }

@@ -18,7 +18,6 @@ package es.sebas1705.youknow.core.root.composable
 
 import android.media.AudioAttributes
 import android.media.SoundPool
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -71,10 +70,7 @@ fun MainComposable(
         mainViewModel.eventHandler(MainIntent.ChargeData)
     }
 
-    mainState.musicVolume.let {
-        Log.d("MainComposable", "Volume: $it")
-        onVolumeChange(it)
-    }
+    onVolumeChange(mainState.musicVolume)
 
     //Content:
     YouKnowTheme(

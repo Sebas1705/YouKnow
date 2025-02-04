@@ -17,6 +17,8 @@ package es.sebas1705.youknow.core.classes.managers
  */
 
 import com.google.android.gms.tasks.Task
+import es.sebas1705.youknow.core.classes.enums.games.LogType
+import es.sebas1705.youknow.core.utlis.extensions.types.log
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
@@ -61,10 +63,14 @@ class TaskFlowManager(
         taskAction: suspend () -> Task<Q>,
         onSuccessListener: (Q) -> ResponseState<T>
     ): Flow<ResponseState<T>> = callbackFlow {
+        log("Starting task flow producer", LogType.INFO)
         val sender = this@callbackFlow::trySendBlocking
         try {
             sender(ResponseState.Loading)
-            assertChecker()?.let { sender(createResponse(ErrorResponseType.BadRequest, it)) }
+            assertChecker()?.let {
+                log("Error in task flow producer: $it", LogType.ERROR)
+                sender(createResponse(ErrorResponseType.BadRequest, it))
+            }
                 ?: taskAction()
                     .addOnSuccessListener {
                         sender(onSuccessListener(it))
@@ -79,6 +85,7 @@ class TaskFlowManager(
                         )
                     }
         } catch (e: Exception) {
+            log("Error in task flow producer: ${e.message}", LogType.ERROR)
             sender(
                 ResponseState.Error(
                     classLogData,

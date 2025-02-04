@@ -64,19 +64,17 @@ class MenuViewModel @Inject constructor(
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
                     userUsesCases.containsUser(firebaseId, onSuccess = { wasLogged ->
-                        if (wasLogged) execute(Dispatchers.IO) {
-                            userUsesCases.setLoggedToUser(firebaseId, true, onEmptySuccess = {
-                                stopLoading()
-                                execute(action = intent.onSuccess)
-                            }, onError = { stopAndError(it, application::printTextInToast) })
-                        }
-                        else execute(Dispatchers.IO) {
+                        if (!wasLogged) execute(Dispatchers.IO) {
                             userUsesCases.saveUser(userModel = UserModel.newGoogleUser(authUsesCases.getFirebaseUser()!!),
                                 onEmptySuccess = {
                                     stopLoading()
                                     execute(action = intent.onSuccess)
                                 },
                                 onError = { stopAndError(it, application::printTextInToast) })
+                        }
+                        else {
+                            stopLoading()
+                            execute(action = intent.onSuccess)
                         }
                     }, onError = { stopAndError(it, application::printTextInToast) })
                 }

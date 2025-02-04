@@ -16,9 +16,10 @@ package es.sebas1705.youknow.core.classes.mvi
  *
  */
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import es.sebas1705.youknow.core.classes.enums.games.LogType
+import es.sebas1705.youknow.core.utlis.extensions.types.log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +79,7 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
      * @author Sebastián Ramiro Entrerrios García
      */
     protected open fun onInit() {
-        Log.d("MVIBaseViewModel", "ViewModel initialized ${this::class.java.simpleName}")
+        log("ViewModel initialized", LogType.WARNING)
     }
 
     init {
@@ -87,7 +88,7 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("MVIBaseViewModel", "ViewModel cleared ${this::class.java.simpleName}")
+        log("ViewModel cleared", LogType.WARNING)
     }
 
     /**

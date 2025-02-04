@@ -51,8 +51,8 @@ class HomeViewModel @Inject constructor(
             is HomeIntent.LoadActual -> loadActual()
             is HomeIntent.ClearActual -> updateUi { it.copy(userModel = null, firebaseUser = null) }
             is HomeIntent.AddCredits -> addCredits(intent)
-            is HomeIntent.GetUser -> getUser(intent)
-            is HomeIntent.SignOut -> signOut(intent)
+            is HomeIntent.GetUsers -> getUsers(intent)
+            is HomeIntent.SignOut -> signOut()
         }
     }
 
@@ -104,43 +104,35 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun getUser(
-        intent: HomeIntent.GetUser
+    private fun getUsers(
+        intent: HomeIntent.GetUsers
     ) = execute(Dispatchers.IO) {
-        if (_uiState.value.infoUsers.containsKey(intent.firebaseId).not()) {
-            Log.d("HomeViewModel", "User not caught")
-            userUsesCases.getUser(
-                intent.firebaseId,
-                onLoading = { startLoading() },
-                onSuccess = { userModel ->
-                    stopLoading()
-                    updateUi {
-                        val infoUsers = it.infoUsers.toMutableMap()
-                        infoUsers[userModel.firebaseId] = userModel
-                        it.copy(infoUsers = infoUsers)
+        intent.firebaseIds.forEach { firebaseId ->
+            if (_uiState.value.infoUsers.containsKey(firebaseId).not()) {
+                Log.d("HomeViewModel", "User not caught")
+                userUsesCases.getUser(
+                    firebaseId,
+                    onLoading = { startLoading() },
+                    onSuccess = { userModel ->
+                        stopLoading()
+                        updateUi {
+                            val infoUsers = it.infoUsers.toMutableMap()
+                            infoUsers[userModel.firebaseId] = userModel
+                            it.copy(infoUsers = infoUsers)
+                        }
+                    },
+                    onError = { error ->
+                        stopAndError(error, application::printTextInToast)
                     }
-                },
-                onError = { error ->
-                    stopAndError(error, application::printTextInToast)
-                }
-            )
+                )
+            }
         }
     }
 
-    private fun signOut(
-        intent: HomeIntent.SignOut
-    ) = execute(Dispatchers.IO) {
+    private fun signOut() = execute(Dispatchers.IO) {
         authUsesCases.signOut(onSuccess = { firebaseId ->
-            execute(Dispatchers.IO) {
-                userUsesCases.setLoggedToUser(firebaseId,
-                    false,
-                    onLoading = { startLoading() },
-                    onEmptySuccess = {
-                        stopLoading()
-                        userUsesCases.removeUserListener()
-                    },
-                    onError = { stopAndError(it, application::printTextInToast) })
-            }
+            stopLoading()
+            userUsesCases.removeUserListener()
         }, onError = { stopAndError(it, application::printTextInToast) })
     }
 

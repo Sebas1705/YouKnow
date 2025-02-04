@@ -154,8 +154,8 @@ fun HomeNav(
                     windowState,
                     homeState,
                     soundPool,
-                    onUserInfoSearch = { firebaseId ->
-                        homeViewModel.eventHandler(HomeIntent.GetUser(firebaseId))
+                    onUserInfoSearch = { firebaseIds ->
+                        homeViewModel.eventHandler(HomeIntent.GetUsers(firebaseIds))
                     }
                 )
             }

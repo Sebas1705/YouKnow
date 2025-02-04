@@ -16,12 +16,12 @@ package es.sebas1705.youknow.presentation.features.guide.viewmodel
  *
  */
 
+import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.FillUsesCases
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.domain.usecases.games.FillUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -41,41 +41,69 @@ import javax.inject.Inject
 @HiltViewModel
 class GuideViewModel @Inject constructor(
     private val datastoreUsesCases: DatastoreUsesCases,
-    private val fillUsesCases: FillUsesCases
+    private val fillUsesCases: FillUsesCases,
+    private val application: Application
 ) : MVIBaseViewModel<GuideState, GuideIntent>() {
 
     override fun initState(): GuideState = GuideState.default()
 
     override fun intentHandler(intent: GuideIntent) {
         when (intent) {
-            is GuideIntent.SaveFirstTime -> saveFirstTime()
-            is GuideIntent.FillData -> fillData(intent)
-        }
-    }
-
-    override fun onInit() {
-        execute(Dispatchers.IO) {
-            datastoreUsesCases.readFirstTime().collect { data ->
-                updateUi { it.copy(firstTime = data) }
-            }
+            is GuideIntent.ChargeData -> chargeData(intent)
         }
     }
 
     //Actions:
-    private fun saveFirstTime() = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveFirstTime()
-        updateUi { it.copy(firstTime = false) }
+    private fun chargeData(
+        intent: GuideIntent.ChargeData
+    ) = execute(Dispatchers.IO) {
+        fillUsesCases.fillByDefaultWords(
+            onLoading = { startLoading() },
+            onSuccess = {
+                execute(Dispatchers.IO) {
+                    fillUsesCases.fillByDefaultFamilies(
+                        onLoading = {},
+                        onSuccess = {
+                            execute(Dispatchers.IO) {
+                                fillUsesCases.fillByDefaultQuestions(
+                                    onLoading = {},
+                                    onSuccess = {
+                                        execute(Dispatchers.IO) {
+                                            datastoreUsesCases.saveFirstTime()
+                                        }
+                                        stopLoading()
+                                        execute { intent.onSuccess() }
+                                    },
+                                    onError = { error ->
+                                        stopAndError(error, application::printTextInToast)
+                                    }
+                                )
+                            }
+                        },
+                        onError = { error ->
+                            stopAndError(error, application::printTextInToast)
+                        }
+                    )
+                }
+            },
+            onError = { error ->
+                stopAndError(error, application::printTextInToast)
+            }
+        )
     }
 
-    private fun fillData(
-        intent: GuideIntent.FillData
-    ) = execute(Dispatchers.IO) {
+    //Privates:
+    private fun startLoading() {
         updateUi { it.copy(isLoading = true) }
-        fillUsesCases.fillByDefaultWords()
-        fillUsesCases.fillByDefaultFamilies()
-        fillUsesCases.fillByDefaultQuestions()
+    }
+
+    private fun stopLoading() {
         updateUi { it.copy(isLoading = false) }
-        execute { intent.onSuccess() }
+    }
+
+    private fun stopAndError(error: String, onError: (String) -> Unit) {
+        stopLoading()
+        execute { onError(error) }
     }
 
 }

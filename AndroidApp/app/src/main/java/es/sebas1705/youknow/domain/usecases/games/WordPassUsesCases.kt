@@ -16,6 +16,7 @@ package es.sebas1705.youknow.domain.usecases.games
  *
  */
 
+import android.util.Log
 import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.core.classes.enums.games.Languages
 import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
@@ -49,6 +50,15 @@ class GenerateWordPass(
             languages,
             difficulty,
         )
+        Log.d(
+            "GenerateWordPass", """
+            |*Words same features* 
+            |-Same letter: ${words.filter { it.letter == letter }.size} (${letter.name})
+            |-Same language: ${words.filter { it.language == languages }.size} (${languages.name})
+            |-Same difficulty: ${words.filter { it.difficulty == difficulty }.size} (${difficulty.name})
+            |-Results: ${words.filter { it.letter == letter && it.language == languages && it.difficulty == difficulty }.size}/${words.size}
+        """.trimMargin()
+        )
         if (words.isEmpty())
             onError("No words found")
         else if (words.size < numFamilies)
@@ -71,6 +81,7 @@ class GenerateWheelWordPass(
 ) {
     suspend operator fun invoke(
         difficulty: Difficulty,
+        languages: Languages,
         onLoading: () -> Unit,
         onSuccess: (List<WordModel>) -> Unit,
         onError: (String) -> Unit
@@ -78,10 +89,12 @@ class GenerateWheelWordPass(
         onLoading()
         val words: MutableList<WordModel> = mutableListOf()
         Letter.entries.forEach {
+            if (it == Letter.ANY)
+                return@forEach
             val word = databaseRepository.getWords(
                 1,
                 it,
-                Languages.ANY,
+                languages,
                 difficulty,
             )
             if (word.isNotEmpty())
