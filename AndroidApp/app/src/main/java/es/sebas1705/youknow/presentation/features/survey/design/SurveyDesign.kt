@@ -17,8 +17,15 @@ package es.sebas1705.youknow.presentation.features.survey.design
  */
 
 import android.media.SoundPool
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.buttons.segmented.ISingleChoiceSegmentedButton
 import es.sebas1705.youknow.presentation.features.survey.viewmodel.SurveyState
 
 /**
@@ -38,5 +45,20 @@ fun SurveyDesign(
     soundPool: Pair<SoundPool, Float>? = null,
     onBack: () -> Unit = {}
 ) {
+    val pagerState = rememberPagerState(initialPage = 0) { pageList.size }
+    Scaffold(
+        topBar = {
+
+            ISingleChoiceSegmentedButton(
+                elements = listOf(Triple()),
+            )
+        }
+    ) {
+        HorizontalPager(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) { }
+    }
 
 }
