@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -20,6 +21,43 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "YouKnow"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":build-logic")
-include(":build-logic:convention")
+
+include(":core")
+include(":core:common")
+include(":core:designsystem")
+include(":core:ui")
+
+include(":domain")
+include(":domain:models")
+include(":domain:services")
+include(":domain:mappers")
+include(":domain:usescases")
+include(":domain:usescases:families")
+include(":domain:usescases:fill")
+include(":domain:usescases:mysteryNumber")
+include(":domain:usescases:quiz")
+include(":domain:usescases:wordPass")
+include(":domain:usescases:opendb")
+include(":domain:usescases:analytics")
+include(":domain:usescases:survey")
+include(":domain:usescases:chat")
+include(":domain:usescases:groups")
+include(":domain:usescases:news")
+include(":domain:usescases:settings")
+include(":domain:usescases:auth")
+include(":domain:usescases:user")
+
+include(":data")
+include(":data:analytics")
+include(":data:authentication")
+include(":data:firestore")
+include(":data:realtime")
+include(":data:room")
+include(":data:datastore")
+include(":data:files")
+include(":data:retrofit")
+
+include(":feature")
+include(":feature:main")

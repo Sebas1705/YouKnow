@@ -118,7 +118,7 @@ firebase-firestrore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase-database = { module = "com.google.firebase:firebase-database-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
-# firebase-remote-config = { module = "com.google.firebase:firebase-remote-config-ktx" }
+firebase-remote-config = { module = "com.google.firebase:firebase-remote-config-ktx" }
 
 # Retrofit:
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

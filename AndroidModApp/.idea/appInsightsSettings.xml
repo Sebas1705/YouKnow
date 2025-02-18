@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="es.sebas1705.youknow.debug" />
+                  <option name="mobileSdkAppId" value="1:875884945428:android:36e1a66ecde24d4da64701" />
+                  <option name="projectId" value="youknow-tfg" />
+                  <option name="projectNumber" value="875884945428" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

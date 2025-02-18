@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_common_dif_easy">Fácil</string>
+    <string name="core_common_dif_medium">Medio</string>
+    <string name="core_common_dif_hard">Difícil</string>
+</resources>

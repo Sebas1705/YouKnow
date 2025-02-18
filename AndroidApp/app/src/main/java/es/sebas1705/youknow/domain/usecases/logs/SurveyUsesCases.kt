@@ -1,10 +1,4 @@
 package es.sebas1705.youknow.domain.usecases.logs
-
-import es.sebas1705.youknow.core.utlis.extensions.types.catcher
-import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
-import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
-import es.sebas1705.youknow.domain.model.stats.SurveyModel
-
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,6 +15,11 @@ import es.sebas1705.youknow.domain.model.stats.SurveyModel
  * limitations under the License.
  *
  */
+
+import es.sebas1705.youknow.core.utlis.extensions.types.catcher
+import es.sebas1705.youknow.data.firebase.firestore.repository.FirestoreRepository
+import es.sebas1705.youknow.data.local.database.repository.DatabaseRepository
+import es.sebas1705.youknow.domain.model.stats.SurveyModel
 
 /**
  * Use case to public a survey

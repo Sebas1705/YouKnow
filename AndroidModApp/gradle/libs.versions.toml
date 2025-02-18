@@ -1,6 +1,15 @@
 [versions]
 # Firebase
-firebase-bom = "33.9.0"
+firebase-analytics = "22.2.0"
+firebase-crashlytics = "19.4.0"
+firebase-perf = "21.3.0"
+firebaseAuthKtx = "23.2.0"
+firebaseFirestoreKtx = "25.1.2"
+firebaseDatabaseKtx = "21.0.0"
+firebaseStorageKtx = "21.0.1"
+firebase-messaging = "24.1.0"
+firebaseRemoteConfigKtx = "22.0.0"
+
 firebase-perf-plugin = "1.4.2"
 firebase-crashlytics-plugin = "3.0.3"
 
@@ -8,33 +17,31 @@ firebase-crashlytics-plugin = "3.0.3"
 appcompat = "1.7.0"
 constraintlayout = "2.2.0"
 core-ktx = "1.15.0"
-lifecycle-runtime-ktx = "2.8.7"
 navigation = "2.8.7"
 espresso-core = "3.6.1"
-test-ext-junit = "1.2.1"
-androidAppPluginVersion = "8.6.1"
+androidAppPluginVersion = "8.8.1"
 lifecycle-viewmodel-compose = "2.8.7"
-accompanist = "0.36.0"
+
+# Lifecycle:
+lifecycleRuntimeKtx = "2.8.7"
+androidxLifecycle = "2.8.7"
+runtimeLivedataVersion = "1.7.8"
 
 #Fragment
 fragment = "1.8.6"
 
 # Google
+accompanist = "0.36.0"
 googleServices = "4.4.2"
 material = "1.12.0"
 
 # Gradle Plugins
 androidGradlePlugin = "8.6.1"
 androidToolsCommon = "31.8.1"
-composeGradlePlugin = "1.4.0"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
 kspGradlePlugin = "2.1.0-1.0.29"
 roomGradlePlugin = "2.6.1"
-
-# Testing
-junit = "4.13.2"
-truth = "1.4.4"
 
 # Hilt
 hilt = "2.54"
@@ -43,6 +50,7 @@ hilt = "2.54"
 retrofit = "2.11.0"
 retrofit-gson = "2.9.0"
 okhttp = "4.12.0"
+converterGson = "2.9.0"
 
 # Kotlin Json
 kotlinSerializationJson = "1.7.3"
@@ -52,36 +60,66 @@ retrofitConverterFactory = "0.8.0"
 kotlinVersion = "2.0.21"
 
 # Compose
-composeUiVersion = "1.7.8"
-composeMaterial3Version = "1.3.1"
+composeBom = "2025.02.00"
 composeNavigationVersion = "2.8.7"
 hilt-navigation-compose = "1.2.0"
+activityCompose = "1.10.0"
+constraintlayoutCompose = "1.1.0"
+composeMaterial3Version = "1.3.1"
+materialIconsExtended = "1.7.8"
+uiTextGoogleFonts = "1.7.8"
 
 #Room
 room = "2.6.1"
 room-ktx = "2.6.1"
 room-compiler = "2.6.1"
 
-# Datastore
-datastore = "1.1.2"
+# Credentials:
+credentials = "1.3.0"
+credentialsPlayServicesAuth = "1.3.0"
+playServicesAuth = "21.3.0"
+googleid = "1.1.1"
+playServicesTasks = "18.2.0"
+playServicesMeasurementApi = "22.2.0"
+
+# Datastore:
+datastorePreferences = "1.1.2"
 
 # Protobuf
 protobufPlugin = "0.9.4"
 protobuf = "4.29.2"
 
-# Couchbase
-couchbase = "3.2.0"
-material3AndroidVersion = "1.3.1"
-uiTextGoogleFontsVersion = "1.7.7"
+# Coil:
+coilComposeVersion = "2.7.0"
 
-# Libraries
+# Lottie:
+lottie = "6.6.0"
+
+# Testing
+junit = "4.13.2"
+truth = "1.4.4"
+androidxTestExt = "1.2.1"
+androidxTest = "1.6.1"
+androidxTestRunner = "1.6.2"
+firebaseAuthKtxVersion = "23.2.0"
+
+
+
 [libraries]
+# Google
+accompanist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+
 # Firebase
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics"}
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics"}
-firebase-perf = { module = "com.google.firebase:firebase-perf"}
-firebase-messaging = { module = "com.google.firebase:firebase-messaging"}
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
+firebase-perf = { module = "com.google.firebase:firebase-perf", version.ref = "firebase-perf" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebase-messaging" }
+firebase-auth = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+firebase-database = { module = "com.google.firebase:firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+firebase-storage = { module = "com.google.firebase:firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+firebase-remote-config = { module = "com.google.firebase:firebase-remote-config-ktx", version.ref = "firebaseRemoteConfigKtx" }
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-plugin" }
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebase-perf-plugin" }
 
@@ -90,33 +128,34 @@ appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat"
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "test-ext-junit" }
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle-runtime-ktx" }
-accompanist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
-# Google
-material = { module = "com.google.android.material:material", version.ref = "material" }
+# Lifecycle:
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedataVersion" }
 
-# Compose (all this libraries are part of the AndroidFeatureConventionPlugin in this project)
-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUiVersion" }
-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" , version.ref = "composeUiVersion"}
-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling",  version.ref = "composeUiVersion"}
-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUiVersion"}
-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeUiVersion"}
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeUiVersion"}
-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3Version"}
-fragment-compose = { group = "androidx.fragment", name = "fragment-compose", version.ref = "fragment" }
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigationVersion" }
-viewmodel-compose = { group = "androidx.lifecycle", name = "viewmodel-compose", version.ref = "lifecycle-viewmodel-compose" }
+# Compose
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigationVersion" }
+hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+fragment = { group = "androidx.fragment", name = "fragment-compose", version.ref = "fragment" }
+constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3Version" }
+material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 
 # Gradle Plugins
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -131,13 +170,16 @@ retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref 
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 retrofit-converter-factory = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitConverterFactory" }
-
-# Testing
-junit = { module = "junit:junit", version.ref = "junit" }
-truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
-
 # Kotlin
 kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerializationJson" }
+
+# Credentials:
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+play-services-tasks = { group = "com.google.android.gms", name = "play-services-tasks", version.ref = "playServicesTasks" }
+play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
 
 # Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -145,21 +187,29 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-ktx
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-compiler" }
 
 # Datastore
-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 # Protobuf
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
-# Couchbase
-couchbase-lite = { group = "com.couchbase.lite", name = "couchbase-lite-android-ktx", version.ref = "couchbase" }
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
+test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
+test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 
-# Plugins
+
 [plugins]
-
 #Android
 android-application = { id = "com.android.application", version.ref = "androidAppPluginVersion" }
 android-library = { id = "com.android.library", version.ref = "androidAppPluginVersion" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.0.21" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Firebase
 firebase-gms = { id = "com.google.gms.google-services", version.ref = "googleServices" }
@@ -169,12 +219,8 @@ firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "fireb
 # Hilt
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
-# Kotlin
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
 #Compose
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
 
 #ksp
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -182,14 +228,26 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 #Protobuf
 protobuf = { id = "com.google.protobuf" ,version.ref = "protobufPlugin" }
 
-# Stone Mobile
-#ibera3movil-android-application = { id = "ibera3movil.android.application", version = "null" }
-#ibera3movil-android-library = { id = "ibera3movil.android.library", version = "null"}
-#ibera3movil-android-feature = { id = "ibera3movil.android.feature"}
-#ibera3movil-android-hilt = { id = "ibera3movil.android.hilt", version = "null"}
-#ibera3movil_android_firebase = { id = "ibera3movil.android.firebase", version = "null"}
-#ibera3movil_android_kotlin_serialization = { id = "ibera3movil.android.kotlinSerialization", version = "null"}
-#ibera3movil_android_flavors = { id = "ibera3movil.android.flavors", version = "null"}
-#ibera3movil_android_networking = { id = "ibera3movil.android.networkLibrary", version = "null"}
-#ibera3movil_android_compose = { id = "ibera3movil.android.compose", version = "null"}
+# My plugins
+# Modules
+youknow-application = { id = "youknow.android.application", version = "null" }
+youknow-core = { id = "youknow.android.core", version = "null"}
+youknow-feature = { id = "youknow.android.feature", version = "null"}
+youknow-data = { id = "youknow.android.data", version = "null"}
+youknow-domain = { id = "youknow.android.domain", version = "null"}
+
+# Libraries
+youknow-library = { id = "youknow.android.library", version = "null"}
+youknow-hilt = { id = "youknow.android.hilt", version = "null"}
+youknow-firebase = { id = "youknow.android.firebase", version = "null"}
+youknow-retrofit = { id = "youknow.android.retrofit", version = "null"}
+youknow-compose = { id = "youknow.android.compose", version = "null"}
+youknow-credential = { id = "youknow.android.credential", version = "null"}
+youknow-room = { id = "youknow.android.room", version = "null"}
+youknow-datastore = { id = "youknow.android.datastore", version = "null"}
+youknow-lifecycle = { id = "youknow.android.lifecycle", version = "null"}
+youknow-test = { id = "youknow.android.test", version = "null"}
+
+# Flavors
+youknow-flavors = { id = "youknow.android.flavors", version = "null"}
 

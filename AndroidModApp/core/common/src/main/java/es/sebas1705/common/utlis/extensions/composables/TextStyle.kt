@@ -1,0 +1,61 @@
+package es.sebas1705.common.utlis.extensions.composables
+/*
+ * Copyright (C) 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import es.sebas1705.youknow.presentation.ui.theme.titleFontFamily
+
+/**
+ * Make the text style bold
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with bold
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+fun TextStyle.makeBold(): TextStyle = this.copy(fontWeight = FontWeight.Bold)
+
+/**
+ * Make the text style italic
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with italic
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+fun TextStyle.makeItalic(): TextStyle = this.copy(fontStyle = FontStyle.Italic)
+
+/**
+ * Make the text style title
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with title
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+fun TextStyle.makeTitle(): TextStyle = this.copy(fontFamily = titleFontFamily)
