@@ -36,15 +36,20 @@ android {
         buildConfig = true
         compose = true
     }
+
+
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains:annotations:23.0.0")
+        }
+    }
+
 }
 
 dependencies {
-    api(projects.core.common)
-    api(projects.core.ui)
+    api(projects.core.resources)
+
     api(projects.domain.services)
 
     api(projects.feature.main)
-
-    implementation(libs.play.services.measurement.api)
-    implementation(libs.core.ktx)
 }

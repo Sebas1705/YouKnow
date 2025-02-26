@@ -1,0 +1,1 @@
+-keep,allowobfuscation,allowshrinking class es.sebas1705.survey.viewmodel.SurveyViewModel
