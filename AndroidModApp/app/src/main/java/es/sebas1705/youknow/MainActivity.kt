@@ -30,7 +30,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
+import es.sebas1705.common.managers.LogType
+import es.sebas1705.common.utlis.extensions.types.log
 import es.sebas1705.main.MainScreen
+import es.sebas1705.services.BackgroundMusicService
 
 
 /**

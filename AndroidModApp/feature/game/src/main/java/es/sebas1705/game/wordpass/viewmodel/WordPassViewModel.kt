@@ -1,0 +1,239 @@
+package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel
+/*
+ * Copyright (C) 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import android.app.Application
+import android.util.Log
+import dagger.hilt.android.lifecycle.HiltViewModel
+import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
+import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
+import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.primitives.normalizeString
+import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
+import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
+
+/**
+ * ViewModel for WordPass Screen that will decide the start destination of the app
+ * depending on the user's state and the first time the app is opened.
+ *
+ * @param wordPassUsesCases [WordPassUsesCases]: UseCases for the WordPass game.
+ * @param userUsesCases [UserUsesCases]: UseCases for the user.
+ * @param authUsesCases [AuthUsesCases]: UseCases for the Auth.
+ * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
+ * @param application [Application]: Application context.
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+@HiltViewModel
+class WordPassViewModel @Inject constructor(
+    private val wordPassUsesCases: WordPassUsesCases,
+    private val userUsesCases: UserUsesCases,
+    private val authUsesCases: AuthUsesCases,
+    private val datastoreUsesCases: DatastoreUsesCases,
+    private val application: Application
+) : MVIBaseViewModel<WordPassState, WordPassIntent>() {
+
+    override fun initState(): WordPassState = WordPassState.default()
+
+    override fun intentHandler(intent: WordPassIntent) {
+        when (intent) {
+            is WordPassIntent.ReadLanguages -> readLanguages()
+            is WordPassIntent.GenerateGame -> generateGame(intent)
+            is WordPassIntent.ResetGame -> resetGame()
+            is WordPassIntent.SelectMode -> selectMode(intent)
+            is WordPassIntent.Response -> response(intent)
+            is WordPassIntent.OutGame -> outGame(intent)
+        }
+    }
+
+
+    //Actions:
+    private fun readLanguages() = execute(Dispatchers.IO) {
+        datastoreUsesCases.readGameLanguage().collect { language ->
+            updateUi {
+                it.copy(languages = language)
+            }
+        }
+    }
+
+    private fun generateGame(
+        intent: WordPassIntent.GenerateGame
+    ) = execute(Dispatchers.IO) {
+        if (intent.wordPassMode == WordPassMode.FIRE_WHEEL)
+            wordPassUsesCases.generateWheelWordPass(
+                intent.difficulty,
+                _uiState.value.languages,
+                onLoading = { startLoading() },
+                onSuccess = { words ->
+                    stopLoading()
+                    updateUi {
+                        it.copy(
+                            words = words,
+                            status = WordPassStatus.RUNNING
+                        )
+                    }
+                },
+                onError = { error ->
+                    stopAndError(error, application::printTextInToast)
+                }
+            )
+        else
+            wordPassUsesCases.generateWordPass(
+                intent.numWords,
+                Letter.ANY,
+                _uiState.value.languages,
+                intent.difficulty,
+                onLoading = { startLoading() },
+                onSuccess = { words ->
+                    stopLoading()
+                    updateUi {
+                        it.copy(
+                            words = words,
+                            status = WordPassStatus.RUNNING
+                        )
+                    }
+                },
+                onError = { error ->
+                    stopAndError(error, application::printTextInToast)
+                }
+            )
+    }
+
+
+    private fun resetGame() = addPointsAndCredits(_uiState.value.points) {
+        updateUi {
+            WordPassState.default()
+        }
+    }
+
+    private fun selectMode(
+        intent: WordPassIntent.SelectMode
+    ) {
+        updateUi {
+            it.copy(
+                mode = intent.wordPassMode
+            )
+        }
+    }
+
+    private fun response(
+        intent: WordPassIntent.Response
+    ) {
+        val state = _uiState.value
+        val word = state.words[state.actualWord]
+        val correct = intent.response.normalizeString() == word.word.normalizeString()
+        //Last: last word or no lives left
+        val last =
+            (state.actualWord + 1 == state.words.size) or (!correct && state.mode == WordPassMode.SURVIVAL && state.lives - 1 <= 0)
+        //Points: word points * mode multiplier
+        val wordPoints = (if (correct) 1 else 0) *
+                (word.difficulty.points * (state.mode?.multiPoints ?: 1.0)).toInt()
+        //Buff: correct answers / total words
+        val buff =
+            state.correctAnswers / state.words.size.toFloat()
+        if (!correct)
+            application.printTextInToast("${application.getString(R.string.correct_response)}${word.word}")
+        updateUi {
+            it.copy(
+                status = if (last) WordPassStatus.FINISHED else WordPassStatus.RUNNING,
+                points = it.points + wordPoints + ((it.points + wordPoints) * (if (last) buff else 0f)).toInt(),
+                actualWord = it.actualWord + 1,
+                correctAnswers = it.correctAnswers + (if (correct) 1 else 0),
+                lives = it.lives - (if (correct) 0 else 1)
+            )
+        }
+    }
+
+    private fun outGame(
+        intent: WordPassIntent.OutGame
+    ) = addPointsAndCredits(_uiState.value.points, intent.onSuccess)
+
+
+    //Privates:
+    private fun addPointsAndCredits(
+        points: Int,
+        onSuccess: () -> Unit
+    ) = execute(Dispatchers.IO) {
+        userUsesCases.getUser(
+            firebaseId = authUsesCases.getFirebaseUser()!!.uid,
+            onLoading = { startLoading() },
+            onSuccess = { user ->
+                Log.i("WordPassViewModel", "User: $user")
+                execute(Dispatchers.IO) {
+                    userUsesCases.addPointsToUser(
+                        user = user,
+                        pointsToAdd = points,
+                        onSuccess = {
+                            Log.i("WordPassViewModel", "Points added")
+                            execute(Dispatchers.IO) {
+                                userUsesCases.addCreditsToUser(
+                                    user = user,
+                                    creditsToAdd = points / (10..100).random(),
+                                    onSuccess = {
+                                        Log.i("WordPassViewModel", "Credits added")
+                                        stopLoading()
+                                        execute {
+                                            onSuccess()
+                                        }
+                                    },
+                                    onError = { error ->
+                                        stopAndError(error, application::printTextInToast)
+                                    }
+                                )
+                            }
+                        },
+                        onError = { error ->
+                            stopAndError(error, application::printTextInToast)
+                        }
+                    )
+                }
+            },
+            onError = { error ->
+                stopAndError(error, application::printTextInToast)
+            }
+        )
+    }
+
+
+    private fun startLoading() {
+        updateUi { it.copy(isLoading = true) }
+    }
+
+    private fun stopLoading() {
+        updateUi { it.copy(isLoading = false) }
+    }
+
+    private fun stopAndError(error: String, onError: (String) -> Unit) {
+        stopLoading()
+        execute { onError(error) }
+    }
+}
+
+
+
+
+
+
+
