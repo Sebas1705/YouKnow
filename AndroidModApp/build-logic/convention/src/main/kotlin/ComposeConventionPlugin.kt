@@ -28,7 +28,6 @@ class ComposeConventionPlugin : Plugin<Project> {
             }
             dependencies {
                 // Compose dependencies with libs implementation
-                implementation(libs.findLibrary("compose-bom").get())
                 implementation(libs.findLibrary("ui").get())
                 implementation(libs.findLibrary("ui-graphics").get())
                 implementation(libs.findLibrary("ui-tooling").get())

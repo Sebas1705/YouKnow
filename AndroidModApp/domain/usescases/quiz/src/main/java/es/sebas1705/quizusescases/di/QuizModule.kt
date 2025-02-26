@@ -34,7 +34,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object QuizModule {
     /**
      * Function to provide quiz use cases
      *

@@ -28,7 +28,7 @@ import es.iberext.youknow.core.common.R
  * @author Sebastián Ramiro Entrerrios García
  */
 enum class Languages(val strRes: Int) {
-    ANY(R.string.core_common_any),
+    ANY(es.iberext.youknow.core.resources.R.string.core_resources_any),
     EN(R.string.core_common_lan_en),
     ES(R.string.core_common_lan_es),
 }

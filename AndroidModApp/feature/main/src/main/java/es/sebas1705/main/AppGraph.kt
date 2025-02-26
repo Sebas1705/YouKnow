@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.navigation
+package es.sebas1705.main
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

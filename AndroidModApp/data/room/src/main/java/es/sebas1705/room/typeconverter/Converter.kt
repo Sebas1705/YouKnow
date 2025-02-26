@@ -23,7 +23,7 @@ import es.sebas1705.common.games.Category
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.Languages
 import es.sebas1705.common.games.QuizType
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 
 /**
  * Class to convert the objects needed to save in the database

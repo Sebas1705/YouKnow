@@ -16,7 +16,7 @@ package es.sebas1705.youknow.domain.model.stats
  *
  */
 
-import es.sebas1705.youknow.core.classes.data.Opinion
+import es.sebas1705.common.data.Opinion
 import es.sebas1705.common.games.Languages
 
 /**

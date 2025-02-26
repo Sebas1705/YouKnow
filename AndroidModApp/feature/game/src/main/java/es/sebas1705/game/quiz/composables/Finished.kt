@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.composables
+package es.sebas1705.game.quiz.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -28,22 +28,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.cards.IResumeCard
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.domain.model.games.QuestionModel
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.games.quiz.QuizMode
+import es.sebas1705.common.games.quiz.QuizStatus
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.toReducedString
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.game.quiz.viewmodel.QuizState
+import es.sebas1705.models.games.QuestionModel
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.games.R
 
 /**
  * Finished state of the Quiz game.
@@ -84,27 +84,27 @@ fun Finished(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val data = mutableMapOf<String, String>(
-                stringResource(id = R.string.mode) to (stringResource(
-                    quizState.mode?.strRes ?: R.string.any
+            val data = mutableMapOf(
+                stringResource(id = R.string.feature_game_mode) to (stringResource(
+                    quizState.mode?.strRes ?: es.iberext.youknow.core.resources.R.string.core_resources_any
                 )),
-                stringResource(id = R.string.points) + ":" to quizState.points.toReducedString(),
-                stringResource(id = R.string.corrects_answers) to quizState.correctAnswers.toString(),
-                stringResource(id = R.string.incorrect_answers) to (quizState.questions.size - quizState.correctAnswers).toString(),
-                stringResource(id = R.string.total_answers) to quizState.questions.size.toString(),
+                stringResource(id = es.iberext.youknow.core.resources.R.string.core_resources_points) + ":" to quizState.points.toReducedString(),
+                stringResource(id = R.string.feature_game_corrects_answers) to quizState.correctAnswers.toString(),
+                stringResource(id = R.string.feature_game_incorrect_answers) to (quizState.questions.size - quizState.correctAnswers).toString(),
+                stringResource(id = R.string.feature_game_total_answers) to quizState.questions.size.toString(),
             )
             if (quizState.mode == QuizMode.SURVIVAL) {
-                data[stringResource(id = R.string.lives)] = quizState.lives.toString()
+                data[stringResource(id = R.string.feature_game_lives)] = quizState.lives.toString()
             }
             IResumeCard(
-                title = stringResource(R.string.finished_title),
+                title = stringResource(R.string.feature_game_finished_title),
                 titlesValues = data.toMap(),
                 modifier = Modifier.padding(MediumPadding)
             )
 
             IOutlinedButton(
                 onClick = onRestartGame,
-                label = stringResource(id = R.string.restart_game),
+                label = stringResource(id = R.string.feature_game_restart_game),
                 imageVector = Icons.Filled.RestartAlt,
                 soundPool = soundPool
             )
@@ -113,7 +113,7 @@ fun Finished(
 
             IOutlinedButton(
                 onClick = onOutGame,
-                label = stringResource(id = R.string.out_game),
+                label = stringResource(id = R.string.feature_game_out_game),
                 imageVector = Icons.Filled.Output,
                 soundPool = soundPool
             )

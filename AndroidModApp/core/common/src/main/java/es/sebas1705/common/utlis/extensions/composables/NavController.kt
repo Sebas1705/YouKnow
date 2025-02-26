@@ -16,7 +16,6 @@ package es.sebas1705.common.utlis.extensions.composables
  *
  */
 
-import android.annotation.SuppressLint
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
@@ -33,7 +32,6 @@ import androidx.navigation.NavHostController
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@SuppressLint("RestrictedApi")
 fun NavHostController.navAndPopUp(route: Any, popUpTo: Any) {
     this.navigate(route) {
         popUpTo(popUpTo) {

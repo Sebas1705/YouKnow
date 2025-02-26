@@ -25,7 +25,6 @@ class DatastoreConventionPlugin : Plugin<Project> {
         with(target){
             dependencies {
                 implementation(project.libs.findLibrary("datastore-preferences").get())
-                implementation(project.libs.findLibrary("protobuf-kotlin-lite").get())
             }
         }
     }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.quiz
+package es.sebas1705.common.games.quiz
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

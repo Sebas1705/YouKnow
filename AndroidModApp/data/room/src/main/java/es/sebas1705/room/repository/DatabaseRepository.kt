@@ -8,7 +8,7 @@ import es.sebas1705.room.entities.FamiliesEntity
 import es.sebas1705.room.entities.QuestionEntity
 import es.sebas1705.room.entities.SurveyEntity
 import es.sebas1705.room.entities.WordEntity
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 
 /*
  * Copyright (C) 2022 The Android Open Source Project

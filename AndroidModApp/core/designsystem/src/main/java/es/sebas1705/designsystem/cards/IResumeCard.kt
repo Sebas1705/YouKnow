@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.cards
+package es.sebas1705.designsystem.cards
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,12 +30,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
-import es.sebas1705.youknow.core.composables.divider.IHorDivider
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.divider.IHorDivider
 
 /**
  * Personalized resume card
@@ -82,7 +82,7 @@ fun IResumeCard(
         }
     }
 
-    for ((title, value) in titlesValues) {
+    for ((titleT, value) in titlesValues) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -90,7 +90,7 @@ fun IResumeCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = title,
+                text = titleT,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(SmallPadding)
             )

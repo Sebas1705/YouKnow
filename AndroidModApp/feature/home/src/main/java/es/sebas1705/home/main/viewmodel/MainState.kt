@@ -16,8 +16,8 @@ package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.social.NewModel
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.social.NewModel
 
 /**
  * State of the [MainViewModel] that will handle the data of the screen.

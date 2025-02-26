@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.splash
+package es.sebas1705.splash
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,7 +17,7 @@ package es.sebas1705.youknow.presentation.features.splash
  */
 
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.youknow.presentation.features.splash.design.SplashDesign
 
 /**

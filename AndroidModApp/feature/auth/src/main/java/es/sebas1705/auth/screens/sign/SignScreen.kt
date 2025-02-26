@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.sign
+package es.sebas1705.auth.screens.sign
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,11 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.design.SignDesign
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignIntent
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignState
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignViewModel
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.auth.screens.sign.design.SignDesign
+import es.sebas1705.auth.screens.sign.viewmodel.SignIntent
+import es.sebas1705.auth.screens.sign.viewmodel.SignState
+import es.sebas1705.auth.screens.sign.viewmodel.SignViewModel
 
 /**
  * Sign Screen that will allow the user to sign up or log in.

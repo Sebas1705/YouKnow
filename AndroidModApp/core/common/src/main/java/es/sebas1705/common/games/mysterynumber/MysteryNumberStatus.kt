@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.mysterynumber
+package es.sebas1705.common.games.mysterynumber
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

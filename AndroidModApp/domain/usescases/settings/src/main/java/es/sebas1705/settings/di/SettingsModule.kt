@@ -42,7 +42,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object SettingsModule {
 
     /**
      * Function to provide settings use cases

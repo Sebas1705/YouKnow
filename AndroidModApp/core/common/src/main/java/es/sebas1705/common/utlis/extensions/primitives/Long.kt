@@ -39,14 +39,3 @@ fun Long.millisToFormatDate(): String {
         .withZone(ZoneId.systemDefault())
     return formatter.format(Instant.ofEpochMilli(this))
 }
-
-/**
- * Convert a long number to seconds
- *
- * @receiver [Long]: the number to convert
- *
- * @return [Long]: the number converted to seconds
- *
- * @since 1.0.0
- */
-fun Long.toSeconds(): Long = this / 1000

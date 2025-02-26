@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel
+package es.sebas1705.game.wordpass.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,17 +19,17 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmo
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.core.utlis.extensions.primitives.normalizeString
-import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
-import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.games.wordpass.WordPassStatus
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.common.utlis.extensions.primitives.normalizeString
+import es.sebas1705.settings.SettingUsesCases
+import es.sebas1705.user.UserUsesCases
+import es.sebas1705.wordpassusescases.WordPassUsesCases
+import es.sebas1705.youknow.feature.games.R
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ import javax.inject.Inject
  * @param wordPassUsesCases [WordPassUsesCases]: UseCases for the WordPass game.
  * @param userUsesCases [UserUsesCases]: UseCases for the user.
  * @param authUsesCases [AuthUsesCases]: UseCases for the Auth.
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
+ * @param settingUsesCases [SettingUsesCases]: UseCases for the Settings.
  * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -51,7 +51,7 @@ class WordPassViewModel @Inject constructor(
     private val wordPassUsesCases: WordPassUsesCases,
     private val userUsesCases: UserUsesCases,
     private val authUsesCases: AuthUsesCases,
-    private val datastoreUsesCases: DatastoreUsesCases,
+    private val settingUsesCases: SettingUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<WordPassState, WordPassIntent>() {
 
@@ -71,7 +71,7 @@ class WordPassViewModel @Inject constructor(
 
     //Actions:
     private fun readLanguages() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readGameLanguage().collect { language ->
+        settingUsesCases.readGameLanguage().collect { language ->
             updateUi {
                 it.copy(languages = language)
             }
@@ -154,7 +154,7 @@ class WordPassViewModel @Inject constructor(
         val buff =
             state.correctAnswers / state.words.size.toFloat()
         if (!correct)
-            application.printTextInToast("${application.getString(R.string.correct_response)}${word.word}")
+            application.printTextInToast("${application.getString(R.string.feature_game_correct_response)}${word.word}")
         updateUi {
             it.copy(
                 status = if (last) WordPassStatus.FINISHED else WordPassStatus.RUNNING,

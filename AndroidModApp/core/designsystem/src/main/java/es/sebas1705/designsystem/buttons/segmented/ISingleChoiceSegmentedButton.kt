@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.buttons.segmented
+package es.sebas1705.designsystem.buttons.segmented
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -35,15 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.NAV_BUTTON_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
-import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.IComposablePreview
 import es.sebas1705.common.utlis.extensions.composables.disabled
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.NAV_BUTTON_SOUND
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized single choice segmented button
@@ -127,7 +127,7 @@ fun ISingleChoiceSegmentedButton(
 @IComposablePreview
 @Composable
 private fun Preview() = YouKnowTheme {
-    var selectedElement = remember { mutableIntStateOf(0) }
+    val selectedElement = remember { mutableIntStateOf(0) }
     ISingleChoiceSegmentedButton(
         elements = listOf(
             Triple("Add", Icons.Default.Add, true),

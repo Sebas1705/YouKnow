@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
+package es.sebas1705.home.navigation.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,11 +19,11 @@ package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.user.UserUsesCases
+import es.sebas1705.youknow.feature.home.R
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -66,7 +66,7 @@ class HomeViewModel @Inject constructor(
         val firebaseUser = authUsesCases.getFirebaseUser()
         if (firebaseUser == null)
             stopAndError(
-                application.getString(R.string.user_not_logged),
+                application.getString(R.string.feature_home_user_not_logged),
                 application::printTextInToast
             )
         else {
@@ -89,7 +89,7 @@ class HomeViewModel @Inject constructor(
         intent: HomeIntent.AddCredits
     ) = execute(Dispatchers.IO) {
         if (uiState.value.userModel == null)
-            execute { application.printTextInToast(application.getString(R.string.user_not_logged)) }
+            execute { application.printTextInToast(application.getString(R.string.feature_home_user_not_logged)) }
         else userUsesCases.addCreditsToUser(
             uiState.value.userModel!!,
             intent.credits,
@@ -130,7 +130,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun signOut() = execute(Dispatchers.IO) {
-        authUsesCases.signOut(onSuccess = { firebaseId ->
+        authUsesCases.signOut(onSuccess = {
             stopLoading()
             userUsesCases.removeUserListener()
         }, onError = { stopAndError(it, application::printTextInToast) })

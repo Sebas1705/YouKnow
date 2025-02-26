@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables
+package es.sebas1705.game.mysterynumber.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,20 +31,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.classes.enums.theme.SizeType
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.games.families.FamiliesMode
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.theme.SizeType
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.common.IFilledTonalButton
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.Paddings.LargePadding
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.games.R
 
 /**
  * Selection mode of the Mystery Number game.
@@ -78,7 +78,7 @@ fun SelectionMode(
                         LargePadding,
                         HugePadding
                     )),
-                    text = stringResource(id = R.string.mode_title)
+                    text = stringResource(id = R.string.feature_game_mode_title)
                 )
             }
 
@@ -98,11 +98,11 @@ fun SelectionMode(
                     )
                 }
             else
-                items(MysteryNumberMode.entries.size) {
-                    if (it % 2 != 0)
+                items(MysteryNumberMode.entries.size) { index ->
+                    if (index % 2 != 0)
                         return@items
-                    val mode1 = MysteryNumberMode.entries[it]
-                    val mode2 = MysteryNumberMode.entries.getOrNull(it + 1)
+                    val mode1 = MysteryNumberMode.entries[index]
+                    val mode2 = MysteryNumberMode.entries.getOrNull(index + 1)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement =
@@ -132,7 +132,7 @@ fun SelectionMode(
                             )
                         }
                     }
-                    if(it != FamiliesMode.entries.size - 1 && it != FamiliesMode.entries.size - 2) {
+                    if(index != FamiliesMode.entries.size - 1 && index != FamiliesMode.entries.size - 2) {
                         Spacer(modifier = Modifier.height(MediumPadding))
                     }
                 }

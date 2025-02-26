@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="feature_home_Ranking">Clasificación</string>
+    <string name="feature_home_Home">Casa</string>
+    <string name="feature_home_New_Message">Noticias e información</string>
+    <string name="feature_home_info">Reportes y propuestas</string>
+    <string name="feature_home_reload">Reload db</string>
+    <string name="feature_home_reload_text">¿Estás seguro de recargar la base de datos de los juegos? (Puede consumir bastante tiempo)</string>
+    <string name="feature_home_settings">Configuaración</string>
+</resources>

@@ -34,7 +34,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object RealtimeDataModule {
 
     /**
      * Provides [RealtimeRepository] that is used to manage the realtime database

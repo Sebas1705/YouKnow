@@ -34,7 +34,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object AnalyticsModule {
 
     /**
      * Function to provide analytics use cases

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.composables
+package es.sebas1705.game.wordpass.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -45,26 +45,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
-import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.toReducedString
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
+import es.sebas1705.designsystem.cards.IPrimaryCard
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.game.wordpass.viewmodel.WordPassState
+import es.sebas1705.models.games.WordModel
+import es.sebas1705.ui.theme.OutlineThickness
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.gameBottomBarHeight
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.numerables.toViewList
-import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassState
-import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
-import es.sebas1705.youknow.presentation.ui.theme.gameBottomBarHeight
+import es.sebas1705.youknow.feature.games.R
 
 /**
  * Screen of the Word Pass Game.
@@ -91,7 +91,7 @@ fun Running(
         if (wordPassState.words.isEmpty()) {
             Title(
                 modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.error_loading_questions),
+                text = stringResource(R.string.feature_game_error_loading_message),
                 color = MaterialTheme.colorScheme.error
             )
             return@ApplyBack
@@ -139,8 +139,8 @@ fun Running(
                     IOutlinedTextField(
                         value = response,
                         onValueChange = { response = it },
-                        label = stringResource(R.string.guest_response),
-                        placeholder = stringResource(R.string.guest_response),
+                        label = stringResource(R.string.feature_game_guest_response),
+                        placeholder = stringResource(R.string.feature_game_guest_response),
                         modifier = Modifier.fillMaxWidth(0.6f),
                         soundPool = soundPool
                     )
@@ -149,7 +149,7 @@ fun Running(
                             onResponse(response)
                             definition = 0
                         },
-                        label = stringResource(R.string.try_word),
+                        label = stringResource(R.string.feature_game_try_word),
                         soundPool = soundPool
                     )
                 }
@@ -166,7 +166,7 @@ fun Running(
 
                     IStandardIconButton(
                         imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
-                        contentDescription = stringResource(R.string.previous_definition),
+                        contentDescription = stringResource(R.string.feature_game_previous_definition),
                         onClick = {
                             definition = (definition - 1).coerceAtLeast(0)
                         },
@@ -179,7 +179,7 @@ fun Running(
                     )
                     IStandardIconButton(
                         imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                        contentDescription = stringResource(R.string.next_definition),
+                        contentDescription = stringResource(R.string.feature_game_next_definition),
                         onClick = {
                             definition = (definition + 1).coerceAtMost(word.definitions.size - 1)
                         },
@@ -204,7 +204,7 @@ fun Running(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Title(
-                            text = "${stringResource(R.string.points)}: ${wordPassState.points.toReducedString()}",
+                            text = "${stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points)}: ${wordPassState.points.toReducedString()}",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Row {
@@ -229,7 +229,7 @@ fun Running(
                             (1..3).forEach {
                                 Icon(
                                     imageVector = Icons.Filled.Favorite,
-                                    contentDescription = stringResource(R.string.lives),
+                                    contentDescription = stringResource(R.string.feature_game_lives),
                                     tint = if (it <= wordPassState.lives) MaterialTheme.colorScheme.tertiary else Color.Gray
                                 )
                             }
@@ -239,6 +239,31 @@ fun Running(
             }
         }
     }
+}
+
+/**
+ * Transform a list of [WordModel] to a list of [String]
+ *
+ * @receiver [List]<[WordModel]>: list of words
+ * @param actualWord: [Int]: actual word
+ *
+ * @return [List]<[String]>: list of words
+ *
+ * @see WordModel
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
+ */
+private fun List<WordModel>.toViewList(actualWord: Int): List<String> {
+    val previousWord = if (actualWord > 0) this[actualWord - 1].word else ""
+    val currentWord = this[actualWord].word
+    val nextWord = if (actualWord < this.size - 1) this[actualWord + 1].word else ""
+
+    val previousString = if (previousWord.isNotEmpty()) "..${previousWord.first()}" else ""
+    val currentString = currentWord.first().toString()
+    val nextString = if (nextWord.isNotEmpty()) "${nextWord.first()}.." else ""
+
+    return listOf(previousString, currentString, nextString)
 }
 
 @UiModePreviews

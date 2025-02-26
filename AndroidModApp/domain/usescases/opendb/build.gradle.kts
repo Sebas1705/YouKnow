@@ -16,7 +16,7 @@ android {
 
 dependencies {
     api(projects.core.common)
-    api(projects.data.room)
+    api(projects.data.retrofit)
     api(projects.domain.models)
     api(projects.domain.mappers)
 }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.guide.viewmodel
+package es.sebas1705.guide.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.guide.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Sealed class that represents the possible intents for Guide Screen.
@@ -28,5 +28,5 @@ sealed interface GuideIntent : MVIBaseIntent {
 
     data class ChargeData(
         val onSuccess: () -> Unit
-    ): GuideIntent
+    ) : GuideIntent
 }

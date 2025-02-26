@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel
+package es.sebas1705.home.groups.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,19 +16,14 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.viewmode
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.domain.model.social.MessageModel
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.social.GroupModel
 
 /**
  * State of the [GroupsViewModel] that will handle the data of the screen.
  *
  * @property isLoading [Boolean]: Flag that indicates if the data is loading.
  * @property groups [List]<[GroupModel]>: List of groups.
- *
- * @see MVIBaseState
- * @see GroupModel
- * @see MessageModel
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0

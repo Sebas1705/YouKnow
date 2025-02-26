@@ -35,7 +35,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object WordPassModule {
 
     /**
      * Function to provide word pass use cases

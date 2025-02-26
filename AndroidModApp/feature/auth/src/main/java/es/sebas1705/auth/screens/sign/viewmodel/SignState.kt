@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel
+package es.sebas1705.auth.screens.sign.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * Data class that represents the state of the Sign Screen.

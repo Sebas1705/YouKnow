@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.buttons.fab
+package es.sebas1705.designsystem.buttons.fab
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,14 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.ComposableConstants.FAB_BUTTON_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.ComposableConstants.FAB_BUTTON_SOUND
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.ui.theme.TonalElevation
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized FAB
@@ -63,7 +62,7 @@ fun IFAB(
     contentDescription: String,
     modifier: Modifier = Modifier,
     imageVector: ImageVector? = null,
-    imageResource: Int = R.drawable.icon,
+    imageResource: Int? = null,
     interactionSource: MutableInteractionSource? = null,
     soundPool: Pair<SoundPool, Float>? = null,
     soundRes: Int = FAB_BUTTON_SOUND,
@@ -94,7 +93,7 @@ fun IFAB(
     content = {
         if (imageVector != null)
             Icon(imageVector, contentDescription)
-        else
+        else if (imageResource != null)
             Icon(painterResource(imageResource), contentDescription)
     }
 )

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.bars
+package es.sebas1705.designsystem.bars
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,9 +24,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized top bar
@@ -38,7 +38,6 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * @param scrollBehavior [TopAppBarScrollBehavior]: Scroll behavior
  *
  * @since 1.0.0
- * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 @OptIn(ExperimentalMaterial3Api::class)

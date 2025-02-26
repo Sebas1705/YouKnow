@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel
+package es.sebas1705.home.groups.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,9 +16,9 @@ package es.sebas1705.youknow.presentation.features.home.features.groups.viewmode
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.domain.model.social.UserModel
+import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.models.social.GroupModel
+import es.sebas1705.models.social.UserModel
 
 /**
  * Sealed interface that represents the possible actions of the [GroupsViewModel].

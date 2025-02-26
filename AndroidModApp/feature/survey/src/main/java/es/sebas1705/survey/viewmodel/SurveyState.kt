@@ -1,7 +1,4 @@
-package es.sebas1705.youknow.presentation.features.survey.viewmodel
-
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-
+package es.sebas1705.survey.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,6 +15,8 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
  * limitations under the License.
  *
  */
+
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * State of the [SurveyViewModel]

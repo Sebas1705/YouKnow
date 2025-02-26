@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_game_mystery_title">Mystery Number</string>
+    <string name="feature_game_minus_plus">+/-</string>
+    <string name="feature_game_try_number">Try</string>
+    <string name="feature_game_incorrect_number">"Try again: "</string>
+    <string name="feature_game_greater">Greater</string>
+    <string name="feature_game_smaller">Smaller</string>
+    <string name="feature_game_range">"Range: "</string>
 </resources>

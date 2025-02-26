@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log.composable
+package es.sebas1705.auth.screens.log.composable
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -20,10 +20,10 @@ import android.media.SoundPool
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
-import es.sebas1705.youknow.core.composables.textfields.IPasswordTextField
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.textfields.IEmailTextField
+import es.sebas1705.designsystem.textfields.IPasswordTextField
 
 /**
  * Component that contains the email and password fields

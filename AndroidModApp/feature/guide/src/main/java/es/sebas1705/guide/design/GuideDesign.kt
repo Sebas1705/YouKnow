@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.guide.design
+package es.sebas1705.guide.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,6 +16,7 @@ package es.sebas1705.youknow.presentation.features.guide.design
  *
  */
 
+import android.content.Context
 import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -40,24 +41,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.bottombars.GuideBottomBar
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.guide.composable.GuideBottomBar
+import es.sebas1705.designsystem.divider.IVerDivider
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.guide.viewmodel.GuideState
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.Paddings.LargePadding
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.divider.IVerDivider
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.composables.generateGuidePages
-import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.domain.model.ui.PageModel
+import es.sebas1705.youknow.feature.guide.R
 
 /**
  * Design of the Guide Screen.
@@ -81,9 +82,9 @@ fun GuideDesign(
 
     //String readers:
     val pageList = ctx.generateGuidePages()
-    val next = stringResource(id = R.string.next)
-    val back = stringResource(id = R.string.back)
-    val start = stringResource(id = R.string.start)
+    val next = stringResource(id = R.string.feature_guide_next)
+    val back = stringResource(id = R.string.feature_guide_back)
+    val start = stringResource(id = R.string.feature_guide_start)
 
     //States:
     val pagerState = rememberPagerState(initialPage = 0) { pageList.size }
@@ -97,7 +98,7 @@ fun GuideDesign(
     }
 
     //Body:
-    if(guideState.isLoading)
+    if (guideState.isLoading)
         LoadingDialog(windowState)
 
     Scaffold(
@@ -146,7 +147,7 @@ fun GuideDesign(
 
                         pageList[pageIndex].imagesAndDescription.forEachIndexed { _, page ->
 
-                            item{
+                            item {
                                 IVerDivider(
                                     modifier = Modifier.padding(horizontal = paddings),
                                     color = MaterialTheme.colorScheme.secondary
@@ -159,7 +160,7 @@ fun GuideDesign(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(horizontal = paddings)
-                                ){
+                                ) {
                                     Image(
                                         painter = painterResource(page.first),
                                         contentDescription = null,
@@ -187,7 +188,7 @@ fun GuideDesign(
                                 )
                             }
 
-                            item{
+                            item {
                                 IVerDivider(
                                     modifier = Modifier.padding(horizontal = paddings),
                                     color = MaterialTheme.colorScheme.secondary
@@ -202,15 +203,47 @@ fun GuideDesign(
     }
 }
 
-
 /**
- * Preview of the Guide Screen.
+ * Generate a list of [PageModel] to use in the guide
  *
- * @see GuideDesign
+ * @receiver [Context]: context of the app
+ *
+ * @return [List]<[PageModel]>: list of pages
+ *
+ * @see PageModel
+ *
+ * @author Sebastián Ramiro Entrerrios García
+ * @since 1.0.0
  */
+fun Context.generateGuidePages() = listOf(
+    PageModel(
+        this.getString(R.string.feature_guide_titlePage1),
+        this.getString(R.string.feature_guide_introPage1),
+        listOf(
+            es.iberext.youknow.core.resources.R.drawable.icon to getString(R.string.feature_guide_des1Page1),
+            R.drawable.urjc to getString(R.string.feature_guide_des2Page1),
+        )
+    ),
+    PageModel(
+        this.getString(R.string.feature_guide_titlePage2),
+        this.getString(R.string.feature_guide_introPage2),
+        listOf(
+            R.drawable.logos_tools to getString(R.string.feature_guide_des1Page2),
+            R.drawable.games to getString(R.string.feature_guide_des2Page2),
+        )
+    ),
+    PageModel(
+        this.getString(R.string.feature_guide_titlePage3),
+        this.getString(R.string.feature_guide_introPage3),
+        listOf(
+            es.iberext.youknow.core.resources.R.drawable.icon to getString(R.string.feature_guide_desPage3)
+        )
+    )
+)
+
 @UiModePreviews
 @Composable
-private fun GuideScreenPreview() {
+private fun GuideDesignPreview() {
     YouKnowTheme {
         GuideDesign()
     }

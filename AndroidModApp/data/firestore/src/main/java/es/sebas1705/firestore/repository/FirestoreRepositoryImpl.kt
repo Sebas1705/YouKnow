@@ -16,6 +16,7 @@ package es.sebas1705.firestore.repository
  *
  */
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import es.sebas1705.common.managers.ClassLogData
 import es.sebas1705.common.managers.ErrorResponseType

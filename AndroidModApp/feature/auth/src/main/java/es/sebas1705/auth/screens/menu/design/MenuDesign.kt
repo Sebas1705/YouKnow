@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.menu.design
+package es.sebas1705.auth.screens.menu.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,17 +31,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.auth.screens.menu.MenuScreen
+import es.sebas1705.auth.screens.menu.composables.MenuButtons
+import es.sebas1705.auth.screens.menu.viewmodel.MenuState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.ui.theme.Paddings.LargePadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.MenuScreen
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.composables.MenuButtons
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.auth.R
 
 /**
  * Main design of the [MenuScreen].
@@ -71,7 +71,6 @@ fun MenuDesign(
     ) {
         if (menuState.isLoading)
             LoadingDialog(windowState)
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,14 +80,14 @@ fun MenuDesign(
             IVerSpacer(0.4f)
             Image(
                 painter = painterResource(id = R.drawable.icon),
-                contentDescription = stringResource(id = R.string.app_name),
+                contentDescription = stringResource(id = es.iberext.youknow.core.resources.R.string.core_resources_app_name),
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             )
             IVerSpacer(0.2f)
             Text(
-                text = stringResource(id = R.string.initial_text),
+                text = stringResource(id = R.string.feature_auth_initial_text),
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center

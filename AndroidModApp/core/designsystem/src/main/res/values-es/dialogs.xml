@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Common -->
+    <string name="core_designsystem_confirm">Confirmar</string>
+    <string name="core_designsystem_dismiss">Cancelar</string>
+
+    <!-- CreateGroup -->
+    <string name="core_designsystem_titleCreateGroup">Crear un grupo</string>
+    <string name="core_designsystem_groupName">Nombre del grupo</string>
+    <string name="core_designsystem_groupDescription">Descripción del grupo</string>
+
+    <!-- DeleteAccount -->
+    <string name="core_designsystem_delete_account">Borrar cuenta</string>
+    <string name="core_designsystem_delete_account_text">¿Estás seguro de eliminar los datos de tu usuario?</string>
+
+    <!-- ErrorInfo -->
+    <string name="core_designsystem_title_error">Mensaje de error</string>
+
+    <!-- ForgotPassword -->
+    <string name="core_designsystem_enter_email">Introduzca el email de su cuenta:</string>
+
+    <!-- Loading -->
+    <string name="core_designsystem_loading">Cargando…</string>
+
+    <!-- GameOut -->
+    <string name="core_designsystem_game_out_title">Salir del juego</string>
+    <string name="core_designsystem_game_out_body">¿Estás seguro de salir? (Perderas todo el progreso del juego)</string>
+
+    <!-- Logout -->
+    <string name="core_designsystem_logout">Cerrar Sesión</string>
+
+    <!-- Nick -->
+    <string name="core_designsystem_change_nickname_title">Cambiar nombre</string>
+    <string name="core_designsystem_change_nickname_body">¿Seguro que quieres cambiar a </string>
+    <string name="core_designsystem_change_nickname_body2"> o por completo a </string>
+    <string name="core_designsystem_change_nickname_body3">\?</string>
+
+    <!-- Reload -->
+    <string name="core_designsystem_reload_text">¿Estás seguro de recargar la base de datos de los juegos? (Puede consumir bastante tiempo)</string>
+
+    <!-- ResetPassword -->
+    <string name="core_designsystem_reset_password">Cambiar contraseña</string>
+    <string name="core_designsystem_reset_password_text">¿Quieres cambiar la contraseña de la cuenta con email: </string>
+
+    <!-- UrlRequest -->
+    <string name="core_designsystem_profile">Perfil</string>
+    <string name="core_designsystem_url_photo">Foto URL</string>
+
 
 </resources>

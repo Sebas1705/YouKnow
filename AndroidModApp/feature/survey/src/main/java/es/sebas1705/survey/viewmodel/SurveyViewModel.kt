@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.survey.viewmodel
+package es.sebas1705.survey.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,8 +17,8 @@ package es.sebas1705.youknow.presentation.features.survey.viewmodel
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.domain.usecases.logs.SurveyUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.survey.SurveyUsesCases
 import javax.inject.Inject
 
 @HiltViewModel

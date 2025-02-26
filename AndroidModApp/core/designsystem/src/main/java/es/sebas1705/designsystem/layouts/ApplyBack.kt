@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.layouts
+package es.sebas1705.designsystem.layouts
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -29,9 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Apply back
@@ -73,7 +72,7 @@ fun ApplyBack(
 @Composable
 private fun Preview() = YouKnowTheme {
     ApplyBack(
-        backId = R.drawable.back_landscape_fill,
+        backId = es.iberext.youknow.core.resources.R.drawable.back_landscape_fill,
         modifier = Modifier
             .height(500.dp)
             .width(200.dp)

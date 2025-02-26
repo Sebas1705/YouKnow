@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.composables
+package es.sebas1705.game.wordpass.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,18 +30,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.cards.IResumeCard
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.toReducedString
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.games.R
+import es.sebas1705.game.wordpass.viewmodel.WordPassState
 
 /**
  * Finished composable
@@ -73,19 +73,19 @@ fun Finished(
         ) {
             item {
                 val data = mutableMapOf(
-                    stringResource(id = R.string.mode) to (stringResource(
-                        wordPassState.mode?.strRes ?: R.string.any
+                    stringResource(id = R.string.feature_game_mode) to (stringResource(
+                        wordPassState.mode?.strRes ?: es.iberext.youknow.core.resources.R.string.core_resources_any
                     )),
-                    stringResource(id = R.string.points) + ":" to wordPassState.points.toReducedString(),
-                    stringResource(id = R.string.corrects_answers) to wordPassState.correctAnswers.toString(),
-                    stringResource(id = R.string.incorrect_answers) to (wordPassState.words.size - wordPassState.correctAnswers).toString(),
-                    stringResource(id = R.string.total_answers) to wordPassState.words.size.toString(),
+                    stringResource(id = es.iberext.youknow.core.resources.R.string.core_resources_points) + ":" to wordPassState.points.toReducedString(),
+                    stringResource(id = R.string.feature_game_corrects_answers) to wordPassState.correctAnswers.toString(),
+                    stringResource(id = R.string.feature_game_incorrect_answers) to (wordPassState.words.size - wordPassState.correctAnswers).toString(),
+                    stringResource(id = R.string.feature_game_total_answers) to wordPassState.words.size.toString(),
                 )
                 if (wordPassState.mode == WordPassMode.SURVIVAL) {
-                    data[stringResource(id = R.string.lives)] = wordPassState.lives.toString()
+                    data[stringResource(id = R.string.feature_game_lives)] = wordPassState.lives.toString()
                 }
                 IResumeCard(
-                    title = stringResource(R.string.finished_title),
+                    title = stringResource(R.string.feature_game_finished_title),
                     titlesValues = data.toMap(),
                     modifier = Modifier.padding(MediumPadding)
                 )
@@ -94,7 +94,7 @@ fun Finished(
             item {
                 IOutlinedButton(
                     onClick = onRestartGame,
-                    label = stringResource(id = R.string.restart_game),
+                    label = stringResource(id = R.string.feature_game_restart_game),
                     imageVector = Icons.Filled.RestartAlt,
                     soundPool = soundPool
                 )
@@ -107,7 +107,7 @@ fun Finished(
             item {
                 IOutlinedButton(
                     onClick = onOutGame,
-                    label = stringResource(id = R.string.out_game),
+                    label = stringResource(id = R.string.feature_game_out_game),
                     imageVector = Icons.Filled.Output,
                     soundPool = soundPool
                 )

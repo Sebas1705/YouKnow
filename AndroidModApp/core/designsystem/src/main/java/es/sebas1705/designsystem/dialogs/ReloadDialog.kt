@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -25,12 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.designsystem.texts.IText
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Composable that shows a dialog with a reload message.
@@ -53,7 +53,7 @@ fun ReloadDialog(
 ) = IDialog(
     confirmButton = {
         ITextButton(
-            label = stringResource(R.string.confirm),
+            label = stringResource(R.string.core_designsystem_confirm),
             onClick = onConfirm,
             soundPool = soundPool
         )
@@ -61,22 +61,17 @@ fun ReloadDialog(
     onDismissRequest = onDismiss,
     dismissButton = {
         ITextButton(
-            label = stringResource(R.string.dismiss),
+            label = stringResource(R.string.core_designsystem_dismiss),
             onClick = onDismiss,
             soundPool = soundPool
         )
     },
     modifier = Modifier.fillMaxWidth(0.9f),
     text = {
-        IText(stringResource(R.string.reload_text))
+        IText(stringResource(R.string.core_designsystem_reload_text))
     }
 )
 
-/**
- * Preview for [ErrorInfoDialog]
- *
- * @see ErrorInfoDialog
- */
 @UiModePreviews
 @Composable
 private fun Preview() = YouKnowTheme {

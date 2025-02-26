@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -34,12 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 
 /**
  * Dialog to request a URL.
@@ -70,7 +70,7 @@ fun UrlRequestDialog(
         confirmButton = {
             ITextButton(
                 onClick = { onConfirmButton(photoUrl) },
-                label = stringResource(R.string.confirm),
+                label = stringResource(R.string.core_designsystem_confirm),
                 soundPool = soundPool
             )
         },
@@ -78,14 +78,14 @@ fun UrlRequestDialog(
         dismissButton = {
             ITextButton(
                 onClick = onDismissAction,
-                label = stringResource(R.string.dismiss),
+                label = stringResource(R.string.core_designsystem_dismiss),
                 soundPool = soundPool
             )
         },
         title = {
             Image(
-                painter = painterResource(R.drawable.sign_user),
-                contentDescription = stringResource(R.string.Profile),
+                painter = painterResource(es.iberext.youknow.core.resources.R.drawable.sign_user),
+                contentDescription = stringResource(R.string.core_designsystem_profile),
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f)
@@ -95,8 +95,8 @@ fun UrlRequestDialog(
             IOutlinedTextField(
                 value = photoUrl,
                 onValueChange = { photoUrl = it },
-                label = stringResource(R.string.url_photo),
-                placeholder = stringResource(R.string.url_photo),
+                label = stringResource(R.string.core_designsystem_url_photo),
+                placeholder = stringResource(R.string.core_designsystem_url_photo),
                 leadingIcon = Icons.Filled.Link to {},
                 soundPool = soundPool,
             )
@@ -104,11 +104,6 @@ fun UrlRequestDialog(
     )
 }
 
-/**
- * Preview for [es.sebas1705.youknow.core.composables.dialogs.LogoutDialog]
- *
- * @see es.sebas1705.youknow.core.composables.dialogs.LogoutDialog
- */
 @UiModePreviews
 @Composable
 private fun UrlRequestWindowPreview() {

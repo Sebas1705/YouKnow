@@ -18,7 +18,7 @@ package es.sebas1705.models.games
 
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 
 /**
  * Model class to represent the word game

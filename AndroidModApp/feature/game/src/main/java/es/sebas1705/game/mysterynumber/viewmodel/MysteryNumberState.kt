@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel
+package es.sebas1705.game.mysterynumber.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,11 +16,11 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.v
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.games.NumberModel
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.games.mysterynumber.MysteryNumberStatus
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.games.NumberModel
 
 /**
  * Data class that represents the state of the MysteryNumber Screen.

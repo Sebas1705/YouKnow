@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.badges
+package es.sebas1705.designsystem.badges
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,9 +22,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BadgedBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.composables.buttons.icon.IOutlinedIconButton
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.icon.IOutlinedIconButton
 
 /**
  * Personalized badge box
@@ -34,7 +34,6 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * @param modifier [Modifier]: Modifier
  *
  * @since 1.0.0
- * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 @Composable

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel
+package es.sebas1705.game.wordpass.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,9 +16,9 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmo
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible intents of the WordPass Screen.

@@ -16,7 +16,6 @@ package es.sebas1705.game
  *
  */
 
-import es.sebas1705.youknow.R
 import es.sebas1705.youknow.feature.games.R
 import kotlinx.serialization.Serializable
 
@@ -38,30 +37,4 @@ interface GameScreens {
 
     @Serializable
     object FamiliesScreen : GameScreens
-
-    companion object {
-
-        /**
-         * Data class that represents a game item.
-         *
-         * @property strRes [Int]: The string resource of the game.
-         * @property icon [Int]: The icon of the game.
-         * @property destination [GameScreens]: The destination of the game.
-         *
-         * @since 1.0.0
-         * @author Sebastián Ramiro Entrerrios García
-         */
-        data class GameItem(
-            val strRes: Int,
-            val icon: Int,
-            val destination: GameScreens
-        )
-
-        val games = listOf(
-            GameItem(R.string.mystery_number, R.drawable.numbers, MysteryNumberScreen),
-            GameItem(R.string.quiz, R.drawable.quiz, QuizScreen),
-            GameItem(R.string.word_pass, R.drawable.wordpass, WordPassScreen),
-            GameItem(R.string.families, R.drawable.family, FamiliesScreen),
-        )
-    }
 }

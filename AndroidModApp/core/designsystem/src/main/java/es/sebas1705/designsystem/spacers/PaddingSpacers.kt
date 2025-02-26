@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.spacers
+package es.sebas1705.designsystem.spacers
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,11 +21,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.Paddings.LargePadding
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
 
 /**
  * Padding spacers

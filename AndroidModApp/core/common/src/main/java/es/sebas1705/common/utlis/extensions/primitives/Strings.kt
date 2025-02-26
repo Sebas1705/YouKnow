@@ -36,7 +36,7 @@ import java.text.Normalizer
  * @author Sebastián Ramiro Entrerrios García
  */
 fun String.isImageUrl(): Boolean {
-    var isImage = false
+    var isImage: Boolean
     try {
         val client = OkHttpClient()
         val request = Request.Builder().url(this).build()

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,10 +24,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized dialog

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass
+package es.sebas1705.game.wordpass
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,11 +22,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.design.WordPassDesign
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassIntent
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassViewModel
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.game.wordpass.design.WordPassDesign
+import es.sebas1705.game.wordpass.viewmodel.WordPassIntent
+import es.sebas1705.game.wordpass.viewmodel.WordPassViewModel
 
 /**
  * Screen of the Mystery Number Game.

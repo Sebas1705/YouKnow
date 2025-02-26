@@ -18,7 +18,6 @@ package es.sebas1705.common.states
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import es.iberext.youknow.core.common.R
 import es.sebas1705.common.theme.SizeType
 import es.sebas1705.common.utlis.PreviewSettings
 
@@ -59,8 +58,8 @@ data class WindowState(
                 heightType = SizeType.COMPACT,
                 isImeVisible = false,
                 isPortrait = true,
-                backFill = R.drawable.back_portrait_fill,
-                backEmpty = R.drawable.back_portrait_empty,
+                backFill = es.iberext.youknow.core.resources.R.drawable.back_portrait_fill,
+                backEmpty = es.iberext.youknow.core.resources.R.drawable.back_portrait_empty,
             )
         }
     }

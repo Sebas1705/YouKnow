@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel
+package es.sebas1705.home.chat.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,8 +16,8 @@ package es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.social.MessageModel
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.social.MessageModel
 
 /**
  * State of the [ChatViewModel] that will handle the data of the screen.

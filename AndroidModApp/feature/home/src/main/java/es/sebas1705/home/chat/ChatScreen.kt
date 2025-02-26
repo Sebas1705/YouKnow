@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.chat
+package es.sebas1705.home.chat
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,14 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.presentation.features.home.features.chat.design.ChatDesign
-import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatIntent
-import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatState
-import es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel.ChatViewModel
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.home.chat.design.ChatDesign
+import es.sebas1705.home.chat.viewmodel.ChatIntent
+import es.sebas1705.home.chat.viewmodel.ChatState
+import es.sebas1705.home.chat.viewmodel.ChatViewModel
+import es.sebas1705.youknow.feature.home.R
+import es.sebas1705.home.navigation.viewmodel.HomeState
 
 /**
  * Social Screen that will show the chat and group options.
@@ -75,7 +75,7 @@ fun ChatScreen(
         messageSender = { message ->
             homeState.userModel?.let {
                 chatViewModel.eventHandler(ChatIntent.SendMessage(message, it))
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         }
     )
 }

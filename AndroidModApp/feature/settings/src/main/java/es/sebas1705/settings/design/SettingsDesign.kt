@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.settings.design
+package es.sebas1705.settings.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -42,25 +42,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.buttons.icon.IFilledTonalIconButton
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.theme.ThemeContrast
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.percentageFormat
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.buttons.icon.IFilledTonalIconButton
+import es.sebas1705.designsystem.extras.DropdownList
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.slider.ISlider
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.extras.DropdownList
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.slider.ISlider
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.primitives.percentageFormat
-import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.settings.R
+import es.sebas1705.settings.viewmodel.SettingsState
 
 /**
  * Design of the Settings Screen.
@@ -111,7 +111,7 @@ fun SettingsDesign(
 
         IFilledTonalIconButton(
             onClick = { onBack() },
-            contentDescription = stringResource(R.string.back),
+            contentDescription = stringResource(es.iberext.youknow.core.resources.R.string.core_resources_back),
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -125,7 +125,7 @@ fun SettingsDesign(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IVerSpacer(0.4f)
-            TitleSurface(stringResource(R.string.settings_title))
+            TitleSurface(stringResource(R.string.feature_settings_settings_title))
             IVerSpacer(0.2f)
             val titleStyle = windowState.heightType.filter(
                 MaterialTheme.typography.titleMedium,
@@ -133,7 +133,7 @@ fun SettingsDesign(
                 MaterialTheme.typography.headlineLarge
             )
             IText(
-                text = stringResource(R.string.music) +
+                text = stringResource(R.string.feature_settings_music) +
                         ": ${settingsState.musicVolume.percentageFormat()}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = titleStyle
@@ -152,7 +152,7 @@ fun SettingsDesign(
                 steps = 39,
             )
             IText(
-                text = stringResource(R.string.sound) +
+                text = stringResource(R.string.feature_settings_sound) +
                         ": ${settingsState.soundVolume.percentageFormat()}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = titleStyle
@@ -171,7 +171,7 @@ fun SettingsDesign(
                 steps = 39,
             )
             IText(
-                text = stringResource(R.string.contrast) +
+                text = stringResource(R.string.feature_settings_contrast) +
                         ": ${settingsState.themeContrast.name}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = titleStyle
@@ -183,24 +183,24 @@ fun SettingsDesign(
                     .padding(vertical = MediumPadding)
             ) {
                 IFilledButton(
-                    label = stringResource(R.string.low_contrast),
+                    label = stringResource(R.string.feature_settings_low_contrast),
                     onClick = { onContrastClick(ThemeContrast.Low) },
                     soundPool = soundPool
                 )
                 IFilledButton(
-                    label = stringResource(R.string.medium_contrast),
+                    label = stringResource(R.string.feature_settings_medium_contrast),
                     onClick = { onContrastClick(ThemeContrast.Medium) },
                     soundPool = soundPool
                 )
                 IFilledButton(
-                    label = stringResource(R.string.high_contrast),
+                    label = stringResource(R.string.feature_settings_high_contrast),
                     onClick = { onContrastClick(ThemeContrast.High) },
                     soundPool = soundPool
                 )
             }
             IVerSpacer(0.1f)
             IText(
-                text = stringResource(R.string.Game_language) +
+                text = stringResource(R.string.feature_settings_Game_language) +
                         ": ${settingsState.gameLanguage.name}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = titleStyle
@@ -233,7 +233,7 @@ fun SettingsDesign(
             }
             IVerSpacer(0.1f)
             IOutlinedButton(
-                label = stringResource(R.string.reset_defaults),
+                label = stringResource(R.string.feature_settings_reset_defaults),
                 imageVector = Icons.Default.Restore,
                 onClick = onRestoreClick,
                 soundPool = soundPool

@@ -24,7 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.composables.states.rememberWindowState
+import es.sebas1705.designsystem.ComposableConstants.MAX_SOUNDS_SIMULTANEITY
+import es.sebas1705.designsystem.states.rememberWindowState
+import es.sebas1705.networkerror.NetworkErrorScreen
+import es.sebas1705.splash.SplashScreen
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Main screen of the app that contains the splash screen and

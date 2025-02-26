@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.guide.viewmodel
+package es.sebas1705.guide.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.guide.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * State for Guide Screen that will handle the first time the app is opened.

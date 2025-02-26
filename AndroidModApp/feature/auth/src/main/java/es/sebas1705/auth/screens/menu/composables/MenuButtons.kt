@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.menu.composables
+package es.sebas1705.auth.screens.menu.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -25,11 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.designsystem.buttons.common.IFilledTonalButton
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.youknow.feature.auth.R
 
 /**
  * Composable that contains the buttons to navigate to the Sign Up, Google Log In and Email Log In screens.
@@ -52,14 +52,14 @@ fun ColumnScope.MenuButtons(
 ) {
     IFilledTonalButton(
         modifier = modifier.height(48.dp),
-        label = stringResource(id = R.string.sign_up),
+        label = stringResource(id = R.string.feature_auth_sign_up),
         onClick = onSignButtonAction,
         soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
         modifier = modifier.height(48.dp),
-        label = stringResource(id = R.string.google_log),
+        label = stringResource(id = R.string.feature_auth_google_log),
         imageResource = R.drawable.google,
         onClick = onGoogleLogButtonAction,
         soundPool = soundPool
@@ -67,7 +67,7 @@ fun ColumnScope.MenuButtons(
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
         modifier = modifier.height(48.dp),
-        label = stringResource(id = R.string.email_log),
+        label = stringResource(id = R.string.feature_auth_email_log),
         imageVector = Icons.Default.Email,
         onClick = onEmailLogButtonAction,
         soundPool = soundPool

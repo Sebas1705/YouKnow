@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,11 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.designsystem.texts.IText
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Dialog that will be shown when the game is over.
@@ -51,7 +51,7 @@ fun GameOutDialog(
     confirmButton = {
         ITextButton(
             onClick = onConfirm,
-            label = stringResource(R.string.confirm),
+            label = stringResource(R.string.core_designsystem_confirm),
             soundPool = soundPool
         )
     },
@@ -59,16 +59,16 @@ fun GameOutDialog(
     dismissButton = {
         ITextButton(
             onClick = onDismiss,
-            label = stringResource(R.string.dismiss),
+            label = stringResource(R.string.core_designsystem_dismiss),
             soundPool = soundPool
         )
     },
     icon = null,
     title = {
-        IText(stringResource(id = R.string.game_out_title))
+        IText(stringResource(id = R.string.core_designsystem_game_out_title))
     },
     text = {
-        IText(stringResource(id = R.string.game_out_body))
+        IText(stringResource(id = R.string.core_designsystem_game_out_body))
     }
 )
 

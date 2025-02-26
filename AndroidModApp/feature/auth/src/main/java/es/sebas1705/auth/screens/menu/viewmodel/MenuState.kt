@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel
+package es.sebas1705.auth.screens.menu.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * Data class that represents the state of the Menu Screen.

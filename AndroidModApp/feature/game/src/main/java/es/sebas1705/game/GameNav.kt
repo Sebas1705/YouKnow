@@ -27,11 +27,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.designsystem.dialogs.GameOutDialog
-import es.sebas1705.game.GameScreens.Companion.games
-import es.sebas1705.youknow.presentation.features.game.features.families.FamiliesScreen
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.MysteryNumberScreen
-import es.sebas1705.youknow.presentation.features.game.features.quiz.QuizScreen
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.WordPassScreen
+import es.sebas1705.game.families.FamiliesScreen
+import es.sebas1705.game.mysterynumber.MysteryNumberScreen
+import es.sebas1705.game.quiz.QuizScreen
+import es.sebas1705.game.wordpass.WordPassScreen
 
 /**
  * Navigation for the game.
@@ -50,12 +49,9 @@ fun GameNav(
     windowState: WindowState,
     soundPool: Pair<SoundPool, Float>,
     onMusicChange: (Boolean) -> Unit,
-    game: GameScreens.Companion.GameItem,
+    gameIndex: Int = 0,
     onOutGameNavigation: () -> Unit,
 ) {
-    //States:
-    val destination by rememberSaveable { mutableIntStateOf(games.indexOf(game)) }
-
     //Flags:
     var outFlag by rememberSaveable { mutableStateOf(false) }
 
@@ -76,8 +72,8 @@ fun GameNav(
         soundPool = soundPool,
     )
 
-    when (games[destination].destination) {
-        is GameScreens.MysteryNumberScreen -> {
+    when (gameIndex) {
+        0 -> {
             MysteryNumberScreen(
                 windowState,
                 soundPool,
@@ -85,7 +81,7 @@ fun GameNav(
             )
         }
 
-        is GameScreens.QuizScreen -> {
+        1 -> {
             QuizScreen(
                 windowState,
                 soundPool,
@@ -93,7 +89,7 @@ fun GameNav(
             )
         }
 
-        is GameScreens.WordPassScreen -> {
+        2 -> {
             WordPassScreen(
                 windowState,
                 soundPool,
@@ -101,7 +97,7 @@ fun GameNav(
             )
         }
 
-        is GameScreens.FamiliesScreen -> {
+        else -> {
             FamiliesScreen(
                 windowState,
                 soundPool,

@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="feature_home_leader">Líder</string>
+    <string name="feature_home_view_profile">Ver perfil</string>
+    <string name="feature_home_kick_out">Expulsar</string>
+    <string name="feature_home_no_groups">No se han encontrado grupos</string>
+    <string name="feature_home_not_in_group">No estás en un grupo</string>
+    <string name="feature_home_search_enabled">Busqueda activada</string>
+    <string name="feature_home_add_group">Añadir grupo</string>
+    <string name="feature_home_search">Buscar</string>
+</resources>

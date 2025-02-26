@@ -18,12 +18,12 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.viewmod
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.core.utlis.extensions.primitives.isImageUrl
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.common.utlis.extensions.primitives.isImageUrl
+import es.sebas1705.user.UserUsesCases
+import es.sebas1705.youknow.feature.home.R
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -67,7 +67,7 @@ class ProfileViewModel @Inject constructor(
                 onEmptySuccess = { stopLoading() },
                 onError = { stopAndError(it, application::printTextInToast) }
             )
-        } else execute { application.printTextInToast(application.getString(R.string.invalid_url)) }
+        } else execute { application.printTextInToast(application.getString(R.string.feature_home_user_invalid_url)) }
     }
 
     private fun changeNickname(

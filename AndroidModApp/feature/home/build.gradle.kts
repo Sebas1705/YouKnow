@@ -1,43 +1,33 @@
+import es.sebas1705.convention.implementation
+
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.youknow.feature)
 }
 
 android {
-    namespace = "es.sebas1705.home"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+    buildFeatures {
+        buildConfig = true
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    namespace = "es.sebas1705.youknow.feature.home"
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
 }
 
 dependencies {
+    api(projects.core.common)
+    api(projects.core.ui)
+    api(projects.core.designsystem)
 
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    api(projects.domain.usescases.analytics)
+    api(projects.domain.usescases.auth)
+    api(projects.domain.usescases.chat)
+    api(projects.domain.usescases.groups)
+    api(projects.domain.usescases.user)
+    api(projects.domain.usescases.fill)
+    api(projects.domain.usescases.news)
+
+    implementation(libs.coil.compose)
 }

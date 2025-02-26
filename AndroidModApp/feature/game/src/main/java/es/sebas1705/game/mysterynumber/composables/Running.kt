@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables
+package es.sebas1705.game.mysterynumber.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -43,23 +43,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.Numbers
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.cards.IPrimaryCard
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.texts.Subtitle
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
-import es.sebas1705.youknow.presentation.ui.theme.gameBottomBarHeight
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.games.mysterynumber.Numbers
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.toReducedString
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.cards.IPrimaryCard
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.texts.Subtitle
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.gameBottomBarHeight
+import es.sebas1705.youknow.feature.games.R
 import kotlinx.coroutines.delay
 
 /**
@@ -88,7 +88,7 @@ fun Running(
         if (mysteryNumberState.numberModel.number == -2) {
             Title(
                 modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.error_loading_number),
+                text = stringResource(R.string.feature_game_error_loading_message),
                 color = MaterialTheme.colorScheme.error
             )
             return@ApplyBack
@@ -116,14 +116,14 @@ fun Running(
                 TitleSurface(
                     modifier = Modifier
                         .padding(MediumPadding),
-                    text = stringResource(R.string.mystery_title)
+                    text = stringResource(R.string.feature_game_mystery_title)
                 )
             }
             item {
                 Subtitle(
-                    text = stringResource(R.string.difficulty)
+                    text = stringResource(R.string.feature_game_difficulty)
                             + ": " + stringResource(number.difficulty.strRes)
-                            + "\n" + stringResource(R.string.range) + "1 - ${number.difficulty.maxMysteryNumber}"
+                            + "\n" + stringResource(R.string.feature_game_range) + "1 - ${number.difficulty.maxMysteryNumber}"
                 )
             }
             item {
@@ -166,7 +166,7 @@ fun Running(
                     onClick = {
                         plus = !plus
                     },
-                    label = stringResource(R.string.minus_plus),
+                    label = stringResource(R.string.feature_game_minus_plus),
                     modifier = Modifier.padding(SmallestPadding),
                     soundPool = soundPool
                 )
@@ -174,7 +174,7 @@ fun Running(
                     onClick = {
                         onResponseNumber(actualNumber, time)
                     },
-                    label = stringResource(R.string.try_number),
+                    label = stringResource(R.string.feature_game_try_number),
                     modifier = Modifier.padding(MediumPadding),
                     soundPool = soundPool
                 )
@@ -194,7 +194,7 @@ fun Running(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Title(
-                            text = "${stringResource(R.string.points)}: ${mysteryNumberState.points.toReducedString()}",
+                            text = "${stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points)}: ${mysteryNumberState.points.toReducedString()}",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Row {
@@ -204,7 +204,7 @@ fun Running(
                             )
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
-                                contentDescription = stringResource(R.string.lives),
+                                contentDescription = stringResource(R.string.feature_game_lives),
                                 tint = MaterialTheme.colorScheme.tertiary
                             )
                         }
@@ -215,7 +215,7 @@ fun Running(
                             )
                             Icon(
                                 imageVector = Icons.Filled.Timer,
-                                contentDescription = stringResource(R.string.time),
+                                contentDescription = stringResource(R.string.feature_game_time),
                                 tint = MaterialTheme.colorScheme.tertiary
                             )
                         }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.settings.viewmodel
+package es.sebas1705.settings.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,17 +19,17 @@ package es.sebas1705.youknow.presentation.features.settings.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
-import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.datastore.config.DefaultValuesDS
+import es.sebas1705.settings.SettingUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
  * ViewModel for Settings Screen that will handle the UI logic and the data flow.
  *
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to handle the app settings.
+ * @param settingUsesCases [SettingUsesCases]: Use cases for the Settings.
  * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -37,7 +37,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val datastoreUsesCases: DatastoreUsesCases,
+    private val settingUsesCases: SettingUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<SettingsState, SettingsIntent>() {
 
@@ -59,25 +59,25 @@ class SettingsViewModel @Inject constructor(
     //Actions:
     private fun readSettings() = execute(Dispatchers.IO) {
         execute(Dispatchers.IO) {
-            datastoreUsesCases.readMusicVolume().collect { volume ->
+            settingUsesCases.readMusicVolume().collect { volume ->
                 Log.i("SettingsViewModel", "readSettings: $volume")
                 updateUi { it.copy(musicVolume = volume) }
             }
         }
         execute(Dispatchers.IO) {
-            datastoreUsesCases.readSoundVolume().collect { volume ->
+            settingUsesCases.readSoundVolume().collect { volume ->
                 Log.i("SettingsViewModel", "readSettings: $volume")
                 updateUi { it.copy(soundVolume = volume) }
             }
         }
         execute(Dispatchers.IO) {
-            datastoreUsesCases.readAppContrast().collect { contrast ->
+            settingUsesCases.readAppContrast().collect { contrast ->
                 Log.i("SettingsViewModel", "readSettings: $contrast")
                 updateUi { it.copy(themeContrast = contrast) }
             }
         }
         execute(Dispatchers.IO) {
-            datastoreUsesCases.readGameLanguage().collect { language ->
+            settingUsesCases.readGameLanguage().collect { language ->
                 Log.i("SettingsViewModel", "readSettings: $language")
                 updateUi { it.copy(gameLanguage = language) }
             }
@@ -85,25 +85,25 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun restoreSettings() = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveMusicVolume(
+        settingUsesCases.saveMusicVolume(
             volume = DefaultValuesDS.MUSIC_VOLUME,
             onLoading = { startLoading() },
             onSuccess = {
                 updateUi { it.copy(musicVolume = DefaultValuesDS.MUSIC_VOLUME) }
                 execute(Dispatchers.IO) {
-                    datastoreUsesCases.saveAppContrast(
+                    settingUsesCases.saveAppContrast(
                         themeContrast = DefaultValuesDS.APP_UI_CONTRAST,
                         onLoading = {},
                         onSuccess = {
                             updateUi { it.copy(themeContrast = DefaultValuesDS.APP_UI_CONTRAST) }
                             execute(Dispatchers.IO) {
-                                datastoreUsesCases.saveGameLanguage(
+                                settingUsesCases.saveGameLanguage(
                                     languages = DefaultValuesDS.GAME_LANGUAGE,
                                     onLoading = {},
                                     onSuccess = {
                                         updateUi { it.copy(gameLanguage = DefaultValuesDS.GAME_LANGUAGE) }
                                         execute(Dispatchers.IO) {
-                                            datastoreUsesCases.saveSoundVolume(
+                                            settingUsesCases.saveSoundVolume(
                                                 volume = DefaultValuesDS.SOUND_VOLUME,
                                                 onLoading = {},
                                                 onSuccess = {
@@ -134,7 +134,7 @@ class SettingsViewModel @Inject constructor(
     private fun changeContrast(
         intent: SettingsIntent.ChangeContrast
     ) = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveAppContrast(
+        settingUsesCases.saveAppContrast(
             intent.themeContrast,
             onLoading = { startLoading() },
             onSuccess = {
@@ -148,7 +148,7 @@ class SettingsViewModel @Inject constructor(
     private fun changeMusicVolume(
         intent: SettingsIntent.ChangeMusicVolume
     ) = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveMusicVolume(
+        settingUsesCases.saveMusicVolume(
             intent.volume,
             onLoading = { startLoading() },
             onSuccess = {
@@ -162,7 +162,7 @@ class SettingsViewModel @Inject constructor(
     private fun changeSoundVolume(
         intent: SettingsIntent.ChangeSoundVolume
     ) = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveSoundVolume(
+        settingUsesCases.saveSoundVolume(
             intent.volume,
             onLoading = { startLoading() },
             onSuccess = {
@@ -176,7 +176,7 @@ class SettingsViewModel @Inject constructor(
     private fun changeLanguage(
         intent: SettingsIntent.ChangeLanguage
     ) = execute(Dispatchers.IO) {
-        datastoreUsesCases.saveGameLanguage(
+        settingUsesCases.saveGameLanguage(
             intent.language,
             onLoading = { startLoading() },
             onSuccess = {

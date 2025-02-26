@@ -27,7 +27,7 @@ import es.sebas1705.room.entities.FamiliesEntity
 import es.sebas1705.room.entities.QuestionEntity
 import es.sebas1705.room.entities.SurveyEntity
 import es.sebas1705.room.entities.WordEntity
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 import es.sebas1705.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.local.database.Database
 import javax.inject.Inject

@@ -18,5 +18,4 @@ android {
 dependencies {
     api(projects.core.common)
     api(projects.data.analytics)
-    implementation(libs.retrofit.gson)
 }

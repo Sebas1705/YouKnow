@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.sign.composables
+package es.sebas1705.auth.screens.sign.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,12 +23,12 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.textfields.IEmailTextField
+import es.sebas1705.designsystem.textfields.IPasswordTextField
+import es.sebas1705.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
-import es.sebas1705.youknow.core.composables.textfields.IPasswordTextField
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.feature.auth.R
 
 /**
  * Sign Field that will allow the user to sign up.
@@ -67,10 +67,10 @@ fun ColumnScope.SignField(
     soundPool: Pair<SoundPool, Float>? = null,
 ) {
     //Texts:
-    val userNameText = stringResource(id = R.string.username)
-    val emailText = stringResource(id = R.string.email)
-    val passwordText = stringResource(id = R.string.password)
-    val repeatText = stringResource(id = R.string.repeat)
+    val userNameText = stringResource(id = R.string.feature_auth_username)
+    val emailText = stringResource(id = R.string.feature_auth_email)
+    val passwordText = stringResource(id = R.string.feature_auth_password)
+    val repeatText = stringResource(id = R.string.feature_auth_repeat)
 
     //Fields:
     IOutlinedTextField(

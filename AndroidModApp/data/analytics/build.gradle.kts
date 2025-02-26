@@ -17,5 +17,4 @@ android {
 
 dependencies {
     api(projects.core.common)
-    implementation(libs.play.services.measurement.api)
 }

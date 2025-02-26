@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="feature_game_families_game">Selecciona quien no coincida</string>
 </resources>

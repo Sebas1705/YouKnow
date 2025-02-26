@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.viewmod
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * State of the [ProfileViewModel] that will handle the UI changes

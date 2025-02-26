@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,13 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
-import es.sebas1705.designsystem.texts.IText
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 
 /**
  * Create group dialog
@@ -71,7 +71,8 @@ fun CreateGroupDialog(
                         onConfirm(groupName, groupDescription)
                     else context.printTextInToast("Please fill all the fields")
                 },
-                label = "${stringResource(R.string.confirm)} (2000 ${stringResource(R.string.credits)})",
+                label = "${stringResource(R.string.core_designsystem_confirm)} (2000 ${stringResource(
+                    es.iberext.youknow.core.resources.R.string.core_resources_credits)})",
                 soundPool = soundPool
             )
         },
@@ -79,13 +80,13 @@ fun CreateGroupDialog(
         dismissButton = {
             ITextButton(
                 onClick = onDismiss,
-                label = stringResource(R.string.dismiss),
+                label = stringResource(R.string.core_designsystem_dismiss),
                 soundPool = soundPool
             )
         },
         icon = null,
         title = {
-            IText(stringResource(R.string.titleCreateGroup))
+            IText(stringResource(R.string.core_designsystem_titleCreateGroup))
         },
         text = {
             Column(
@@ -95,16 +96,16 @@ fun CreateGroupDialog(
                 IOutlinedTextField(
                     value = groupName,
                     onValueChange = { groupName = it },
-                    label = stringResource(R.string.groupName),
-                    placeholder = stringResource(R.string.groupName),
+                    label = stringResource(R.string.core_designsystem_groupName),
+                    placeholder = stringResource(R.string.core_designsystem_groupName),
                     modifier = Modifier.fillMaxWidth(),
                     soundPool = soundPool
                 )
                 IOutlinedTextField(
                     value = groupDescription,
                     onValueChange = { groupDescription = it },
-                    label = stringResource(R.string.groupDescription),
-                    placeholder = stringResource(R.string.groupDescription),
+                    label = stringResource(R.string.core_designsystem_groupDescription),
+                    placeholder = stringResource(R.string.core_designsystem_groupDescription),
                     modifier = Modifier.fillMaxWidth(),
                     soundPool = soundPool
                 )
@@ -113,11 +114,6 @@ fun CreateGroupDialog(
     )
 }
 
-/**
- * Preview for [LogoutDialog]
- *
- * @see LogoutDialog
- */
 @UiModePreviews
 @Composable
 private fun CreateGroupPreview() = YouKnowTheme {

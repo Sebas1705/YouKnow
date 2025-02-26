@@ -18,6 +18,7 @@ import es.sebas1705.convention.implementation
 import es.sebas1705.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 
 /**
@@ -31,6 +32,7 @@ class FeatureConventionPlugin : Plugin<Project> {
                 apply("youknow.android.library")
                 apply("youknow.android.hilt")
                 apply("youknow.android.compose")
+                apply("youknow.android.firebase")
                 apply("org.jetbrains.kotlin.plugin.serialization")
             }
 

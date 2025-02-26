@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.guide.viewmodel
+package es.sebas1705.guide.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,10 +18,10 @@ package es.sebas1705.youknow.presentation.features.guide.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.games.FillUsesCases
-import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.fillusescases.FillUsesCases
+import es.sebas1705.settings.SettingUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -30,7 +30,9 @@ import javax.inject.Inject
  * It will show the guide screen if it is the first time the app is opened.
  * If it is not the first time, it will navigate to the Home Screen.
  *
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCase to check if the app is opened for the first time.
+ * @param settingUsesCases [SettingUsesCases]: Uses cases for settings.
+ * @param fillUsesCases [FillUsesCases]: Uses cases for fill.
+ * @param application [Application]: Application context.
  *
  * @see MVIBaseViewModel
  * @see HiltViewModel
@@ -40,7 +42,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class GuideViewModel @Inject constructor(
-    private val datastoreUsesCases: DatastoreUsesCases,
+    private val settingUsesCases: SettingUsesCases,
     private val fillUsesCases: FillUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<GuideState, GuideIntent>() {
@@ -69,7 +71,7 @@ class GuideViewModel @Inject constructor(
                                     onLoading = {},
                                     onSuccess = {
                                         execute(Dispatchers.IO) {
-                                            datastoreUsesCases.saveFirstTime()
+                                            settingUsesCases.saveFirstTime()
                                         }
                                         stopLoading()
                                         execute { intent.onSuccess() }

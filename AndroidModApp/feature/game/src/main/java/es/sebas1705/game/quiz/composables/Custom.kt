@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.composables
+package es.sebas1705.game.quiz.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -41,24 +41,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.buttons.radio.IRadioButton
-import es.sebas1705.youknow.core.composables.buttons.segmented.ISingleChoiceSegmentedButton
-import es.sebas1705.youknow.core.composables.extras.DropdownList
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.PaddingSpacers.MediumSpacer
-import es.sebas1705.youknow.core.composables.spacers.PaddingSpacers.SmallSpacer
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.QuizType
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.buttons.radio.IRadioButton
+import es.sebas1705.designsystem.buttons.segmented.ISingleChoiceSegmentedButton
+import es.sebas1705.designsystem.extras.DropdownList
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.PaddingSpacers.MediumSpacer
+import es.sebas1705.designsystem.spacers.PaddingSpacers.SmallSpacer
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.game.quiz.viewmodel.QuizState
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.games.R
 
 /**
  * Custom mode of the Quiz game.
@@ -107,12 +107,12 @@ fun Custom(
         ) {
             item {
                 MediumSpacer()
-                TitleSurface(stringResource(R.string.custom_title))
+                TitleSurface(stringResource(R.string.feature_game_custom_title))
                 MediumSpacer()
             }
             item {
                 IText(
-                    text = stringResource(R.string.num_questions) +
+                    text = stringResource(R.string.feature_game_num_questions) +
                             " $numQuestions",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
@@ -130,7 +130,7 @@ fun Custom(
 
             item {
                 IText(
-                    text = stringResource(R.string.type) +
+                    text = stringResource(R.string.feature_game_type) +
                             ": " + stringResource(quizTypeEnum.strRes),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
@@ -187,7 +187,7 @@ fun Custom(
             }
             item {
                 IText(
-                    text = stringResource(R.string.difficulty) +
+                    text = stringResource(R.string.feature_game_difficulty) +
                             ": " + stringResource(difficultyEnum.strRes),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
@@ -215,7 +215,7 @@ fun Custom(
             }
             item {
                 IText(
-                    text = stringResource(R.string.category),
+                    text = stringResource(R.string.feature_game_category),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
                 )
@@ -252,7 +252,7 @@ fun Custom(
                             numQuestions
                         )
                     },
-                    label = stringResource(R.string.start_game),
+                    label = stringResource(R.string.feature_game_start_game),
                     imageVector = Icons.Filled.Start,
                     soundPool = soundPool
                 )

@@ -34,7 +34,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object FilesDataModule {
 
     /**
      * Provides [FileRepository] that is used to manage the files

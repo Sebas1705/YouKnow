@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.families.design
+package es.sebas1705.game.families.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,19 +18,19 @@ package es.sebas1705.youknow.presentation.features.game.features.families.design
 
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesStatus
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.families.FamiliesMode
+import es.sebas1705.common.games.families.FamiliesStatus
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.game.families.composables.Custom
+import es.sebas1705.game.families.composables.Finished
+import es.sebas1705.game.families.composables.Running
+import es.sebas1705.game.families.composables.SelectionMode
+import es.sebas1705.game.families.viewmodel.FamiliesState
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.families.composables.Custom
-import es.sebas1705.youknow.presentation.features.game.features.families.composables.Finished
-import es.sebas1705.youknow.presentation.features.game.features.families.composables.Running
-import es.sebas1705.youknow.presentation.features.game.features.families.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.families.viewmodel.FamiliesState
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.

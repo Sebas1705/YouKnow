@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.mysterynumber
+package es.sebas1705.common.games.mysterynumber
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.HourglassBottom
 import androidx.compose.ui.graphics.vector.ImageVector
-import es.sebas1705.youknow.R
 
 /**
  * Enum class that represents the modes of the Mystery Number game.
@@ -40,7 +39,7 @@ enum class MysteryNumberMode(
     val lives: Int,
     val multiPoints: Double
 ) {
-    TIME_ATTACK(R.string.time_attack, Icons.Filled.HourglassBottom, 100, 1.2),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 20, 1.0),
-    CUSTOM(R.string.custom, Icons.Filled.DashboardCustomize, 20, 1.0),
+    TIME_ATTACK(es.iberext.youknow.core.resources.R.string.core_resources_time_attack, Icons.Filled.HourglassBottom, 100, 1.2),
+    ALEATORY(es.iberext.youknow.core.resources.R.string.core_resources_aleatory, Icons.Filled.Casino, 20, 1.0),
+    CUSTOM(es.iberext.youknow.core.resources.R.string.core_resources_custom, Icons.Filled.DashboardCustomize, 20, 1.0),
 }

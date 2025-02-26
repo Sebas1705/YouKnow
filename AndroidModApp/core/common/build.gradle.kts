@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.youknow.library)
     alias(libs.plugins.youknow.compose)
     alias(libs.plugins.youknow.retrofit)
+    alias(libs.plugins.youknow.credential)
 }
 
 android {
@@ -14,7 +15,5 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.play.services.tasks)
-
+    api(projects.core.resources)
 }

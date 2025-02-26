@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.navigation
+package es.sebas1705.main
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -25,15 +25,15 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.extensions.composables.navAndPopUp
-import es.sebas1705.youknow.presentation.features.auth.navigation.AuthNav
-import es.sebas1705.youknow.presentation.features.game.navigation.GameNav
-import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens.Companion.games
-import es.sebas1705.youknow.presentation.features.guide.GuideScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
-import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
-import es.sebas1705.youknow.presentation.features.survey.SurveyScreen
+import es.sebas1705.auth.AuthNav
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.extensions.composables.navAndPopUp
+import es.sebas1705.game.GameNav
+import es.sebas1705.guide.GuideScreen
+import es.sebas1705.home.navigation.HomeNav
+import es.sebas1705.home.play.GameItem.Companion.games
+import es.sebas1705.settings.SettingsScreen
+import es.sebas1705.survey.SurveyScreen
 
 /**
  * Navigation for the app.
@@ -114,7 +114,7 @@ fun AppNav(
                 windowState,
                 soundPool,
                 onMusicChange,
-                games[game],
+                game,
                 onOutGameNavigation = {
                     appNavController.navAndPopUp(
                         AppGraph.HomeNavigation,

@@ -26,11 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.lottie.IRawLottieAnimation
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.lottie.IRawLottieAnimation
 
 /**
  * Loading dialog

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.guide
+package es.sebas1705.guide
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,10 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.guide.design.GuideDesign
-import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideIntent
-import es.sebas1705.youknow.presentation.features.guide.viewmodel.GuideViewModel
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.guide.design.GuideDesign
+import es.sebas1705.guide.viewmodel.GuideIntent
+import es.sebas1705.guide.viewmodel.GuideViewModel
 
 /**
  * Guide Screen that will show the user a guide of the app.

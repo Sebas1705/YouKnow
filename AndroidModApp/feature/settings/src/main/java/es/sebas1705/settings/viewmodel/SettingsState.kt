@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.settings.viewmodel
+package es.sebas1705.settings.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,10 +16,10 @@ package es.sebas1705.youknow.presentation.features.settings.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.theme.ThemeContrast
+import es.sebas1705.datastore.config.DefaultValuesDS
 
 /**
  * Data class that represents the state of the Settings Screen.

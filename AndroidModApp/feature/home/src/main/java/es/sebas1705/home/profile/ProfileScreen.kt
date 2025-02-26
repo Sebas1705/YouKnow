@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.profile
+package es.sebas1705.home.profile
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,13 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.presentation.features.home.features.profile.design.ProfileDesign
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.home.profile.design.ProfileDesign
+import es.sebas1705.youknow.feature.home.R
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileIntent
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileViewModel
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
 
 /**
  * Profile Screen that shows the user's data.
@@ -72,7 +72,7 @@ fun ProfileScreen(
                         photo
                     )
                 )
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         },
         onChangeNickname = {
             homeState.userModel?.let { userModel ->
@@ -82,7 +82,7 @@ fun ProfileScreen(
                         it
                     )
                 )
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         },
         onChangePassword = {
             homeState.userModel?.let { userModel ->
@@ -91,7 +91,7 @@ fun ProfileScreen(
                         userModel.email,
                     )
                 )
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         }
     )
 }

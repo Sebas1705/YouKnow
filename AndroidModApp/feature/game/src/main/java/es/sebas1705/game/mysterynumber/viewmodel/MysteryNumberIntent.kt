@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel
+package es.sebas1705.game.mysterynumber.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,9 +16,9 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.v
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible intents of the MysteryNumber Screen.

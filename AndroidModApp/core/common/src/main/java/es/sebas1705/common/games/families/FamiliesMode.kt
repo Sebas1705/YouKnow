@@ -40,8 +40,8 @@ enum class FamiliesMode(
     val numFamilies: Int,
     val multiPoints: Double
 ) {
-    SURVIVAL(R.string.survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    TIME_ATTACK(R.string.time_attack, Icons.Filled.HourglassBottom, 20, 1.2),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 10, 1.0),
-    CUSTOM(R.string.custom, Icons.Filled.DashboardCustomize, 0, 0.75)
+    SURVIVAL(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
+    TIME_ATTACK(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.HourglassBottom, 20, 1.2),
+    ALEATORY(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.Casino, 10, 1.0),
+    CUSTOM(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.DashboardCustomize, 0, 0.75)
 }

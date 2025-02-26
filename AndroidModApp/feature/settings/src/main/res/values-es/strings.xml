@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="feature_settings_settings_title">Ajustes</string>
+    <string name="feature_settings_volume">Volumen</string>
+    <string name="feature_settings_contrast">Contraste</string>
+    <string name="feature_settings_low_contrast">Bajo</string>
+    <string name="feature_settings_medium_contrast">Medio</string>
+    <string name="feature_settings_high_contrast">Alto</string>
+    <string name="feature_settings_reset_defaults">Restaurar ajustes</string>
+    <string name="feature_settings_Game_language">Game language</string>
+    <string name="feature_settings_music">Volumen música</string>
+    <string name="feature_settings_sound">Volumen sonido</string>
 </resources>

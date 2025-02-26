@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz
+package es.sebas1705.game.quiz
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,10 +22,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.game.features.quiz.design.QuizDesign
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizIntent
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizViewModel
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.game.quiz.design.QuizDesign
+import es.sebas1705.game.quiz.viewmodel.QuizIntent
+import es.sebas1705.game.quiz.viewmodel.QuizViewModel
 
 /**
  * Screen of the Mystery Number Game.

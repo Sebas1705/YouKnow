@@ -18,9 +18,10 @@ android {
 
 dependencies {
     api(projects.core.common)
+
     api(projects.data.authentication)
+
     api(projects.domain.models)
-    api(projects.domain.mappers)
 
     implementation(libs.firebase.auth)
 }

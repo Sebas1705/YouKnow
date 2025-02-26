@@ -16,7 +16,6 @@ package es.sebas1705.analytics.di
  *
  */
 
-import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
@@ -34,7 +33,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object AnalyticsDataModule {
 
     /**
      * Provides [AnalyticsRepository] that is used to track events

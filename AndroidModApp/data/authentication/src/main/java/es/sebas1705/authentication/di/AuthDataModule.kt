@@ -34,7 +34,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object AuthDataModule {
 
     /**
      * Provides [AuthenticationRepository] that is used to manage the authentication

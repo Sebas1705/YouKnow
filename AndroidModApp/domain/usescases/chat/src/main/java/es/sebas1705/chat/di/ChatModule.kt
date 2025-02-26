@@ -35,7 +35,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object ChatModule {
 
     /**
      * Function to provide chat use cases

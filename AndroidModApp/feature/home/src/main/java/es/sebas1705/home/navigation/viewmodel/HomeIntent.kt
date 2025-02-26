@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
+package es.sebas1705.home.navigation.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Intent for [HomeViewModel].

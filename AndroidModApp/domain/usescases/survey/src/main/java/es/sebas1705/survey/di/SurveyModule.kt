@@ -36,7 +36,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object SurveyModule {
 
     /**
      * Function to provide survey use cases

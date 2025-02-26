@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -32,14 +32,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.youknow.core.composables.cards.IResumeCard
-import es.sebas1705.youknow.core.composables.texts.Title
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.social.UserModel
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.models.social.UserModel
 
 /**
  * User info dialog
@@ -68,7 +68,7 @@ fun UserInfoDialog(
         dismissButton = {
             ITextButton(
                 onClick = onDismiss,
-                label = stringResource(R.string.dismiss),
+                label = stringResource(R.string.core_designsystem_dismiss),
                 soundPool = soundPool
             )
         },
@@ -79,13 +79,13 @@ fun UserInfoDialog(
                     .data(userModel.photoUrl)
                     .crossfade(true)
                     .build(),
-                placeholder = painterResource(R.drawable.sign_user),
-                contentDescription = stringResource(R.string.Profile),
+                placeholder = painterResource(es.iberext.youknow.core.resources.R.drawable.sign_user),
+                contentDescription = stringResource(R.string.core_designsystem_profile),
                 modifier = Modifier.size(size)
             )
             else Image(
-                painter = painterResource(R.drawable.sign_user),
-                contentDescription = stringResource(R.string.Profile),
+                painter = painterResource(es.iberext.youknow.core.resources.R.drawable.sign_user),
+                contentDescription = stringResource(R.string.core_designsystem_profile),
                 modifier = Modifier.size(size)
             )
         },
@@ -103,8 +103,8 @@ fun UserInfoDialog(
             IResumeCard(
                 title = userModel.nickName,
                 titlesValues = mapOf(
-                    stringResource(R.string.points) to userModel.points.toString(),
-                    stringResource(R.string.credits) to userModel.credits.toString(),
+                    stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points) to userModel.points.toString(),
+                    stringResource(es.iberext.youknow.core.resources.R.string.core_resources_credits) to userModel.credits.toString(),
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

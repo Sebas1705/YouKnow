@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- UserViewModel -->
+    <string name="feature_home_user_not_logged">User not logged correctly, try again or contact to support</string>
+    <!-- HomeScreens -->
+    <string name="feature_home_user_not_found">User not found, restart the app</string>
+    <string name="feature_home_Main">Home</string>
+    <string name="feature_home_Profile">Profile</string>
+    <string name="feature_home_Groups">Groups</string>
+    <string name="feature_home_Play">Play</string>
+    <string name="feature_home_Chat">Chat</string>
+    <string name="feature_home_You">You</string>
 </resources>

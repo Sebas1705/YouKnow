@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.families.viewmodel
+package es.sebas1705.game.families.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,16 +19,16 @@ package es.sebas1705.youknow.presentation.features.game.features.families.viewmo
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.games.FamiliesUsesCases
-import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.families.FamiliesMode
+import es.sebas1705.common.games.families.FamiliesStatus
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.familiesusescases.FamiliesUsesCases
+import es.sebas1705.settings.SettingUsesCases
+import es.sebas1705.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ import javax.inject.Inject
  * @param familiesUsesCases [FamiliesUsesCases]: Use cases for the Families game.
  * @param userUsesCases [UserUsesCases]: Use cases for the User.
  * @param authUsesCases [AuthUsesCases]: Use cases for the Auth.
- * @param datastoreUsesCases [DatastoreUsesCases]: Use cases for the Datastore.
+ * @param settingUsesCases [SettingUsesCases]: Use cases for the Settings.
  * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -50,7 +50,7 @@ class FamiliesViewModel @Inject constructor(
     private val familiesUsesCases: FamiliesUsesCases,
     private val userUsesCases: UserUsesCases,
     private val authUsesCases: AuthUsesCases,
-    private val datastoreUsesCases: DatastoreUsesCases,
+    private val settingUsesCases: SettingUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<FamiliesState, FamiliesIntent>() {
 
@@ -70,7 +70,7 @@ class FamiliesViewModel @Inject constructor(
 
     //Actions:
     private fun readLanguages() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readGameLanguage().collect { languages ->
+        settingUsesCases.readGameLanguage().collect { languages ->
             updateUi {
                 it.copy(languages = languages)
             }

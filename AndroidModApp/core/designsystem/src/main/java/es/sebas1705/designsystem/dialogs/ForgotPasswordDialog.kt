@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -29,12 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
-import es.sebas1705.youknow.core.composables.textfields.IEmailTextField
-import es.sebas1705.designsystem.texts.IText
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.textfields.IEmailTextField
 
 /**
  * Composable that displays a dialog to recover the password.
@@ -63,7 +63,7 @@ fun ForgotPasswordDialog(
         confirmButton = {
             ITextButton(
                 onClick = { onConfirm(email) },
-                label = stringResource(R.string.confirm),
+                label = stringResource(R.string.core_designsystem_confirm),
                 soundPool = soundPool
             )
         },
@@ -71,12 +71,12 @@ fun ForgotPasswordDialog(
         dismissButton = {
             ITextButton(
                 onClick = onDismiss,
-                label = stringResource(R.string.dismiss),
+                label = stringResource(R.string.core_designsystem_dismiss),
                 soundPool = soundPool
             )
         },
         title = {
-            IText(stringResource(R.string.enter_email))
+            IText(stringResource(R.string.core_designsystem_enter_email))
         },
         text = {
             IEmailTextField(
@@ -89,11 +89,6 @@ fun ForgotPasswordDialog(
     )
 }
 
-/**
- * Preview of the [ForgotPasswordDialog].
- *
- * @see ForgotPasswordDialog
- */
 @UiModePreviews
 @Composable
 private fun ForgotPasswordWindowPreview() {

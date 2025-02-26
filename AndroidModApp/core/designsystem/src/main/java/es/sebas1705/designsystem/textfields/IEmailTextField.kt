@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.textfields
+package es.sebas1705.designsystem.textfields
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,9 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import es.sebas1705.youknow.R
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 
 /**
  * Email text field
@@ -53,8 +54,8 @@ fun IEmailTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
-    label: String = stringResource(R.string.email),
-    placeholder: String = stringResource(R.string.email),
+    label: String = stringResource(R.string.core_designsystem_email),
+    placeholder: String = stringResource(R.string.core_designsystem_email),
     soundPool: Pair<SoundPool, Float>? = null
 ) = IOutlinedTextField(
     value,

@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_home_mystery_number">Mystery number</string>
+    <string name="feature_home_quiz">Quiz</string>
+    <string name="feature_home_word_pass">Word-Pass</string>
+    <string name="feature_home_families">Families</string>
 </resources>

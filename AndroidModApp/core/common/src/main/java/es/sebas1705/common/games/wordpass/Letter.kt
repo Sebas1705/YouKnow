@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.wordpass
+package es.sebas1705.common.games.wordpass
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

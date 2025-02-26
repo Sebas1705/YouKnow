@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.cards
+package es.sebas1705.designsystem.cards
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -27,11 +27,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
 import es.sebas1705.common.utlis.IComposablePreview
 import es.sebas1705.common.utlis.extensions.composables.makeBold
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized interactive card

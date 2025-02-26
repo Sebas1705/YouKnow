@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
+package es.sebas1705.game.quiz.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,11 +16,11 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.games.QuestionModel
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.games.quiz.QuizMode
+import es.sebas1705.common.games.quiz.QuizStatus
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.games.QuestionModel
 
 /**
  * Data class that represents the state of the Quiz Screen.

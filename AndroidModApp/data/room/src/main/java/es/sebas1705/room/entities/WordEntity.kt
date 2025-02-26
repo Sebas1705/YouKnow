@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.Languages
 import es.sebas1705.room.config.SettingsDB
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 
 /**
  * Entity to represent the word in the database

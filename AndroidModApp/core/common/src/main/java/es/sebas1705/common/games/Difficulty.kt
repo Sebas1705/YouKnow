@@ -36,7 +36,7 @@ enum class Difficulty(
     val points: Int,
     val maxMysteryNumber: Int
 ) {
-    ANY(null, R.string.core_common_any, 10, 0),
+    ANY(null, es.iberext.youknow.core.resources.R.string.core_resources_any, 10, 0),
     EASY("easy", R.string.core_common_dif_easy, 5, 100),
     MEDIUM("medium", R.string.core_common_dif_medium, 10, 1_000),
     HARD("hard", R.string.core_common_dif_hard, 15, 1_000_000);

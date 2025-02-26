@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.texts
+package es.sebas1705.designsystem.texts
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.common.utlis.extensions.composables.makeTitle
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.makeTitle
 
 /**
  * Subtitle

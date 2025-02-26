@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel
+package es.sebas1705.game.wordpass.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,11 +16,11 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmo
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.games.WordModel
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.games.wordpass.WordPassStatus
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.games.WordModel
 
 /**
  * Data class that represents the state of the WordPass Screen.

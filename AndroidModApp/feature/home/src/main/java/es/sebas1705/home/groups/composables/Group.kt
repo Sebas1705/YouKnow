@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups.composables
+package es.sebas1705.home.groups.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -36,22 +36,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.icon.IFilledIconButton
-import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
-import es.sebas1705.youknow.core.composables.divider.IHorDivider
-import es.sebas1705.youknow.core.composables.surfaces.IPrimarySurface
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.ComposableConstants
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.composables.makeBold
-import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.composables.makeBold
+import es.sebas1705.designsystem.ComposableConstants
+import es.sebas1705.designsystem.buttons.icon.IFilledIconButton
+import es.sebas1705.designsystem.cards.IInteractiveCard
+import es.sebas1705.designsystem.divider.IHorDivider
+import es.sebas1705.designsystem.surfaces.IPrimarySurface
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.models.social.GroupModel
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.home.R
 
 /**
  * Group composable that will show the group information.
@@ -160,19 +159,19 @@ fun Group(
                 val firebaseId = homeState.userModel?.firebaseId
                 val groupLeader = groupModel.leaderUID
                 IInteractiveCard(
-                    title = if (firebaseId == memberId) stringResource(R.string.You) else memberName,
-                    subtitle = if (groupLeader == memberId) "(${stringResource(R.string.leader)})" else "",
+                    title = if (firebaseId == memberId) stringResource(R.string.feature_home_You) else memberName,
+                    subtitle = if (groupLeader == memberId) "(${stringResource(R.string.feature_home_leader)})" else "",
                     buttons = {
                         if (firebaseId != memberId) IFilledIconButton(
                             onClick = { onInfoButton(memberId) },
-                            contentDescription = stringResource(R.string.view_profile),
+                            contentDescription = stringResource(R.string.feature_home_view_profile),
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Search,
                             soundPool = soundPool
                         )
                         if (groupLeader == firebaseId && firebaseId != memberId) IFilledIconButton(
                             onClick = { onKickButton(memberId) },
-                            contentDescription = "Delete",
+                            contentDescription = stringResource(R.string.feature_home_kick_out),
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Delete,
                             soundPool = soundPool

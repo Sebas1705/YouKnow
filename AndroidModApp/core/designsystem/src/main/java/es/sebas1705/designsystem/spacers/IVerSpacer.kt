@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.spacers
+package es.sebas1705.designsystem.spacers
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -25,8 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Horizontal spacer

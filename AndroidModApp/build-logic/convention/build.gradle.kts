@@ -53,15 +53,6 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.ksp.gradle.plugin)
-    compileOnly(libs.firebase.crashlytics.gradlePlugin)
-    compileOnly(libs.firebase.performance.gradlePlugin)
-}
-
-tasks {
-    validatePlugins {
-        enableStricterValidation = true
-        failOnWarning = true
-    }
 }
 
 gradlePlugin {
@@ -117,10 +108,6 @@ gradlePlugin {
         register("androidCredential") {
             id = "youknow.android.credential"
             implementationClass = "CredentialConventionPlugin"
-        }
-        register("androidRoom") {
-            id = "youknow.android.room"
-            implementationClass = "RoomConventionPlugin"
         }
         register("androidDatastore") {
             id = "youknow.android.datastore"

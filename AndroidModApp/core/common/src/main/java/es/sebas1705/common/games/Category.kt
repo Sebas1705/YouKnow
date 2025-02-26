@@ -29,7 +29,7 @@ import es.iberext.youknow.core.common.R
  * @author Sebastián Ramiro Entrerrios García
  */
 enum class Category(val id: Int?, val strRes: Int) {
-    ANY(null, R.string.core_common_any),
+    ANY(null, es.iberext.youknow.core.resources.R.string.core_resources_any),
     GENERAL_KNOWLEDGE(9, R.string.core_common_cat_general_knowledge),
     BOOKS(10, R.string.core_common_cat_entertainment_books),
     FILMS(11, R.string.core_common_cat_entertainment_film),

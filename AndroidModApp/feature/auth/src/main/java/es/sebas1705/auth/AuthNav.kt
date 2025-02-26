@@ -28,7 +28,7 @@ import es.sebas1705.auth.AuthScreens.LogScreen
 import es.sebas1705.auth.AuthScreens.MenuScreen
 import es.sebas1705.auth.AuthScreens.SignScreen
 import es.sebas1705.auth.screens.log.LogScreen
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.MenuScreen
+import es.sebas1705.auth.screens.menu.MenuScreen
 import es.sebas1705.auth.screens.sign.SignScreen
 
 /**

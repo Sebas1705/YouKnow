@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.families.viewmodel
+package es.sebas1705.game.families.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,11 +16,11 @@ package es.sebas1705.youknow.presentation.features.game.features.families.viewmo
  *
  */
 
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesMode
-import es.sebas1705.youknow.core.classes.enums.games.families.FamiliesStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.games.FamiliesModel
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.games.families.FamiliesMode
+import es.sebas1705.common.games.families.FamiliesStatus
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.games.FamiliesModel
 
 /**
  * Data class that represents the state of the Families Screen.

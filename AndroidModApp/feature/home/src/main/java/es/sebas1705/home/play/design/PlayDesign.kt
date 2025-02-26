@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.play.design
+package es.sebas1705.home.play.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,6 @@ package es.sebas1705.youknow.presentation.features.home.features.play.design
  *
  */
 
-import android.media.AudioAttributes
 import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,18 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.ComposableConstants.GAME_BUTTON_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.navigation.GameScreens.Companion.games
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.ComposableConstants.GAME_BUTTON_SOUND
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.home.play.GameItem.Companion.games
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Design of the Play Screen.
@@ -113,6 +111,10 @@ fun PlayDesign(
         }
     }
 }
+
+
+
+
 
 @UiModePreviews
 @Composable

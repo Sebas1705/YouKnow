@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups.design
+package es.sebas1705.home.groups.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -35,27 +35,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
-import es.sebas1705.youknow.core.composables.buttons.fab.ISmallFAB
-import es.sebas1705.youknow.core.composables.dialogs.CreateGroupDialog
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.fab.IFAB
+import es.sebas1705.designsystem.buttons.fab.ISmallFAB
+import es.sebas1705.designsystem.dialogs.CreateGroupDialog
+import es.sebas1705.designsystem.dialogs.UserInfoDialog
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.textfields.IFilledTextField
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.home.groups.composables.Group
+import es.sebas1705.home.groups.composables.GroupsList
+import es.sebas1705.home.groups.viewmodel.GroupsState
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.models.social.GroupModel
+import es.sebas1705.models.social.UserModel
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.dialogs.UserInfoDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.textfields.IFilledTextField
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.domain.model.social.UserModel
-import es.sebas1705.youknow.presentation.features.home.features.groups.composables.Group
-import es.sebas1705.youknow.presentation.features.home.features.groups.composables.GroupsList
-import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.home.R
 
 /**
  * Design of the Groups Screen.
@@ -153,7 +152,7 @@ fun GroupsDesign(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Title(
-                        text = stringResource(R.string.no_groups),
+                        text = stringResource(R.string.feature_home_no_groups),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }
@@ -171,7 +170,7 @@ fun GroupsDesign(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = MediumPadding),
                 value = search,
-                placeholder = stringResource(R.string.search),
+                placeholder = stringResource(R.string.feature_home_search),
                 leadingIcon = Icons.Filled.Cancel to {
                     showSearch = !showSearch
                 },
@@ -186,7 +185,7 @@ fun GroupsDesign(
             ) {
                 ISmallFAB(
                     onClick = { createFlag = !createFlag },
-                    contentDescription = stringResource(R.string.add_group),
+                    contentDescription = stringResource(R.string.feature_home_add_group),
                     imageVector = Icons.Filled.Add,
                     modifier = Modifier
                         .padding(bottom = SmallPadding),
@@ -194,7 +193,7 @@ fun GroupsDesign(
                 )
                 IFAB(
                     onClick = { showSearch = !showSearch },
-                    contentDescription = stringResource(R.string.search_enabled),
+                    contentDescription = stringResource(R.string.feature_home_search_enabled),
                     imageVector = Icons.Filled.Search,
                     soundPool = soundPool
                 )

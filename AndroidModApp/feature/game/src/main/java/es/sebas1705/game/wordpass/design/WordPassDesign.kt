@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.wordpass.design
+package es.sebas1705.game.wordpass.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,16 +18,16 @@ package es.sebas1705.youknow.presentation.features.game.features.wordpass.design
 
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassMode
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.games.wordpass.WordPassMode
+import es.sebas1705.common.games.wordpass.WordPassStatus
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.game.wordpass.composables.Finished
+import es.sebas1705.game.wordpass.composables.Running
+import es.sebas1705.game.wordpass.composables.SelectionMode
+import es.sebas1705.game.wordpass.viewmodel.WordPassState
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.composables.Finished
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.composables.Running
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.wordpass.viewmodel.WordPassState
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.

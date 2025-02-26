@@ -1,11 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
-
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-
+package es.sebas1705.game.quiz.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,6 +15,12 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
  * limitations under the License.
  *
  */
+
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.QuizType
+import es.sebas1705.common.games.quiz.QuizMode
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible intents of the Quiz Screen.

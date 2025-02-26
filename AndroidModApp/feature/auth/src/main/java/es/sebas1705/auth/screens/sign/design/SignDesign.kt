@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.sign.design
+package es.sebas1705.auth.screens.sign.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -36,23 +36,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.dialogs.ErrorInfoDialog
+import es.sebas1705.auth.screens.sign.viewmodel.SignState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.dialogs.ErrorInfoDialog
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.composables.SignField
-import es.sebas1705.youknow.presentation.features.auth.screens.sign.viewmodel.SignState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.auth.R
+import es.sebas1705.auth.screens.sign.composables.SignField
 
 /**
  * Main Design of the SignScreen.
@@ -70,7 +70,7 @@ fun SignDesign(
     windowState: WindowState = WindowState.default(),
     signState: SignState = SignState.default(),
     soundPool: Pair<SoundPool, Float>? = null,
-    onSignButtonAction: (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit = { e, p, n, o -> }
+    onSignButtonAction: (email: String, pass: String, nickname: String, onError: (String) -> Unit) -> Unit = { _, _, _, _ -> }
 ) {
 
     //Locals:
@@ -78,11 +78,11 @@ fun SignDesign(
     val ctx = LocalContext.current
 
     //Texts:
-    val defaultErrorText = stringResource(id = R.string.login_error)
-    val notMatchErrorText = stringResource(id = R.string.any_not_match)
-    val bothText = stringResource(id = R.string.both)
-    val emailText = stringResource(id = R.string.email)
-    val passwordText = stringResource(id = R.string.password)
+    val defaultErrorText = stringResource(id = R.string.feature_auth_login_error)
+    val notMatchErrorText = stringResource(id = R.string.feature_auth_any_not_match)
+    val bothText = stringResource(id = R.string.feature_auth_both)
+    val emailText = stringResource(id = R.string.feature_auth_email)
+    val passwordText = stringResource(id = R.string.feature_auth_password)
 
     //States:
     var email by rememberSaveable { mutableStateOf("") }
@@ -135,7 +135,7 @@ fun SignDesign(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TitleSurface(text = stringResource(id = R.string.signup))
+                    TitleSurface(text = stringResource(id = R.string.feature_auth_signup))
                     IVerSpacer(height = HugePadding)
                     SignField(
                         modifier = Modifier
@@ -154,7 +154,7 @@ fun SignDesign(
                     )
                     IVerSpacer(height = MediumPadding)
                     IFilledButton(
-                        label = stringResource(id = R.string.signup),
+                        label = stringResource(id = R.string.feature_auth_signup),
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()

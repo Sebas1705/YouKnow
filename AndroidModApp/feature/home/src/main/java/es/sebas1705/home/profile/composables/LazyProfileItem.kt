@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.profile.composables
+package es.sebas1705.home.profile.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -40,16 +40,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.cards.IResumeCard
-import es.sebas1705.youknow.core.composables.divider.IHorDivider
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.designsystem.divider.IHorDivider
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.models.social.UserModel
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.domain.model.social.UserModel
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
+import es.sebas1705.youknow.feature.home.R
 
 /**
  * LazyColumn item for the Profile Screen.
@@ -99,14 +99,14 @@ fun LazyProfileItem(
             .data(userModel.photoUrl)
             .crossfade(true)
             .build(),
-        placeholder = painterResource(R.drawable.sign_user),
-        contentDescription = stringResource(R.string.Profile),
+        placeholder = painterResource(es.iberext.youknow.core.resources.R.drawable.sign_user),
+        contentDescription = stringResource(R.string.feature_home_Profile),
         contentScale = ContentScale.Fit,
         modifier = imageModifier
     )
     else Image(
-        painter = painterResource(R.drawable.sign_user),
-        contentDescription = stringResource(R.string.Profile),
+        painter = painterResource(es.iberext.youknow.core.resources.R.drawable.sign_user),
+        contentDescription = stringResource(R.string.feature_home_Profile),
         contentScale = ContentScale.Fit,
         modifier = imageModifier
     )
@@ -122,9 +122,9 @@ fun LazyProfileItem(
             .fillMaxWidth(width)
             .padding(bottom = SmallPadding),
         value = nickname,
-        label = stringResource(R.string.nickname),
+        label = stringResource(R.string.feature_home_user_nickname),
         onValueChange = onChangeNickname,
-        placeholder = stringResource(R.string.nickname),
+        placeholder = stringResource(R.string.feature_home_user_nickname),
         trailingIcon = Icons.Filled.Save to onChangeNicknameDialog,
         soundPool = soundPool
     )
@@ -135,17 +135,17 @@ fun LazyProfileItem(
             .padding(bottom = MediumPadding)
     )
     Title(
-        text = stringResource(R.string.profile_title),
+        text = stringResource(R.string.feature_home_user_profile_title),
         modifier = Modifier.padding(bottom = SmallPadding),
         style = MaterialTheme.typography.displayMedium
     )
     IResumeCard(
         title = userModel.nickName,
         titlesValues = mapOf(
-            stringResource(R.string.email) to userModel.email.toString(),
-            stringResource(R.string.firebase_id) to userModel.firebaseId.toString(),
-            stringResource(R.string.credits) to userModel.credits.toString(),
-            stringResource(R.string.points) to userModel.points.toString(),
+            stringResource(es.iberext.youknow.core.designsystem.R.string.core_designsystem_email) to userModel.email,
+            stringResource(R.string.feature_home_user_firebase_id) to userModel.firebaseId,
+            stringResource(es.iberext.youknow.core.resources.R.string.core_resources_credits) to userModel.credits.toString(),
+            stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points) to userModel.points.toString(),
         ),
         modifier = Modifier
             .fillMaxWidth(width)
@@ -154,7 +154,7 @@ fun LazyProfileItem(
     )
     IOutlinedButton(
         onClick = onChangePassDialog,
-        label = stringResource(R.string.reset_password),
+        label = stringResource(R.string.feature_home_user_reset_password),
         modifier = Modifier
             .fillMaxWidth(width)
             .padding(bottom = SmallPadding),

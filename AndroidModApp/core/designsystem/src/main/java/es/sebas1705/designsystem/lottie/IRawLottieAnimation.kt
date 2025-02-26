@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.lottie
+package es.sebas1705.designsystem.lottie
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -27,9 +27,9 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import es.sebas1705.youknow.R
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Raw lottie animation

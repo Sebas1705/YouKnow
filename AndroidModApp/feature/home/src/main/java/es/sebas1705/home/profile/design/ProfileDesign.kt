@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.profile.design
+package es.sebas1705.home.profile.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,7 +17,6 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.design
  */
 
 import android.media.SoundPool
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,22 +30,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.fab.IFAB
+import es.sebas1705.designsystem.dialogs.LogoutDialog
+import es.sebas1705.designsystem.dialogs.NickDialog
+import es.sebas1705.designsystem.dialogs.ResetPasswordDialog
+import es.sebas1705.designsystem.dialogs.UrlRequestDialog
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.home.profile.composables.LazyProfileItem
+import es.sebas1705.models.social.UserModel
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.dialogs.LogoutDialog
-import es.sebas1705.youknow.core.composables.dialogs.NickDialog
-import es.sebas1705.youknow.core.composables.dialogs.ResetPasswordDialog
-import es.sebas1705.youknow.core.composables.dialogs.UrlRequestDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.social.UserModel
-import es.sebas1705.youknow.presentation.features.home.features.profile.composables.LazyProfileItem
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileState
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Profile Screen. It shows the user's data.
@@ -63,7 +61,6 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProfileDesign(
     windowState: WindowState = WindowState.default(),
@@ -156,7 +153,7 @@ fun ProfileDesign(
 
         IFAB(
             onClick = { signOutDialog = true },
-            contentDescription = stringResource(R.string.logout),
+            contentDescription = stringResource(es.iberext.youknow.core.designsystem.R.string.core_designsystem_logout),
             imageVector = Icons.AutoMirrored.Filled.Logout,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

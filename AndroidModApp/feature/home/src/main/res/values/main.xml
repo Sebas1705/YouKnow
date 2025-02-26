@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_home_Ranking">Ranking</string>
+    <string name="feature_home_Home">Home</string>
+    <string name="feature_home_New_Message">NEWS &amp; INFO</string>
+    <string name="feature_home_info">Reports &amp; proposes</string>
+    <string name="feature_home_reload">Reload db</string>
+    <string name="feature_home_reload_text">Are you sure to reload database of games? (It can consume a lot of time)</string>
+    <string name="feature_home_settings">Settings</string>
 </resources>

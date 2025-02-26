@@ -33,7 +33,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object DatastoreDataModule {
 
     /**
      * Provides [DatastoreRepository] that is used to manage the datastore

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.textfields
+package es.sebas1705.designsystem.textfields
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,9 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import es.sebas1705.youknow.R
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 
 /**
  * Password text field
@@ -58,8 +59,8 @@ fun IPasswordTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
-    label: String = stringResource(R.string.password),
-    placeholder: String = stringResource(R.string.password),
+    label: String = stringResource(R.string.core_designsystem_password),
+    placeholder: String = stringResource(R.string.core_designsystem_password),
     soundPool: Pair<SoundPool, Float>? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }

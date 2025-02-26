@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
+package es.sebas1705.game.quiz.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,17 +19,17 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.games.QuizUsesCases
-import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.QuizType
+import es.sebas1705.common.games.quiz.QuizMode
+import es.sebas1705.common.games.quiz.QuizStatus
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.quizusescases.QuizUsesCases
+import es.sebas1705.settings.SettingUsesCases
+import es.sebas1705.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ import javax.inject.Inject
  * @param quizUsesCases [QuizUsesCases]: UseCases for the Quiz.
  * @param userUsesCases [UserUsesCases]: UseCases for the user.
  * @param authUsesCases [AuthUsesCases]: UseCases for the Auth.
- * @param datastoreUsesCases [DatastoreUsesCases]: UseCases for the Datastore.
+ * @param settingUsesCases [SettingUsesCases]: UseCases for the Settings.
  * @param application [Application]: Application context.
  *
  * @author Sebastián Ramiro Entrerrios García
@@ -51,7 +51,7 @@ class QuizViewModel @Inject constructor(
     private val quizUsesCases: QuizUsesCases,
     private val userUsesCases: UserUsesCases,
     private val authUsesCases: AuthUsesCases,
-    private val datastoreUsesCases: DatastoreUsesCases,
+    private val settingUsesCases: SettingUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<QuizState, QuizIntent>() {
 
@@ -70,7 +70,7 @@ class QuizViewModel @Inject constructor(
 
     //Actions:
     private fun readLanguages() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readGameLanguage().collect { languages ->
+        settingUsesCases.readGameLanguage().collect { languages ->
             updateUi {
                 it.copy(languages = languages)
             }

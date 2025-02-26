@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.families
+package es.sebas1705.common.games.families
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *

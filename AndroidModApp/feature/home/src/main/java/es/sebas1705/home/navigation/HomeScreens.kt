@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation
+package es.sebas1705.home.navigation
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -28,7 +28,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.ui.graphics.vector.ImageVector
-import es.sebas1705.youknow.R
+import es.sebas1705.youknow.feature.home.R
 import kotlinx.serialization.Serializable
 
 /**
@@ -67,26 +67,31 @@ interface HomeScreens {
 
         val homes = listOf(
             HomeItem(
-                R.string.Chat,
+                R.string.feature_home_Chat,
                 Icons.AutoMirrored.Outlined.Chat,
                 Icons.AutoMirrored.Filled.Chat,
                 ChatScreen
             ),
             HomeItem(
-                R.string.Profile,
+                R.string.feature_home_Profile,
                 Icons.Outlined.Person,
                 Icons.Filled.Person,
                 ProfileScreen
             ),
-            HomeItem(R.string.Main, Icons.Outlined.Home, Icons.Filled.Home, MainScreen),
             HomeItem(
-                R.string.Play,
+                R.string.feature_home_Main,
+                Icons.Outlined.Home,
+                Icons.Filled.Home,
+                MainScreen
+            ),
+            HomeItem(
+                R.string.feature_home_Play,
                 Icons.Outlined.SportsEsports,
                 Icons.Filled.SportsEsports,
                 PlayScreen
             ),
             HomeItem(
-                R.string.Groups,
+                R.string.feature_home_Groups,
                 Icons.Outlined.Groups,
                 Icons.Filled.Groups,
                 GroupsScreen

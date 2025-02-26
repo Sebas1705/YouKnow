@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.networkerror
+package es.sebas1705.networkerror
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,8 +17,8 @@ package es.sebas1705.youknow.presentation.features.networkerror
  */
 
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.networkerror.design.NetworkErrorDesign
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.networkerror.design.NetworkErrorDesign
 
 /**
  * Screen to show when there is a network error.

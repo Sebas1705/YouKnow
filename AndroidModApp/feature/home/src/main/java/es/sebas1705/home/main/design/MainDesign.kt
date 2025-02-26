@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main.design
+package es.sebas1705.home.main.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -41,26 +41,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledTonalButton
-import es.sebas1705.youknow.core.composables.buttons.fab.IFAB
-import es.sebas1705.youknow.core.composables.cards.IOutlinedCard
-import es.sebas1705.youknow.core.composables.cards.IResumeCard
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.common.IFilledTonalButton
+import es.sebas1705.designsystem.buttons.fab.IFAB
+import es.sebas1705.designsystem.cards.IOutlinedCard
+import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.designsystem.dialogs.ReloadDialog
+import es.sebas1705.designsystem.divider.IHorDivider
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.ui.theme.Paddings.HugePadding
+import es.sebas1705.ui.theme.Paddings.LargePadding
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.dialogs.ReloadDialog
-import es.sebas1705.youknow.core.composables.divider.IHorDivider
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.utlis.UiModePreviews
+import es.sebas1705.youknow.feature.home.R
 import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.HugePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.LargePadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 import java.util.Locale
 
 /**
@@ -116,7 +116,7 @@ fun MainDesign(
         ) {
             item {
                 Title(
-                    stringResource(R.string.New_Message),
+                    stringResource(R.string.feature_home_New_Message),
                     modifier = Modifier.padding(vertical = MediumPadding),
                     style = windowState.widthFilter(
                         MaterialTheme.typography.displaySmall,
@@ -191,7 +191,7 @@ fun MainDesign(
                     ) {
                         Spacer(Modifier.height(MediumPadding))
                         Title(
-                            stringResource(R.string.info),
+                            stringResource(R.string.feature_home_info),
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -202,7 +202,7 @@ fun MainDesign(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = HugePadding),
-                            label = stringResource(R.string.reload),
+                            label = stringResource(R.string.feature_home_reload),
                             onClick = { reloadDialog = true },
                             enabled = mainState.isLoading.not()
                         )
@@ -227,13 +227,13 @@ fun MainDesign(
 
             item {
                 IResumeCard(
-                    stringResource(R.string.Ranking),
+                    stringResource(R.string.feature_home_Ranking),
                     mainState.ranking.mapIndexed { index, user ->
                         val first =
                             ("${index + 1}º. ${user.first}" + if (user.first == homeState.userModel?.nickName) " (${
-                                stringResource(R.string.You)
+                                stringResource(R.string.feature_home_You)
                             })" else "")
-                        val second = "${user.second} ${stringResource(R.string.points)}"
+                        val second = "${user.second} ${stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points)}"
                         first to second
                     }.toMap(),
                     modifier = Modifier.fillMaxWidth(
@@ -246,7 +246,7 @@ fun MainDesign(
 
         IFAB(
             onClick = onSettingsNav,
-            contentDescription = stringResource(R.string.settings_title),
+            contentDescription = stringResource(R.string.feature_home_settings),
             imageVector = Icons.Default.Settings,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
+package es.sebas1705.home.main.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,11 +18,12 @@ package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.games.FillUsesCases
-import es.sebas1705.youknow.domain.usecases.social.NewsUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.fillusescases.FillUsesCases
+import es.sebas1705.news.NewsUsesCases
+import es.sebas1705.user.UserUsesCases
+import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

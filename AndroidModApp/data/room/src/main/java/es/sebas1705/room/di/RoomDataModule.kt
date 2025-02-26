@@ -37,7 +37,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object RoomDataModule {
 
     /**
      * Provides [Database] that is used to manage the local database

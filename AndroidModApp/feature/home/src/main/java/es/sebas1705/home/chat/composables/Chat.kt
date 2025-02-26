@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.chat.composables
+package es.sebas1705.home.chat.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -27,11 +27,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.social.MessageModel
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.models.social.MessageModel
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Chat composable that will show the messages of the chat.

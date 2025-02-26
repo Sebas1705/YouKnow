@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel
+package es.sebas1705.auth.screens.log.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
+import es.sebas1705.common.mvi.MVIBaseState
 
 /**
  * Data class that represents the state of the Log Screen.

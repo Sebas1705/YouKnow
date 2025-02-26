@@ -1,6 +1,6 @@
 package es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /*
  * Copyright (C) 2022 The Android Open Source Project

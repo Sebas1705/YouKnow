@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_game_correct_response">"Correct word: "</string>
+    <string name="feature_game_guest_response">Guest word</string>
+    <string name="feature_game_try_word">Try</string>
+    <string name="feature_game_previous_definition">Previous definition</string>
+    <string name="feature_game_next_definition">Next Definition</string>
 </resources>

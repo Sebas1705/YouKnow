@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.settings
+package es.sebas1705.settings
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,10 +22,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.settings.design.SettingsDesign
-import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsIntent
-import es.sebas1705.youknow.presentation.features.settings.viewmodel.SettingsViewModel
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.settings.design.SettingsDesign
+import es.sebas1705.settings.viewmodel.SettingsIntent
+import es.sebas1705.settings.viewmodel.SettingsViewModel
 
 /**
  * Screen for the Settings of the app.

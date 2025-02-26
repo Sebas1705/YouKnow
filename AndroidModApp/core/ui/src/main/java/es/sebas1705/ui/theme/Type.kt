@@ -19,6 +19,7 @@ package es.sebas1705.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
@@ -64,6 +65,19 @@ val titleFontFamily = FontFamily(
         fontProvider = provider,
     )
 )
+
+/**
+ * Make the text style title
+ *
+ * @receiver [TextStyle]: Text style
+ *
+ * @return [TextStyle]: Text style with title
+ *
+ * @since 1.0.0
+ * @Version 1.0.0
+ * @author Sebastián Ramiro Entrerrios García
+ */
+fun TextStyle.makeTitle(): TextStyle = this.copy(fontFamily = titleFontFamily)
 
 // Default Material 3 typography values
 val baseline = Typography()

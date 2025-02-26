@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.quiz.design
+package es.sebas1705.game.quiz.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,20 +18,20 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.design
 
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.games.Category
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizMode
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizStatus
-import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.games.Category
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.QuizType
+import es.sebas1705.common.games.quiz.QuizMode
+import es.sebas1705.common.games.quiz.QuizStatus
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.game.quiz.composables.Custom
+import es.sebas1705.game.quiz.composables.Finished
+import es.sebas1705.game.quiz.composables.Running
+import es.sebas1705.game.quiz.composables.SelectionMode
+import es.sebas1705.game.quiz.viewmodel.QuizState
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.quiz.composables.Custom
-import es.sebas1705.youknow.presentation.features.game.features.quiz.composables.Finished
-import es.sebas1705.youknow.presentation.features.game.features.quiz.composables.Running
-import es.sebas1705.youknow.presentation.features.game.features.quiz.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.
@@ -69,14 +69,6 @@ fun QuizDesign(
     }
 }
 
-/**
- * Preview of the Mystery Number Game.
- *
- * @see UiModePreviews
- * @see QuizDesign
- *
- * @since 1.0.0
- */
 @UiModePreviews
 @Composable
 private fun QuizPreview() {

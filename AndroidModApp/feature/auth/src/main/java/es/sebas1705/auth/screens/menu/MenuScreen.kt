@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.menu
+package es.sebas1705.auth.screens.menu
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,10 +22,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.design.MenuDesign
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuIntent
-import es.sebas1705.youknow.presentation.features.auth.screens.menu.viewmodel.MenuViewModel
+import es.sebas1705.auth.screens.menu.design.MenuDesign
+import es.sebas1705.auth.screens.menu.viewmodel.MenuIntent
+import es.sebas1705.auth.screens.menu.viewmodel.MenuViewModel
+import es.sebas1705.common.states.WindowState
 
 /**
  * Menu Screen that will show the user the options to sign in, log in or log in with Google.

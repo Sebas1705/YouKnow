@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups.composables
+package es.sebas1705.home.groups.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,16 +23,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.ComposableConstants
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.domain.model.social.GroupModel
-import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.ComposableConstants
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.cards.IInteractiveCard
+import es.sebas1705.home.groups.viewmodel.GroupsState
+import es.sebas1705.models.social.GroupModel
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * New group composable that will show the groups to join.

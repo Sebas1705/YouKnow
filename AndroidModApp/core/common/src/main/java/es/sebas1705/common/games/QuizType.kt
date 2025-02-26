@@ -31,7 +31,7 @@ import es.iberext.youknow.core.common.R
  * @author Sebastián Ramiro Entrerrios García
  */
 enum class QuizType(val id: String?, val strRes: Int, val multiPoints: Double) {
-    ANY(null, R.string.core_common_any, 0.0),
+    ANY(null, es.iberext.youknow.core.resources.R.string.core_resources_any, 0.0),
     BOOLEAN("boolean", R.string.core_common_type_boolean, 0.5),
     MULTIPLE("multiple", R.string.core_common_type_multiple, 1.0);
 

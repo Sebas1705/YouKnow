@@ -19,19 +19,6 @@ package es.sebas1705.common.utlis.extensions.primitives
 import android.annotation.SuppressLint
 
 /**
- * Format a float number to a string with two decimal
- *
- * @receiver [Float]: the number to format
- *
- * @return [String]: the number formatted
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-@SuppressLint("DefaultLocale")
-fun Float.twoDecimalFormat(): String = String.format("%.2f", this)
-
-/**
  * Format a float number to a string with two decimal and a percentage symbol
  *
  * @receiver [Float]: the number to format
@@ -44,15 +31,3 @@ fun Float.twoDecimalFormat(): String = String.format("%.2f", this)
  */
 @SuppressLint("DefaultLocale")
 fun Float.percentageFormat(): String = String.format("%.2f", this * 100) + "%"
-
-/**
- * Reverse a float number
- *
- * @receiver [Float]: the number to reverse
- *
- * @return [Float]: the number reversed
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-fun Float.reverseOne(): Float = 1 - this

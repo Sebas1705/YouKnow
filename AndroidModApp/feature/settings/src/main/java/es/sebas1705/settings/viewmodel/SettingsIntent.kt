@@ -1,9 +1,4 @@
-package es.sebas1705.youknow.presentation.features.settings.viewmodel
-
-import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-
+package es.sebas1705.settings.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -20,6 +15,10 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
  * limitations under the License.
  *
  */
+
+import es.sebas1705.common.games.Languages
+import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.theme.ThemeContrast
 
 /**
  * Sealed class that represents the possible intents of the Settings Screen.

@@ -38,7 +38,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DomainModule {
+object AuthModule {
 
     /**
      * Function to provide authentication use cases

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.play
+package es.sebas1705.home.play
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,8 +19,8 @@ package es.sebas1705.youknow.presentation.features.home.features.play
 import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.home.features.play.design.PlayDesign
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.home.play.design.PlayDesign
 
 /**
  * Play Screen that will show the game to the user.

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main
+package es.sebas1705.home.main
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,11 +23,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.home.features.main.design.MainDesign
-import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainIntent
-import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainViewModel
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.home.main.design.MainDesign
+import es.sebas1705.home.main.viewmodel.MainIntent
+import es.sebas1705.home.main.viewmodel.MainViewModel
+import es.sebas1705.home.navigation.viewmodel.HomeState
 
 /**
  * Main Screen of the app.

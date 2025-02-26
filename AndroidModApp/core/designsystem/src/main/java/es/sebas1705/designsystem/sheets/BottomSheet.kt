@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.sheets
+package es.sebas1705.designsystem.sheets
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,8 +30,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.TonalElevation
+import es.sebas1705.ui.theme.YouKnowTheme
 import kotlinx.coroutines.launch
 
 /**

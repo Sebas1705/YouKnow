@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
+package es.sebas1705.home.main.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -16,7 +16,7 @@ package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
  *
  */
 
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible actions of the [MainViewModel].

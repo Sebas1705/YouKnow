@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
+package es.sebas1705.home.navigation.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -17,8 +17,8 @@ package es.sebas1705.youknow.presentation.features.home.navigation.viewmodel
  */
 
 import com.google.firebase.auth.FirebaseUser
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
-import es.sebas1705.youknow.domain.model.social.UserModel
+import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.models.social.UserModel
 
 /**
  * State for [HomeViewModel] that will handle the user's data.

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.groups
+package es.sebas1705.home.groups
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -24,13 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.presentation.features.home.features.groups.design.GroupsDesign
-import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsIntent
-import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsViewModel
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.home.groups.design.GroupsDesign
+import es.sebas1705.home.groups.viewmodel.GroupsIntent
+import es.sebas1705.home.groups.viewmodel.GroupsViewModel
+import es.sebas1705.home.navigation.viewmodel.HomeState
+import es.sebas1705.youknow.feature.home.R
 
 /**
  * Groups Screen that will show the groups options.
@@ -74,26 +74,26 @@ fun GroupsScreen(
         groupCreator = { name, description ->
             homeState.userModel?.let { userModel ->
                 groupsViewModel.eventHandler(GroupsIntent.CreateGroup(name, description, userModel))
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         },
         groupJoin = { groupModel ->
             homeState.userModel?.let { userModel ->
                 groupsViewModel.eventHandler(GroupsIntent.JoinGroup(groupModel, userModel))
-            } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
+            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         },
         onGroupOutButton = {
             groupsState.groups.firstOrNull { it.groupId == homeState.userModel?.groupId }
                 ?.let { groupModel ->
                     homeState.userModel?.let { userModel ->
                         groupsViewModel.eventHandler(GroupsIntent.OutGroup(groupModel, userModel))
-                    } ?: ctx.printTextInToast(ctx.getString(R.string.user_not_logged))
-                } ?: ctx.printTextInToast(ctx.getString(R.string.not_in_group))
+                    } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
+                } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_not_in_group))
         },
         onKickButton = { user ->
             groupsState.groups.firstOrNull { it.groupId == homeState.userModel?.groupId }
                 ?.let { groupModel ->
                     groupsViewModel.eventHandler(GroupsIntent.KickGroup(groupModel, user))
-                } ?: ctx.printTextInToast(ctx.getString(R.string.not_in_group))
+                } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_not_in_group))
         },
         onUserInfoSearch
     )

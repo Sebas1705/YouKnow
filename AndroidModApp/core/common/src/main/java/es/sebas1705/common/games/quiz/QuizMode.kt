@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.quiz
+package es.sebas1705.common.games.quiz
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,8 +22,6 @@ import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.HourglassBottom
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.ui.graphics.vector.ImageVector
-import es.iberext.youknow.core.common.R
-import es.sebas1705.youknow.R
 
 /**
  * Enum class that represents the possible modes of the Quiz game.
@@ -42,8 +40,8 @@ enum class QuizMode(
     val numQuestions: Int,
     val multiPoints: Double
 ) {
-    SURVIVAL(R.string.survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    TIME_ATTACK(R.string.time_attack, Icons.Filled.HourglassBottom, 20, 1.2),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 10, 1.0),
-    CUSTOM(R.string.custom, Icons.Filled.DashboardCustomize, 0, 0.75)
+    SURVIVAL(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
+    TIME_ATTACK(es.iberext.youknow.core.resources.R.string.core_resources_time_attack, Icons.Filled.HourglassBottom, 20, 1.2),
+    ALEATORY(es.iberext.youknow.core.resources.R.string.core_resources_aleatory, Icons.Filled.Casino, 10, 1.0),
+    CUSTOM(es.iberext.youknow.core.resources.R.string.core_resources_custom, Icons.Filled.DashboardCustomize, 0, 0.75)
 }

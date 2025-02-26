@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.classes.enums.games.wordpass
+package es.sebas1705.common.games.wordpass
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
-import es.sebas1705.youknow.R
 
 /**
  * Enum class that represents the possible modes of the WordPass game.
@@ -40,7 +39,7 @@ enum class WordPassMode(
     val numWords: Int,
     val multiPoints: Double
 ) {
-    SURVIVAL(R.string.survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    FIRE_WHEEL(R.string.fire_wheel, Icons.Filled.Settings, Letter.entries.size, 5.0),
-    ALEATORY(R.string.aleatory, Icons.Filled.Casino, 20, 1.0)
+    SURVIVAL(es.iberext.youknow.core.resources.R.string.core_resources_survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
+    FIRE_WHEEL(es.iberext.youknow.core.resources.R.string.core_resources_fire_wheel, Icons.Filled.Settings, Letter.entries.size, 5.0),
+    ALEATORY(es.iberext.youknow.core.resources.R.string.core_resources_aleatory, Icons.Filled.Casino, 20, 1.0)
 }

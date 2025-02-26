@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.states
+package es.sebas1705.designsystem.states
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -26,8 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.theme.SizeType
 import es.sebas1705.common.utlis.extensions.primitives.toDp
 
@@ -61,8 +60,12 @@ fun rememberWindowState(): MutableState<WindowState> {
                 isImeVisible = ViewCompat.getRootWindowInsets(view)
                     ?.isVisible(WindowInsetsCompat.Type.ime()) != false,
                 isPortrait = portrait,
-                backFill = if (portrait) R.drawable.back_portrait_fill else R.drawable.back_landscape_fill,
-                backEmpty = if (portrait) R.drawable.back_portrait_empty else R.drawable.back_landscape_empty
+                backFill = if (portrait)
+                    es.iberext.youknow.core.resources.R.drawable.back_portrait_fill
+                else es.iberext.youknow.core.resources.R.drawable.back_landscape_fill,
+                backEmpty = if (portrait)
+                    es.iberext.youknow.core.resources.R.drawable.back_portrait_empty
+                else es.iberext.youknow.core.resources.R.drawable.back_landscape_empty
             )
         }
 

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log
+package es.sebas1705.auth.screens.log
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,10 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.presentation.features.auth.screens.log.design.LogDesign
-import es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel.LogIntent
-import es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel.LogViewModel
+import es.sebas1705.auth.screens.log.design.LogDesign
+import es.sebas1705.auth.screens.log.viewmodel.LogIntent
+import es.sebas1705.auth.screens.log.viewmodel.LogViewModel
+import es.sebas1705.common.states.WindowState
 
 /**
  * Main composable for the Log screen. It contains the [LogDesign] composable, which is the main design of the screen.

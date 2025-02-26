@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
+package es.sebas1705.designsystem.dialogs
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,11 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.designsystem.texts.IText
+import es.iberext.youknow.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Nick dialog
@@ -55,7 +55,7 @@ fun NickDialog(
     onDismissRequest = onDismiss,
     confirmButton = {
         IFilledButton(
-            label = stringResource(R.string.confirm),
+            label = stringResource(R.string.core_designsystem_confirm),
             onClick = { onConfirm(nickname) },
             soundPool = soundPool
         )
@@ -63,33 +63,28 @@ fun NickDialog(
     modifier = modifier,
     dismissButton = {
         IFilledButton(
-            label = stringResource(R.string.dismiss),
+            label = stringResource(R.string.core_designsystem_dismiss),
             onClick = onDismiss,
             soundPool = soundPool
         )
     },
     title = {
-        IText(stringResource(R.string.change_nickname_title))
+        IText(stringResource(R.string.core_designsystem_change_nickname_title))
     },
     text = {
         IText(
-            stringResource(R.string.change_nickname_body)
+            stringResource(R.string.core_designsystem_change_nickname_body)
                     + " "
                     + nickname
                     + " "
-                    + stringResource(R.string.change_nickname_body2)
+                    + stringResource(R.string.core_designsystem_change_nickname_body2)
                     + " "
                     + nickname + "-" + firebaseId
-                    + stringResource(R.string.change_nickname_body3)
+                    + stringResource(R.string.core_designsystem_change_nickname_body3)
         )
     }
 )
 
-/**
- * Preview for [NickDialog]
- *
- * @see NickDialog
- */
 @UiModePreviews
 @Composable
 private fun NickWindowPreview() {

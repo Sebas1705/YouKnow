@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables
+package es.sebas1705.game.mysterynumber.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -38,18 +38,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.buttons.common.IOutlinedButton
-import es.sebas1705.youknow.core.composables.buttons.radio.IRadioButton
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.PaddingSpacers.MediumSpacer
-import es.sebas1705.youknow.core.composables.spacers.PaddingSpacers.SmallSpacer
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
+import es.sebas1705.designsystem.buttons.radio.IRadioButton
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.PaddingSpacers.MediumSpacer
+import es.sebas1705.designsystem.spacers.PaddingSpacers.SmallSpacer
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.games.R
 
 /**
  * Custom screen of the Mystery Number game.
@@ -89,13 +89,13 @@ fun Custom(
         ) {
             item {
                 MediumSpacer()
-                TitleSurface(stringResource(R.string.custom_title))
+                TitleSurface(stringResource(R.string.feature_game_custom_title))
                 MediumSpacer()
             }
 
             item {
                 IText(
-                    text = stringResource(R.string.lives) +
+                    text = stringResource(R.string.feature_game_lives) +
                             " $lives",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
@@ -113,7 +113,7 @@ fun Custom(
 
             item {
                 IText(
-                    text = stringResource(R.string.difficulty) +
+                    text = stringResource(R.string.feature_game_difficulty) +
                             ": " + stringResource(difficultyEnum.strRes),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = titleStyle
@@ -171,7 +171,7 @@ fun Custom(
             item {
                 IOutlinedButton(
                     onClick = { onStartGame(difficultyEnum, lives) },
-                    label = stringResource(R.string.start_game),
+                    label = stringResource(R.string.feature_game_start_game),
                     imageVector = Icons.Filled.Start,
                     soundPool = soundPool
                 )

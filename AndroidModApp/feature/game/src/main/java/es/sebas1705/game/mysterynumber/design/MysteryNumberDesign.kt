@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.design
+package es.sebas1705.game.mysterynumber.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -18,18 +18,18 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.d
 
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberStatus
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.games.mysterynumber.MysteryNumberStatus
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.game.mysterynumber.composables.Custom
+import es.sebas1705.game.mysterynumber.composables.Finished
+import es.sebas1705.game.mysterynumber.composables.Running
+import es.sebas1705.game.mysterynumber.composables.SelectionMode
+import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
+import es.sebas1705.ui.theme.YouKnowTheme
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.Custom
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.Finished
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.Running
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.composables.SelectionMode
-import es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel.MysteryNumberState
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 
 /**
  * Design of the Mystery Number Game.

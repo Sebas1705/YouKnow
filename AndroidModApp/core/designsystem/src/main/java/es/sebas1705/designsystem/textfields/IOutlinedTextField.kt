@@ -35,16 +35,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.ComposableConstants.ICON_BUTTON_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
-import es.sebas1705.youknow.core.composables.buttons.icon.IStandardIconButton
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.IComposablePreview
 import es.sebas1705.common.utlis.extensions.composables.disabled
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.ComposableConstants.ICON_BUTTON_SOUND
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Outlined text field
@@ -132,7 +132,7 @@ fun IOutlinedTextField(
                     )
                     it.second()
                 },
-                contentDescription = label ?: stringResource(R.string.leading_content),
+                contentDescription = label ?: stringResource(R.string.core_designsystem_leading_content),
                 imageVector = it.first,
                 enabled = leadingEnabled
             )
@@ -152,7 +152,7 @@ fun IOutlinedTextField(
                     )
                     it.second()
                 },
-                contentDescription = label ?: stringResource(R.string.trailing_content),
+                contentDescription = label ?: stringResource(R.string.core_designsystem_trailing_content),
                 imageVector = it.first,
                 enabled = trailingEnabled
             )

@@ -31,8 +31,9 @@ class AppConventionPlugin: Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("com.google.firebase.crashlytics")
-                apply("com.google.firebase.firebase-perf")
                 apply("com.google.gms.google-services")
+                apply("org.jetbrains.kotlin.kapt")
+                apply("org.jetbrains.kotlin.android")
                 apply("youknow.android.hilt")
                 apply("youknow.android.compose")
                 apply("youknow.android.lifecycle")
@@ -41,7 +42,7 @@ class AppConventionPlugin: Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = 35
-                defaultConfig.minSdk = 30
+                defaultConfig.minSdk = 31
             }
         }
     }

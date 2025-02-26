@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.chips
+package es.sebas1705.designsystem.chips
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import es.sebas1705.common.utlis.IComposablePreview
 import es.sebas1705.common.utlis.extensions.composables.disabled
-import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.OutlineThickness
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized filter chip

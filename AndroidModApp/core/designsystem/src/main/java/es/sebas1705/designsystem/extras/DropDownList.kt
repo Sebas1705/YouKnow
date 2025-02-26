@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.extras
+package es.sebas1705.designsystem.extras
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -36,9 +36,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
+import es.iberext.youknow.core.designsystem.R
+import es.sebas1705.ui.theme.TonalElevation
 import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
-import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
 
 /**
  * Dropdown list
@@ -71,7 +71,7 @@ fun DropdownList(
     ) {
         IOutlinedTextField(
             value = stringResource(valueRes),
-            label = stringResource(R.string.select_option),
+            label = stringResource(R.string.core_designsystem_select_option),
             readOnly = true,
             onValueChange = onValueChange,
             trailingIcon = (if (!expanded) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowDropUp) to {},

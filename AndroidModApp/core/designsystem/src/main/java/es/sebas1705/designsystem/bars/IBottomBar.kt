@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.bars
+package es.sebas1705.designsystem.bars
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -21,10 +21,10 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.TonalElevation
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.ui.theme.TonalElevation
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized bottom bar
@@ -33,7 +33,6 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  * @param content [RowScope.() -> Unit]: Content
  *
  * @since 1.0.0
- * @Version 1.0.0
  * @author Sebastián Ramiro Entrerrios García
  */
 @Composable

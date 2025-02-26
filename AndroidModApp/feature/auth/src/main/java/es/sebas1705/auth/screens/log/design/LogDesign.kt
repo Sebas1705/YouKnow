@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log.design
+package es.sebas1705.auth.screens.log.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -36,25 +36,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.ComposableConstants.LOOP_N
-import es.sebas1705.youknow.core.composables.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.youknow.core.composables.ComposableConstants.RATE
-import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
-import es.sebas1705.youknow.core.composables.dialogs.ErrorInfoDialog
-import es.sebas1705.youknow.core.composables.dialogs.ForgotPasswordDialog
+import es.sebas1705.auth.screens.log.composable.EmailAndPassFields
+import es.sebas1705.auth.screens.log.composable.ForgotAndRegisterButtons
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.designsystem.ComposableConstants.LOOP_N
+import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
+import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.ui.theme.Paddings.MediumPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.buttons.common.IFilledButton
+import es.sebas1705.designsystem.dialogs.ErrorInfoDialog
+import es.sebas1705.designsystem.dialogs.ForgotPasswordDialog
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.composables.layouts.ApplyBack
-import es.sebas1705.youknow.core.composables.spacers.IVerSpacer
-import es.sebas1705.youknow.core.composables.texts.TitleSurface
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.presentation.features.auth.screens.log.composable.EmailAndPassFields
-import es.sebas1705.youknow.presentation.features.auth.screens.log.composable.ForgotAndRegisterButtons
-import es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel.LogState
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.designsystem.layouts.ApplyBack
+import es.sebas1705.designsystem.spacers.IVerSpacer
+import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.youknow.feature.auth.R
+import es.sebas1705.auth.screens.log.viewmodel.LogState
 
 /**
  * Main design of the Log screen.
@@ -75,7 +75,7 @@ fun LogDesign(
     soundPool: Pair<SoundPool, Float>? = null,
     onRegisterButton: () -> Unit = {},
     onPasswordForgot: (String) -> Unit = {},
-    onLoginButton: (email: String, pass: String, onError: (String) -> Unit) -> Unit = { e, p, o -> }
+    onLoginButton: (email: String, pass: String, onError: (String) -> Unit) -> Unit = { _, _, _ -> }
 ) {
 
     //Locals:
@@ -83,7 +83,7 @@ fun LogDesign(
     val keyboard = LocalSoftwareKeyboardController.current
 
     //Texts:
-    val defaultError = stringResource(id = R.string.login_error)
+    val defaultError = stringResource(id = R.string.feature_auth_login_error)
 
     //States:
     var email by rememberSaveable { mutableStateOf("") }
@@ -137,7 +137,7 @@ fun LogDesign(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IVerSpacer(0.4f)
-                    TitleSurface(stringResource(R.string.access))
+                    TitleSurface(stringResource(R.string.feature_auth_access))
                     IVerSpacer(0.2f)
                     EmailAndPassFields(
                         modifier = Modifier
@@ -162,7 +162,7 @@ fun LogDesign(
                     )
                     IVerSpacer(0.2f)
                     IFilledButton(
-                        label = stringResource(id = R.string.access),
+                        label = stringResource(id = R.string.feature_auth_access),
                         modifier = Modifier,
                         onClick = {
                             keyboard?.hide()

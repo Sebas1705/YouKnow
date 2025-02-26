@@ -19,47 +19,6 @@ package es.sebas1705.common.utlis.extensions.composables
 import android.content.Context
 import android.media.MediaPlayer
 import android.widget.Toast
-import es.iberext.youknow.core.common.R
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.domain.model.ui.PageModel
-
-/**
- * Generate a list of [PageModel] to use in the guide
- *
- * @receiver [Context]: context of the app
- *
- * @return [List]<[PageModel]>: list of pages
- *
- * @see PageModel
- *
- * @author Sebastián Ramiro Entrerrios García
- * @since 1.0.0
- */
-fun Context.generateGuidePages() = listOf(
-    PageModel(
-        this.getString(R.string.titlePage1),
-        this.getString(R.string.introPage1),
-        listOf(
-            R.drawable.icon to getString(R.string.des1Page1),
-            R.drawable.urjc to getString(R.string.des2Page1),
-        )
-    ),
-    PageModel(
-        this.getString(R.string.titlePage2),
-        this.getString(R.string.introPage2),
-        listOf(
-            R.drawable.logos_tools to getString(R.string.des1Page2),
-            R.drawable.games to getString(R.string.des2Page2),
-        )
-    ),
-    PageModel(
-        this.getString(R.string.titlePage3),
-        this.getString(R.string.introPage3),
-        listOf(
-            R.drawable.icon to getString(R.string.desPage3)
-        )
-    )
-)
 
 /**
  * Print a text generating a [Toast]

@@ -36,7 +36,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object Module {
+object RetrofitDataModule {
 
     /**
      * Provides [OpendbApi] that is used to get the questions

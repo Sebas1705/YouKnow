@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.divider
+package es.sebas1705.designsystem.divider
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -22,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.OutlineThickness
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Vertical divider

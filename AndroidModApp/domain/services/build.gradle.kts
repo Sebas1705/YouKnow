@@ -19,5 +19,4 @@ android {
 
 dependencies {
     api(projects.core.common)
-    api(projects.data.analytics)
 }

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.survey.design
+package es.sebas1705.survey.design
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -23,9 +23,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.survey.viewmodel.SurveyState
 import es.sebas1705.youknow.domain.model.stats.SurveyModel
-import es.sebas1705.youknow.presentation.features.survey.viewmodel.SurveyState
 
 /**
  * Survey Design of the app.

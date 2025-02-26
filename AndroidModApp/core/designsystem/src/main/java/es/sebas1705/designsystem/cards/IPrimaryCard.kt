@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.core.composables.cards
+package es.sebas1705.designsystem.cards
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -28,8 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import es.sebas1705.common.utlis.IComposablePreview
-import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.ui.theme.OutlineThickness
+import es.sebas1705.ui.theme.YouKnowTheme
 
 /**
  * Personalized primary card

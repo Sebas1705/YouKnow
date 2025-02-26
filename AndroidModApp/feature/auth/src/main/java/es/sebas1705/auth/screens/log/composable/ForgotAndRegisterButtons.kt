@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.auth.screens.log.composable
+package es.sebas1705.auth.screens.log.composable
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -26,8 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.composables.buttons.common.ITextButton
+import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.youknow.feature.auth.R
 
 /**
  * Component that contains the forgot password and wanna register buttons
@@ -49,7 +49,7 @@ fun ForgotAndRegisterButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ITextButton(
-            label = stringResource(id = R.string.forgot_password),
+            label = stringResource(id = R.string.feature_auth_forgot_password),
             onClick = onForgotButton,
             soundPool = soundPool
         )
@@ -58,7 +58,7 @@ fun ForgotAndRegisterButtons(
             color = MaterialTheme.colorScheme.primary
         )
         ITextButton(
-            label = stringResource(id = R.string.wanna_register),
+            label = stringResource(id = R.string.feature_auth_wanna_register),
             onClick = onRegisterButton,
             soundPool = soundPool
         )

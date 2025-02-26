@@ -21,7 +21,7 @@ import es.sebas1705.common.games.Languages
 import es.sebas1705.mappers.toWordModel
 import es.sebas1705.models.games.WordModel
 import es.sebas1705.room.repository.DatabaseRepository
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
+import es.sebas1705.common.games.wordpass.Letter
 
 /**
  * Use case to generate a word pass for the wheel

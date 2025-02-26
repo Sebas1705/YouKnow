@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel
+package es.sebas1705.home.chat.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,9 +19,9 @@ package es.sebas1705.youknow.presentation.features.home.features.chat.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.social.ChatUsesCases
+import es.sebas1705.chat.ChatUsesCases
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

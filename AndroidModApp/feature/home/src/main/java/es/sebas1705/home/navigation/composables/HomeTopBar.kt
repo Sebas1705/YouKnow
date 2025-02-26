@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation.composables
+package es.sebas1705.home.navigation.composables
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -31,16 +31,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.states.WindowState
-import es.sebas1705.youknow.core.composables.bars.ITopBar
-import es.sebas1705.youknow.core.composables.texts.IText
-import es.sebas1705.youknow.core.composables.texts.Title
-import es.sebas1705.youknow.core.utlis.UiModePreviews
-import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.common.utlis.extensions.primitives.toReducedString
+import es.sebas1705.designsystem.bars.ITopBar
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.designsystem.texts.Title
+import es.sebas1705.ui.theme.Paddings.SmallPadding
+import es.sebas1705.ui.theme.Paddings.SmallestPadding
+import es.sebas1705.ui.theme.YouKnowTheme
+import es.sebas1705.youknow.feature.home.R
 
 /**
  * TopBar for the Home Screen.
@@ -86,7 +86,7 @@ fun HomeTopBar(
                     )
                     Image(
                         painter = painterResource(R.drawable.point),
-                        contentDescription = stringResource(R.string.points),
+                        contentDescription = stringResource(es.iberext.youknow.core.resources.R.string.core_resources_points),
                         modifier = Modifier
                             .size(iconSize)
                             .padding(end = SmallestPadding)
@@ -95,7 +95,7 @@ fun HomeTopBar(
             },
             title = {
                 Title(
-                    text = stringResource(R.string.app_name),
+                    text = stringResource(es.iberext.youknow.core.resources.R.string.core_resources_app_name),
                     style = textStyle,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -111,7 +111,7 @@ fun HomeTopBar(
                 )
                 Image(
                     painter = painterResource(R.drawable.credit),
-                    contentDescription = stringResource(R.string.credits),
+                    contentDescription = stringResource(es.iberext.youknow.core.resources.R.string.core_resources_credits),
                     modifier = Modifier.size(iconSize)
                 )
             }

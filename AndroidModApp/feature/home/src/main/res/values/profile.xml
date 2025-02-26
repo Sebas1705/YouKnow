@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_home_user_profile_title">My Profile</string>
+    <string name="feature_home_user_url_photo">Photo URL</string>
+    <string name="feature_home_user_invalid_url">Url not valid for image, try other</string>
+    <string name="feature_home_user_nickname">Nickname</string>
+    <string name="feature_home_user_firebase_id">FirebaseId</string>
+    <string name="feature_home_user_delete_account">Delete account</string>
+    <string name="feature_home_user_reset_password">Reset password</string>
 </resources>

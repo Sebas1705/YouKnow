@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.viewmodel
+package es.sebas1705.game.mysterynumber.viewmodel
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -19,15 +19,15 @@ package es.sebas1705.youknow.presentation.features.game.features.mysterynumber.v
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.enums.games.Difficulty
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.youknow.core.classes.enums.games.mysterynumber.MysteryNumberStatus
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
-import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.usecases.games.MysteryNumberUsesCases
-import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
-import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
+import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.common.games.Difficulty
+import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
+import es.sebas1705.common.games.mysterynumber.MysteryNumberStatus
+import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.mysterynumberusescases.MysteryNumberUsesCases
+import es.sebas1705.user.UserUsesCases
+import es.sebas1705.youknow.feature.games.R
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -128,11 +128,11 @@ class MysteryNumberViewModel @Inject constructor(
         if (!correct) {
             val m =
                 if (_uiState.value.numberModel.number > intent.response) application.getString(
-                    R.string.greater
+                    R.string.feature_game_greater
                 ) else application.getString(
-                    R.string.smaller
+                    R.string.feature_game_smaller
                 )
-            application.printTextInToast(application.getString(R.string.incorrect_number) + " $m")
+            application.printTextInToast(application.getString(R.string.feature_game_incorrect_number) + " $m")
         }
         updateUi {
             val multiPoints = it.mode?.multiPoints ?: 1.0

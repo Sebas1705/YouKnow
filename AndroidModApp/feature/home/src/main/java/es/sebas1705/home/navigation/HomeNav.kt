@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.navigation
+package es.sebas1705.home.navigation
 /*
  * Copyright (C) 2022 The Android Open Source Project
  *
@@ -32,24 +32,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.common.states.WindowState
+import es.sebas1705.common.utlis.extensions.composables.navToTab
 import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.youknow.core.utlis.extensions.composables.navToTab
-import es.sebas1705.youknow.presentation.features.home.features.chat.ChatScreen
-import es.sebas1705.youknow.presentation.features.home.features.groups.GroupsScreen
-import es.sebas1705.youknow.presentation.features.home.features.main.MainScreen
-import es.sebas1705.youknow.presentation.features.home.features.play.PlayScreen
-import es.sebas1705.youknow.presentation.features.home.features.profile.ProfileScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.ChatScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.Companion.homes
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.GroupsScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.MainScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.PlayScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.HomeScreens.ProfileScreen
-import es.sebas1705.youknow.presentation.features.home.navigation.composables.HomeBottomBar
-import es.sebas1705.youknow.presentation.features.home.navigation.composables.HomeTopBar
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeIntent
-import es.sebas1705.youknow.presentation.features.home.navigation.viewmodel.HomeViewModel
+import es.sebas1705.home.chat.ChatScreen
+import es.sebas1705.home.groups.GroupsScreen
+import es.sebas1705.home.main.MainScreen
+import es.sebas1705.home.play.PlayScreen
+import es.sebas1705.home.profile.ProfileScreen
+import es.sebas1705.home.navigation.HomeScreens.ChatScreen
+import es.sebas1705.home.navigation.HomeScreens.Companion.homes
+import es.sebas1705.home.navigation.HomeScreens.GroupsScreen
+import es.sebas1705.home.navigation.HomeScreens.MainScreen
+import es.sebas1705.home.navigation.HomeScreens.PlayScreen
+import es.sebas1705.home.navigation.HomeScreens.ProfileScreen
+import es.sebas1705.home.navigation.composables.HomeBottomBar
+import es.sebas1705.home.navigation.composables.HomeTopBar
+import es.sebas1705.home.navigation.viewmodel.HomeIntent
+import es.sebas1705.home.navigation.viewmodel.HomeViewModel
 
 /**
  * Home Navigation Composable that will handle the navigation between the different screens of the app.
