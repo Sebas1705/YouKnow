@@ -134,7 +134,7 @@ class GroupsViewModel @Inject constructor(
     ) = execute(Dispatchers.IO) {
         userUsesCases.removeGroupToUser(
             group = intent.groupModel,
-            userMemberId = intent.userModel.memberId(),
+            firebaseId = intent.userModel.firebaseId,
             onLoading = { startLoading() },
             onSuccess = {
                 if (intent.groupModel.leaderUID == intent.userModel.firebaseId || intent.groupModel.members.isEmpty()) {
@@ -172,7 +172,7 @@ class GroupsViewModel @Inject constructor(
     ) = execute(Dispatchers.IO) {
         userUsesCases.removeGroupToUser(
             group = intent.groupModel,
-            userMemberId = intent.userToKickMemberId,
+            firebaseId = intent.userToKickMemberId,
             onLoading = { startLoading() },
             onSuccess = { stopLoading() },
             onError = {

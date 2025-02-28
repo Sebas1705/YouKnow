@@ -20,6 +20,7 @@ import es.sebas1705.youknow.core.utlis.alias.FlowResponse
 import es.sebas1705.youknow.core.utlis.alias.FlowResponseNothing
 import es.sebas1705.youknow.domain.model.social.NewModel
 import es.sebas1705.youknow.domain.model.social.UserModel
+import es.sebas1705.youknow.domain.model.stats.SurveyModel
 
 /**
  * Repository that will handle the Firestore operations.
@@ -54,36 +55,6 @@ interface FirestoreRepository {
     fun getUser(
         userId: String
     ): FlowResponse<UserModel>
-
-    /**
-     * Set the logged status of a user
-     *
-     * @param firebaseId [String]: Id of the user to set the logged status
-     * @param logged [Boolean]: Logged status to set
-     *
-     * @return [FlowResponseNothing]: Flow with the response of the operation
-     *
-     * @since 1.0.0
-     * @author Sebastián Ramiro Entrerrios García
-     */
-    fun setLoggedToUser(
-        firebaseId: String,
-        logged: Boolean
-    ): FlowResponseNothing
-
-    /**
-     * Get the logged status of a user
-     *
-     * @param userId [String]: Id of the user to get the logged status
-     *
-     * @return [FlowResponse]<[Boolean]>: Flow with the response of the operation
-     *
-     * @since 1.0.0
-     * @author Sebastián Ramiro Entrerrios García
-     */
-    fun getLoggedFromUser(
-        userId: String
-    ): FlowResponse<Boolean>
 
     /**
      * Add credits to a user
@@ -246,6 +217,40 @@ interface FirestoreRepository {
      */
     fun getNews(): FlowResponse<List<NewModel>>
 
+    /**
+     * Save a Survey in Firestore
+     *
+     * @param surveyModel [SurveyModel]: New to save
+     *
+     * @return [FlowResponseNothing]: Flow with the response of the operation
+     */
+    fun publicNewSurvey(
+        surveyModel: SurveyModel
+    ): FlowResponseNothing
+
+    /**
+     * Get a Survey from Firestore
+     *
+     * @param firebaseId [String]: Id of the Survey to get
+     *
+     * @return [FlowResponse]<[SurveyModel]>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    fun getSurvey(
+        firebaseId: String
+    ): FlowResponse<SurveyModel>
+
+    /**
+     * Get all Surveys
+     *
+     * @return [FlowResponse]<[List]<[SurveyModel]>>: Flow with the response of the operation
+     *
+     * @since 1.0.0
+     * @author Sebastián Ramiro Entrerrios García
+     */
+    fun getSurveys(): FlowResponse<List<SurveyModel>>
 
     // Listeners:
     /**

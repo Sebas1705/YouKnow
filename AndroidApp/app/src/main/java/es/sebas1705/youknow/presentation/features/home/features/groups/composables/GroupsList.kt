@@ -24,9 +24,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import es.sebas1705.youknow.core.classes.states.WindowState
+import es.sebas1705.youknow.core.composables.ComposableConstants
 import es.sebas1705.youknow.core.composables.buttons.common.IFilledButton
 import es.sebas1705.youknow.core.composables.cards.IInteractiveCard
-import es.sebas1705.youknow.core.composables.ComposableConstants
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.domain.model.social.GroupModel
 import es.sebas1705.youknow.presentation.features.home.features.groups.viewmodel.GroupsState
@@ -41,9 +41,9 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
  *
  * @param windowState [WindowState]: The state of the window.
  * @param groupsState [GroupsState]: The state of the Groups Screen.
+ * @param groups [List]<[GroupModel]>: The list of groups to show.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onGroupClick (GroupModel) -> Unit: The click on a group.
- * @param searchFilter String: The search filter.
  *
  * @author Sebastián Ramiro Entrerrios García
  * @since 1.0.0
@@ -52,21 +52,15 @@ import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
 fun GroupsList(
     windowState: WindowState = WindowState.default(),
     groupsState: GroupsState = GroupsState.default(),
+    groups: List<GroupModel> = groupsState.groups,
     soundPool: Pair<SoundPool, Float>? = null,
     onGroupClick: (GroupModel) -> Unit = {},
-    searchFilter: String = "",
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = SmallestPadding, bottom = SmallestPadding),
     ) {
-        val groups = groupsState.groups.filter {
-            searchFilter.isEmpty() || it.name.contains(
-                searchFilter,
-                ignoreCase = true
-            )
-        }
         items(groups.size) { index ->
             IInteractiveCard(
                 modifier = Modifier

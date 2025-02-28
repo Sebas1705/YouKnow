@@ -30,7 +30,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
+import es.sebas1705.youknow.core.classes.enums.games.LogType
 import es.sebas1705.youknow.core.root.composable.MainComposable
+import es.sebas1705.youknow.core.utlis.extensions.types.log
 import es.sebas1705.youknow.domain.services.BackgroundMusicService
 
 
@@ -90,21 +92,25 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         musicService?.pauseMusic()
+        log("onPause", LogType.WARNING)
     }
 
     override fun onResume() {
         super.onResume()
         musicService?.resumeMusic()
+        log("onResume", LogType.WARNING)
     }
 
     override fun onStop() {
         super.onStop()
         musicService?.pauseMusic()
+        log("onStop", LogType.WARNING)
     }
 
     override fun onRestart() {
         super.onRestart()
         musicService?.resumeMusic()
+        log("onRestart", LogType.WARNING)
     }
 
     /**
@@ -117,6 +123,7 @@ class MainActivity : ComponentActivity() {
      */
     private fun hideSystemBars() {
         window.decorView.windowInsetsController?.apply {
+            log("Hiding system bars", LogType.INFO)
             hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }

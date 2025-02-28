@@ -34,8 +34,6 @@ import es.sebas1705.youknow.presentation.features.guide.GuideScreen
 import es.sebas1705.youknow.presentation.features.home.navigation.HomeNav
 import es.sebas1705.youknow.presentation.features.settings.SettingsScreen
 import es.sebas1705.youknow.presentation.features.survey.SurveyScreen
-import es.sebas1705.youknow.presentation.navigation.AppGraph.Companion.graph
-import org.checkerframework.checker.units.qual.A
 
 /**
  * Navigation for the app.
@@ -60,10 +58,9 @@ fun AppNav(
 
     //States:
     var game by rememberSaveable { mutableIntStateOf(0) }
-    val destination by rememberSaveable { mutableIntStateOf(graph.indexOf(startDestination)) }
 
     //Body:
-    NavHost(navController = appNavController, startDestination = graph[destination]) {
+    NavHost(navController = appNavController, startDestination = startDestination) {
         composable<AppGraph.GuideScreen> {
             GuideScreen(
                 windowState,
@@ -124,6 +121,18 @@ fun AppNav(
                         AppGraph.GameNavigation
                     )
                 },
+            )
+        }
+        composable<AppGraph.AuthNavigation> {
+            AuthNav(
+                windowState,
+                soundPool,
+                toHomeNav = {
+                    appNavController.navAndPopUp(
+                        AppGraph.HomeNavigation,
+                        AppGraph.AuthNavigation
+                    )
+                }
             )
         }
     }

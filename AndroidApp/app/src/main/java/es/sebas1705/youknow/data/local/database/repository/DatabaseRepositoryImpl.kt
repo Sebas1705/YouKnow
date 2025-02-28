@@ -19,8 +19,8 @@ package es.sebas1705.youknow.data.local.database.repository
 import es.sebas1705.youknow.core.classes.enums.games.Category
 import es.sebas1705.youknow.core.classes.enums.games.Difficulty
 import es.sebas1705.youknow.core.classes.enums.games.Languages
-import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
 import es.sebas1705.youknow.core.classes.enums.games.quiz.QuizType
+import es.sebas1705.youknow.core.classes.enums.games.wordpass.Letter
 import es.sebas1705.youknow.data.firebase.analytics.config.ClassLogData
 import es.sebas1705.youknow.data.firebase.analytics.config.Layer
 import es.sebas1705.youknow.data.firebase.analytics.config.Repository
@@ -30,11 +30,14 @@ import es.sebas1705.youknow.data.mappers.toFamiliesEntity
 import es.sebas1705.youknow.data.mappers.toFamiliesModel
 import es.sebas1705.youknow.data.mappers.toQuestionEntity
 import es.sebas1705.youknow.data.mappers.toQuestionModel
+import es.sebas1705.youknow.data.mappers.toSurveyEntity
+import es.sebas1705.youknow.data.mappers.toSurveyModel
 import es.sebas1705.youknow.data.mappers.toWordEntity
 import es.sebas1705.youknow.data.mappers.toWordModel
 import es.sebas1705.youknow.domain.model.games.FamiliesModel
 import es.sebas1705.youknow.domain.model.games.QuestionModel
 import es.sebas1705.youknow.domain.model.games.WordModel
+import es.sebas1705.youknow.domain.model.stats.SurveyModel
 import javax.inject.Inject
 
 /**
@@ -66,6 +69,10 @@ class DatabaseRepositoryImpl @Inject constructor(
     override suspend fun containsWord(
         word: String
     ): Boolean = database.wordDao().contains(word) > 0
+
+    override suspend fun containsSurvey(
+        authorFirebaseId: String
+    ): Boolean = database.surveyDao().contains(authorFirebaseId) > 0
 
     override suspend fun getQuestions(
         numOfQuestions: Int,
@@ -105,6 +112,12 @@ class DatabaseRepositoryImpl @Inject constructor(
         difficulty.ordinal
     ).map { it.toWordModel() }
 
+    override suspend fun getSurvey(
+        authorFirebaseId: String
+    ): SurveyModel? = database.surveyDao().getSurvey(
+        authorFirebaseId
+    )?.toSurveyModel()
+
     //Inserts
     override suspend fun insertOrReplace(questionModel: QuestionModel) {
         database.questionDao().insertOrReplace(questionModel.toQuestionEntity())
@@ -116,6 +129,10 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun insertOrReplace(wordModel: WordModel) {
         database.wordDao().insertOrReplace(wordModel.toWordEntity())
+    }
+
+    override suspend fun insertOrReplace(surveyModel: SurveyModel) {
+        database.surveyDao().insertOrReplace(surveyModel.toSurveyEntity())
     }
 
     //Updates
@@ -132,5 +149,9 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWord(word: String): Boolean {
         return database.wordDao().deleteById(word) > 0
+    }
+
+    override suspend fun deleteSurvey(authorFirebaseId: String): Boolean {
+        return database.surveyDao().deleteSurvey(authorFirebaseId) > 0
     }
 }

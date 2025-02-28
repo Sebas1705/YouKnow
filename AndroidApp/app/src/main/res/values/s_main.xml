@@ -4,4 +4,6 @@
     <string name="Home">Home</string>
     <string name="New_Message">NEWS &amp; INFO</string>
     <string name="info">Reports &amp; proposes</string>
+    <string name="reload">Reload db</string>
+    <string name="reload_text">Are you sure to reload database of games? (It can consume a lot of time)</string>
 </resources>

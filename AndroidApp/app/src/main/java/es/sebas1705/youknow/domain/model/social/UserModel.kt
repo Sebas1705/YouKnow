@@ -82,7 +82,4 @@ data class UserModel(
             )
         }
     }
-
-    fun memberId() = "$firebaseId-$nickName"
-
 }

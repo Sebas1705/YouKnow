@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -81,7 +82,13 @@ fun Group(
     onOutButton: () -> Unit = {},
     onInfoButton: (String) -> Unit = {},
     onKickButton: (String) -> Unit = {},
+    onUsersLoad: (List<String>) -> Unit = {}
 ) {
+    LaunchedEffect(groupModel) {
+        onUsersLoad(
+            groupModel.members
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -148,9 +155,8 @@ fun Group(
                 )
             }
 
-            items(groupModel.members) { member ->
-                val memberId = member.split("-")[0]
-                val memberName = member.split("-")[1]
+            items(groupModel.members) { memberId ->
+                val memberName = homeState.infoUsers[memberId]?.nickName ?: ""
                 val firebaseId = homeState.userModel?.firebaseId
                 val groupLeader = groupModel.leaderUID
                 IInteractiveCard(
@@ -165,7 +171,7 @@ fun Group(
                             soundPool = soundPool
                         )
                         if (groupLeader == firebaseId && firebaseId != memberId) IFilledIconButton(
-                            onClick = { onKickButton(member) },
+                            onClick = { onKickButton(memberId) },
                             contentDescription = "Delete",
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Delete,

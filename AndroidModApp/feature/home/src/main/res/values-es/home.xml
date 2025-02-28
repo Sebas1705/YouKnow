@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- UserViewModel -->
+    <string name="feature_home_user_not_logged">Usuario no cargado correctamente, prueba de nuevo o contacta con soporte</string>
+    <!-- HomeScreens -->
+    <string name="feature_home_user_not_found">Usuario no encontrado, reinicia la app</string>
+    <string name="feature_home_Main">Casa</string>
+    <string name="feature_home_Profile">Perfil</string>
+    <string name="feature_home_Groups">Grupos</string>
+    <string name="feature_home_Play">Jugar</string>
+    <string name="feature_home_Chat">Chat</string>
+    <string name="feature_home_You">Tú</string>
+</resources>

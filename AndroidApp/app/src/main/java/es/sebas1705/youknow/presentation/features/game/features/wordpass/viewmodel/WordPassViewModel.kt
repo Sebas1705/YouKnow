@@ -26,8 +26,8 @@ import es.sebas1705.youknow.core.classes.enums.games.wordpass.WordPassStatus
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.core.utlis.extensions.primitives.normalizeString
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.games.WordPassUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
@@ -71,9 +71,9 @@ class WordPassViewModel @Inject constructor(
 
     //Actions:
     private fun readLanguages() = execute(Dispatchers.IO) {
-        datastoreUsesCases.readGameLanguage().collect {
+        datastoreUsesCases.readGameLanguage().collect { language ->
             updateUi {
-                it.copy(languages = it.languages)
+                it.copy(languages = language)
             }
         }
     }
@@ -84,6 +84,7 @@ class WordPassViewModel @Inject constructor(
         if (intent.wordPassMode == WordPassMode.FIRE_WHEEL)
             wordPassUsesCases.generateWheelWordPass(
                 intent.difficulty,
+                _uiState.value.languages,
                 onLoading = { startLoading() },
                 onSuccess = { words ->
                     stopLoading()

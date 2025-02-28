@@ -41,11 +41,11 @@ class CreateGroup(
         val groupModel = GroupModel(
             name = name,
             description = description,
-            members = listOf(userModel.memberId()),
-            leaderUID = userModel.memberId()
+            members = listOf(userModel.firebaseId),
+            leaderUID = userModel.firebaseId
         )
-        realtimeRepository.addGroup(groupModel).collect {
-            it.catcher(
+        realtimeRepository.addGroup(groupModel).collect { flow ->
+            flow.catcher(
                 onEmptySuccess = { onSuccess(groupModel) },
                 onError = { onError(it.message) },
             )
@@ -69,8 +69,8 @@ class RemoveGroup(
         onSuccess: suspend () -> Unit,
         onError: (String) -> Unit
     ) {
-        realtimeRepository.removeGroup(groupModel.groupId).collect {
-            it.catcher(
+        realtimeRepository.removeGroup(groupModel.groupId).collect { flow ->
+            flow.catcher(
                 onEmptySuccess = { onSuccess() },
                 onError = { onError(it.message) },
             )

@@ -27,14 +27,18 @@ import es.sebas1705.youknow.data.firebase.analytics.config.Repository
 import es.sebas1705.youknow.data.firebase.analytics.repository.AnalyticsRepository
 import es.sebas1705.youknow.data.firebase.firestore.config.SettingsFS
 import es.sebas1705.youknow.data.firebase.firestore.documents.NewDocument
+import es.sebas1705.youknow.data.firebase.firestore.documents.SurveyDocument
 import es.sebas1705.youknow.data.firebase.firestore.documents.UserDocument
 import es.sebas1705.youknow.data.mappers.toNewModel
+import es.sebas1705.youknow.data.mappers.toSurveyDocument
+import es.sebas1705.youknow.data.mappers.toSurveyModel
 import es.sebas1705.youknow.data.mappers.toUserDocument
 import es.sebas1705.youknow.data.mappers.toUserModel
 import es.sebas1705.youknow.data.model.ErrorResponseType
 import es.sebas1705.youknow.data.model.ResponseState
 import es.sebas1705.youknow.domain.model.social.NewModel
 import es.sebas1705.youknow.domain.model.social.UserModel
+import es.sebas1705.youknow.domain.model.stats.SurveyModel
 import javax.inject.Inject
 
 /**
@@ -69,6 +73,7 @@ class FirestoreRepositoryImpl @Inject constructor(
     //References:
     private val usersReference = firestore.collection(SettingsFS.USERS_COLLECTION_NAME)
     private val newsReference = firestore.collection(SettingsFS.NEWS_COLLECTION_NAME)
+    private val surveysReference = firestore.collection(SettingsFS.SURVEYS_COLLECTION_NAME)
 
     override fun saveUser(
         userModel: UserModel,
@@ -86,30 +91,6 @@ class FirestoreRepositoryImpl @Inject constructor(
         onSuccessListener = {
             val userDocument = it.toObject(UserDocument::class.java)
             if (userDocument != null) ResponseState.Success(userDocument.toUserModel(userId))
-            else taskFlowManager.createResponse(
-                ErrorResponseType.BadRequest,
-                SettingsFS.USER_NOT_FOUND
-            )
-        }
-    )
-
-    override fun setLoggedToUser(
-        firebaseId: String,
-        logged: Boolean
-    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
-        taskAction = {
-            usersReference.document(firebaseId).update(SettingsFS.USERS_LOGGED_FIELD, logged)
-        },
-        onSuccessListener = { ResponseState.EmptySuccess }
-    )
-
-    override fun getLoggedFromUser(
-        userId: String
-    ): FlowResponse<Boolean> = taskFlowManager.taskFlowProducer(
-        taskAction = { usersReference.document(userId).get() },
-        onSuccessListener = {
-            val userDocument = it.toObject(UserDocument::class.java)
-            if (userDocument != null) ResponseState.Success(userDocument.logged)
             else taskFlowManager.createResponse(
                 ErrorResponseType.BadRequest,
                 SettingsFS.USER_NOT_FOUND
@@ -230,6 +211,40 @@ class FirestoreRepositoryImpl @Inject constructor(
                 document.toObject(NewDocument::class.java)!!.toNewModel()
             }
             ResponseState.Success(news)
+        }
+    )
+
+    override fun publicNewSurvey(
+        surveyModel: SurveyModel
+    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+        taskAction = {
+            surveysReference.document(surveyModel.authorFirebaseId)
+                .set(surveyModel.toSurveyDocument())
+        },
+        onSuccessListener = { ResponseState.EmptySuccess }
+    )
+
+    override fun getSurvey(
+        firebaseId: String
+    ): FlowResponse<SurveyModel> = taskFlowManager.taskFlowProducer(
+        taskAction = { surveysReference.document(firebaseId).get() },
+        onSuccessListener = {
+            val surveyDocument = it.toObject(SurveyDocument::class.java)
+            if (surveyDocument != null) ResponseState.Success(surveyDocument.toSurveyModel())
+            else taskFlowManager.createResponse(
+                ErrorResponseType.BadRequest,
+                SettingsFS.SURVEY_NOT_FOUND
+            )
+        }
+    )
+
+    override fun getSurveys(): FlowResponse<List<SurveyModel>> = taskFlowManager.taskFlowProducer(
+        taskAction = { surveysReference.get() },
+        onSuccessListener = {
+            val surveys = it.documents.map { document ->
+                document.toObject(SurveyDocument::class.java)!!.toSurveyModel()
+            }
+            ResponseState.Success(surveys)
         }
     )
 

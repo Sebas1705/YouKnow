@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_common_cat_general_knowledge">General Knowledge</string>
+    <string name="core_common_cat_entertainment_books">Entertainment: Books</string>
+    <string name="core_common_cat_entertainment_film">Entertainment: Film</string>
+    <string name="core_common_cat_entertainment_music">Entertainment: Music</string>
+    <string name="core_common_cat_entertainment_musicals_and_theatres">Entertainment: Musicals &amp; Theatres</string>
+    <string name="core_common_cat_entertainment_television">Entertainment: Television</string>
+    <string name="core_common_cat_entertainment_video_games">Entertainment: Video Games</string>
+    <string name="core_common_cat_entertainment_board_games">Entertainment: Board Games</string>
+    <string name="core_common_cat_science_and_nature">Science &amp; Nature</string>
+    <string name="core_common_cat_science_computers">Science: Computers</string>
+    <string name="core_common_cat_science_mathematics">Science: Mathematics</string>
+    <string name="core_common_cat_mythology">Mythology</string>
+    <string name="core_common_cat_sports">Sports</string>
+    <string name="core_common_cat_geography">Geography</string>
+    <string name="core_common_cat_history">History</string>
+    <string name="core_common_cat_politics">Politics</string>
+    <string name="core_common_cat_art">Art</string>
+    <string name="core_common_cat_celebrities">Celebrities</string>
+    <string name="core_common_cat_animals">Animals</string>
+    <string name="core_common_cat_vehicles">Vehicles</string>
+    <string name="core_common_cat_entertainment_comics">Entertainment: Comics</string>
+    <string name="core_common_cat_science_gadgets">Science: Gadgets</string>
+    <string name="core_common_cat_entertainment_japanese_anime_and_manga">Entertainment: Japanese Anime &amp; Manga</string>
+    <string name="core_common_cat_entertainment_cartoon_and_animations">Entertainment: Cartoon &amp; Animations</string>
+</resources>

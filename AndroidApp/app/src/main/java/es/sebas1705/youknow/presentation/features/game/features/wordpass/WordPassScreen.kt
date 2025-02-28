@@ -51,7 +51,7 @@ fun WordPassScreen(
     val wordPassState by wordPassViewModel.uiState.collectAsStateWithLifecycle()
 
     //Effects:
-    LaunchedEffect(Unit) {
+    LaunchedEffect(null) {
         wordPassViewModel.eventHandler(WordPassIntent.ReadLanguages)
     }
 

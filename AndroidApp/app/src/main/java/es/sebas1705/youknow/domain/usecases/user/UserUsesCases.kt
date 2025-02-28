@@ -111,46 +111,6 @@ class ContainsUser(
 }
 
 /**
- * Use case to get if user is logged
- *
- * @property firestoreRepository [FirestoreRepository]: repository to get if user is logged
- *
- * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios García
- */
-class GetLoggedFromUser(
-    private val firestoreRepository: FirestoreRepository
-) {
-    suspend operator fun invoke(
-        firebaseId: String,
-        onLoading: () -> Unit = {},
-        onSuccess: (Boolean) -> Unit,
-        onError: (String) -> Unit
-    ) = firestoreRepository.getLoggedFromUser(firebaseId).catcher(onLoading, onSuccess, onError)
-}
-
-/**
- * Use case to set if user is logged
- *
- * @property firestoreRepository [FirestoreRepository]: repository to set if user is logged
- *
- * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios García
- */
-class SetLoggedToUser(
-    private val firestoreRepository: FirestoreRepository
-) {
-    suspend operator fun invoke(
-        firebaseId: String,
-        logged: Boolean,
-        onLoading: () -> Unit = {},
-        onEmptySuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) = firestoreRepository.setLoggedToUser(firebaseId, logged)
-        .catcher(onLoading, onEmptySuccess, onError)
-}
-
-/**
  * Use case to add credits to user
  *
  * @property firestoreRepository [FirestoreRepository]: repository to add credits to user
@@ -218,7 +178,7 @@ class SetGroupToUser(
             onEmptySuccess = {
                 if (!creator) {
                     val list = group.members.toMutableList()
-                    list.add(user.firebaseId + "-" + user.nickName)
+                    list.add(user.firebaseId)
                     val response =
                         if (group.members.isEmpty())
                             realTimeRepository.pushMembersToGroup(
@@ -255,16 +215,16 @@ class RemoveGroupToUser(
 ) {
     suspend operator fun invoke(
         group: GroupModel,
-        userMemberId: String,
+        firebaseId: String,
         onLoading: () -> Unit = {},
         onSuccess: () -> Unit,
         onError: (String) -> Unit
-    ) = firestoreRepository.removeGroupFromUser(userMemberId.split("-")[0])
+    ) = firestoreRepository.removeGroupFromUser(firebaseId)
         .catcher(
             onLoading,
             onEmptySuccess = {
                 val list = group.members.toMutableList()
-                list.remove(userMemberId)
+                list.remove(firebaseId)
                 realTimeRepository.changeMembersToGroup(
                     group.groupId,
                     list.toList()
@@ -387,7 +347,6 @@ data class UserUsesCases(
     val setUserListener: SetUserListener,
     val removeUserListener: RemoveUserListener,
     val saveUser: SaveUser,
-    val setLoggedToUser: SetLoggedToUser,
     val setGroupToUser: SetGroupToUser,
     val removeGroupToUser: RemoveGroupToUser,
     val addCreditsToUser: AddCreditsToUser,
@@ -398,7 +357,6 @@ data class UserUsesCases(
     //Getters:
     val getUser: GetUser,
     val containsUser: ContainsUser,
-    val getLoggedFromUser: GetLoggedFromUser,
     val getUserRanking: GetUserRanking,
     val getUserByNickname: GetUserByNickname
 )

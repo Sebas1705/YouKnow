@@ -22,9 +22,9 @@ import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
+import es.sebas1705.youknow.core.classes.enums.games.LogType
 import es.sebas1705.youknow.core.classes.enums.theme.ThemeContrast
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
@@ -32,10 +32,11 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.root.composable.MainIntent.ChargeData
 import es.sebas1705.youknow.core.root.composable.MainIntent.FinishSplashScreen
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
+import es.sebas1705.youknow.core.utlis.extensions.types.log
 import es.sebas1705.youknow.data.firebase.analytics.config.EventLog
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.logs.AnalyticsUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
 import es.sebas1705.youknow.presentation.navigation.AppGraph
 import es.sebas1705.youknow.presentation.navigation.AppGraph.AuthNavigation
@@ -82,7 +83,7 @@ class MainViewModel @Inject constructor(
      */
     private fun chargeData() = execute(Dispatchers.IO) {
         try {
-            Log.i("MainViewModel", "Start chargeData")
+            log("Start chargeData", LogType.INFO)
             val time = System.currentTimeMillis()
             setConnectivityCallback()
             execute(Dispatchers.IO) {
@@ -116,10 +117,7 @@ class MainViewModel @Inject constructor(
                 datastoreUsesCases.readFirstTime().collect { data ->
                     val millis = System.currentTimeMillis() - time
                     val millisLog = System.currentTimeMillis()
-                    Log.i(
-                        "MainViewModel",
-                        "Finish chargeData $millis millis"
-                    )
+                    log("End chargeData", LogType.INFO)
                     analyticsUsesCases.logEvent(
                         EventLog.ChargeTime,
                         Bundle().apply {
@@ -181,7 +179,6 @@ class MainViewModel @Inject constructor(
                 updateUi {
                     it.copy(isNetworkAvailable = true)
                 }
-                //Log.i("Network", "The default network is now: $network")
             }
 
             override fun onLost(network: Network) {

@@ -17,7 +17,6 @@ package es.sebas1705.youknow.presentation.features.game.features.quiz.composable
  */
 
 import android.media.SoundPool
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -59,6 +58,7 @@ import es.sebas1705.youknow.core.composables.texts.TitleSurface
 import es.sebas1705.youknow.core.utlis.UiModePreviews
 import es.sebas1705.youknow.core.utlis.extensions.primitives.toReducedString
 import es.sebas1705.youknow.presentation.features.game.features.quiz.viewmodel.QuizState
+import es.sebas1705.youknow.presentation.ui.theme.OutlineThickness
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.MediumPadding
 import es.sebas1705.youknow.presentation.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.youknow.presentation.ui.theme.YouKnowTheme
@@ -122,9 +122,14 @@ fun Running(
                 TitleSurface(
                     modifier = Modifier
                         .padding(MediumPadding)
-                        .border(1.dp, color, MaterialTheme.shapes.small),
-                    text = question.question,
-                    textAlign = TextAlign.Justify
+                        .border(OutlineThickness, color, MaterialTheme.shapes.small),
+                    text = quizState.questions[quizState.actualQuestion].question,
+                    textAlign = TextAlign.Center,
+                    textStyle = when {
+                        quizState.questions[quizState.actualQuestion].question.length > 20 -> MaterialTheme.typography.titleMedium
+                        quizState.questions[quizState.actualQuestion].question.length > 15 -> MaterialTheme.typography.headlineMedium
+                        else -> MaterialTheme.typography.displayMedium
+                    }
                 )
             }
             item {

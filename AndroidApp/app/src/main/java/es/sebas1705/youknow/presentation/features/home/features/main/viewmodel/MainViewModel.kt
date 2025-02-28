@@ -18,11 +18,9 @@ package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
-import es.sebas1705.youknow.domain.model.social.NewModel
+import es.sebas1705.youknow.domain.usecases.games.FillUsesCases
 import es.sebas1705.youknow.domain.usecases.social.NewsUsesCases
 import es.sebas1705.youknow.domain.usecases.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +40,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val userUsesCases: UserUsesCases,
     private val newsUsesCases: NewsUsesCases,
+    private val fillUsesCases: FillUsesCases,
     private val application: Application
 ) : MVIBaseViewModel<MainState, MainIntent>() {
 
@@ -51,6 +50,7 @@ class MainViewModel @Inject constructor(
         when (intent) {
             is MainIntent.GetRanking -> getRanking()
             is MainIntent.GetNews -> getNews()
+            is MainIntent.RecreateGameDB -> recreateGameDB()
         }
     }
 
@@ -74,6 +74,38 @@ class MainViewModel @Inject constructor(
             onSuccess = { news ->
                 stopLoading()
                 updateUi { it.copy(news = news) }
+            },
+            onError = { error ->
+                stopAndError(error, application::printTextInToast)
+            }
+        )
+    }
+
+    private fun recreateGameDB() = execute(Dispatchers.IO) {
+        fillUsesCases.fillByDefaultWords(
+            onLoading = { startLoading() },
+            onSuccess = {
+                execute(Dispatchers.IO) {
+                    fillUsesCases.fillByDefaultFamilies(
+                        onLoading = {},
+                        onSuccess = {
+                            execute(Dispatchers.IO) {
+                                fillUsesCases.fillByDefaultQuestions(
+                                    onLoading = {},
+                                    onSuccess = {
+                                        stopLoading()
+                                    },
+                                    onError = { error ->
+                                        stopAndError(error, application::printTextInToast)
+                                    }
+                                )
+                            }
+                        },
+                        onError = { error ->
+                            stopAndError(error, application::printTextInToast)
+                        }
+                    )
+                }
             },
             onError = { error ->
                 stopAndError(error, application::printTextInToast)

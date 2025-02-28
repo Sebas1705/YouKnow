@@ -19,8 +19,6 @@ package es.sebas1705.youknow.presentation.features.auth.screens.log.viewmodel
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.R
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
-import es.sebas1705.youknow.core.classes.mvi.MVIBaseState
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.domain.usecases.user.AuthUsesCases
@@ -67,28 +65,13 @@ class LogViewModel @Inject constructor(
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
-                    userUsesCases.getLoggedFromUser(firebaseId, onSuccess = { logged ->
-                        if (logged) stopAndError(
-                            application.getString(R.string.already_logged), intent.onError
-                        )
-                        else {
-                            val user = authUsesCases.getFirebaseUser()
-                            if (user != null && user.isEmailVerified) {
-                                execute(Dispatchers.IO) {
-                                    userUsesCases.setLoggedToUser(
-                                        firebaseId,
-                                        true,
-                                        onEmptySuccess = {
-                                            stopLoading()
-                                            execute(action = intent.onSuccess)
-                                        },
-                                        onError = { stopAndError(it, intent.onError) })
-                                }
-                            } else stopAndError(
-                                application.getString(R.string.verify_email), intent.onError
-                            )
-                        }
-                    }, onError = { stopAndError(it, intent.onError) })
+                    val user = authUsesCases.getFirebaseUser()
+                    if (user != null && user.isEmailVerified) {
+                        stopLoading()
+                        execute(action = intent.onSuccess)
+                    } else stopAndError(
+                        application.getString(R.string.verify_email), intent.onError
+                    )
                 }
             },
             onError = { stopAndError(it, intent.onError) })

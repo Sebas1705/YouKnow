@@ -29,4 +29,7 @@ sealed interface MainIntent : MVIBaseIntent {
     data object GetRanking : MainIntent
 
     data object GetNews : MainIntent
+
+    data object RecreateGameDB : MainIntent
+
 }

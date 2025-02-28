@@ -26,9 +26,7 @@ import es.sebas1705.youknow.core.classes.mvi.MVIBaseIntent
  */
 sealed interface GuideIntent : MVIBaseIntent {
 
-    data object SaveFirstTime : GuideIntent
-
-    data class FillData(
+    data class ChargeData(
         val onSuccess: () -> Unit
     ): GuideIntent
 }

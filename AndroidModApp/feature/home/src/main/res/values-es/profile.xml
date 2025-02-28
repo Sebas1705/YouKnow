@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_user_profile_title">Mi perfil</string>
+    <string name="feature_home_user_url_photo">Foto URL</string>
+    <string name="feature_home_user_invalid_url">La URL no corresponde a una imagen, prueba otra</string>
+    <string name="feature_home_user_nickname">Nombre de usuario</string>
+    <string name="feature_home_user_firebase_id">FirebaseId</string>
+    <string name="feature_home_user_delete_account">Borrar cuenta</string>
+    <string name="feature_home_user_reset_password">Cambiar contraseña</string>
+</resources>

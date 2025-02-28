@@ -22,7 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.youknow.core.classes.mvi.MVIBaseViewModel
 import es.sebas1705.youknow.core.utlis.extensions.composables.printTextInToast
 import es.sebas1705.youknow.data.local.datastore.config.DefaultValuesDS
-import es.sebas1705.youknow.domain.usecases.DatastoreUsesCases
+import es.sebas1705.youknow.domain.usecases.ui.DatastoreUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
