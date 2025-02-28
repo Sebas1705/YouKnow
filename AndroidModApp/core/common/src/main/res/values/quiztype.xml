@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_common_type_multiple">Multiple choice</string>
+    <string name="core_common_type_boolean">True or False</string>
+</resources>

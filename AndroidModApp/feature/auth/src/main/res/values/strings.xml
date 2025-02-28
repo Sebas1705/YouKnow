@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="feature_auth_email">Email</string>
+    <string name="feature_auth_password">Password</string>
+    <string name="feature_auth_login_error">Incorrect email or passwords</string>
+    <!-- Log Screen -->
+    <string name="feature_auth_access">Access</string>
+    <string name="feature_auth_wanna_register">Create account?</string>
+    <string name="feature_auth_forgot_password">Forgot your password?</string>
+    <!-- Menu Screen -->
+    <string name="feature_auth_initial_text">Much of questions\nFree on YouKnow</string>
+    <string name="feature_auth_sign_up">Sign up free</string>
+    <string name="feature_auth_google_log">Continue with Google</string>
+    <string name="feature_auth_email_log">Continue with Email</string>
+    <!-- Sign Screen -->
+    <string name="feature_auth_username">User name</string>
+    <string name="feature_auth_repeat">Repeat</string>
+    <string name="feature_auth_any_not_match">Emails or passwords not match</string>
+    <string name="feature_auth_signup">Create</string>
+    <string name="feature_auth_both">Both\n</string>
+    <!-- AuthViewModel -->
+    <string name="feature_auth_already_logged">You are already logged in other dispositive, please log out first from the other dispositive</string>
+    <string name="feature_auth_verify_email">Please verify your email</string>
+</resources>

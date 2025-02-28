@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_game_time">Time</string>
+    <string name="feature_game_mode">Mode:</string>
+    <string name="feature_game_corrects_answers">Corrects:</string>
+    <string name="feature_game_incorrect_answers">Incorrect:</string>
+    <string name="feature_game_total_answers">Total:</string>
+    <string name="feature_game_lives">Lives:</string>
+    <string name="feature_game_restart_game">Restart game</string>
+    <string name="feature_game_out_game">Out Game</string>
+    <string name="feature_game_finished_title">Finished game</string>
+    <string name="feature_game_error_loading_message">Error with loading game data</string>
+    <string name="feature_game_mode_title">Selection Mode</string>
+    <string name="feature_game_custom_title">Custom Mode</string>
+    <string name="feature_game_type">Type</string>
+    <string name="feature_game_difficulty">Difficulty</string>
+    <string name="feature_game_category">Category</string>
+    <string name="feature_game_start_game">Start game</string>
+    <string name="feature_game_select_option">Select an option</string>
+    <string name="feature_game_remaining_time">Remaining Time:</string>
+</resources>
