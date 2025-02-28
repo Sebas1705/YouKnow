@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- ErrorInfo Window -->
-    <string name="title_error">Mensaje de error</string>
-    <!-- ForgotPassword Window -->
-    <string name="enter_email">Introduzca el email de su cuenta:</string>
-    <!-- Loading -->
-    <string name="loading">Cargando…</string>
-</resources>

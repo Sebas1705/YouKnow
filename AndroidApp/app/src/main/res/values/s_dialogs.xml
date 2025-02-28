@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- ErrorInfo -->
-    <string name="title_error">Error message</string>
-    <!-- ForgotPassword -->
-    <string name="enter_email">Enter your account email:</string>
-    <!-- Loading -->
-    <string name="loading">Loading…</string>
-</resources>

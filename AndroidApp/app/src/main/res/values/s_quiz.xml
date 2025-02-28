@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="type_multiple">Multiple choice</string>
-    <string name="type_boolean">True or False</string>
-    <string name="error_loading_questions">Error loading questions</string>
-    <string name="num_questions">Question number:</string>
-</resources>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="Ranking">Clasificación</string>
-    <string name="Home">Casa</string>
-    <string name="New_Message">Noticias e información</string>
-    <string name="info">Reportes y propuestas</string>
-    <string name="reload">Reload db</string>
-    <string name="reload_text">¿Estás seguro de recargar la base de datos de los juegos? (Puede consumir bastante tiempo)</string>
-</resources>
