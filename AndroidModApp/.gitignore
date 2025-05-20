@@ -1,15 +1,65 @@
-*.iml
-.gradle
+# ===============
+# Android Studio
+# ===============
+
+# Ignore Gradle files
+.gradle/
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Ignore local configuration
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+
+# Ignore APKs and generated RAR/ZIP files
+*.apk
+*.aar
+*.rar
+*.zip
+
+# Ignore IntelliJ/Android Studio project files
+.idea/
+*.iml
+
+# Ignore logs and caches
+*.log
+/.cxx/
+/.externalNativeBuild/
+/.captures/
+
+# Ignore build artifacts
+/build/
+**/build/
+**/intermediates/
+**/generated/
+**/outputs/
+
+# Ignore Dependency caches
+/.gradle/
+/caches/
+**/gradle/caches/
+**/gradle/daemon/
+**/gradle/wrapper/
+
+# Ignore Kotlin/Java build artifacts
+*.class
+*.dex
+
+# Ignore test results
+/test-results/
+**/test-results/
+**/outputs/apk/
+**/outputs/mapping/
+
+# Ignore NDK and JNI build outputs
+/obj/
+*.so
+
+# Ignore Google Services JSON (Sensitive Data)
+/google-services.json
+
+# Ignore keystore files (Sensitive Data)
+*.keystore
+*.jks
+
+# Ignore VS Code settings
+.vscode/

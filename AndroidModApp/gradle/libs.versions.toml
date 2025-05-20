@@ -10,7 +10,7 @@ firebase-messaging = "24.1.0"
 firebase-crashlytics-plugin = "3.0.3"
 
 # AndroidX
-androidAppPluginVersion = "8.8.1"
+androidAppPluginVersion = "8.10.0"
 
 # Lifecycle:
 lifecycleRuntimeKtx = "2.8.7"
