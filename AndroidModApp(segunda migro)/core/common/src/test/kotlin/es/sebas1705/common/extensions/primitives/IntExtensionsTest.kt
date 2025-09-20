@@ -1,0 +1,67 @@
+package es.sebas1705.common.extensions.primitives
+
+import android.content.Context
+import androidx.compose.ui.unit.Dp
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.mockito.Mockito.*
+
+class IntExtensionsTest {
+
+    @Test fun `toDp converts px to dp correctly`() {
+        val mockContext = mock(Context::class.java)
+        val mockDisplayMetrics = mockContext.resources.displayMetrics
+        `when`(mockDisplayMetrics.density).thenReturn(2.0f)
+        val pxValue = 20
+        val dpValue = pxValue.toDp(mockContext)
+        assertEquals(Dp(10f), dpValue)
+    }
+
+    @Test fun `toDp handles zero px value`() {
+        val mockContext = mock(Context::class.java)
+        val mockDisplayMetrics = mockContext.resources.displayMetrics
+        `when`(mockDisplayMetrics.density).thenReturn(2.0f)
+        val pxValue = 0
+        val dpValue = pxValue.toDp(mockContext)
+        assertEquals(Dp(0f), dpValue)
+    }
+
+    @Test fun `toDp handles negative px value`() {
+        val mockContext = mock(Context::class.java)
+        val mockDisplayMetrics = mockContext.resources.displayMetrics
+        `when`(mockDisplayMetrics.density).thenReturn(2.0f)
+        val pxValue = -20
+        val dpValue = pxValue.toDp(mockContext)
+        assertEquals(Dp(-10f), dpValue)
+    }
+
+    @Test fun `toReducedString formats numbers below 1000 correctly`() {
+        val value = 999
+        val reducedString = value.toReducedString()
+        assertEquals("999", reducedString)
+    }
+
+    @Test fun `toReducedString formats numbers in thousands correctly`() {
+        val value = 1500
+        val reducedString = value.toReducedString()
+        assertEquals("1.5k", reducedString)
+    }
+
+    @Test fun `toReducedString formats numbers in millions correctly`() {
+        val value = 2500000
+        val reducedString = value.toReducedString()
+        assertEquals("2.5M", reducedString)
+    }
+
+    @Test fun `toReducedString handles edge case of exactly 1000`() {
+        val value = 1000
+        val reducedString = value.toReducedString()
+        assertEquals("1.0k", reducedString)
+    }
+
+    @Test fun `toReducedString handles edge case of exactly 1000000`() {
+        val value = 1000000
+        val reducedString = value.toReducedString()
+        assertEquals("1.0M", reducedString)
+    }
+}

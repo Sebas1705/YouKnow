@@ -1,0 +1,99 @@
+package es.sebas1705.common.theme
+
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import es.sebas1705.common.theme.SizeType.COMPACT
+import es.sebas1705.common.theme.SizeType.Companion.HEIGHT_COMPACT_MEDIUM_LIMIT
+import es.sebas1705.common.theme.SizeType.Companion.HEIGHT_MEDIUM_EXPANDED_LIMIT
+import es.sebas1705.common.theme.SizeType.Companion.WIDTH_COMPACT_MEDIUM_LIMIT
+import es.sebas1705.common.theme.SizeType.Companion.WIDTH_MEDIUM_EXPANDED_LIMIT
+import es.sebas1705.common.theme.SizeType.EXPANDED
+import es.sebas1705.common.theme.SizeType.MEDIUM
+
+/**
+ * Enum class to define the size of the width and height of the window
+ *
+ * @property COMPACT for width less than 600dp or height less than 600dp
+ * @property MEDIUM for width less than 840dp
+ * @property EXPANDED for width greater than 840dp
+ *
+ * @property WIDTH_COMPACT_MEDIUM_LIMIT [Dp]: limit for the compact and medium size type of the width
+ * @property WIDTH_MEDIUM_EXPANDED_LIMIT [Dp]: limit for the medium and expanded size type of the width
+ * @property HEIGHT_COMPACT_MEDIUM_LIMIT [Dp]: limit for the compact and medium size type of the height
+ * @property HEIGHT_MEDIUM_EXPANDED_LIMIT [Dp]: limit for the medium and expanded size type of the height
+ *
+ * @author Sebas1705 12/09/2025
+ * @since 1.0.0
+ */
+enum class SizeType {
+    COMPACT,
+    MEDIUM,
+    EXPANDED;
+
+    companion object {
+
+        val WIDTH_COMPACT_MEDIUM_LIMIT = 600.dp
+        val WIDTH_MEDIUM_EXPANDED_LIMIT = 840.dp
+
+        /**
+         * Transform the size in dp on a [SizeType] for the width
+         *
+         * @param size [Dp]: size on dp of the width of the window
+         * @return [SizeType]: the size type of the width
+         *
+         * @since 1.0.0
+         * @author Sebas1705 12/09/2025
+         */
+        fun getWidth(size: Dp): SizeType {
+            return when {
+                size < WIDTH_COMPACT_MEDIUM_LIMIT -> COMPACT
+                size < WIDTH_MEDIUM_EXPANDED_LIMIT -> MEDIUM
+                else -> EXPANDED
+            }
+        }
+
+        val HEIGHT_COMPACT_MEDIUM_LIMIT = 480.dp
+        val HEIGHT_MEDIUM_EXPANDED_LIMIT = 900.dp
+
+        /**
+         * Transform the size in dp on a [SizeType] for the height
+         *
+         * @param size [Dp]: size on dp of the height of the window
+         * @return [SizeType]: the size type of the height
+         *
+         * @since 1.0.0
+         * @author Sebas1705 12/09/2025
+         */
+        fun getHeight(size: Dp): SizeType {
+            return when {
+                size < HEIGHT_COMPACT_MEDIUM_LIMIT -> COMPACT
+                size < HEIGHT_MEDIUM_EXPANDED_LIMIT -> MEDIUM
+                else -> EXPANDED
+            }
+        }
+    }
+
+    /**
+     * Filter the value based on the size type
+     *
+     * @param compactOpt [T]: the value for the compact size type
+     * @param mediumOpt [T]: the value for the medium size type
+     * @param expandedOpt [T]: the value for the expanded size type
+     * @return [T] the value based on the size type
+     *
+     * @since 1.0.0
+     * @author Sebas1705 12/09/2025
+     */
+    fun <T> filter(
+        compactOpt: T,
+        mediumOpt: T,
+        expandedOpt: T
+    ): T {
+        return when (this) {
+            COMPACT -> compactOpt
+            MEDIUM -> mediumOpt
+            EXPANDED -> expandedOpt
+        }
+    }
+}

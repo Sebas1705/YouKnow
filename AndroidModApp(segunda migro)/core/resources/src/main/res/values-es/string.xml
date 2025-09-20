@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_resources_any">Cualquiera</string>
+    <string name="core_resources_icon_content">Icono de You Know</string>
+    <string name="core_resources_back_arrow_content">Flecha hacia atrás</string>
+    <string name="core_resources_credits">Créditos</string>
+    <string name="core_resources_points">Puntos</string>
+    <string name="core_resources_back">Atrás</string>
+
+    <!-- MainViewModel -->
+    <string name="core_resources_error_loading_data">Hubo un problema, reinicia la app o puede haber problemas: </string>
+    <!-- Game Screens -->
+    <string name="core_resources_game_out_title">Salir del juego</string>
+    <string name="core_resources_game_out_body">¿Estás seguro de salir? (Perderas todo el progreso del juego)</string>
+    <!-- Enums core -->
+    <string name="core_resources_survival">Supervivencía</string>
+    <string name="core_resources_time_attack">Contrareloj</string>
+    <string name="core_resources_aleatory">Aleatorio</string>
+    <string name="core_resources_custom">Personalizado</string>
+    <string name="core_resources_fire_wheel">Ruleta</string>
+</resources>

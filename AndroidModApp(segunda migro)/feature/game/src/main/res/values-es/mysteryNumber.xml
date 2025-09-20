@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_game_mystery_title">Número misterioso</string>
+    <string name="feature_game_minus_plus">+/-</string>
+    <string name="feature_game_try_number">Intentar</string>
+    <string name="feature_game_incorrect_number">"Intenta de nuevo: "</string>
+    <string name="feature_game_greater">Mayor</string>
+    <string name="feature_game_smaller">Menor</string>
+    <string name="feature_game_range">"Rango: "</string>
+</resources>

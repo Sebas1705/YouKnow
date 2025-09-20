@@ -1,0 +1,24 @@
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
+
+/**
+ * Plugin that applies common configuration for Android domain modules.
+ *
+ * @since 0.1.0
+ * @author Sebas1705 09/09/2025
+ */
+class DomainConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply {
+                apply("buildlogic.android.library")
+                apply("buildlogic.android.hilt")
+                apply("org.jetbrains.kotlin.plugin.serialization")
+            }
+
+            dependencies {
+            }
+        }
+    }
+}
