@@ -33,7 +33,7 @@ import es.sebas1705.designsystem.texts.Title
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.home.R
 
 /**

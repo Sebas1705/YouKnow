@@ -1,6 +1,5 @@
 package es.sebas1705.settings.design
 
-import android.app.Activity
 import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.common.states.WindowState
@@ -41,7 +38,6 @@ import es.sebas1705.designsystem.extras.DropdownList
 import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.designsystem.slider.ISlider
 import es.sebas1705.designsystem.spacers.IVerSpacer
-import es.sebas1705.designsystem.states.rememberWindowState
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.designsystem.texts.TitleSurface
 import es.sebas1705.feature.settings.R
@@ -49,7 +45,7 @@ import es.sebas1705.resources.games.Languages
 import es.sebas1705.settings.viewmodel.SettingsState
 import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.ui.theme.Paddings.MediumPadding
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 
 /**
  * Design of the Settings Screen.
@@ -68,6 +64,7 @@ import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun SettingsDesign(
+    windowState: WindowState = WindowState.default(),
     settingsState: SettingsState = SettingsState.default(),
     isLoading: Boolean = false,
     soundPool: Pair<SoundPool, Float>? = null,
@@ -80,7 +77,6 @@ fun SettingsDesign(
 ) {
     //Local:
     BackHandler { onBack() }
-    val windowState = rememberWindowState()
 
     //States:
     var music by rememberSaveable { mutableFloatStateOf(settingsState.settings.musicVolume) }

@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.layouts
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope

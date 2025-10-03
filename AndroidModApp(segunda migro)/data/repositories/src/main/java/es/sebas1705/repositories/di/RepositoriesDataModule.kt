@@ -15,7 +15,6 @@ import es.sebas1705.repositories.interfaces.ISettingsRepository
 import es.sebas1705.repositories.repos.AnalyticsRepository
 import es.sebas1705.repositories.repos.AuthenticationRepository
 import es.sebas1705.repositories.repos.DatabaseRepository
-import es.sebas1705.repositories.repos.FileRepository
 import es.sebas1705.repositories.repos.FirestoreRepository
 import es.sebas1705.repositories.repos.OpendbRepository
 import es.sebas1705.repositories.repos.RealtimeRepository

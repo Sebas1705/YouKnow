@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.buildlogic.data)
+    alias(libs.plugins.buildlogic.firebase)
 }
 
 android {

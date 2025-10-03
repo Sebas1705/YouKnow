@@ -31,7 +31,7 @@ import es.sebas1705.designsystem.divider.IHorDivider
  * @param imageVector [Triple<ImageVector,String,()->Unit>]: Image vector
  *
  * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios
+ * @author Sebas1705 21/09/2025
  */
 @Composable
 fun IResumeCard(

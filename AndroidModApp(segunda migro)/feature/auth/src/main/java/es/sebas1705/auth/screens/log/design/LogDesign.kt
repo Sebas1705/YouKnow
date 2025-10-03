@@ -34,7 +34,7 @@ import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.designsystem.buttons.common.IFilledButton
 import es.sebas1705.designsystem.dialogs.ErrorInfoDialog
 import es.sebas1705.designsystem.dialogs.ForgotPasswordDialog
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.designsystem.spacers.IVerSpacer
 import es.sebas1705.designsystem.texts.TitleSurface

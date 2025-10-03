@@ -2,7 +2,7 @@ package es.sebas1705.survey.viewmodel
 
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.survey.SurveyUsesCases
 import javax.inject.Inject
 

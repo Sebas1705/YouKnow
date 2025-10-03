@@ -6,7 +6,6 @@ import es.sebas1705.analytics.config.UserProperty
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.analytics.datasources.UserPropertiesDataSource
 import es.sebas1705.analytics.model.AnalyticsModel
-import es.sebas1705.common.managers.ClassLogData
 import es.sebas1705.repositories.interfaces.IAnalyticsRepository
 import javax.inject.Inject
 

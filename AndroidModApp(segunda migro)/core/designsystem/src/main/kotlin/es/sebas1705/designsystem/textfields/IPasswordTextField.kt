@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.textfields
 
-
 import android.media.SoundPool
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Password
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import es.sebas1705.core.designsystem.R
 import es.sebas1705.common.utlis.ComposablePreview
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 
 /**
  * Password text field
@@ -31,7 +29,6 @@ import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
  * @param isError [Boolean]: Is error
  * @param label [String]: Label
  * @param placeholder [String]: Placeholder
- * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
  *
  * @since 1.0.0
  * @author Sebas1705 12/09/2025
@@ -46,7 +43,6 @@ fun IPasswordTextField(
     isError: Boolean = false,
     label: String = stringResource(R.string.core_designsystem_password),
     placeholder: String = stringResource(R.string.core_designsystem_password),
-    soundPool: Pair<SoundPool, Float>? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     IOutlinedTextField(
@@ -63,7 +59,6 @@ fun IPasswordTextField(
                 { passwordVisible = !passwordVisible },
         isError = isError,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        soundPool = soundPool
     )
 }
 

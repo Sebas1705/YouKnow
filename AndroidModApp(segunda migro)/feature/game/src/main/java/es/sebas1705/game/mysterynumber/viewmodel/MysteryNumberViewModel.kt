@@ -4,11 +4,10 @@ package es.sebas1705.game.mysterynumber.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
 import es.sebas1705.common.games.mysterynumber.MysteryNumberStatus
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.mysterynumberusescases.MysteryNumberUsesCases
 import es.sebas1705.user.UserUsesCases

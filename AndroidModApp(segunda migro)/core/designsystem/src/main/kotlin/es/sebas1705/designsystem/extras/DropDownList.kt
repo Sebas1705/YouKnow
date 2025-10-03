@@ -1,7 +1,5 @@
 package es.sebas1705.designsystem.extras
 
-
-import android.media.SoundPool
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.sebas1705.core.designsystem.R
 import es.sebas1705.ui.theme.TonalElevation
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.designsystem.textfields.IOutlinedTextField
 
 /**
  * Dropdown list
@@ -31,7 +29,6 @@ import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
  * @param valueRes [Int]: Value resource
  * @param onValueChange [Function1<String, Unit]: On value change
  * @param modifier [Modifier]: Modifier
- * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
  * @param dropDownMenuConstructor [@Composable ColumnScope.(onChanged: (Int) -> Unit) -> Unit]: Drop down menu constructor
  *
  * @since 1.0.0
@@ -43,7 +40,6 @@ fun DropdownList(
     valueRes: Int,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    soundPool: Pair<SoundPool, Float>? = null,
     dropDownMenuConstructor: @Composable ColumnScope.(onChanged: (Int) -> Unit) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -64,7 +60,6 @@ fun DropdownList(
             modifier = Modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth(),
-            soundPool = soundPool
         )
         ExposedDropdownMenu(
             expanded = expanded,

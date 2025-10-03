@@ -20,6 +20,6 @@ import java.time.format.DateTimeFormatter
  */
 fun Long.millisToFormatDate(): String {
     val formatter = DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy")
-        .withZone(ZoneId.systemDefault())
+        .withZone(ZoneId.of("UTC"))
     return formatter.format(Instant.ofEpochMilli(this))
 }

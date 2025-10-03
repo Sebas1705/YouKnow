@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.mappers.toUserModel
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.firestore.repository.FirestoreRepository
@@ -22,7 +22,7 @@ class GetUser(
         onLoading: () -> Unit,
         onSuccess: (UserModel) -> Unit,
         onError: (String) -> Unit
-    ) = firestoreRepository.getUser(firebaseId).catcher(
+    ) = firestoreRepository.getUser(firebaseId).collect(
         onLoading,
         onSuccess = { onSuccess(it.toUserModel(firebaseId)) },
         onError

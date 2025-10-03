@@ -12,7 +12,7 @@ import es.sebas1705.designsystem.spacers.IVerSpacer
 import es.sebas1705.designsystem.textfields.IEmailTextField
 import es.sebas1705.designsystem.textfields.IPasswordTextField
 import es.sebas1705.ui.theme.Paddings.SmallPadding
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.auth.R
 
 /**

@@ -3,7 +3,7 @@ package es.sebas1705.repositories.repos
 import es.sebas1705.authentication.datasources.EmailAuthDataSource
 import es.sebas1705.authentication.datasources.GoogleAuthDataSource
 import es.sebas1705.authentication.datasources.UserAuthDataSource
-import es.sebas1705.common.utlis.alias.FlowResponseNothing
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.repositories.interfaces.IAuthenticationRepository
 import javax.inject.Inject
 
@@ -27,21 +27,22 @@ class AuthenticationRepository @Inject constructor(
     override fun signUpWithEmail(
         email: String,
         password: String,
-    ): FlowResponseNothing = emailAuthDataSource.signUpWithEmail(email, password)
+    ): DataEmptyFlow = emailAuthDataSource.signUpWithEmail(email, password)
 
     override fun signInWithEmail(
         email: String,
         password: String,
-    ): FlowResponseNothing = emailAuthDataSource.signInWithEmail(email, password)
+    ): DataEmptyFlow = emailAuthDataSource.signInWithEmail(email, password)
 
     override fun sendForgotPassword(
         email: String
-    ): FlowResponseNothing = userAuthDataSource.sendForgotPassword(email)
+    ): DataEmptyFlow = userAuthDataSource.sendForgotPassword(email)
 
-    override suspend fun signWithGoogle(): FlowResponseNothing =
+    override suspend fun signWithGoogle(): DataEmptyFlow =
         googleAuthDataSource.signWithGoogle()
 
     //Functions:
     override fun signOut(): Boolean = userAuthDataSource.signOut()
     override fun isUserLogged(): Boolean = userAuthDataSource.isUserLogged()
+    override fun getCurrentUser() = userAuthDataSource.getCurrentUser()
 }

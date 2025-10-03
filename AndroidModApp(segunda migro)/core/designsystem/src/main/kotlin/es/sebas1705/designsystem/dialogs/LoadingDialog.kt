@@ -1,5 +1,4 @@
-package es.sebas1705.youknow.core.composables.dialogs
-
+package es.sebas1705.designsystem.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

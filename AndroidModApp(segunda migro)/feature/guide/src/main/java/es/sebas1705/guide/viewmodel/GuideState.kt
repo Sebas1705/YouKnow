@@ -1,7 +1,7 @@
 package es.sebas1705.guide.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseState
 
 /**
  * State for Guide Screen that will handle the first time the app is opened.

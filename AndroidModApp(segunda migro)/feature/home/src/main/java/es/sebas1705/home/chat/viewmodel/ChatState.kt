@@ -1,7 +1,7 @@
 package es.sebas1705.home.chat.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseState
 import es.sebas1705.models.social.MessageModel
 
 /**

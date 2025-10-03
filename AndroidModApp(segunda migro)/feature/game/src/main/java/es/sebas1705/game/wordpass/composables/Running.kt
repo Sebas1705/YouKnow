@@ -48,7 +48,7 @@ import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.ui.theme.gameBottomBarHeight
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.games.R
 
 /**

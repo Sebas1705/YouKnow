@@ -19,7 +19,7 @@ android {
 dependencies {
     api(projects.core.common)
 
-    api(projects.data.authentication)
+    api(projects.data.repositories)
 
     api(projects.domain.models)
 

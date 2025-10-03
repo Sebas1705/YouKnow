@@ -1,7 +1,7 @@
 package es.sebas1705.survey.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.mappers.toSurveyDocument
 import es.sebas1705.mappers.toSurveyEntity
 import es.sebas1705.room.repository.DatabaseRepository
@@ -32,7 +32,7 @@ class PublicSurvey(
             databaseRepository.insertOrReplace(surveyModel.toSurveyEntity())
             firestoreRepository.publicNewSurvey(
                 surveyModel.toSurveyDocument()
-            ).catcher(
+            ).collect(
                 onEmptySuccess = onSuccess,
                 onError = onError
             )

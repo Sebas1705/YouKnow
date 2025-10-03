@@ -57,7 +57,7 @@ import kotlinx.coroutines.delay
  * @param onResponseQuestion (String) -> Unit: Function to respond to the question.
  *
  * @since 1.0.0
- * @Author Sebastián Ramiro Entrerrios
+ * @Author Sebas1705 21/09/2025
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

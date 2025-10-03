@@ -18,7 +18,7 @@ import es.sebas1705.survey.viewmodel.SurveyViewModel
  * @param onBack () -> Unit: action to go back
  *
  * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios
+ * @author Sebas1705 21/09/2025
  */
 @Composable
 fun SurveyScreen(

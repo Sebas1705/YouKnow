@@ -20,7 +20,7 @@ import es.sebas1705.domain.model.stats.SurveyModel
  * @param onBack () -> Unit: action to go back
  *
  * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios
+ * @author Sebas1705 21/09/2025
  */
 @Composable
 fun SurveyDesign(

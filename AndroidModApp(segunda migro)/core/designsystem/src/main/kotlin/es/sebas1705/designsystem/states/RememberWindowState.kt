@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.states
 
-
 import android.content.res.Configuration
 import android.view.ViewTreeObserver
 import androidx.compose.runtime.Composable
@@ -18,7 +17,7 @@ import es.sebas1705.common.utlis.extensions.primitives.toDp
 /**
  * Remember the state of the window
  *
- * @return MutableState<WindowState>
+ * @return [MutableState]<[WindowState]>
  *
  * @see WindowState
  *

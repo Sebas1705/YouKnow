@@ -50,7 +50,7 @@ import es.sebas1705.feature.games.R
  * @param onStartGame (Difficulty, Category, Int) -> Unit: Function to start the game.
  *
  * @since 1.0.0
- * @Author Sebastián Ramiro Entrerrios
+ * @Author Sebas1705 21/09/2025
  */
 @Composable
 fun Custom(

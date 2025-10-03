@@ -15,6 +15,7 @@ dependencies {
     api(projects.core.ui)
 
     api(projects.domain.models)
+    api(projects.domain.providers)
 
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)

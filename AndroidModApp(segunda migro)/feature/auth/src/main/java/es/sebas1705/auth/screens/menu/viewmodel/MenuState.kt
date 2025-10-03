@@ -1,7 +1,7 @@
 package es.sebas1705.auth.screens.menu.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseState
 
 /**
  * Data class that represents the state of the Menu Screen.

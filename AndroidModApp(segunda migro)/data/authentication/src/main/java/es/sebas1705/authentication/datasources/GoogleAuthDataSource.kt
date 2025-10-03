@@ -11,11 +11,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.authentication.config.SettingsAuth
 import es.sebas1705.authentication.config.getCredentialRequestGoogle
-import es.sebas1705.common.managers.ClassLogData
-import es.sebas1705.common.managers.TaskFlowManager
-import es.sebas1705.common.responses.ErrorResponseType
-import es.sebas1705.common.responses.ResponseState
-import es.sebas1705.common.utlis.alias.FlowResponseNothing
+import es.sebas1705.common.classes.TaskFlow
+import es.sebas1705.common.states.ErrorDataType
+import es.sebas1705.common.states.DataState
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import javax.inject.Inject
 
@@ -39,7 +38,7 @@ class GoogleAuthDataSource @Inject constructor(
     private var credentialManager: CredentialManager? = null
 
     //Managers:
-    private val taskFlowManager = TaskFlowManager(
+    private val taskFlow = TaskFlow(
         this,
         logEventDataSource::logError,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
@@ -50,12 +49,12 @@ class GoogleAuthDataSource @Inject constructor(
     /**
      * Signs in with Google using the provided context.
      *
-     * @return [FlowResponseNothing]: A flow response indicating the result of the sign-in operation.
+     * @return [DataEmptyFlow]: A flow response indicating the result of the sign-in operation.
      *
      * @since 0.1.0
      * @author Sebas1705 09/09/2025
      */
-    suspend fun signWithGoogle(): FlowResponseNothing {
+    suspend fun signWithGoogle(): DataEmptyFlow {
         credentialManager = CredentialManager.create(context)
         var credential: Credential? = null
         var error = ""
@@ -68,7 +67,7 @@ class GoogleAuthDataSource @Inject constructor(
             logE("Error getting google credential: ${e.message}")
             error = e.message ?: SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL
         }
-        return taskFlowManager.taskFlowProducer(
+        return taskFlow.taskFlowProducer(
             assertChecker = {
                 if (credential == null) error
                 else if (
@@ -86,9 +85,9 @@ class GoogleAuthDataSource @Inject constructor(
                 firebaseAuth.signInWithCredential(authCredential)
             },
             onSuccessListener = {
-                if (it.user != null) ResponseState.EmptySuccess
-                else taskFlowManager.createResponse(
-                    ErrorResponseType.INTERNAL,
+                if (it.user != null) DataState.EmptySuccess
+                else taskFlow.createResponse(
+                    ErrorDataType.INTERNAL,
                     SettingsAuth.NOT_LOGGED_USER
                 )
             }

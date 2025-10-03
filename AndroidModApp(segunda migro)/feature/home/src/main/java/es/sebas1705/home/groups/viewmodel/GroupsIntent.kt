@@ -1,7 +1,7 @@
 package es.sebas1705.home.groups.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 import es.sebas1705.models.social.GroupModel
 import es.sebas1705.models.social.UserModel
 

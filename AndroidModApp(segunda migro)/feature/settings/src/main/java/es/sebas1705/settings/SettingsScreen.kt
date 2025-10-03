@@ -24,7 +24,7 @@ import es.sebas1705.settings.viewmodel.SettingsViewModel
  */
 @Composable
 fun SettingsScreen(
-    soundPool: Pair<SoundPool, Float>,
+    windowState: WindowState,
     onBack: () -> Unit
 ) {
 
@@ -42,9 +42,9 @@ fun SettingsScreen(
 
     //Body:
     SettingsDesign(
+        windowState,
         settingsState,
         isLoading,
-        soundPool,
         onBack,
         onMusicVolumeSlideBarChange = {
             settingsViewModel.eventHandler(SettingsIntent.ChangeSettings(

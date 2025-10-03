@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.slider
 
-
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider

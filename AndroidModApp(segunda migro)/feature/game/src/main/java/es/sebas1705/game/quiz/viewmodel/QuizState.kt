@@ -4,7 +4,7 @@ package es.sebas1705.game.quiz.viewmodel
 import es.sebas1705.common.games.Languages
 import es.sebas1705.common.games.quiz.QuizMode
 import es.sebas1705.common.games.quiz.QuizStatus
-import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseState
 import es.sebas1705.models.games.QuestionModel
 
 /**

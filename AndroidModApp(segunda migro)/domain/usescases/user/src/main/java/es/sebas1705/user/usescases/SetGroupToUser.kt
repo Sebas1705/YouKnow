@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.models.social.GroupModel
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.realtime.repository.RealtimeRepository
@@ -28,7 +28,7 @@ class SetGroupToUser(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.setGroupToUser(user.firebaseId, group.groupId)
-        .catcher(
+        .collect(
             onLoading,
             onEmptySuccess = {
                 if (!creator) {
@@ -45,7 +45,7 @@ class SetGroupToUser(
                                 group.groupId,
                                 list.toList()
                             )
-                    response.catcher(
+                    response.collect(
                         onEmptySuccess = { onSuccess() },
                         onError = onError
                     )

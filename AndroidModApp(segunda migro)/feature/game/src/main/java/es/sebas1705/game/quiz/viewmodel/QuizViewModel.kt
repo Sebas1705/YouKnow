@@ -4,13 +4,12 @@ package es.sebas1705.game.quiz.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.games.Category
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.QuizType
 import es.sebas1705.common.games.quiz.QuizMode
 import es.sebas1705.common.games.quiz.QuizStatus
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.quizusescases.QuizUsesCases
 import es.sebas1705.settings.SettingUsesCases

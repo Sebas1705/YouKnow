@@ -1,7 +1,7 @@
 package es.sebas1705.survey.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 /**
  * Intent of the [SurveyViewModel]

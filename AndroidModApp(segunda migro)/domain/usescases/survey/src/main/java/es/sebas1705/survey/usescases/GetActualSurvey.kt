@@ -1,7 +1,7 @@
 package es.sebas1705.survey.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.mappers.toSurveyModel
 import es.sebas1705.room.repository.DatabaseRepository
 import es.sebas1705.firestore.repository.FirestoreRepository
@@ -34,7 +34,7 @@ class GetActualSurvey(
             } else {
                 firestoreRepository.getSurvey(
                     firebaseId
-                ).catcher(
+                ).collect(
                     onSuccess = {
                         onSuccess(it.toSurveyModel())
                     },

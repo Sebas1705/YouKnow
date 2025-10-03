@@ -5,10 +5,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.authentication.config.SettingsAuth
-import es.sebas1705.common.managers.ClassLogData
-import es.sebas1705.common.managers.TaskFlowManager
-import es.sebas1705.common.responses.ResponseState
-import es.sebas1705.common.utlis.alias.FlowResponseNothing
+import es.sebas1705.common.classes.TaskFlow
+import es.sebas1705.common.states.DataState
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import javax.inject.Inject
 
 /**
@@ -26,11 +25,8 @@ class UserAuthDataSource @Inject constructor(
     private val logEventDataSource: LogEventDataSource
 ) : ClassLogData() {
 
-    //Properties:
-    private var credentialManager: CredentialManager? = null
-
     //Managers:
-    private val taskFlowManager = TaskFlowManager(
+    private val taskFlow = TaskFlow(
         this,
         logEventDataSource::logError,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
@@ -41,9 +37,9 @@ class UserAuthDataSource @Inject constructor(
 
     fun sendForgotPassword(
         email: String
-    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
         taskAction = { firebaseAuth.sendPasswordResetEmail(email) },
-        onSuccessListener = { ResponseState.EmptySuccess }
+        onSuccessListener = { DataState.EmptySuccess }
     )
 
     //Functions:

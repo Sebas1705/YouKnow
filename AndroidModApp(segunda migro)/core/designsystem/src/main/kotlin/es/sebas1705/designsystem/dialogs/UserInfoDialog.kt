@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
 import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -54,7 +53,6 @@ fun UserInfoDialog(
             ITextButton(
                 onClick = onDismiss,
                 label = stringResource(R.string.core_designsystem_dismiss),
-                soundPool = soundPool
             )
         },
         icon = {

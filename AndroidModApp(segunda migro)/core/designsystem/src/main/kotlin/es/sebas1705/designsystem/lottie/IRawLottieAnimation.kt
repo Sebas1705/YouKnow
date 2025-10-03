@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.lottie
 
-
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable

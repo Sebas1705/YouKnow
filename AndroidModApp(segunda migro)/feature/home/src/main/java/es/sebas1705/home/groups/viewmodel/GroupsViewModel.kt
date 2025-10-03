@@ -3,7 +3,7 @@ package es.sebas1705.home.groups.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.groups.GroupUsesCases
 import es.sebas1705.user.UserUsesCases

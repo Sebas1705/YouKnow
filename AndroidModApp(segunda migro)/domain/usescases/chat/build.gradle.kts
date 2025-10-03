@@ -16,7 +16,7 @@ android {
 
 dependencies {
     api(projects.core.common)
-    api(projects.data.realtime)
+    api(projects.data.repositories)
     api(projects.domain.models)
     api(projects.domain.mappers)
 }

@@ -10,11 +10,10 @@ import android.os.Bundle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.analytics.AnalyticsUsesCases
 import es.sebas1705.analytics.config.EventLog
-import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.managers.LogType
-import es.sebas1705.common.mvi.MVIBaseIntent
-import es.sebas1705.common.mvi.MVIBaseState
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.theme.ThemeContrast
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.common.utlis.extensions.types.log

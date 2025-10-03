@@ -4,7 +4,7 @@ package es.sebas1705.game.families.viewmodel
 import es.sebas1705.common.games.Category
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.families.FamiliesMode
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible intents of the Families Screen.

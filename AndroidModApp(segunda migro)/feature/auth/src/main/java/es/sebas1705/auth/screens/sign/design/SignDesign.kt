@@ -35,7 +35,7 @@ import es.sebas1705.designsystem.texts.TitleSurface
 import es.sebas1705.ui.theme.Paddings.HugePadding
 import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.feature.auth.R
 import es.sebas1705.auth.screens.sign.composables.SignField
 

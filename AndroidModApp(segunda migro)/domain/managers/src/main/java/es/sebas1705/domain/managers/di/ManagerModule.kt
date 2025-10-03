@@ -23,28 +23,13 @@ import jakarta.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ManagerModule {
 
-    private const val MAX_SOUNDS_SIMULTANEITY = 5
-
-    @Provides
-    @Singleton
-    fun provideSoundPool(): SoundPool = SoundPool
-        .Builder()
-        .setMaxStreams(MAX_SOUNDS_SIMULTANEITY)
-        .setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-        )
-        .build()
-
     @Provides
     @Singleton
     fun provideMediaPlayer(
         @ApplicationContext context: Context
     ): MediaPlayer = MediaPlayer.create(
         context,
-        R.raw.music_background
+        es.sebas1705.core.resources.R.raw.music_background
     )
 
     @Provides

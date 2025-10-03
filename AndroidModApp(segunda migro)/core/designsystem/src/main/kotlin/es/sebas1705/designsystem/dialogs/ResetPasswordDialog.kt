@@ -1,7 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
-import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.core.designsystem.R
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.core.designsystem.R
 import es.sebas1705.designsystem.buttons.common.ITextButton
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.ui.theme.AppTheme
@@ -22,7 +20,6 @@ import es.sebas1705.ui.theme.AppTheme
  * Composable that displays a dialog to recover the password.
  *
  * @param email [String]: Email to be displayed in the dialog.
- * @param soundPool [Pair<SoundPool, Float>]: Pair of SoundPool and volume to play sounds.
  * @param windowState [WindowState]: State of the window.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
@@ -35,7 +32,6 @@ import es.sebas1705.ui.theme.AppTheme
 @Composable
 fun ResetPasswordDialog(
     email: String,
-    soundPool: Pair<SoundPool, Float>? = null,
     windowState: WindowState = WindowState.default(),
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
@@ -45,7 +41,6 @@ fun ResetPasswordDialog(
         ITextButton(
             onClick = onConfirm,
             label = stringResource(R.string.core_designsystem_confirm),
-            soundPool = soundPool
         )
     },
     modifier = Modifier
@@ -54,7 +49,6 @@ fun ResetPasswordDialog(
         ITextButton(
             onClick = onDismiss,
             label = stringResource(R.string.core_designsystem_dismiss),
-            soundPool = soundPool
         )
     },
     icon = null,

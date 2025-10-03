@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.firestore.repository.FirestoreRepository
 import es.sebas1705.models.social.GroupModel
 import es.sebas1705.realtime.repository.RealtimeRepository
@@ -26,7 +26,7 @@ class RemoveGroupToUser(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.removeGroupFromUser(firebaseId)
-        .catcher(
+        .collect(
             onLoading,
             onEmptySuccess = {
                 val list = group.members.toMutableList()
@@ -34,7 +34,7 @@ class RemoveGroupToUser(
                 realTimeRepository.changeMembersToGroup(
                     group.groupId,
                     list.toList()
-                ).catcher(
+                ).collect(
                     onEmptySuccess = { onSuccess() },
                     onError = onError
                 )

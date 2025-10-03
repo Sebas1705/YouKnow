@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
 import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +17,6 @@ import es.sebas1705.ui.theme.AppTheme
  * Nick dialog
  *
  * @param modifier [Modifier]: Modifier
- * @param soundPool [Pair<SoundPool, Float>]: Sound pool
  * @param nickname [String]: Nickname
  * @param firebaseId [String]: Firebase id
  * @param onConfirm ([String]) -> Unit: On confirm
@@ -31,7 +29,6 @@ import es.sebas1705.ui.theme.AppTheme
 @Composable
 fun NickDialog(
     modifier: Modifier = Modifier,
-    soundPool: Pair<SoundPool, Float>? = null,
     nickname: String = "temp",
     firebaseId: String = "------",
     onConfirm: (String) -> Unit = {},
@@ -42,7 +39,6 @@ fun NickDialog(
         IFilledButton(
             label = stringResource(R.string.core_designsystem_confirm),
             onClick = { onConfirm(nickname) },
-            soundPool = soundPool
         )
     },
     modifier = modifier,
@@ -50,7 +46,6 @@ fun NickDialog(
         IFilledButton(
             label = stringResource(R.string.core_designsystem_dismiss),
             onClick = onDismiss,
-            soundPool = soundPool
         )
     },
     title = {

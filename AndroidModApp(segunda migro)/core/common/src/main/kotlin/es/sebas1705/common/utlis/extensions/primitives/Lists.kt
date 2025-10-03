@@ -40,11 +40,13 @@ fun <T> MutableList<T>.pushAndPopTo(
     to: T,
     inclusive: Boolean = false
 ) = this.push(element) {
-    while (this.lastOrNull() != to && this.isNotEmpty()) {
-        this.pop()
+    if (this.contains(to)) {
+        while (this.lastOrNull() != to && this.isNotEmpty()) {
+            this.pop()
+        }
+        if (inclusive)
+            this.pop()
     }
-    if (inclusive)
-        this.pop()
 }
 
 /**

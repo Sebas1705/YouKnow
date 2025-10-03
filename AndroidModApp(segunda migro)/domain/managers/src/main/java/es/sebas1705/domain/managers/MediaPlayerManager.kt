@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class MediaPlayerManager @Inject constructor(
     private val mediaPlayer: MediaPlayer,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ){
 
     fun play() {

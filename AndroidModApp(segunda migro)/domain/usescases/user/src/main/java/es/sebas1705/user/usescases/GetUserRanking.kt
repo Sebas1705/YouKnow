@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.firestore.repository.FirestoreRepository
 
 /**
@@ -19,5 +19,5 @@ class GetUserRanking(
         onLoading: () -> Unit,
         onSuccess: (List<Pair<String, Int>>) -> Unit,
         onError: (String) -> Unit
-    ) = firestoreRepository.getUserRanking().catcher(onLoading, onSuccess, onError)
+    ) = firestoreRepository.getUserRanking().collect(onLoading, onSuccess, onError)
 }

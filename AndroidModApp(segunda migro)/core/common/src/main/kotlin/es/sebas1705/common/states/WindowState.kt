@@ -4,7 +4,7 @@ package es.sebas1705.common.states
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import es.sebas1705.common.theme.SizeType
-import es.sebas1705.common.utlis.PreviewSettings
+import es.sebas1705.common.utlis.annotations.PreviewSettings
 
 /**
  * Data class that represents the state of window and its properties for design purposes.

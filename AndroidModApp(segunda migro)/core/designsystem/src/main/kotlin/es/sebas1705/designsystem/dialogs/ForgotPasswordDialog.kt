@@ -1,7 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
-import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,18 +12,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.core.designsystem.R
 import es.sebas1705.designsystem.buttons.common.ITextButton
+import es.sebas1705.designsystem.textfields.IEmailTextField
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.designsystem.textfields.IEmailTextField
 
 /**
  * Composable that displays a dialog to recover the password.
  *
  * @param modifier [Modifier]: Modifier to be applied to the dialog.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
@@ -37,7 +34,6 @@ import es.sebas1705.designsystem.textfields.IEmailTextField
 @Composable
 fun ForgotPasswordDialog(
     modifier: Modifier = Modifier,
-    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: (String) -> Unit = {},
     onDismiss: () -> Unit = {}
 ) {
@@ -49,7 +45,6 @@ fun ForgotPasswordDialog(
             ITextButton(
                 onClick = { onConfirm(email) },
                 label = stringResource(R.string.core_designsystem_confirm),
-                soundPool = soundPool
             )
         },
         modifier = modifier,
@@ -57,7 +52,6 @@ fun ForgotPasswordDialog(
             ITextButton(
                 onClick = onDismiss,
                 label = stringResource(R.string.core_designsystem_dismiss),
-                soundPool = soundPool
             )
         },
         title = {
@@ -68,7 +62,6 @@ fun ForgotPasswordDialog(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
-                soundPool = soundPool
             )
         }
     )

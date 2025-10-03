@@ -28,7 +28,7 @@ import es.sebas1705.home.profile.composables.LazyProfileItem
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel.ProfileState
 
 /**

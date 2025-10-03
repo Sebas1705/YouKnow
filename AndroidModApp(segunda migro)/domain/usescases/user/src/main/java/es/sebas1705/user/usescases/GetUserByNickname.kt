@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.firestore.repository.FirestoreRepository
 import es.sebas1705.mappers.toUserModel
 import es.sebas1705.models.social.UserModel
@@ -22,7 +22,7 @@ class GetUserByNickname(
         onLoading: () -> Unit,
         onSuccess: (UserModel) -> Unit,
         onError: (String) -> Unit
-    ) = firestoreRepository.getUserByNickname(nickname).catcher(
+    ) = firestoreRepository.getUserByNickname(nickname).collect(
         onLoading,
         onSuccess = {
             onSuccess(it.first.toUserModel(it.second))

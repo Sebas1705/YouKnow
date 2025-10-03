@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.firestore.repository.FirestoreRepository
 
@@ -23,5 +23,5 @@ class AddPointsToUser(
         onSuccess: (Int) -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.addPointsToUser(user.firebaseId, user.points, pointsToAdd)
-        .catcher(onLoading, onSuccess, onError)
+        .collect(onLoading, onSuccess, onError)
 }

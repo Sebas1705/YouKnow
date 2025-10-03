@@ -4,11 +4,10 @@ import androidx.credentials.CredentialManager
 import com.google.firebase.auth.FirebaseAuth
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.authentication.config.SettingsAuth
-import es.sebas1705.common.managers.ClassLogData
-import es.sebas1705.common.managers.TaskFlowManager
-import es.sebas1705.common.responses.ErrorResponseType
-import es.sebas1705.common.responses.ResponseState
-import es.sebas1705.common.utlis.alias.FlowResponseNothing
+import es.sebas1705.common.classes.TaskFlow
+import es.sebas1705.common.states.ErrorDataType
+import es.sebas1705.common.states.DataState
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import javax.inject.Inject
 
 /**
@@ -26,11 +25,8 @@ class EmailAuthDataSource @Inject constructor(
     private val logEventDataSource: LogEventDataSource
 ) : ClassLogData() {
 
-    //Properties:
-    private var credentialManager: CredentialManager? = null
-
     //Managers:
-    private val taskFlowManager = TaskFlowManager(
+    private val taskFlow = TaskFlow(
         this,
         logEventDataSource::logError,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
@@ -44,7 +40,7 @@ class EmailAuthDataSource @Inject constructor(
      * @param email [String]: The email address of the user.
      * @param password [String]: The password for the user.
      *
-     * @return [FlowResponseNothing]: A flow response indicating the result of the sign-up operation.
+     * @return [DataEmptyFlow]: A flow response indicating the result of the sign-up operation.
      *
      * @since 0.1.0
      * @author Sebas1705 09/09/2025
@@ -52,14 +48,14 @@ class EmailAuthDataSource @Inject constructor(
     fun signUpWithEmail(
         email: String,
         password: String,
-    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
         taskAction = { firebaseAuth.createUserWithEmailAndPassword(email, password) },
         onSuccessListener = {
             if (it.user != null) {
                 it.user?.sendEmailVerification()
-                ResponseState.EmptySuccess
-            } else taskFlowManager.createResponse(
-                ErrorResponseType.INTERNAL,
+                DataState.EmptySuccess
+            } else taskFlow.createResponse(
+                ErrorDataType.INTERNAL,
                 SettingsAuth.NOT_LOGGED_USER
             )
         }
@@ -71,7 +67,7 @@ class EmailAuthDataSource @Inject constructor(
      * @param email [String]: The email address of the user.
      * @param password [String]: The password for the user.
      *
-     * @return [FlowResponseNothing]: A flow response indicating the result of the sign-in operation.
+     * @return [DataEmptyFlow]: A flow response indicating the result of the sign-in operation.
      *
      * @since 0.1.0
      * @author Sebas1705 09/09/2025
@@ -79,12 +75,12 @@ class EmailAuthDataSource @Inject constructor(
     fun signInWithEmail(
         email: String,
         password: String,
-    ): FlowResponseNothing = taskFlowManager.taskFlowProducer(
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
         taskAction = { firebaseAuth.signInWithEmailAndPassword(email, password) },
         onSuccessListener = {
-            if (it.user != null) ResponseState.EmptySuccess
-            else taskFlowManager.createResponse(
-                ErrorResponseType.INTERNAL,
+            if (it.user != null) DataState.EmptySuccess
+            else taskFlow.createResponse(
+                ErrorDataType.INTERNAL,
                 SettingsAuth.NOT_LOGGED_USER
             )
         }

@@ -1,7 +1,5 @@
 package es.sebas1705.repositories.interfaces
 
-import es.sebas1705.room.entities.MyEntity
-
 
 /**
  * Interface to represent the repository of the database

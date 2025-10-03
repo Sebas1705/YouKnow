@@ -5,8 +5,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import es.sebas1705.analytics.config.EventLog
 import es.sebas1705.analytics.model.AnalyticsModel
-import es.sebas1705.common.managers.ClassLogData
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 /**
  * Data source for logging events to Firebase Analytics.
@@ -34,18 +34,18 @@ class LogEventDataSource @Inject constructor(
     }
 
     /**
-     * Log an error event with the given [ClassLogData] and error message.
+     * Log an error event with the class information
      *
-     * @param classLogData [ClassLogData]: The class that logs the event.
+     * @param clazz [KClass]<*>: The class where the error occurred.
      * @param error [String]: The error message to log.
      *
      * @since 0.1.0
      * @author Sebas1705 09/09/2025
      */
-    fun logError(classLogData: ClassLogData, error: String) {
+    fun logError(clazz: KClass<*>, error: String) {
         firebaseAnalytics.logEvent(EventLog.Error.tag) {
-            param("package", classLogData.packageName)
-            param("class", classLogData.className)
+            param("package", clazz.javaObjectType.packageName)
+            param("class", clazz.simpleName ?: "Unknown")
             param("error", error)
         }
     }

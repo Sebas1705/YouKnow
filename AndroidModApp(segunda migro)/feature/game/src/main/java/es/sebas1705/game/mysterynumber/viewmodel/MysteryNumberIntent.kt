@@ -3,7 +3,7 @@ package es.sebas1705.game.mysterynumber.viewmodel
 
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible intents of the MysteryNumber Screen.

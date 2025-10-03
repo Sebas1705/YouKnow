@@ -1,7 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
-import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,19 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
+import es.sebas1705.core.designsystem.R
 import es.sebas1705.designsystem.buttons.common.ITextButton
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
+import es.sebas1705.designsystem.textfields.IOutlinedTextField
 
 /**
  * Create group dialog
  *
  * @param modifier [Modifier]: Modifier
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume
  * @param onConfirm [Function2<String, String, Unit>]: On confirm
  * @param onDismiss [Function0<Unit>]: On dismiss
  *
@@ -39,7 +36,6 @@ import es.sebas1705.youknow.core.composables.textfields.IOutlinedTextField
 @Composable
 fun CreateGroupDialog(
     modifier: Modifier = Modifier,
-    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: (String, String) -> Unit = { _, _ -> },
     onDismiss: () -> Unit = {}
 ) {
@@ -58,7 +54,6 @@ fun CreateGroupDialog(
                 },
                 label = "${stringResource(R.string.core_designsystem_confirm)} (2000 ${stringResource(
                     es.sebas1705.core.resources.R.string.core_resources_credits)})",
-                soundPool = soundPool
             )
         },
         modifier = modifier,
@@ -66,7 +61,6 @@ fun CreateGroupDialog(
             ITextButton(
                 onClick = onDismiss,
                 label = stringResource(R.string.core_designsystem_dismiss),
-                soundPool = soundPool
             )
         },
         icon = null,
@@ -84,7 +78,6 @@ fun CreateGroupDialog(
                     label = stringResource(R.string.core_designsystem_groupName),
                     placeholder = stringResource(R.string.core_designsystem_groupName),
                     modifier = Modifier.fillMaxWidth(),
-                    soundPool = soundPool
                 )
                 IOutlinedTextField(
                     value = groupDescription,
@@ -92,7 +85,6 @@ fun CreateGroupDialog(
                     label = stringResource(R.string.core_designsystem_groupDescription),
                     placeholder = stringResource(R.string.core_designsystem_groupDescription),
                     modifier = Modifier.fillMaxWidth(),
-                    soundPool = soundPool
                 )
             }
         }

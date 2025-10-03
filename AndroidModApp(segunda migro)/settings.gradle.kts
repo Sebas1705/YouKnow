@@ -44,6 +44,7 @@ include(":data:repositories")
 
 include(":domain")
 include(":domain:managers")
+include(":domain:providers")
 include(":domain:models")
 include(":domain:services")
 include(":domain:mappers")

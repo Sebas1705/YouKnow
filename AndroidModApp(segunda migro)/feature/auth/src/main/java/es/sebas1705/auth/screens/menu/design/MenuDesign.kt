@@ -25,7 +25,7 @@ import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.designsystem.spacers.IVerSpacer
 import es.sebas1705.ui.theme.Paddings.LargePadding
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.feature.auth.R
 
 /**

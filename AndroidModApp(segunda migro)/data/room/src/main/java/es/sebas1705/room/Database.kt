@@ -3,8 +3,14 @@ package es.sebas1705.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import es.sebas1705.room.daos.MyDao
-import es.sebas1705.room.entities.MyEntity
+import es.sebas1705.room.daos.FamiliesDao
+import es.sebas1705.room.daos.QuestionDao
+import es.sebas1705.room.daos.SurveyDao
+import es.sebas1705.room.daos.WordDao
+import es.sebas1705.room.entities.FamiliesEntity
+import es.sebas1705.room.entities.QuestionEntity
+import es.sebas1705.room.entities.SurveyEntity
+import es.sebas1705.room.entities.WordEntity
 import es.sebas1705.room.typeconverter.Converter
 
 /**
@@ -15,7 +21,10 @@ import es.sebas1705.room.typeconverter.Converter
  */
 @Database(
     entities = [
-        MyEntity::class
+        QuestionEntity::class,
+        FamiliesEntity::class,
+        WordEntity::class,
+        SurveyEntity::class
     ],
     version = 1
 )
@@ -23,6 +32,12 @@ import es.sebas1705.room.typeconverter.Converter
 abstract class Database : RoomDatabase() {
 
     //DAOs:
-    abstract fun myDao(): MyDao
+    abstract fun questionDao(): QuestionDao
+
+    abstract fun familiesDao(): FamiliesDao
+
+    abstract fun wordDao(): WordDao
+
+    abstract fun surveyDao(): SurveyDao
 
 }

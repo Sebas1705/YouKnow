@@ -1,6 +1,5 @@
 package es.sebas1705.guide.design
 
-
 import android.content.Context
 import android.media.SoundPool
 import androidx.compose.foundation.Image
@@ -41,9 +40,9 @@ import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.Paddings.SmallPadding
 import es.sebas1705.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
-import es.sebas1705.domain.model.ui.PageModel
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.feature.guide.R
+import es.sebas1705.models.ui.PageModel
 
 /**
  * Design of the Guide Screen.

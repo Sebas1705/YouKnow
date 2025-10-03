@@ -3,8 +3,7 @@ package es.sebas1705.auth.screens.log.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.auth.AuthUsesCases
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.user.UserUsesCases
 import es.sebas1705.feature.auth.R

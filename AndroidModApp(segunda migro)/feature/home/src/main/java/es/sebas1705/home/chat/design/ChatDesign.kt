@@ -27,7 +27,6 @@ import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.designsystem.textfields.IFilledTextField
 import es.sebas1705.designsystem.texts.Title
 import es.sebas1705.home.chat.composables.Chat
-import es.sebas1705.realtime.config.SettingsRT
 import es.sebas1705.ui.theme.Paddings.MediumPadding
 import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.feature.home.R

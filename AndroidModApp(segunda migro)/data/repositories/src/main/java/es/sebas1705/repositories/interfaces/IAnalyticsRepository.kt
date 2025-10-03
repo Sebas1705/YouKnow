@@ -4,7 +4,6 @@ import android.os.Bundle
 import es.sebas1705.analytics.config.EventLog
 import es.sebas1705.analytics.config.UserProperty
 import es.sebas1705.analytics.model.AnalyticsModel
-import es.sebas1705.common.managers.ClassLogData
 
 /**
  * Repository interface to log events and set user properties

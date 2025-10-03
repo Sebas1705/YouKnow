@@ -3,8 +3,7 @@ package es.sebas1705.youknow.presentation.features.home.features.profile.viewmod
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.auth.AuthUsesCases
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.common.utlis.extensions.primitives.isImageUrl
 import es.sebas1705.user.UserUsesCases

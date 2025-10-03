@@ -2,7 +2,7 @@ package es.sebas1705.auth.screens.menu.viewmodel
 
 
 import android.content.Context
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 /**
  * Sealed interface that represents the possible actions that can be performed in the Menu Screen.

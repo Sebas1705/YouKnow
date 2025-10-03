@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.firestore.repository.FirestoreRepository
 
 /**
@@ -22,5 +22,5 @@ class ChangePhotoToUser(
         onEmptySuccess: () -> Unit,
         onError: (String) -> Unit
     ) = firestoreRepository.changePhotoToUser(firebaseId, photoUrl)
-        .catcher(onLoading, onEmptySuccess, onError)
+        .collect(onLoading, onEmptySuccess, onError)
 }

@@ -23,7 +23,7 @@ import es.sebas1705.ui.theme.AppTheme
  * @param content [ColumnScope.() -> Unit]: Content
  *
  * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios
+ * @author Sebas1705 21/09/2025
  */
 @Composable
 fun IPrimaryCard(

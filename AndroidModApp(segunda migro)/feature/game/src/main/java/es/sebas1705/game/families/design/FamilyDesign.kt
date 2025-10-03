@@ -15,7 +15,7 @@ import es.sebas1705.game.families.composables.Running
 import es.sebas1705.game.families.composables.SelectionMode
 import es.sebas1705.game.families.viewmodel.FamiliesState
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 
 /**
  * Design of the Mystery Number Game.
@@ -29,7 +29,7 @@ import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
  * @param onStartGame (Difficulty, Category, Int) -> Unit: Function to start the game.
  *
  * @since 1.0.0
- * @Author Sebastián Ramiro Entrerrios
+ * @Author Sebas1705 21/09/2025
  */
 @Composable
 fun FamiliesDesign(

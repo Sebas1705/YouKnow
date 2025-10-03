@@ -1,15 +1,13 @@
 package es.sebas1705.designsystem.dialogs
 
-
-import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import es.sebas1705.core.designsystem.R
 import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.core.designsystem.R
 import es.sebas1705.designsystem.buttons.common.ITextButton
 import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.ui.theme.AppTheme
@@ -18,7 +16,6 @@ import es.sebas1705.ui.theme.AppTheme
  * Dialog that will be shown when the game is over.
  *
  * @param modifier [Modifier]: Modifier to be applied to the dialog.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
@@ -28,7 +25,6 @@ import es.sebas1705.ui.theme.AppTheme
 @Composable
 fun GameOutDialog(
     modifier: Modifier = Modifier,
-    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm : () -> Unit = {},
     onDismiss : () -> Unit = {},
 ) = IDialog(
@@ -37,7 +33,6 @@ fun GameOutDialog(
         ITextButton(
             onClick = onConfirm,
             label = stringResource(R.string.core_designsystem_confirm),
-            soundPool = soundPool
         )
     },
     modifier = modifier,
@@ -45,7 +40,6 @@ fun GameOutDialog(
         ITextButton(
             onClick = onDismiss,
             label = stringResource(R.string.core_designsystem_dismiss),
-            soundPool = soundPool
         )
     },
     icon = null,

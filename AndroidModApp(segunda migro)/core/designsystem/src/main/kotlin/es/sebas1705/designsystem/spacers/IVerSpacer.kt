@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.spacers
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer

@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.datastore.config.DefaultValuesDS
 import es.sebas1705.models.SettingsModel
 import es.sebas1705.settings.ReadSettingsUseCase

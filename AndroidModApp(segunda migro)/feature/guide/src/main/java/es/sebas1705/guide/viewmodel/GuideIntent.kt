@@ -1,7 +1,7 @@
 package es.sebas1705.guide.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 /**
  * Sealed class that represents the possible intents for Guide Screen.

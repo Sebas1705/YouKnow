@@ -16,7 +16,7 @@ import es.sebas1705.game.quiz.composables.Running
 import es.sebas1705.game.quiz.composables.SelectionMode
 import es.sebas1705.game.quiz.viewmodel.QuizState
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 
 /**
  * Design of the Mystery Number Game.

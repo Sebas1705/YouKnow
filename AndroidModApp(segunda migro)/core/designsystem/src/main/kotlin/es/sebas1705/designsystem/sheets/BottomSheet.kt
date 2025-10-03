@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.sheets
 
-
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +20,11 @@ import kotlinx.coroutines.launch
 
 /**
  * IBottomSheet
+ *
+ * @param onDismissRequest [() -> Unit]: On dismiss request
+ * @param modifier [Modifier]: Modifier
+ * @param sheetState [SheetState]: Sheet state
+ * @param content [@Composable ColumnScope.() -> Unit]: Content
  *
  * @since 1.0.0
  * @author Sebas1705 12/09/2025

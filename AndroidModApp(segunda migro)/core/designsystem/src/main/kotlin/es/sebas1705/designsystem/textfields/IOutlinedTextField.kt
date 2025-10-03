@@ -1,8 +1,5 @@
-package es.sebas1705.youknow.core.composables.textfields
+package es.sebas1705.designsystem.textfields
 
-
-import android.content.Context
-import android.media.SoundPool
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,22 +10,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import es.sebas1705.core.designsystem.R
-import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
-import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.common.utlis.ComposablePreview
 import es.sebas1705.common.utlis.extensions.composables.disabled
-import es.sebas1705.designsystem.ComposableConstants.ICON_BUTTON_SOUND
-import es.sebas1705.designsystem.ComposableConstants.LOOP_N
-import es.sebas1705.designsystem.ComposableConstants.PRIORITY_SOUND
-import es.sebas1705.designsystem.ComposableConstants.RATE
+import es.sebas1705.core.designsystem.R
+import es.sebas1705.core.resources.Sounds
+import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
+import es.sebas1705.designsystem.texts.IText
+import es.sebas1705.domain.providers.SoundPoolProvider
+import es.sebas1705.domain.providers.play
 import es.sebas1705.ui.theme.AppTheme
 
 /**
@@ -57,10 +52,6 @@ import es.sebas1705.ui.theme.AppTheme
  * @param maxLines [Int]: Max lines
  * @param minLines [Int]: Min lines
  * @param interactionSource [MutableInteractionSource]: Interaction source
- * @param soundPool [Pair]<[SoundPool], [Float]>: Sound pool
- * @param soundRes [Int]: Sound resource
- * @param context [Context]: Context,
- * @param soundId [Int]: Sound id
  *
  * @since 1.0.0
  * @author Sebas1705 12/09/2025
@@ -90,138 +81,127 @@ fun IOutlinedTextField(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
-    soundPool: Pair<SoundPool, Float>? = null,
-    soundRes: Int = ICON_BUTTON_SOUND,
-    context: Context = LocalContext.current,
-    soundId: Int? = remember { soundPool?.first?.load(context, soundRes, PRIORITY_SOUND) }
-) = OutlinedTextField(
-    value,
-    onValueChange,
-    modifier,
-    enabled,
-    readOnly,
-    textStyle,
-    label?.let { { IText(it, style = MaterialTheme.typography.bodySmall) } },
-    placeholder?.let { { IText(it, style = textStyle) } },
-    leadingIcon?.let {
-        {
-            IStandardIconButton(
-                onClick = {
-                    soundPool?.first?.play(
-                        soundId ?: 0,
-                        soundPool.second,
-                        soundPool.second,
-                        PRIORITY_SOUND,
-                        LOOP_N,
-                        RATE
-                    )
-                    it.second()
-                },
-                contentDescription = label ?: stringResource(R.string.core_designsystem_leading_content),
-                imageVector = it.first,
-                enabled = leadingEnabled
-            )
-        }
-    },
-    trailingIcon?.let {
-        {
-            IStandardIconButton(
-                onClick = {
-                    soundPool?.first?.play(
-                        soundId ?: 0,
-                        soundPool.second,
-                        soundPool.second,
-                        PRIORITY_SOUND,
-                        LOOP_N,
-                        RATE
-                    )
-                    it.second()
-                },
-                contentDescription = label ?: stringResource(R.string.core_designsystem_trailing_content),
-                imageVector = it.first,
-                enabled = trailingEnabled
-            )
-        }
-    },
-    prefix?.let { { IText(it, style = textStyle) } },
-    suffix?.let { { IText(it, style = textStyle) } },
-    supportingText?.let { { IText(it) } },
-    isError,
-    visualTransformation,
-    keyboardOptions,
-    keyboardActions,
-    singleLine,
-    maxLines,
-    minLines,
-    interactionSource,
-    colors = OutlinedTextFieldDefaults.colors(
-        //Text
-        focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Text
-        //Container
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        errorContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer.disabled(),
-        //End Container
-        //Cursor
-        cursorColor = MaterialTheme.colorScheme.primary,
-        errorCursorColor = MaterialTheme.colorScheme.error,
-        //End Cursor
-        //Border
-        focusedBorderColor = MaterialTheme.colorScheme.primary,
-        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-        errorBorderColor = MaterialTheme.colorScheme.error,
-        disabledBorderColor = MaterialTheme.colorScheme.outline.disabled(),
-        //End Border
-        //Leading Icon
-        focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Leading Icon
-        //Trailing Icon
-        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorTrailingIconColor = MaterialTheme.colorScheme.error,
-        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Trailing Icon
-        //Label
-        focusedLabelColor = MaterialTheme.colorScheme.primary,
-        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorLabelColor = MaterialTheme.colorScheme.error,
-        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Label
-        //Placeholder
-        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Placeholder
-        //Supporting Text
-        focusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorSupportingTextColor = MaterialTheme.colorScheme.error,
-        disabledSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Supporting Text
-        //Prefix
-        focusedPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        disabledPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Prefix
-        //Suffix
-        focusedSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        disabledSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
-        //End Suffix
-        selectionColors = null,
+) {
+    //Local:
+    val context = LocalContext.current
+    val soundPool = SoundPoolProvider.getSoundPool(context)
+    OutlinedTextField(
+        value,
+        onValueChange,
+        modifier,
+        enabled,
+        readOnly,
+        textStyle,
+        label?.let { { IText(it, style = MaterialTheme.typography.bodySmall) } },
+        placeholder?.let { { IText(it, style = textStyle) } },
+        leadingIcon?.let {
+            {
+                IStandardIconButton(
+                    onClick = {
+                        soundPool.play(Sounds.ICON_BUTTON, soundPool.second)
+                        it.second()
+                    },
+                    contentDescription = label
+                        ?: stringResource(R.string.core_designsystem_leading_content),
+                    imageVector = it.first,
+                    enabled = leadingEnabled
+                )
+            }
+        },
+        trailingIcon?.let {
+            {
+                IStandardIconButton(
+                    onClick = {
+                        soundPool.play(Sounds.ICON_BUTTON, soundPool.second)
+                        it.second()
+                    },
+                    contentDescription = label
+                        ?: stringResource(R.string.core_designsystem_trailing_content),
+                    imageVector = it.first,
+                    enabled = trailingEnabled
+                )
+            }
+        },
+        prefix?.let { { IText(it, style = textStyle) } },
+        suffix?.let { { IText(it, style = textStyle) } },
+        supportingText?.let { { IText(it) } },
+        isError,
+        visualTransformation,
+        keyboardOptions,
+        keyboardActions,
+        singleLine,
+        maxLines,
+        minLines,
+        interactionSource,
+        colors = OutlinedTextFieldDefaults.colors(
+            //Text
+            focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Text
+            //Container
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            errorContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer.disabled(),
+            //End Container
+            //Cursor
+            cursorColor = MaterialTheme.colorScheme.primary,
+            errorCursorColor = MaterialTheme.colorScheme.error,
+            //End Cursor
+            //Border
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            errorBorderColor = MaterialTheme.colorScheme.error,
+            disabledBorderColor = MaterialTheme.colorScheme.outline.disabled(),
+            //End Border
+            //Leading Icon
+            focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Leading Icon
+            //Trailing Icon
+            focusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorTrailingIconColor = MaterialTheme.colorScheme.error,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Trailing Icon
+            //Label
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorLabelColor = MaterialTheme.colorScheme.error,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Label
+            //Placeholder
+            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Placeholder
+            //Supporting Text
+            focusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorSupportingTextColor = MaterialTheme.colorScheme.error,
+            disabledSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Supporting Text
+            //Prefix
+            focusedPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPrefixColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Prefix
+            //Suffix
+            focusedSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            errorSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledSuffixColor = MaterialTheme.colorScheme.onSurfaceVariant.disabled(),
+            //End Suffix
+            selectionColors = null,
+        )
     )
-)
+}
 
 @ComposablePreview
 @Composable

@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.domain.model.ui
+package es.sebas1705.models.ui
 
 
 /**

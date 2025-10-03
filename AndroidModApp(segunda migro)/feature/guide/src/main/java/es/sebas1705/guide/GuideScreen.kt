@@ -25,7 +25,6 @@ import es.sebas1705.guide.viewmodel.GuideViewModel
 @Composable
 fun GuideScreen(
     windowState: WindowState,
-    soundPool: Pair<SoundPool, Float>,
     onSuccessNavigation: () -> Unit,
 ) {
     //ViewModel:
@@ -38,7 +37,6 @@ fun GuideScreen(
     GuideDesign(
         windowState,
         guideState,
-        soundPool,
         onSuccessNavigation = {
             guideViewModel.eventHandler(GuideIntent.ChargeData {
                 onSuccessNavigation()

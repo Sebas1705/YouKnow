@@ -3,7 +3,7 @@ package es.sebas1705.retrofit.opendb.dtos
 import com.google.gson.annotations.SerializedName
 
 /**
- * DTO to represent a response from the Opentbd API
+ * DTO to represent a response from the OpenBD API
  *
  * @property responseCode [Int]: Response code of the API
  * @property questionOpendbDtos [List]<[QuestionOpendbDto]>: List of questions

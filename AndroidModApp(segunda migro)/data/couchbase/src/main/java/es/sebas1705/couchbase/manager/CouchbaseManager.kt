@@ -9,7 +9,6 @@ import com.couchbase.lite.MutableDocument
 import com.couchbase.lite.QueryBuilder
 import com.couchbase.lite.SelectResult
 import es.sebas1705.analytics.datasources.LogEventDataSource
-import es.sebas1705.common.managers.ClassLogData
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.couchbase.config.alias.DocMap
 import javax.inject.Inject
@@ -27,7 +26,7 @@ import javax.inject.Inject
 internal class CouchbaseManager @Inject constructor(
     private val database: Database,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData(), ICouchbaseManager {
+) : ICouchbaseManager {
 
     // Properties:
     private var collectionsTokens: MutableMap<String, ListenerToken?> = HashMap()
@@ -280,7 +279,7 @@ internal class CouchbaseManager @Inject constructor(
      */
     private fun logError(message: String) {
         logE(message)
-        logEventDataSource.logError(this, message)
+        logEventDataSource.logError(this.javaClass.kotlin, message)
     }
 
     /**

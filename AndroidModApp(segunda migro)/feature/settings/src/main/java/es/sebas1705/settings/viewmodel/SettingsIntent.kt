@@ -1,9 +1,8 @@
 package es.sebas1705.settings.viewmodel
 
-import es.sebas1705.common.mvi.MVIBaseIntent
+import es.sebas1705.common.classes.mvi.MVIBaseIntent
 import es.sebas1705.common.theme.ThemeContrast
 import es.sebas1705.models.SettingsModel
-import es.sebas1705.resources.games.Languages
 
 /**
  * Sealed class that represents the possible intents of the Settings Screen.

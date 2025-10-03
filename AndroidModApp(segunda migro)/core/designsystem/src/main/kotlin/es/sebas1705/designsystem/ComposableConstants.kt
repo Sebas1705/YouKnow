@@ -25,16 +25,5 @@ object ComposableConstants {
     const val MAX_GROUP = 50
 
     //Sounds:
-    const val MAX_SOUNDS_SIMULTANEITY = 100
-    const val PRIORITY_SOUND = 1
-    const val LOOP_N = 0
-    const val RATE = 1f
-    val BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_casual
-    val ICON_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_instant
-    val FAB_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.sound_bowing
-    val RADIO_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_clock
-    val NAV_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_tap
-    val GAME_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_arcade
-    val WIN_SOUND = es.sebas1705.core.resources.R.raw.sound_win
-    val LOSE_SOUND = es.sebas1705.core.resources.R.raw.sound_lose
+
 }

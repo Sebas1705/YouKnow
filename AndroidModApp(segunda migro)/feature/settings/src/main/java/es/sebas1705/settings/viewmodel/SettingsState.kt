@@ -1,8 +1,7 @@
 package es.sebas1705.settings.viewmodel
 
 
-import es.sebas1705.common.mvi.MVIBaseState
-import es.sebas1705.common.theme.ThemeContrast
+import es.sebas1705.common.classes.mvi.MVIBaseState
 import es.sebas1705.datastore.config.DefaultValuesDS
 import es.sebas1705.models.SettingsModel
 

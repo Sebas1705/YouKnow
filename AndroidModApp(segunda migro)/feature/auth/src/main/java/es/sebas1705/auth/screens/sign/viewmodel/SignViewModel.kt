@@ -2,8 +2,7 @@ package es.sebas1705.auth.screens.sign.viewmodel
 
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.sebas1705.auth.AuthUsesCases
-import es.sebas1705.common.mvi.MVIBaseViewModel
+import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

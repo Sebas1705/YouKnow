@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
 import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +31,6 @@ import es.sebas1705.ui.theme.AppTheme
 @Composable
 fun ReloadDialog(
     windowState: WindowState = WindowState.default(),
-    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
 ) = IDialog(
@@ -40,7 +38,6 @@ fun ReloadDialog(
         ITextButton(
             label = stringResource(R.string.core_designsystem_confirm),
             onClick = onConfirm,
-            soundPool = soundPool
         )
     },
     onDismissRequest = onDismiss,
@@ -48,7 +45,6 @@ fun ReloadDialog(
         ITextButton(
             label = stringResource(R.string.core_designsystem_dismiss),
             onClick = onDismiss,
-            soundPool = soundPool
         )
     },
     modifier = Modifier.fillMaxWidth(0.9f),

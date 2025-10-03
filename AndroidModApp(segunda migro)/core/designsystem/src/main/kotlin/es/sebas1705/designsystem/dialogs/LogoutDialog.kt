@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
 import android.media.SoundPool
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,6 @@ import es.sebas1705.ui.theme.AppTheme
  * Composable that displays a dialog to log out.
  *
  * @param windowState [WindowState]: State of the window.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onConfirm [Function]: Function to be executed when the user confirms the dialog.
  * @param onDismiss [Function]: Function to be executed when the user dismisses the dialog.
  *
@@ -34,7 +32,6 @@ import es.sebas1705.ui.theme.AppTheme
 @Composable
 fun LogoutDialog(
     windowState: WindowState = WindowState.default(),
-    soundPool: Pair<SoundPool, Float>? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {}
 ) = IDialog(
@@ -45,14 +42,12 @@ fun LogoutDialog(
         IFilledButton(
             label = stringResource(R.string.core_designsystem_confirm),
             onClick = onConfirm,
-            soundPool = soundPool
         )
     },
     dismissButton = {
         IFilledButton(
             label = stringResource(R.string.core_designsystem_dismiss),
             onClick = onDismiss,
-            soundPool = soundPool
         )
     },
     title = {

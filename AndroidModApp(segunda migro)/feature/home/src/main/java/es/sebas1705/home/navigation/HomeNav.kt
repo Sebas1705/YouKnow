@@ -19,7 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.extensions.composables.navToTab
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.home.chat.ChatScreen
 import es.sebas1705.home.groups.GroupsScreen
 import es.sebas1705.home.main.MainScreen

@@ -12,7 +12,7 @@ import es.sebas1705.game.wordpass.composables.Running
 import es.sebas1705.game.wordpass.composables.SelectionMode
 import es.sebas1705.game.wordpass.viewmodel.WordPassState
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.youknow.core.composables.dialogs.LoadingDialog
+import es.sebas1705.designsystem.dialogs.LoadingDialog
 
 /**
  * Design of the Mystery Number Game.

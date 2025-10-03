@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.firestore.repository.FirestoreRepository
 
 /**
@@ -20,7 +20,7 @@ class ContainsUser(
         onLoading: () -> Unit = {},
         onSuccess: (Boolean) -> Unit,
         onError: (String) -> Unit
-    ) = firestoreRepository.containsUser(firebaseId).catcher(
+    ) = firestoreRepository.containsUser(firebaseId).collect(
         onLoading,
         onSuccess,
         onError

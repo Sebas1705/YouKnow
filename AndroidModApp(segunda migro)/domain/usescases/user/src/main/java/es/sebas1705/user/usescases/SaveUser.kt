@@ -1,7 +1,7 @@
 package es.sebas1705.user.usescases
 
 
-import es.sebas1705.common.utlis.extensions.types.catcher
+import es.sebas1705.common.utlis.extensions.types.collect
 import es.sebas1705.mappers.toUserDocument
 import es.sebas1705.models.social.UserModel
 import es.sebas1705.firestore.repository.FirestoreRepository
@@ -25,5 +25,5 @@ class SaveUser(
     ) = firestoreRepository.saveUser(
         userModel.firebaseId,
         userModel.toUserDocument()
-    ).catcher(onLoading, onEmptySuccess, onError)
+    ).collect(onLoading, onEmptySuccess, onError)
 }

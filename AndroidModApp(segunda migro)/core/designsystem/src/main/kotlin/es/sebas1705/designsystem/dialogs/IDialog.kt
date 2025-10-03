@@ -1,6 +1,5 @@
 package es.sebas1705.designsystem.dialogs
 
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -26,7 +25,7 @@ import es.sebas1705.ui.theme.AppTheme
  * @param text [(() -> Unit)?]: Text
  *
  * @since 1.0.0
- * @author Sebastián Ramiro Entrerrios
+ * @author Sebas1705 21/09/2025
  */
 @Composable
 fun IDialog(
@@ -69,6 +68,5 @@ private fun Preview() = AppTheme {
         title = { IText("Hello, World!") },
         text = { IText("This is a dialog") },
     )
-
 }
 

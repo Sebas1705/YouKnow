@@ -1,14 +1,16 @@
 package es.sebas1705.core.resources
 
-enum class Sounds(
-    val resourceId: Int
-) {
-    CLK_ARCADE(R.raw.click_arcade),
-    CLK_CASUAL(R.raw.click_casual),
-    CLK_CLOCK(R.raw.click_clock),
-    CLK_INSTANT(R.raw.click_instant),
-    CLK_TAP(R.raw.click_tap),
-    SND_BOWING(R.raw.sound_bowing),
-    SND_WIN(R.raw.sound_win),
-    SND_LOSE(R.raw.sound_lose),
+/**
+ * Enum class to define the different sounds used in the app.
+ *
+ * @since 0.1.0
+ * @author Sebas1705 03/07/2025
+ */
+enum class Sounds(val soundRes: Int) {
+    BUTTON(R.raw.click_casual),
+    ICON_BUTTON(R.raw.click_instant),
+    FAB_BUTTON(R.raw.sound_bowing),
+    RADIO_BUTTON(R.raw.click_clock),
+    NAV_BUTTON(R.raw.click_tap),
+    GAME_BUTTON(R.raw.click_arcade)
 }

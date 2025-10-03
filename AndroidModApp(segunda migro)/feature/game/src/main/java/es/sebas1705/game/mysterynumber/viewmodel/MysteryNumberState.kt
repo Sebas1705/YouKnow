@@ -4,7 +4,7 @@ package es.sebas1705.game.mysterynumber.viewmodel
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
 import es.sebas1705.common.games.mysterynumber.MysteryNumberStatus
-import es.sebas1705.common.mvi.MVIBaseState
+import es.sebas1705.common.classes.mvi.MVIBaseState
 import es.sebas1705.models.games.NumberModel
 
 /**
