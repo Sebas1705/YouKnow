@@ -8,6 +8,7 @@ import es.sebas1705.authentication.config.SettingsAuth
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
+import es.sebas1705.common.utlis.extensions.types.logE
 import javax.inject.Inject
 
 /**
@@ -23,15 +24,17 @@ import javax.inject.Inject
 class UserAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData() {
+) {
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsAuth.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //Tasks:
 

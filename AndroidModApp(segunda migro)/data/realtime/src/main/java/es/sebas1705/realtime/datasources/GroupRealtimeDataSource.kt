@@ -8,6 +8,7 @@ import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
+import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.realtime.config.SettingsRT
 import es.sebas1705.realtime.jsons.GroupJson
 import javax.inject.Inject
@@ -24,15 +25,17 @@ import javax.inject.Inject
 class GroupRealtimeDataSource @Inject constructor(
     private val database: FirebaseDatabase,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData() {
+) {
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsRT.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsRT.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //References:
     private val groupsReference = database.getReference(SettingsRT.GROUPS_REFERENCE)

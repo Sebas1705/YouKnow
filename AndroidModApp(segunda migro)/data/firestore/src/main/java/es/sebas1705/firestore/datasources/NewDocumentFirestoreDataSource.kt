@@ -5,6 +5,7 @@ import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataFlow
+import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.NewDocument
 import javax.inject.Inject
@@ -21,15 +22,17 @@ import javax.inject.Inject
 class NewDocumentFirestoreDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData() {
+) {
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsFS.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsFS.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //References:
     private val newsReference = firestore.collection(SettingsFS.NEWS_COLLECTION_NAME)

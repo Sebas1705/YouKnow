@@ -1,8 +1,8 @@
 package es.sebas1705.common.utlis.extensions.types
 
 import android.util.Log
-import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.states.DataState
+import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.utlis.alias.DataFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -80,7 +80,6 @@ fun Any.logW(message: String) = Log.w(this::class.java.simpleName, message)
  */
 fun Any.logWTF(message: String) = Log.wtf(this::class.java.simpleName, message)
 
-
 /**
  * Function to create a FlowResponse with loading, success and error states.
  *
@@ -91,16 +90,16 @@ fun Any.logWTF(message: String) = Log.wtf(this::class.java.simpleName, message)
  * @since 0.1.0
  * @author Sebas1705 22/07/2025
  */
-fun <T> Any.resourceFlow(
-    block: suspend () -> T?,
+fun <T> Any.dataFlow(
     loggerAction: (clazz: KClass<*>, message: String) -> Unit = { _, _ -> },
+    block: suspend () -> T?
 ) : DataFlow<T> = flow {
     emit(DataState.Loading)
     val data = block()
     emit(DataState.Success(data!!))
 }.catch {
     emit(DataState.Error(
-        clazz = this.javaClass.kotlin,
+        clazz = this@dataFlow.javaClass.kotlin,
         type = ErrorDataType.fromThrowable(it),
         message = it.message ?: "Unknown error",
         loggerAction = loggerAction

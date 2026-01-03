@@ -8,6 +8,7 @@ import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
+import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.UserDocument
 import javax.inject.Inject
@@ -24,18 +25,20 @@ import javax.inject.Inject
 class UserDocumentFirestoreDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData() {
+) {
 
     //Listeners:
     private var userListener: ListenerRegistration? = null
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsFS.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsFS.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //References:
     private val usersReference = firestore.collection(SettingsFS.USERS_COLLECTION_NAME)

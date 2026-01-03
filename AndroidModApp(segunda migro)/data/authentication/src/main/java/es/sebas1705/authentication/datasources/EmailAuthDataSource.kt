@@ -1,19 +1,18 @@
 package es.sebas1705.authentication.datasources
 
-import androidx.credentials.CredentialManager
 import com.google.firebase.auth.FirebaseAuth
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.authentication.config.SettingsAuth
 import es.sebas1705.common.classes.TaskFlow
-import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.states.DataState
+import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
+import es.sebas1705.common.utlis.extensions.types.logE
 import javax.inject.Inject
 
 /**
  * Authentication data source for email authentication operations.
  *
- * @property credentialManager [CredentialManager]: credential manager to get the google credential
  * @property firebaseAuth [FirebaseAuth]: firebase authentication instance
  * @property logEventDataSource [LogEventDataSource]: data source for logging events
  *
@@ -23,15 +22,17 @@ import javax.inject.Inject
 class EmailAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val logEventDataSource: LogEventDataSource
-) : ClassLogData() {
+) {
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsAuth.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //Tasks:
     /**

@@ -32,18 +32,20 @@ class GoogleAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val logEventDataSource: LogEventDataSource,
     @param:ApplicationContext private val context: Context
-) : ClassLogData() {
+) {
 
     //Properties:
     private var credentialManager: CredentialManager? = null
 
     //Managers:
     private val taskFlow = TaskFlow(
-        this,
-        logEventDataSource::logError,
+        this.javaClass.kotlin,
         SettingsAuth.ERROR_GENERIC_MESSAGE_FAIL,
         SettingsAuth.ERROR_GENERIC_MESSAGE_EX
-    )
+    ) { clazz, error ->
+        logE(error)
+        logEventDataSource.logError(clazz, error)
+    }
 
     //Tasks:
     /**
