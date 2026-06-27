@@ -88,7 +88,6 @@ fun GroupsDesign(
             onDismiss = {
                 createFlag = false
             },
-            soundPool = soundPool
         )
     }
 
@@ -160,7 +159,6 @@ fun GroupsDesign(
                     showSearch = !showSearch
                 },
                 onValueChange = { search = it },
-                soundPool = soundPool
             )
             else Column(
                 modifier = Modifier
@@ -174,13 +172,11 @@ fun GroupsDesign(
                     imageVector = Icons.Filled.Add,
                     modifier = Modifier
                         .padding(bottom = SmallPadding),
-                    soundPool = soundPool
                 )
                 IFAB(
                     onClick = { showSearch = !showSearch },
                     contentDescription = stringResource(R.string.feature_home_search_enabled),
                     imageVector = Icons.Filled.Search,
-                    soundPool = soundPool
                 )
             }
         }
