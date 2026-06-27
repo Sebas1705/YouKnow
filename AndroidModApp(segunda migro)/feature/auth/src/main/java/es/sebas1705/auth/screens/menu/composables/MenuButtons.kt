@@ -16,17 +16,6 @@ import es.sebas1705.designsystem.buttons.common.IOutlinedButton
 import es.sebas1705.designsystem.spacers.IVerSpacer
 import es.sebas1705.feature.auth.R
 
-/**
- * Composable that contains the buttons to navigate to the Sign Up, Google Log In and Email Log In screens.
- *
- * @param modifier [Modifier]: Modifier to apply to the buttons.
- * @param onSignButtonAction () -> Unit: Function to navigate to the Sign Up screen.
- * @param onEmailLogButtonAction () -> Unit: Function to navigate to the Email Log In screen.
- * @param onGoogleLogButtonAction () -> Unit: Function to navigate to the Google Log In screen.
- *
- * @author Sebas1705 12/09/2025
- * @since 1.0.0
- */
 @Composable
 fun ColumnScope.MenuButtons(
     modifier: Modifier,
@@ -39,7 +28,6 @@ fun ColumnScope.MenuButtons(
         modifier = modifier.height(48.dp),
         label = stringResource(id = R.string.feature_auth_sign_up),
         onClick = onSignButtonAction,
-        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
@@ -47,7 +35,6 @@ fun ColumnScope.MenuButtons(
         label = stringResource(id = R.string.feature_auth_google_log),
         imageResource = R.drawable.google,
         onClick = onGoogleLogButtonAction,
-        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IOutlinedButton(
@@ -55,6 +42,5 @@ fun ColumnScope.MenuButtons(
         label = stringResource(id = R.string.feature_auth_email_log),
         imageVector = Icons.Default.Email,
         onClick = onEmailLogButtonAction,
-        soundPool = soundPool
     )
 }
