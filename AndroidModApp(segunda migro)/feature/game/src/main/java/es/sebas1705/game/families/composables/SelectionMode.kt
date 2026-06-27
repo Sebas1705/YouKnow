@@ -78,7 +78,6 @@ fun SelectionMode(
                         onClick = { onSelectMode(mode) },
                         label = stringResource(id = mode.strRes),
                         imageVector = mode.icon,
-                        soundPool = soundPool
                     )
                 }
             else
@@ -102,7 +101,6 @@ fun SelectionMode(
                             modifier = Modifier
                                 .width(width)
                                 .fillMaxHeight(0.25f),
-                            soundPool = soundPool
                         )
                         mode2?.let {
                             IFilledTonalButton(
@@ -112,7 +110,6 @@ fun SelectionMode(
                                 modifier = Modifier
                                     .width(width)
                                     .fillMaxHeight(0.25f),
-                                soundPool = soundPool
                             )
                         }
                     }
