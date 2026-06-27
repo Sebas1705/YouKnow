@@ -236,7 +236,6 @@ fun MainDesign(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = MediumPadding, bottom = MediumPadding),
-            soundPool = soundPool
         )
     }
 
