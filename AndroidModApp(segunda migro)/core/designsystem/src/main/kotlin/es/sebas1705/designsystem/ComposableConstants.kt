@@ -2,6 +2,7 @@ package es.sebas1705.designsystem
 
 object ComposableConstants {
     const val MAX_GROUP = 50
+    const val MAX_SOUNDS_SIMULTANEITY = 5
 
     // SoundPool playback parameters:
     const val PRIORITY_SOUND = 1
