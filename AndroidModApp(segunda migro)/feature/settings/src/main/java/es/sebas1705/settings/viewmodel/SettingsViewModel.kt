@@ -1,10 +1,6 @@
 package es.sebas1705.settings.viewmodel
 
-
-import android.app.Application
-import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.datastore.config.DefaultValuesDS
 import es.sebas1705.models.SettingsModel
@@ -13,22 +9,11 @@ import es.sebas1705.settings.UpdateSettingsUseCase
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-/**
- * ViewModel for Settings Screen that will handle the UI logic and the data flow.
- *
- * @param readSettingsUseCase [ReadSettingsUseCase]: Use case to read the settings.
- * @param updateSettingsUseCase [UpdateSettingsUseCase]: Use case to update the settings
- * @param ctx [Application]: Application context.
- *
- * @author Sebas1705 12/09/2025
- * @since 1.0.0
- */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val readSettingsUseCase: ReadSettingsUseCase,
     private val updateSettingsUseCase: UpdateSettingsUseCase,
-    @param:ApplicationContext val ctx: Context
-) : MVIBaseViewModel<SettingsState, SettingsIntent>(ctx) {
+) : MVIBaseViewModel<SettingsState, SettingsIntent>() {
 
     override fun initState(): SettingsState = SettingsState.default()
 
@@ -42,7 +27,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    //Actions:
     private fun readSettings() = execute(Dispatchers.IO) {
         readSettingsUseCase().collect { settings ->
             updateUi {
@@ -73,6 +57,3 @@ class SettingsViewModel @Inject constructor(
         )
     }
 }
-
-
-
