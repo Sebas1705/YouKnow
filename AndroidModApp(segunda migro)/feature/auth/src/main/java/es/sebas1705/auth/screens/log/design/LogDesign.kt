@@ -91,7 +91,6 @@ fun LogDesign(
             ErrorInfoDialog(
                 errorText = error,
                 onConfirm = { errorFlag = false },
-                soundPool = soundPool
             )
         else if (passwordFlag)
             ForgotPasswordDialog(
@@ -103,7 +102,6 @@ fun LogDesign(
                     keyboard?.hide()
                     passwordFlag = false
                 },
-                soundPool = soundPool
             )
 
         //Body:
