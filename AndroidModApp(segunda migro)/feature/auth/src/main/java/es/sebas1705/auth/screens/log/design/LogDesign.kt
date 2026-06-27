@@ -164,7 +164,6 @@ fun LogDesign(
                                 errorFlag = true
                             }
                         },
-                        soundPool = soundPool
                     )
                     IVerSpacer(if (windowState.isImeVisible) 0.2f else 0.7f)
                 }
