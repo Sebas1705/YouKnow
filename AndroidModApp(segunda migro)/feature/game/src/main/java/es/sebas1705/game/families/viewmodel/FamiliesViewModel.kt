@@ -4,6 +4,7 @@ package es.sebas1705.game.families.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.games.Category
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.families.FamiliesMode
