@@ -10,19 +10,6 @@ import es.sebas1705.designsystem.spacers.IVerSpacer
 import es.sebas1705.designsystem.textfields.IEmailTextField
 import es.sebas1705.designsystem.textfields.IPasswordTextField
 
-/**
- * Component that contains the email and password fields
- *
- * @param email String: email value
- * @param password String: password value
- * @param onEmailChange (String) -> Unit: action to be executed when the email field changes
- * @param onPasswordChange (String) -> Unit: action to be executed when the password field changes
- * @param modifier Modifier: modifier to be applied to the fields
- * @param soundPool Pair<SoundPool, Float>: sound pool to play sounds
- *
- * @author: Sebas1705 12/09/2025
- * @since 1.0.0
- */
 @Composable
 fun ColumnScope.EmailAndPassFields(
     email: String,
@@ -36,13 +23,11 @@ fun ColumnScope.EmailAndPassFields(
         modifier = modifier,
         value = email,
         onValueChange = onEmailChange,
-        soundPool = soundPool
     )
     IVerSpacer(height = SmallPadding)
     IPasswordTextField(
         modifier = modifier,
         value = password,
         onValueChange = onPasswordChange,
-        soundPool = soundPool
     )
 }
