@@ -120,7 +120,6 @@ fun Custom(
                                     IRadioButton(
                                         selected = difficulty.intValue == it.ordinal,
                                         onClick = { difficulty.intValue = it.ordinal },
-                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -139,7 +138,6 @@ fun Custom(
                                     IRadioButton(
                                         selected = difficulty.intValue == it.ordinal,
                                         onClick = { difficulty.intValue = it.ordinal },
-                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -158,7 +156,6 @@ fun Custom(
                     onClick = { onStartGame(difficultyEnum, lives) },
                     label = stringResource(R.string.feature_game_start_game),
                     imageVector = Icons.Filled.Start,
-                    soundPool = soundPool
                 )
                 MediumSpacer()
             }
