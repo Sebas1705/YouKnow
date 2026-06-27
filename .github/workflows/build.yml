@@ -30,6 +30,21 @@ jobs:
         with:
           gradle-version: "8.13"
 
+      - name: Create dummy secrets.properties and keystore
+        run: |
+          cat > app/secrets.properties <<SECRETS
+          signing_keystore_password=ci_placeholder
+          signing_key_alias_release=release
+          signing_key_alias_debug=debug
+          SECRETS
+          keytool -genkeypair -v \
+            -keystore app/keystore.jks \
+            -alias debug \
+            -keyalg RSA -keysize 2048 -validity 1 \
+            -storepass ci_placeholder \
+            -keypass ci_placeholder \
+            -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=US" 2>/dev/null
+
       - name: Run Detekt
         run: gradle detekt --continue
 
