@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.buildlogic.credential)
     alias(libs.plugins.buildlogic.unit.test)
     alias(libs.plugins.buildlogic.lifecycle)
+    alias(libs.plugins.buildlogic.navigation)
 }
 
 android {
