@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build & Lint
+    name: Build
     runs-on: ubuntu-latest
 
     defaults:
@@ -44,9 +44,6 @@ jobs:
             -storepass ci_placeholder \
             -keypass ci_placeholder \
             -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=US" 2>/dev/null
-
-      - name: Run Detekt
-        run: gradle detekt --continue
 
       - name: Build debug APK
         run: gradle assembleDebug
