@@ -26,7 +26,7 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun authWithGoogleAction(intent: MenuIntent.SignWithGoogle) = execute(Dispatchers.IO) {
-        authUsesCases.signGoogle(intent.context,
+        authUsesCases.signGoogle(
             onLoading = { startLoading() },
             onSuccess = { firebaseId ->
                 execute(Dispatchers.IO) {
