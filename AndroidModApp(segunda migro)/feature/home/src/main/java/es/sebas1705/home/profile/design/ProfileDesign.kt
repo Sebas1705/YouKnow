@@ -83,7 +83,6 @@ fun ProfileDesign(
                 onDismiss = {
                     signOutDialog = false
                 },
-                soundPool = soundPool
             )
         else if (changePhotoDialog) UrlRequestDialog(
             windowState = windowState,
@@ -92,7 +91,6 @@ fun ProfileDesign(
                 onChangePhoto(it)
             },
             onDismissAction = { changePhotoDialog = false },
-            soundPool = soundPool
         )
         else if (changeNicknameDialog) NickDialog(
             nickname = nickname,
@@ -102,12 +100,10 @@ fun ProfileDesign(
                 onChangeNickname(it)
             },
             onDismiss = { changeNicknameDialog = false },
-            soundPool = soundPool
         )
         else if (changePassDialog)
             ResetPasswordDialog(
                 email = homeState.userModel?.email ?: "",
-                soundPool = soundPool,
                 windowState,
                 onConfirm = {
                     changePassDialog = false
@@ -143,7 +139,6 @@ fun ProfileDesign(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = MediumPadding, bottom = MediumPadding),
-            soundPool = soundPool
         )
     }
 }
