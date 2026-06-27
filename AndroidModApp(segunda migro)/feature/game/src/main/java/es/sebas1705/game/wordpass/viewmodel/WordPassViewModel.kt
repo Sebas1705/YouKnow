@@ -4,6 +4,7 @@ package es.sebas1705.game.wordpass.viewmodel
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.games.wordpass.Letter
 import es.sebas1705.common.games.wordpass.WordPassMode
 import es.sebas1705.common.games.wordpass.WordPassStatus
