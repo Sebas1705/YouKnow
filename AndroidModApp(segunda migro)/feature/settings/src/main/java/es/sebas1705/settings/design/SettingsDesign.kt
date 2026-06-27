@@ -104,7 +104,6 @@ fun SettingsDesign(
                 .align(Alignment.TopStart)
                 .padding(MediumPadding)
                 .size(windowState.sizeFilter(48.dp, 56.dp, 64.dp)),
-            soundPool = soundPool
         )
         Column(
             modifier = Modifier
@@ -172,17 +171,14 @@ fun SettingsDesign(
                 IFilledButton(
                     label = stringResource(R.string.feature_settings_low_contrast),
                     onClick = { onContrastClick(ThemeContrast.Low) },
-                    soundPool = soundPool
                 )
                 IFilledButton(
                     label = stringResource(R.string.feature_settings_medium_contrast),
                     onClick = { onContrastClick(ThemeContrast.Medium) },
-                    soundPool = soundPool
                 )
                 IFilledButton(
                     label = stringResource(R.string.feature_settings_high_contrast),
                     onClick = { onContrastClick(ThemeContrast.High) },
-                    soundPool = soundPool
                 )
             }
             IVerSpacer(0.1f)
@@ -200,7 +196,6 @@ fun SettingsDesign(
                     .padding(vertical = MediumPadding),
                 valueRes = settingsState.settings.language.strRes,
                 onValueChange = { },
-                soundPool = soundPool
             ) { onChanged ->
                 Languages.entries.forEach {
                     DropdownMenuItem(
@@ -223,7 +218,6 @@ fun SettingsDesign(
                 label = stringResource(R.string.feature_settings_reset_defaults),
                 imageVector = Icons.Default.Restore,
                 onClick = onRestoreClick,
-                soundPool = soundPool
             )
             IVerSpacer(0.4f)
         }
