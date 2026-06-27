@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.buildlogic.application)
     alias(libs.plugins.buildlogic.firebase)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 val secretsPropertiesFile = rootProject.file("./app/secrets.properties")
@@ -64,7 +65,6 @@ android {
         compose = true
     }
 
-
     configurations.all {
         resolutionStrategy {
             force("org.jetbrains:annotations:23.0.0")
@@ -87,7 +87,6 @@ android {
             resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
-
 }
 
 dependencies {
