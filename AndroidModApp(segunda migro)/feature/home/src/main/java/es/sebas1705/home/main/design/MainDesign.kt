@@ -84,7 +84,6 @@ fun MainDesign(
         else if (reloadDialog)
             ReloadDialog(
                 windowState,
-                soundPool,
                 onConfirm = {
                     reloadDialog = false
                     onReloadButton()
