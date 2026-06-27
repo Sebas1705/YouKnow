@@ -11,15 +11,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.analytics.AnalyticsUsesCases
 import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.analytics.config.EventLog
-import es.sebas1705.common.managers.LogType
 import es.sebas1705.common.classes.mvi.MVIBaseIntent
 import es.sebas1705.common.classes.mvi.MVIBaseState
 import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.theme.ThemeContrast
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
-import es.sebas1705.common.utlis.extensions.types.log
+import es.sebas1705.common.utlis.extensions.types.logI
 import es.sebas1705.main.MainIntent.ChargeData
 import es.sebas1705.main.MainIntent.FinishSplashScreen
+import es.sebas1705.datastore.config.DefaultValuesDS
 import es.sebas1705.settings.SettingUsesCases
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class MainViewModel @Inject constructor(
      */
     private fun chargeData() = execute(Dispatchers.IO) {
         try {
-            log("Start chargeData", LogType.INFO)
+            logI("Start chargeData")
             val time = System.currentTimeMillis()
             setConnectivityCallback()
             execute(Dispatchers.IO) {
@@ -96,7 +96,7 @@ class MainViewModel @Inject constructor(
                 settingUsesCases.readFirstTime().collect { data ->
                     val millis = System.currentTimeMillis() - time
                     val millisLog = System.currentTimeMillis()
-                    log("End chargeData", LogType.INFO)
+                    logI("End chargeData")
                     analyticsUsesCases.logEvent(
                         EventLog.ChargeTime,
                         Bundle().apply {
