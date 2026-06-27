@@ -14,16 +14,6 @@ import androidx.compose.ui.unit.dp
 import es.sebas1705.designsystem.buttons.common.ITextButton
 import es.sebas1705.feature.auth.R
 
-/**
- * Component that contains the forgot password and wanna register buttons
- *
- * @param soundPool [Pair<SoundPool, Float>]: sound pool to play sounds
- * @param onForgotButton () -> Unit: action to be executed when the forgot password button is clicked
- * @param onRegisterButton () -> Unit: action to be executed when the wanna register button is clicked
- *
- * @author Sebas1705 12/09/2025
- * @since 1.0.0
- */
 @Composable
 fun ForgotAndRegisterButtons(
     soundPool: Pair<SoundPool, Float>? = null,
@@ -36,7 +26,6 @@ fun ForgotAndRegisterButtons(
         ITextButton(
             label = stringResource(id = R.string.feature_auth_forgot_password),
             onClick = onForgotButton,
-            soundPool = soundPool
         )
         VerticalDivider(
             modifier = Modifier.height(30.dp),
@@ -45,7 +34,6 @@ fun ForgotAndRegisterButtons(
         ITextButton(
             label = stringResource(id = R.string.feature_auth_wanna_register),
             onClick = onRegisterButton,
-            soundPool = soundPool
         )
     }
 }
