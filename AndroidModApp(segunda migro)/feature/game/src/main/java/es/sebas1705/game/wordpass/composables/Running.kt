@@ -127,7 +127,6 @@ fun Running(
                         label = stringResource(R.string.feature_game_guest_response),
                         placeholder = stringResource(R.string.feature_game_guest_response),
                         modifier = Modifier.fillMaxWidth(0.6f),
-                        soundPool = soundPool
                     )
                     ITextButton(
                         onClick = {
@@ -135,7 +134,6 @@ fun Running(
                             definition = 0
                         },
                         label = stringResource(R.string.feature_game_try_word),
-                        soundPool = soundPool
                     )
                 }
             }
@@ -155,7 +153,6 @@ fun Running(
                         onClick = {
                             definition = (definition - 1).coerceAtLeast(0)
                         },
-                        soundPool = soundPool
                     )
                     Title(
                         modifier = Modifier.fillMaxWidth(0.7f),
@@ -168,7 +165,6 @@ fun Running(
                         onClick = {
                             definition = (definition + 1).coerceAtMost(word.definitions.size - 1)
                         },
-                        soundPool = soundPool
                     )
 
                 }
