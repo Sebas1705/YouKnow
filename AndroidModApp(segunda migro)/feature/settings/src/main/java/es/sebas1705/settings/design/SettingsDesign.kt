@@ -1,6 +1,5 @@
 package es.sebas1705.settings.design
 
-import android.media.SoundPool
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -67,7 +66,6 @@ fun SettingsDesign(
     windowState: WindowState = WindowState.default(),
     settingsState: SettingsState = SettingsState.default(),
     isLoading: Boolean = false,
-    soundPool: Pair<SoundPool, Float>? = null,
     onBack: () -> Unit = { },
     onMusicVolumeSlideBarChange: (Float) -> Unit = { },
     onSoundVolumeSliderBarChange: (Float) -> Unit = { },
