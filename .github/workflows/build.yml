@@ -25,11 +25,13 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
 
-      - name: Grant execute permission to gradlew
-        run: chmod +x gradlew
+      - name: Regenerate Gradle wrapper
+        run: gradle wrapper --gradle-version 8.9
 
       - name: Run Detekt
         run: ./gradlew detekt --continue
