@@ -95,7 +95,6 @@ fun SignDesign(
             ErrorInfoDialog(
                 errorText = error,
                 onConfirm = { errorFlag = false },
-                soundPool = soundPool
             )
         }
 
@@ -164,7 +163,6 @@ fun SignDesign(
                                 activateError("$notMatchErrorText ($who)")
                             }
                         },
-                        soundPool = soundPool
                     )
                 }
             }
