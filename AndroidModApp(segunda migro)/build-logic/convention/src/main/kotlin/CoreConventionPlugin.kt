@@ -17,6 +17,7 @@ class CoreConventionPlugin : Plugin<Project> {
                 apply("buildlogic.android.compose")
                 apply("buildlogic.android.material")
                 apply("org.jetbrains.kotlin.plugin.serialization")
+                apply("buildlogic.android.jacoco")
             }
 
             dependencies {
