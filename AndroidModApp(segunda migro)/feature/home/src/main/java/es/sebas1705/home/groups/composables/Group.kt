@@ -103,7 +103,6 @@ fun Group(
                         contentDescription = "Out",
                         modifier = Modifier.padding(SmallestPadding),
                         imageVector = Icons.Default.Output,
-                        soundPool = soundPool
                     )
                 }
                 IHorDivider(
@@ -152,14 +151,12 @@ fun Group(
                             contentDescription = stringResource(R.string.feature_home_view_profile),
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Search,
-                            soundPool = soundPool
                         )
                         if (groupLeader == firebaseId && firebaseId != memberId) IFilledIconButton(
                             onClick = { onKickButton(memberId) },
                             contentDescription = stringResource(R.string.feature_home_kick_out),
                             modifier = Modifier.padding(SmallestPadding),
                             imageVector = Icons.Filled.Delete,
-                            soundPool = soundPool
                         )
                     },
                     modifier = Modifier.padding(bottom = SmallPadding)
