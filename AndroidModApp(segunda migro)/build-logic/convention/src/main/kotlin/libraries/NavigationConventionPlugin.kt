@@ -18,6 +18,7 @@ class NavigationConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(libs.findLibrary("navigation3-runtime").get())
                 implementation(libs.findLibrary("navigation3-ui").get())
+                implementation(libs.findLibrary("navigation-compose").get())
             }
         }
     }
