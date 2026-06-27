@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel() {
-    private val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initState()) }
+    protected val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initState()) }
     val uiState: StateFlow<S> by lazy { _uiState.asStateFlow() }
 
     abstract fun initState(): S
