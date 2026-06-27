@@ -44,6 +44,11 @@ jobs:
           signing_keystore_password=ci_placeholder
           signing_key_alias_release=release
           signing_key_alias_debug=debug
+          QUIZ_API_URL_DEV=https://example.com
+          QUIZ_API_URL_DEMO=https://example.com
+          QUIZ_API_URL_BETA=https://example.com
+          QUIZ_API_URL_ALPHA=https://example.com
+          QUIZ_API_URL_PRO=https://example.com
           SECRETS
 
           keytool -genkeypair -v \
@@ -64,13 +69,11 @@ jobs:
             "client": [
               {
                 "client_info": {
-                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
-                  "android_client_info": {
-                    "package_name": "es.sebas1705.youknow"
-                  }
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000001",
+                  "android_client_info": { "package_name": "es.sebas1705.youknow.alpha.debug" }
                 },
                 "oauth_client": [],
-                "api_key": [{ "current_key": "ci_placeholder_key" }],
+                "api_key": [{ "current_key": "ci_placeholder" }],
                 "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
               }
             ],
@@ -78,5 +81,5 @@ jobs:
           }
           JSON
 
-      - name: Build debug APK
-        run: gradle assembleDebug
+      - name: Build Alpha debug APK
+        run: gradle assembleAlphaDebug
