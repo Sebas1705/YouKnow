@@ -14,6 +14,13 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     protected val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initState()) }
     val uiState: StateFlow<S> by lazy { _uiState.asStateFlow() }
 
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
+    init { onInit() }
+
+    open fun onInit() {}
+
     abstract fun initState(): S
     abstract fun intentHandler(intent: I)
 
@@ -21,6 +28,8 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     fun eventHandler(intent: I) = intentHandler(intent)
 
     protected fun updateUi(transform: (S) -> S) { _uiState.update(transform) }
+
+    protected fun setLoading(value: Boolean) { _loading.value = value }
 
     protected fun execute(dispatcher: CoroutineDispatcher = Dispatchers.Main, action: suspend () -> Unit) {
         viewModelScope.launch(dispatcher) { action() }
