@@ -54,7 +54,6 @@ fun GameNav(
             onOutGameNavigation()
         },
         onDismiss = { outFlag = false },
-        soundPool = soundPool,
     )
 
     when (gameIndex) {
