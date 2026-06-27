@@ -56,16 +56,11 @@ fun <T> WindowAdaptiveInfo.filterHeight(
 /**
  * Determines the appropriate navigation suite type based on the window's width size class.
  *
- * This extension property follows Material Design's adaptive layout guidelines:
- * - **Compact width:** Suggests a bottom NavigationBar.
- * - **Medium width:** Suggests a side NavigationRail.
- * - **Expanded width:** Suggests a permanent NavigationDrawer.
- *
  * @receiver The [WindowAdaptiveInfo] from which to derive the navigation type.
  * @return The calculated [NavigationSuiteType] for the current window size.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025 // Updated on 02/10/2025
+ * @author Sebas1705 09/09/2025
  */
 val WindowAdaptiveInfo.navigationSuiteType: NavigationSuiteType
     get() = this.filterWidth(
@@ -73,3 +68,19 @@ val WindowAdaptiveInfo.navigationSuiteType: NavigationSuiteType
         medium = NavigationSuiteType.NavigationRail,
         expanded = NavigationSuiteType.NavigationDrawer
     )
+
+/**
+ * Extension function to determine the layout type based on the WindowAdaptiveInfo.
+ *
+ * @receiver [WindowAdaptiveInfo]: The adaptive info to check.
+ *
+ * @return [NavigationSuiteType]: The type of navigation suite.
+ *
+ * @since 0.1.0
+ * @author Sebas1705 09/09/2025
+ */
+fun WindowAdaptiveInfo.calcLayoutType(): NavigationSuiteType = this.filterWidth(
+    compact = NavigationSuiteType.NavigationBar,
+    medium = NavigationSuiteType.NavigationRail,
+    expanded = NavigationSuiteType.NavigationDrawer
+)
