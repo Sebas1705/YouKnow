@@ -141,7 +141,6 @@ fun Running(
                             },
                             label = (if (plus) "+" else "-") + Numbers.entries[it].str,
                             modifier = Modifier.padding(SmallestPadding),
-                            soundPool = soundPool
                         )
                     }
                 }
@@ -153,7 +152,6 @@ fun Running(
                     },
                     label = stringResource(R.string.feature_game_minus_plus),
                     modifier = Modifier.padding(SmallestPadding),
-                    soundPool = soundPool
                 )
                 IFilledButton(
                     onClick = {
@@ -161,7 +159,6 @@ fun Running(
                     },
                     label = stringResource(R.string.feature_game_try_number),
                     modifier = Modifier.padding(MediumPadding),
-                    soundPool = soundPool
                 )
             }
             stickyHeader {
