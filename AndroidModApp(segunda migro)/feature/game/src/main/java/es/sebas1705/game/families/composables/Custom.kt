@@ -130,7 +130,6 @@ fun Custom(
                                     IRadioButton(
                                         selected = difficulty == it.ordinal,
                                         onClick = { difficulty = it.ordinal },
-                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -149,7 +148,6 @@ fun Custom(
                                     IRadioButton(
                                         selected = difficulty == it.ordinal,
                                         onClick = { difficulty = it.ordinal },
-                                        soundPool = soundPool
                                     )
                                     IText(
                                         text = stringResource(it.strRes),
@@ -179,7 +177,6 @@ fun Custom(
                         category.intValue =
                             Category.entries.indexOfFirst { ctx.getString(it.strRes) == s }
                     },
-                    soundPool = soundPool
                 ) { onChanged ->
                     Category.entries.forEach {
                         DropdownMenuItem(
@@ -200,7 +197,6 @@ fun Custom(
                     label = stringResource(R.string.feature_game_start_game),
                     imageVector = Icons.Filled.Start,
                     onClick = { onStartGame(difficultyEnum, categoryEnum, numQuestions) },
-                    soundPool = soundPool
                 )
                 MediumSpacer()
             }
