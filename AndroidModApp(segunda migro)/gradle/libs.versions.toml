@@ -105,6 +105,8 @@ kspGradlePlugin = "2.1.0-1.0.29"
 benmanes-versions = "0.51.0"
 dependency-analyze = "1.10.0"
 junitVersion = "4.13.2"
+detekt = "1.23.8"
+orgJacocoCore = "0.8.14"
 
 [libraries]
 # Core
@@ -210,6 +212,8 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidToolsCommon" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "kspGradlePlugin" }
+detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgJacocoCore" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitVersion" }
 
 [plugins]
@@ -232,6 +236,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 #Compose
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 #Protobuf
 protobuf = { id = "com.google.protobuf" ,version.ref = "protobufPlugin" }
@@ -257,6 +262,8 @@ buildlogic-lifecycle = { id = "buildlogic.android.lifecycle", version = "null"}
 buildlogic-material = { id = "buildlogic.android.material", version = "null"}
 buildlogic-navigation = { id = "buildlogic.android.navigation", version = "null"}
 buildlogic-unit-test = { id = "buildlogic.android.unit.test", version = "null"}
+buildlogic-jacoco = { id = "buildlogic.android.jacoco", version = "null" }
+buildlogic-detekt = { id = "buildlogic.android.detekt", version = "null" }
 
 # Flavors
 buildlogic-flavors = { id = "buildlogic.android.flavors", version = "null"}
