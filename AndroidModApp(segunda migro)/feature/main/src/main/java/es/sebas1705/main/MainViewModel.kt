@@ -65,35 +65,7 @@ class MainViewModel @Inject constructor(
             logI("Start chargeData")
             val time = System.currentTimeMillis()
             setConnectivityCallback()
-            execute(Dispatchers.IO) {
-                settingUsesCases.readMusicVolume().collect { data ->
-                    updateUi {
-                        it.copy(
-                            musicVolume = data
-                        )
-                    }
-                }
-            }
-            execute(Dispatchers.IO) {
-                settingUsesCases.readSoundVolume().collect { data ->
-                    updateUi {
-                        it.copy(
-                            soundVolume = data
-                        )
-                    }
-                }
-            }
-            execute(Dispatchers.IO) {
-                settingUsesCases.readAppContrast().collect { data ->
-                    updateUi {
-                        it.copy(
-                            themeContrast = data
-                        )
-                    }
-                }
-            }
-            execute(Dispatchers.IO) {
-                settingUsesCases.readFirstTime().collect { data ->
+            settingUsesCases.readSettingsUseCase().collect { settings ->
                     val millis = System.currentTimeMillis() - time
                     val millisLog = System.currentTimeMillis()
                     logI("End chargeData")
@@ -106,8 +78,11 @@ class MainViewModel @Inject constructor(
                     )
                     updateUi {
                         it.copy(
+                            musicVolume = settings.musicVolume,
+                            soundVolume = settings.soundVolume,
+                            themeContrast = settings.appContrast,
                             startDestination =
-                            if (!data)
+                            if (!settings.firstTime)
                                 AppGraph.GuideScreen
                             else if (authUsesCases.getFirebaseUser() != null)
                                 AppGraph.HomeNavigation
@@ -117,7 +92,6 @@ class MainViewModel @Inject constructor(
                         )
                     }
                 }
-            }
         } catch (e: Exception) {
             application.printTextInToast(
                 application.getString(es.sebas1705.core.resources.R.string.core_resources_error_loading_data)
