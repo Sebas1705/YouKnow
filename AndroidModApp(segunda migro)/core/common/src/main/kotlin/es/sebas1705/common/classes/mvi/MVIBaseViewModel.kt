@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel() {
-
     private val _uiState: MutableStateFlow<S> by lazy { MutableStateFlow(initState()) }
     val uiState: StateFlow<S> by lazy { _uiState.asStateFlow() }
 
@@ -19,15 +18,11 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     abstract fun intentHandler(intent: I)
 
     fun sendIntent(intent: I) = intentHandler(intent)
+    fun eventHandler(intent: I) = intentHandler(intent)
 
-    protected fun updateUi(transform: (S) -> S) {
-        _uiState.update(transform)
-    }
+    protected fun updateUi(transform: (S) -> S) { _uiState.update(transform) }
 
-    protected fun execute(
-        dispatcher: CoroutineDispatcher = Dispatchers.Main,
-        action: suspend () -> Unit
-    ) {
+    protected fun execute(dispatcher: CoroutineDispatcher = Dispatchers.Main, action: suspend () -> Unit) {
         viewModelScope.launch(dispatcher) { action() }
     }
 }
