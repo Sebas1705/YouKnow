@@ -5,6 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import es.sebas1705.analytics.config.EventLog
 import es.sebas1705.analytics.model.AnalyticsModel
+import es.sebas1705.common.managers.ClassLogData
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -20,28 +21,10 @@ class LogEventDataSource @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) {
 
-    /**
-     * Log an event with the given [EventLog] and [Bundle].
-     *
-     * @param event [EventLog]: The event to log.
-     * @param bundle [Bundle]: The bundle containing event data.
-     *
-     * @since 0.1.0
-     * @author Sebas1705 09/09/2025
-     */
     fun logEvent(event: EventLog, bundle: Bundle) {
         firebaseAnalytics.logEvent(event.tag, bundle)
     }
 
-    /**
-     * Log an error event with the class information
-     *
-     * @param clazz [KClass]<*>: The class where the error occurred.
-     * @param error [String]: The error message to log.
-     *
-     * @since 0.1.0
-     * @author Sebas1705 09/09/2025
-     */
     fun logError(clazz: KClass<*>, error: String) {
         firebaseAnalytics.logEvent(EventLog.Error.tag) {
             param("package", clazz.javaObjectType.packageName)
@@ -50,14 +33,8 @@ class LogEventDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Send a configured event model to Firebase Analytics.
-     *
-     * @param analyticsModel [AnalyticsModel]: The model containing the event data.
-     *
-     * @since 0.1.0
-     * @author Sebas1705 09/09/2025
-     */
+    fun logError(classLogData: ClassLogData, error: String) = logError(classLogData::class, error)
+
     fun sendEvent(analyticsModel: AnalyticsModel) {
         firebaseAnalytics.logEvent(analyticsModel.title) {
             analyticsModel.analyticsString.forEach { (key, value) -> param(key, value) }
