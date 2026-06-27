@@ -105,7 +105,6 @@ fun GuideBottomBar(
                                 pagerState.animateScrollToPage(page = pagerState.currentPage - 1)
                             }
                         },
-                        soundPool = soundPool
                     )
                 }
                 IFilledButton(
@@ -116,7 +115,6 @@ fun GuideBottomBar(
                             else pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }
                     },
-                    soundPool = soundPool
                 )
             }
         }
