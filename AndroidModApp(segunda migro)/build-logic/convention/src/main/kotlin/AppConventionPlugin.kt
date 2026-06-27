@@ -23,6 +23,8 @@ class AppConventionPlugin: Plugin<Project> {
                 apply("buildlogic.android.compose")
                 apply("buildlogic.android.lifecycle")
                 apply("buildlogic.android.flavors")
+                apply("buildlogic.android.jacoco")
+                apply("buildlogic.android.detekt")
             }
 
             extensions.configure<ApplicationExtension> {
