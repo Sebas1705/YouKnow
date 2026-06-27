@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.analytics.AnalyticsUsesCases
+import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.analytics.config.EventLog
 import es.sebas1705.common.managers.LogType
 import es.sebas1705.common.classes.mvi.MVIBaseIntent
