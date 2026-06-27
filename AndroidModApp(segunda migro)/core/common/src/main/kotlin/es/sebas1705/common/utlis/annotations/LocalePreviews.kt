@@ -1,4 +1,4 @@
-package es.sebas1705.common.utlis.annotations
+package es.sebas1705.common.utlis
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
