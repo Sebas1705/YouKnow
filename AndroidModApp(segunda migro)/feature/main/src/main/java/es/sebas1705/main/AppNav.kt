@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.sebas1705.auth.AuthNav
 import es.sebas1705.common.states.WindowState
-import es.sebas1705.common.utlis.extensions.composables.navAndPopUp
 import es.sebas1705.game.GameNav
 import es.sebas1705.guide.GuideScreen
 import es.sebas1705.home.navigation.HomeNav
