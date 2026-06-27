@@ -134,7 +134,6 @@ fun Running(
                                 .fillMaxHeight()
                                 .weight(1f)
                                 .padding(SmallestPadding),
-                            soundPool = soundPool
                         )
                         IFilledButton(
                             onClick = { onResponseQuestion(answers[1]) },
@@ -143,7 +142,6 @@ fun Running(
                                 .fillMaxHeight()
                                 .weight(1f)
                                 .padding(SmallestPadding),
-                            soundPool = soundPool
                         )
                     }
                     Row(
@@ -157,7 +155,6 @@ fun Running(
                                 .fillMaxHeight()
                                 .weight(1f)
                                 .padding(SmallestPadding),
-                            soundPool = soundPool
                         )
                         IFilledButton(
                             onClick = { onResponseQuestion(answers[3]) },
@@ -166,7 +163,6 @@ fun Running(
                                 .fillMaxHeight()
                                 .weight(1f)
                                 .padding(SmallestPadding),
-                            soundPool = soundPool
                         )
                     }
                 }
