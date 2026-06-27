@@ -22,32 +22,29 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.ksp.gradle.plugin)
+    implementation(libs.detekt.gradle.plugin)
+    implementation(libs.org.jacoco.core)
 }
 
 gradlePlugin {
     plugins {
         ///////////////MODULES////////////////
-        //Register the plugin that applies common configuration for Android applications
         register("androidApplication") {
             id = "buildlogic.android.application"
             implementationClass = "AppConventionPlugin"
         }
-        //Register the plugin that applies common configuration for Android feature modules
         register("androidFeature") {
             id = "buildlogic.android.feature"
             implementationClass = "FeatureConventionPlugin"
         }
-        //Register the plugin that applies common configuration for Android core modules
         register("androidCore") {
             id = "buildlogic.android.core"
             implementationClass = "CoreConventionPlugin"
         }
-        //Register the plugin that applies common configuration for Android data modules
         register("androidData") {
             id = "buildlogic.android.data"
             implementationClass = "DataConventionPlugin"
         }
-        //Register the plugin that applies common configuration for Android domain modules
         register("androidDomain") {
             id = "buildlogic.android.domain"
             implementationClass = "DomainConventionPlugin"
@@ -101,6 +98,14 @@ gradlePlugin {
         register("androidUnitTest") {
             id = "buildlogic.android.unit.test"
             implementationClass = "libraries.UnitTestConventionPlugin"
+        }
+        register("androidJacoco") {
+            id = "buildlogic.android.jacoco"
+            implementationClass = "libraries.JacocoConventionPlugin"
+        }
+        register("androidDetekt") {
+            id = "buildlogic.android.detekt"
+            implementationClass = "libraries.DetektConventionPlugin"
         }
 
         //////////////FLAVORS////////////////
