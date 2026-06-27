@@ -75,7 +75,6 @@ fun UrlRequestDialog(
                 label = stringResource(R.string.core_designsystem_url_photo),
                 placeholder = stringResource(R.string.core_designsystem_url_photo),
                 leadingIcon = Icons.Filled.Link to {},
-                soundPool = soundPool,
             )
         }
     )
