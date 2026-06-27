@@ -99,7 +99,6 @@ fun ChatDesign(
                 messageSender(message)
             },
             trailingEnabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH,
-            soundPool = soundPool
         )
         else ISmallFAB(
             onClick = { showMessage = !showMessage },
@@ -108,7 +107,6 @@ fun ChatDesign(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = MediumPadding, bottom = MediumPadding),
-            soundPool = soundPool
         )
     }
 }
