@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.buildlogic.retrofit)
     alias(libs.plugins.buildlogic.credential)
     alias(libs.plugins.buildlogic.unit.test)
+    alias(libs.plugins.buildlogic.lifecycle)
 }
 
 android {
