@@ -111,7 +111,6 @@ fun LazyProfileItem(
         onValueChange = onChangeNickname,
         placeholder = stringResource(R.string.feature_home_user_nickname),
         trailingIcon = Icons.Filled.Save to onChangeNicknameDialog,
-        soundPool = soundPool
     )
     IHorDivider(
         modifier = Modifier
@@ -144,6 +143,5 @@ fun LazyProfileItem(
             .fillMaxWidth(width)
             .padding(bottom = SmallPadding),
         imageVector = Icons.Filled.Password,
-        soundPool = soundPool
     )
 }
