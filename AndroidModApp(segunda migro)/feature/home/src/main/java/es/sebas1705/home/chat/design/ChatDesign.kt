@@ -98,7 +98,7 @@ fun ChatDesign(
             trailingIcon = Icons.AutoMirrored.Filled.Send to {
                 messageSender(message)
             },
-            trailingEnabled = message.isNotEmpty() || message.length >= SettingsRT.MESSAGE_MAX_LENGTH,
+            trailingEnabled = message.isNotEmpty() || message.length >= 50,
         )
         else ISmallFAB(
             onClick = { showMessage = !showMessage },
