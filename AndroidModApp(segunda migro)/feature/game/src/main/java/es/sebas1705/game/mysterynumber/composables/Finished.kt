@@ -78,7 +78,6 @@ fun Finished(
                 onClick = onRestartGame,
                 label = stringResource(id = R.string.feature_game_restart_game),
                 imageVector = Icons.Filled.RestartAlt,
-                soundPool = soundPool,
             )
 
             IVerSpacer(height = SmallPadding)
@@ -87,7 +86,6 @@ fun Finished(
                 onClick = onOutGame,
                 label = stringResource(id = R.string.feature_game_out_game),
                 imageVector = Icons.Filled.Output,
-                soundPool = soundPool,
             )
         }
     }
