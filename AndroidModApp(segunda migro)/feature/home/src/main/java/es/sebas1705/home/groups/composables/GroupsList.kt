@@ -59,7 +59,6 @@ fun GroupsList(
                         label = "Join",
                         onClick = { onGroupClick(groups[index]) },
                         enabled = groups[index].members.size < ComposableConstants.MAX_GROUP,
-                        soundPool = soundPool
                     )
                 }
             )
