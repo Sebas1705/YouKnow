@@ -1,4 +1,4 @@
-package es.sebas1705.common.utlis.annotations
+package es.sebas1705.common.utlis
 
 /**
  * Settings for the preview
