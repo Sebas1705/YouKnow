@@ -1,17 +1,9 @@
 package es.sebas1705.chat
 
-import es.sebas1705.repositories.interfaces.IRealtimeRepository
+import es.sebas1705.realtime.repository.RealtimeRepository
 
-/**
- * Use case to remove the listener to get messages
- *
- * @property realtimeRepository [IRealtimeRepository]: repository to remove the listener
- *
- * @since 1.0.0
- * @author Sebas1705 12/09/2025
- */
 class RemoveMessagesListener(
-    private val realtimeRepository: IRealtimeRepository
+    private val realtimeRepository: RealtimeRepository
 ) {
     operator fun invoke() {
         realtimeRepository.removeMessagesListener()
