@@ -6,18 +6,10 @@ import es.sebas1705.analytics.config.UserProperty
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.analytics.datasources.UserPropertiesDataSource
 import es.sebas1705.analytics.model.AnalyticsModel
+import es.sebas1705.common.managers.ClassLogData
 import es.sebas1705.repositories.interfaces.IAnalyticsRepository
 import javax.inject.Inject
 
-/**
- * Analytics repository implementation
- *
- * @property logEventDataSource [LogEventDataSource]: Data source for logging events
- * @property userPropertiesDataSource [UserPropertiesDataSource]: Data source for user properties
- *
- * @since 0.1.0
- * @author Sebas1705 09/09/2025
- */
 class AnalyticsRepository @Inject constructor(
     private val logEventDataSource: LogEventDataSource,
     private val userPropertiesDataSource: UserPropertiesDataSource
