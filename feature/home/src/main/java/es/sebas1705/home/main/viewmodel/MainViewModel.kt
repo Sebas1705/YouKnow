@@ -8,7 +8,7 @@ import es.sebas1705.common.utlis.extensions.composables.printTextInToast
 import es.sebas1705.fillusescases.FillUsesCases
 import es.sebas1705.news.NewsUsesCases
 import es.sebas1705.user.UserUsesCases
-import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
+import es.sebas1705.home.main.viewmodel.MainState
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

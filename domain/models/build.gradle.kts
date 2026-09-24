@@ -18,5 +18,6 @@ android {
 dependencies {
     api(projects.core.common)
 
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
 }

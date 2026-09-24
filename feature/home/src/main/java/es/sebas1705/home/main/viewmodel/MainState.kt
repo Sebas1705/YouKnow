@@ -1,4 +1,4 @@
-package es.sebas1705.youknow.presentation.features.home.features.main.viewmodel
+package es.sebas1705.home.main.viewmodel
 
 
 import es.sebas1705.common.classes.mvi.MVIBaseState

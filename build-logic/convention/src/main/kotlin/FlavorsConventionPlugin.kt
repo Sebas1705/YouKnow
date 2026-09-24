@@ -8,13 +8,13 @@ import org.gradle.kotlin.dsl.configure
  * A plugin that configures the Android flavors of the application.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class FlavorsConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             extensions.configure<ApplicationExtension> {
-                configureFlavors(this)
+                configureFlavors(this, rootDir = rootDir)
             }
         }
     }

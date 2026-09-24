@@ -6,6 +6,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import es.sebas1705.core.resources.ProviderAuth
+import es.sebas1705.data.authentication.BuildConfig
 
 /**
  * Extension function that get the Google credential request
@@ -24,7 +25,7 @@ val Context.getCredentialRequestGoogle: GetCredentialRequest
         .addCredentialOption(
             GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(SettingsAuth.FILTER_BY_AUTHORIZED_ACCOUNTS)
-                .setServerClientId("875884945428-k0hdf0jcctbne94ors1khudputut8klj.apps.googleusercontent.com")
+                .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
                 .build()
         )
         .build()

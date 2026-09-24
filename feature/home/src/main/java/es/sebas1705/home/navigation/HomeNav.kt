@@ -12,13 +12,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import es.sebas1705.common.states.WindowState
-import es.sebas1705.common.utlis.extensions.composables.navToTab
+import es.sebas1705.common.utlis.extensions.primitives.pushAndFree
 import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.home.chat.ChatScreen
 import es.sebas1705.home.groups.GroupsScreen
@@ -65,8 +66,8 @@ fun HomeNav(
     //states:
     var selectedItem by rememberSaveable { mutableIntStateOf(2) }
 
-    //navigation Controller:
-    val navController = rememberNavController()
+    //Back stack (one entry: the selected tab):
+    val homeBackStack = rememberNavBackStack(homes[selectedItem].destination)
 
     //Body:
     Scaffold(
@@ -78,7 +79,7 @@ fun HomeNav(
                 soundPool = soundPool,
                 onItemClick = {
                     selectedItem = it
-                    navController.navToTab(homes[it].destination)
+                    homeBackStack.pushAndFree(homes[it].destination)
                 },
             )
         },
@@ -95,61 +96,56 @@ fun HomeNav(
         if (homeState.isLoading)
             LoadingDialog(windowState)
 
-        NavHost(
-            navController = navController,
-            startDestination = MainScreen,
+        NavDisplay(
+            backStack = homeBackStack,
             modifier =
             if (windowState.isImeVisible)
                 Modifier.imePadding()
             else
-                Modifier.padding(contentPadding)
-        ) {
-            composable<MainScreen> {
-                MainScreen(
-                    windowState,
-                    homeState,
-                    soundPool,
-                    onSettingsNav
-                )
+                Modifier.padding(contentPadding),
+            entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
+            entryProvider = entryProvider {
+                entry<MainScreen> {
+                    MainScreen(
+                        windowState,
+                        homeState,
+                        soundPool,
+                        onSettingsNav
+                    )
+                }
+                entry<ProfileScreen> {
+                    ProfileScreen(
+                        windowState,
+                        homeState,
+                        soundPool,
+                        onAuthNav
+                    )
+                }
+                entry<ChatScreen> {
+                    ChatScreen(
+                        windowState,
+                        homeState,
+                        soundPool
+                    )
+                }
+                entry<PlayScreen> {
+                    PlayScreen(
+                        windowState,
+                        soundPool,
+                        onGameNav
+                    )
+                }
+                entry<GroupsScreen> {
+                    GroupsScreen(
+                        windowState,
+                        homeState,
+                        soundPool,
+                        onUserInfoSearch = { firebaseIds ->
+                            homeViewModel.eventHandler(HomeIntent.GetUsers(firebaseIds))
+                        }
+                    )
+                }
             }
-            composable<ProfileScreen> {
-                ProfileScreen(
-                    windowState,
-                    homeState,
-                    soundPool,
-                    onAuthNav
-                )
-            }
-            composable<ChatScreen> {
-                ChatScreen(
-                    windowState,
-                    homeState,
-                    soundPool
-                )
-            }
-            composable<PlayScreen> {
-                PlayScreen(
-                    windowState,
-                    soundPool,
-                    onGameNav
-                )
-            }
-            composable<GroupsScreen> {
-                GroupsScreen(
-                    windowState,
-                    homeState,
-                    soundPool,
-                    onUserInfoSearch = { firebaseIds ->
-                        homeViewModel.eventHandler(HomeIntent.GetUsers(firebaseIds))
-                    }
-                )
-            }
-        }
+        )
     }
 }
-
-
-
-
-
-

@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * Method that configures the Kotlin Android plugin in the project.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
@@ -24,8 +24,10 @@ internal fun Project.configureKotlinAndroid(
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_21
-            targetCompatibility = JavaVersion.VERSION_21
+            // Align Java compatibility with Java 17 (LTS)
+            // As specified in AGENTS.md for broader compatibility
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
     }
 
@@ -36,12 +38,13 @@ internal fun Project.configureKotlinAndroid(
  * Method that configures the Kotlin plugin in the project.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 private fun Project.configureKotlin() {
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            // Align Kotlin JVM target with Java 17
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }

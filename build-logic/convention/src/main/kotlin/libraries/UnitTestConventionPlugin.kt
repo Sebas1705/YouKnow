@@ -5,14 +5,18 @@ import es.sebas1705.convention.libs
 import es.sebas1705.convention.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
+import kotlin.math.max
 
 /**
  * A plugin that configures the dependencies for the Test libraries.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class UnitTestConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -34,6 +38,18 @@ class UnitTestConventionPlugin : Plugin<Project> {
                 testImplementation(libs.findLibrary("test-rules").get())
                 testImplementation(libs.findLibrary("turbine").get())
                 testImplementation(libs.findLibrary("reflections-test").get())
+                testImplementation(libs.findLibrary("robolectric").get())
+            }
+
+            tasks.withType(Test::class.java).configureEach {
+                // Keep test output consistent in CI and local runs.
+                testLogging {
+                    events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+                    exceptionFormat = TestExceptionFormat.FULL
+                }
+
+                maxParallelForks = max(1, Runtime.getRuntime().availableProcessors() / 2)
+                failFast = false
             }
         }
     }

@@ -4,7 +4,7 @@ package es.sebas1705.auth.screens.log
 import android.media.SoundPool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.auth.screens.log.design.LogDesign
 import es.sebas1705.auth.screens.log.viewmodel.LogIntent

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.buildlogic.data)
     alias(libs.plugins.buildlogic.datastore)
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {
@@ -29,7 +30,7 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.26.1"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     generateProtoTasks {
         all().forEach { task ->

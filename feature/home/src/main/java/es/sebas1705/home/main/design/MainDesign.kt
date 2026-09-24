@@ -45,7 +45,7 @@ import es.sebas1705.ui.theme.Paddings.SmallPadding
 import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.designsystem.dialogs.LoadingDialog
 import es.sebas1705.feature.home.R
-import es.sebas1705.youknow.presentation.features.home.features.main.viewmodel.MainState
+import es.sebas1705.home.main.viewmodel.MainState
 import java.util.Locale
 
 /**

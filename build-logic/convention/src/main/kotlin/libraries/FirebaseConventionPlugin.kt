@@ -10,12 +10,13 @@ import org.gradle.kotlin.dsl.dependencies
  * A plugin that configures the dependencies for the Firebase libraries.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class FirebaseConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             dependencies {
+                implementation(platform(libs.findLibrary("firebase-bom").get()))
                 implementation(libs.findLibrary("firebase-analytics").get())
                 implementation(libs.findLibrary("firebase-crashlytics").get())
                 implementation(libs.findLibrary("firebase-messaging").get())

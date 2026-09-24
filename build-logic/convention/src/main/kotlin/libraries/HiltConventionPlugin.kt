@@ -10,7 +10,7 @@ import org.gradle.kotlin.dsl.dependencies
  * A plugin that configures the dependencies for the Hilt library.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class HiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {

@@ -1,6 +1,7 @@
 package es.sebas1705.home.navigation
 
 
+import androidx.navigation3.runtime.NavKey
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
@@ -22,7 +23,7 @@ import kotlinx.serialization.Serializable
  * @since 1.0.0
  * @author Sebas1705 12/09/2025
  */
-interface HomeScreens {
+interface HomeScreens : NavKey {
     @Serializable
     object MainScreen : HomeScreens
 

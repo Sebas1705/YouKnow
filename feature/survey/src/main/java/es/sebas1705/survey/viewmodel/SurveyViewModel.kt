@@ -13,11 +13,8 @@ class SurveyViewModel @Inject constructor(
 
     override fun initState(): SurveyState = SurveyState.default()
 
-    override fun intentHandler(intent: SurveyIntent) {
-        when (intent) {
-            else -> {}
-        }
-    }
+    // SurveyIntent has no intents yet: the survey screen is still a stub.
+    override fun intentHandler(intent: SurveyIntent) = Unit
 
     //Actions:
     //Privates:
