@@ -62,12 +62,12 @@ feature/
    git clone https://github.com/Sebas1705/YouKnow.git
    ```
 
-2. Secrets come from [Doppler](https://www.doppler.com) (project `youknow`, config `dev`) — no
+2. Secrets and the Firebase config come from [Doppler](https://www.doppler.com) (project `youknow`, config `dev`) — no
    `google-services.json` or secrets file in the repo:
    ```bash
    doppler setup                                  # once
    doppler run -- ./gradlew assembleDevelopmentDebug
-   scripts/doppler-sync-local-properties.sh       # for Android Studio: writes local.properties
+   scripts/doppler-sync-local-properties.sh       # for Android Studio: local.properties + app/google-services.json
    ```
    Without the Firebase keys the project still builds (CI's validation relies on this), but
    Firebase features will not work at runtime.

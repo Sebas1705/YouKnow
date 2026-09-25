@@ -27,6 +27,9 @@ on the debug apps and on the dev/staging release apps (signed with the debug key
 npx firebase-tools apps:android:sha:create <appId> <sha1-or-sha256> --project youknow-tfg
 ```
 
+After adding or removing an app or a SHA, run `scripts/refresh-google-services.sh` so the
+`google-services.json` stored in Doppler (used locally and in CI) picks it up.
+
 ## Security rules
 
 | Service | File | Model |

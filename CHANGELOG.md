@@ -12,6 +12,7 @@ The format follows Keep a Changelog principles and semantic versioning for templ
 - Production keeps the `es.sebas1705.youknow` application id (no `.pro` suffix).
 - Firebase moves to the BoM (34.19.0) with the main artifacts; the discontinued `-ktx` ones are gone.
 - Protobuf aligned on 3.25.9 (runtime, Kotlin lite and protoc) instead of forcing 3.19.4.
+- The official `google-services.json` lives in Doppler (`GOOGLE_SERVICES_JSON`, refreshed by `scripts/refresh-google-services.sh`); the sync script writes it for local development and CI uses it for release builds.
 - Firebase project organized: one app per variant (Staging apps added, each variant reports to its own app id), SHA certificates registered, `testers` group created. Security rules, indexes and their emulator tests are versioned under `firebase/` (`docs/FIREBASE.md`).
 ### Fixed
 - Unit tests no longer depend on the machine locale; stale settings mapper test updated.

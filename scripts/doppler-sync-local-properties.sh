@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Writes/updates local.properties (what Android Studio reads) with the secrets from Doppler.
+# Writes/updates local.properties (what Android Studio reads) with the secrets from Doppler, and
+# app/google-services.json with the official Firebase config stored there.
 #
 # Usage:  scripts/doppler-sync-local-properties.sh [project] [config]      (default: youknow dev)
 #
@@ -54,3 +55,13 @@ done
 } > local.properties
 
 echo "local.properties updated: $synced key(s) from Doppler ($PROJECT/$CONFIG)."
+
+# app/google-services.json too, so Android Studio builds with the google-services and Crashlytics
+# plugins exactly like CI (the official file, see scripts/refresh-google-services.sh). It is
+# gitignored; delete it to fall back to the resValue path.
+if gs="$(doppler secrets get GOOGLE_SERVICES_JSON --plain -p "$PROJECT" -c "$CONFIG" 2>/dev/null)" && [ -n "$gs" ]; then
+  (umask 077; printf '%s' "$gs" > app/google-services.json)
+  echo "app/google-services.json written from Doppler ($PROJECT/$CONFIG)."
+else
+  echo "  no GOOGLE_SERVICES_JSON in Doppler ($PROJECT/$CONFIG): app/google-services.json not written" >&2
+fi

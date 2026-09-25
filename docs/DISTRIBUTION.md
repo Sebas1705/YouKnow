@@ -11,6 +11,7 @@ Doppler project **`youknow`**, configs **`dev`** (local) and **`prd`** (CI / dis
 |---|---|
 | `FIREBASE_APP_ID`, `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SENDER_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_DATABASE_URL` | Firebase config compiled into the APK (replaces `google-services.json`); `FIREBASE_APP_ID` is also the App Distribution target |
 | `GOOGLE_WEB_CLIENT_ID` | Google Sign-In server client id (web OAuth client of the Firebase project) |
+| `GOOGLE_SERVICES_JSON` | The official `google-services.json` of the project (all six apps, with the Android OAuth clients of the registered SHAs), written to `app/` for local development and CI. Refreshed with `scripts/refresh-google-services.sh` |
 | `API_BASE_URL_DEVELOPMENT`, `API_BASE_URL_STAGING`, `API_BASE_URL_PRODUCTION` (optional) | `BuildConfig.API_BASE_URL` per flavor |
 | `SIGNING_KEYSTORE_BASE64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS`, `SIGNING_KEY_PASSWORD` | Release signing (`prd` only) |
 | `FIREBASE_SERVICE_ACCOUNT_JSON` | Firebase App Distribution upload (`prd` only) |
@@ -21,26 +22,34 @@ Firebase keys the app still builds, but Firebase is not initialized.
 
 ### Local use
 
-- Command line: `doppler setup` once (project `youknow`, config `dev`), then
-  `doppler run -- ./gradlew assembleDevelopmentDebug`.
-- Android Studio (does not inherit Doppler's environment):
-  `scripts/doppler-sync-local-properties.sh` writes the keys into `local.properties`, leaving
-  `sdk.dir` and anything else alone. Run it again when a secret changes.
+- **Android Studio** (does not inherit Doppler's environment): run
+  `scripts/doppler-sync-local-properties.sh` once, and again when a secret changes. It writes the
+  keys into `local.properties` (leaving `sdk.dir` and anything else alone) **and**
+  `app/google-services.json`, so local builds behave exactly like CI.
+- **Command line**: `doppler setup` once (project `youknow`, config `dev`), then
+  `doppler run -- ./gradlew assembleDevelopmentDebug` (run the sync script first if you want the
+  `google-services.json` path).
 
 ### How Firebase config reaches the APK
 
-- **Local build**, no `google-services.json`: `app/build.gradle.kts` turns the keys into the same
-  resources the google-services plugin would generate (`google_app_id`, `default_web_client_id`,
-  `firebase_database_url`, ...). `FirebaseInitProvider` reads them, so every Firebase product works.
-  The resource `com.google.firebase.crashlytics.RequireBuildId=false` keeps Crashlytics running
-  without its Gradle plugin.
-- **CI release**: `scripts/write-google-services-json.sh` writes `app/google-services.json` from the
-  same keys, so the google-services and Crashlytics plugins run. Crashlytics injects its build id and
-  uploads the R8 mapping, so release crash reports come out deobfuscated. The file is gitignored and
-  deleted from the runner at the end.
+- **With `app/google-services.json`** (the normal case: the sync script locally, the release action
+  in CI): the file is the official one from Firebase, stored in Doppler as `GOOGLE_SERVICES_JSON`.
+  The google-services plugin picks each variant's app id from it, and the Crashlytics plugin injects
+  its build id and uploads the R8 mapping of release builds, so crash reports come out
+  deobfuscated. The file is gitignored and deleted from the CI runner at the end.
+- **Without it**: `app/build.gradle.kts` turns the individual keys into the same resources the
+  google-services plugin would generate (`google_app_id` per variant, `default_web_client_id`,
+  `firebase_database_url`, ...), which is enough for a debug build. The resource
+  `com.google.firebase.crashlytics.RequireBuildId=false` keeps Crashlytics running without its
+  plugin. If `GOOGLE_SERVICES_JSON` were missing, `scripts/write-google-services-json.sh` would
+  also build an equivalent file from these keys.
 
-`doppler run -- scripts/write-google-services-json.sh` also works locally if you want the plugin
-path (for example to test a minified release).
+**When an app or a SHA changes in Firebase**, refresh the stored file (needs
+`npx firebase-tools login`):
+
+```bash
+scripts/refresh-google-services.sh
+```
 
 ## Pipeline
 
