@@ -1,8 +1,9 @@
 ﻿# Changelog
 All notable changes to this repository are documented in this file.
-The format follows Keep a Changelog principles and semantic versioning for template releases.
+The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
-- Changelog entries are generated automatically from merged PR labels during release publishing.
+
+## [1.1.0] - 2026-09-25
 ### Changed
 - Aligned with the Templetry `android/modular-features` template (commit `cc60aeb`): build-logic, version catalog (Kotlin 2.3, Compose 1.11, Navigation 3 1.0), Gradle 9 wrapper, CI and docs.
 - Environment profiles `Development`/`Staging`/`Production` replace the `Dev`/`Demo`/`Beta`/`Alpha`/`Pro` flavors; `QUIZ_API_URL` becomes `API_BASE_URL`.
