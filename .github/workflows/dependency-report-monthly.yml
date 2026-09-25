@@ -1,10 +1,11 @@
 name: dependency-report-monthly
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  # Monthly, as its name and config/templates/dependency-report-monthly.workflow.yml.template say;
+  # the template shipped it on every push and pull request instead.
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
