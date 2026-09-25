@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="core_resources_app_name" translatable="false">You Know?</string>
-    <string name="core_resources_web_client_id" translatable="false">445608778208-u91a5dbmgj8ija5g4p25oa61o8ip779r.apps.googleusercontent.com</string>
     <string name="core_resources_any">Any</string>
     <string name="core_resources_icon_content">You Know icon</string>
     <string name="core_resources_back_arrow_content">Back arrow</string>

@@ -1,19 +1,23 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     `kotlin-dsl`
 }
 
-group = "es.sebas1705.build_logic"
-
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
-kotlin {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+
+// Ensure published variants target JVM 21 for compatibility with root build JDK
+tasks.withType<Jar>().configureEach {
+    manifest {
+        attributes("Target-JVM" to "21")
     }
 }
 
@@ -29,22 +33,27 @@ dependencies {
 gradlePlugin {
     plugins {
         ///////////////MODULES////////////////
+        //Register the plugin that applies common configuration for Android applications
         register("androidApplication") {
             id = "buildlogic.android.application"
             implementationClass = "AppConventionPlugin"
         }
+        //Register the plugin that applies common configuration for Android feature modules
         register("androidFeature") {
             id = "buildlogic.android.feature"
             implementationClass = "FeatureConventionPlugin"
         }
+        //Register the plugin that applies common configuration for Android core modules
         register("androidCore") {
             id = "buildlogic.android.core"
             implementationClass = "CoreConventionPlugin"
         }
+        //Register the plugin that applies common configuration for Android data modules
         register("androidData") {
             id = "buildlogic.android.data"
             implementationClass = "DataConventionPlugin"
         }
+        //Register the plugin that applies common configuration for Android domain modules
         register("androidDomain") {
             id = "buildlogic.android.domain"
             implementationClass = "DomainConventionPlugin"

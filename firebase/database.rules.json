@@ -1,0 +1,35 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "chat-global-youknow": {
+      ".read": "auth != null",
+      "$messageId": {
+        // New messages only, keyed "<authorUid>-<time>" by their author. Any signed-in client may
+        // delete a message: the app trims the chat to its latest 100 messages on every client.
+        ".write": "auth != null && ((!data.exists() && newData.exists() && $messageId.beginsWith(auth.uid + '-')) || !newData.exists())",
+        ".validate": "newData.hasChildren(['text', 'authorName'])",
+        "text": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50" },
+        "authorName": { ".validate": "newData.isString() && newData.val().length <= 30" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "groups-youknow": {
+      ".read": "auth != null",
+      "$groupId": {
+        // Groups are keyed "<name>-<leaderUid>". Only the leader creates or deletes one; a group
+        // with no members left can be deleted by whoever leaves it last.
+        ".write": "auth != null && ((!data.exists() && $groupId.endsWith('-' + auth.uid)) || (data.exists() && !newData.exists() && ($groupId.endsWith('-' + auth.uid) || !data.child('members').exists())))",
+        "description": { ".validate": "newData.isString() && newData.val().length <= 100" },
+        "members": {
+          // Joining and leaving rewrite the whole list, from any signed-in member-to-be.
+          ".write": "auth != null && data.parent().exists()",
+          "$index": { ".validate": "newData.isString()" }
+        },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

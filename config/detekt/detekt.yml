@@ -1,4 +1,6 @@
 build:
+  # Gradual adoption target: keep this high initially, then reduce in small PRs.
+  # Suggested path: 500 -> 300 -> 150 -> 50 -> 0.
   maxIssues: 300
   excludeCorrectable: false
 

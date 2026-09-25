@@ -65,3 +65,14 @@
 
 # Ignore VS Code settings
 .vscode/
+
+# Firebase project config, rules and their tests are versioned (the *.json rule above is meant
+# for google-services.json and similar); dependencies and CLI logs are not.
+!/firebase.json
+!/firebase/*.json
+!/firebase/rules-test/package.json
+!/firebase/rules-test/package-lock.json
+firebase/rules-test/node_modules/
+firebase-debug.log
+database-debug.log
+firestore-debug.log

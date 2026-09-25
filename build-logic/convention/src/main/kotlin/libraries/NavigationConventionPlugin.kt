@@ -10,7 +10,7 @@ import org.gradle.kotlin.dsl.dependencies
  * A plugin that configures the Navigation dependencies in the project.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class NavigationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -18,7 +18,6 @@ class NavigationConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(libs.findLibrary("navigation3-runtime").get())
                 implementation(libs.findLibrary("navigation3-ui").get())
-                implementation(libs.findLibrary("navigation-compose").get())
             }
         }
     }

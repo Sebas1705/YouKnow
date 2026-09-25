@@ -49,7 +49,7 @@ fun IBottomSheet(
     dragHandle = { BottomSheetDefaults.DragHandle() },
     contentWindowInsets = { BottomSheetDefaults.windowInsets },
     properties = ModalBottomSheetDefaults.properties,
-    content
+    content = content
 )
 
 

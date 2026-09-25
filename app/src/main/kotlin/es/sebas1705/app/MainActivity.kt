@@ -10,8 +10,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import es.sebas1705.common.utlis.extensions.types.logI
-import es.sebas1705.main.AppNav
-import es.sebas1705.ui.theme.AppTheme
+import es.sebas1705.core.resources.Musics
+import es.sebas1705.domain.managers.MediaPlayerManager
+import es.sebas1705.main.MainScreen
+import javax.inject.Inject
 
 
 /**
@@ -24,9 +26,15 @@ import es.sebas1705.ui.theme.AppTheme
 class MainActivity : ComponentActivity() {
 
     /**
-     * Create the activity and set the content to the SplashScreen
-     * before the app is ready enable the edge to edge and set on the
-     * decor view the listener to hide the system bars
+     * Background music player, shared across the whole app.
+     */
+    @Inject
+    lateinit var mediaPlayerManager: MediaPlayerManager
+
+    /**
+     * Create the activity and set the content to the MainScreen
+     * (splash, network error or the app navigation), enable the edge to edge
+     * and set on the decor view the listener to hide the system bars
      *
      * @param savedInstanceState [Bundle]: the saved instance state
      */
@@ -44,10 +52,24 @@ class MainActivity : ComponentActivity() {
                 WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         setContent {
-            AppTheme {
-                AppNav()
-            }
+            MainScreen(
+                onVolumeChange = { mediaPlayerManager.setVolume(it) },
+                onMusicChange = { background, volume ->
+                    mediaPlayerManager.changeSong(if (background) Musics.BACKGROUND else Musics.GAME)
+                    mediaPlayerManager.setVolume(volume)
+                }
+            )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mediaPlayerManager.play()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayerManager.pause()
     }
 
     /**

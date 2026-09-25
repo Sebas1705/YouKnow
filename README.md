@@ -23,7 +23,8 @@ Android trivia and quiz app built with **Kotlin** and **Jetpack Compose** on a m
 | UI | Jetpack Compose · Material Design |
 | Architecture | Multi-module Clean Architecture (core / data / domain / feature) |
 | Data | OpenTriviaDB API · Firebase Auth · Firebase Storage |
-| Build | Gradle with build-logic convention plugins |
+| Navigation | Navigation 3 (nested `NavDisplay` per feature) |
+| Build | Gradle 9 with build-logic convention plugins · Kotlin 2.3 · Hilt · KSP |
 
 ---
 
@@ -50,9 +51,9 @@ feature/
 ## Getting Started
 
 ### Prerequisites
-- Android Studio Hedgehog or newer
-- JDK 17+
-- Firebase project with **Authentication** and **Storage** enabled
+- JDK 21 (Android Studio's bundled JDK works)
+- Android SDK 36
+- Firebase project with **Authentication**, **Firestore**, **Realtime Database** and **Storage** enabled (optional for building — see below)
 
 ### Setup
 
@@ -61,15 +62,60 @@ feature/
    git clone https://github.com/Sebas1705/YouKnow.git
    ```
 
-2. Add your `google-services.json` to the `app/` directory.
-
-3. Build:
-   ```powershell
-   .\gradlew.bat assembleDebug    # Windows
-   ```
+2. Secrets come from [Doppler](https://www.doppler.com) (project `youknow`, config `dev`) — no
+   `google-services.json` or secrets file in the repo:
    ```bash
-   ./gradlew assembleDebug        # macOS/Linux
+   doppler setup                                  # once
+   doppler run -- ./gradlew assembleDevelopmentDebug
+   scripts/doppler-sync-local-properties.sh       # for Android Studio: writes local.properties
    ```
+   Without the Firebase keys the project still builds (CI's validation relies on this), but
+   Firebase features will not work at runtime.
+
+3. Test:
+   ```bash
+   ./gradlew testDebugUnitTest detekt
+   ```
+
+### Environment profiles
+
+| Flavor | `applicationId` | `BuildConfig.ENVIRONMENT` | Verbose logging |
+|---|---|---|---|
+| `Development` | `es.sebas1705.youknow.dev` | `development` | on |
+| `Staging` | `es.sebas1705.youknow.staging` | `staging` | on |
+| `Production` | `es.sebas1705.youknow` | `production` | off |
+
+Debug builds add `.debug`.
+
+---
+
+## Distribution
+
+A `vX.Y.Z` tag builds the signed `Production` release, publishes it as a GitHub Release and
+uploads it to Firebase App Distribution; GitHub only needs `DOPPLER_TOKEN`:
+
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+Secrets, one-time setup and details: **[docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)**.
+Firebase apps, security rules and how to test and deploy them: **[docs/FIREBASE.md](docs/FIREBASE.md)**.
+---
+
+## Template
+
+YouKnow is aligned with the [Templetry](https://github.com/Templetry) form
+[`android/modular-features`](https://github.com/Templetry/android/tree/main/modular-features).
+`.templetry-answers.yml` records the template and commit it tracks, so improvements to the template can be
+pulled in with a three-way merge that keeps YouKnow's own changes:
+
+```bash
+templetry update          # preview
+templetry update --apply  # merge
+```
+
+Do not edit `.templetry-answers.yml` by hand. See `AGENTS.md` and `AI_INDEX.md` for the working docs.
 
 ---
 

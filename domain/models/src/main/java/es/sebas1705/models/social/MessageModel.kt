@@ -24,5 +24,5 @@ data class MessageModel(
      *
      * @return [String]: Message id
      */
-    val messageId: String get() = this.authorId.toString() + "-" + this.time.toString()
+    val messageId: String get() = this.authorId + "-" + this.time.toString()
 }

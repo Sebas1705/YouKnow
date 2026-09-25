@@ -1,0 +1,29 @@
+﻿# Changelog
+All notable changes to this repository are documented in this file.
+The format follows Keep a Changelog principles and semantic versioning for template releases.
+## [Unreleased]
+- Changelog entries are generated automatically from merged PR labels during release publishing.
+### Changed
+- Aligned with the Templetry `android/modular-features` template (commit `cc60aeb`): build-logic, version catalog (Kotlin 2.3, Compose 1.11, Navigation 3 1.0), Gradle 9 wrapper, CI and docs.
+- Environment profiles `Development`/`Staging`/`Production` replace the `Dev`/`Demo`/`Beta`/`Alpha`/`Pro` flavors; `QUIZ_API_URL` becomes `API_BASE_URL`.
+- Navigation migrated to Navigation 3; the root graph (`AppNav`) is restored, so the app navigates again.
+- Secrets move to Doppler (project `youknow`): Firebase config, Google Sign-In client id, signing and API URLs are read from the environment or `local.properties`; no `google-services.json` or `secrets.properties` in the repo.
+- Release pipeline: a `vX.Y.Z` tag builds the signed Production APK, publishes a GitHub Release and uploads it to Firebase App Distribution (`release-apk.yml`), replacing the template's date-tag release flow.
+- Production keeps the `es.sebas1705.youknow` application id (no `.pro` suffix).
+- Firebase moves to the BoM (34.19.0) with the main artifacts; the discontinued `-ktx` ones are gone.
+- Protobuf aligned on 3.25.9 (runtime, Kotlin lite and protoc) instead of forcing 3.19.4.
+- Firebase project organized: one app per variant (Staging apps added, each variant reports to its own app id), SHA certificates registered, `testers` group created. Security rules, indexes and their emulator tests are versioned under `firebase/` (`docs/FIREBASE.md`).
+### Fixed
+- Unit tests no longer depend on the machine locale; stale settings mapper test updated.
+- Hardcoded Google Sign-In client ids removed (one belonged to another Google project).
+- Compiler warnings: deprecated `MenuAnchorType`, redundant conversion and `when` branch.
+- Security: Firestore and Realtime Database were open to anyone (read and write); new rules require sign-in and ownership.
+- Release builds: R8 obfuscated the Firestore, Realtime Database and Gson models, so a release APK would read empty data and write obfuscated field names; the data modules now ship keep rules.
+- News were always empty: Firestore stores `title_es`/`body_en`…, now mapped with `@PropertyName`.
+## [2026.05.09] - 2026-05-09
+### Added
+- CI and security automation in repository root workflows.
+- Governance, release policy, triage, KPI and 30-60-90 maintenance docs.
+- Issue forms, pull request template, CODEOWNERS, and label sync workflow.
+### Changed
+- Detekt configuration migration and validation pipeline hardening for `YouKnow`.

@@ -5,9 +5,10 @@ import android.media.SoundPool
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.auth.AuthScreens.LogScreen
 import es.sebas1705.auth.AuthScreens.MenuScreen
@@ -32,46 +33,47 @@ fun AuthNav(
     soundPool: Pair<SoundPool, Float>,
     toHomeNav: () -> Unit,
 ) {
-    // NavController:
-    val authNavController = rememberNavController()
+    // Back stack:
+    val authBackStack = rememberNavBackStack(MenuScreen)
 
     // Body:
-    NavHost(
+    NavDisplay(
         modifier = Modifier.fillMaxSize(),
-        navController = authNavController,
-        startDestination = MenuScreen
-    ) {
-        composable<MenuScreen> {
-            MenuScreen(
-                windowState,
-                soundPool,
-                toSignNav = {
-                    authNavController.navigate(SignScreen)
-                },
-                toHomeNav,
-                toLogNav = {
-                    authNavController.navigate(LogScreen)
-                }
-            )
+        backStack = authBackStack,
+        entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
+        entryProvider = entryProvider {
+            entry<MenuScreen> {
+                MenuScreen(
+                    windowState,
+                    soundPool,
+                    toSignNav = {
+                        authBackStack.add(SignScreen)
+                    },
+                    toHomeNav,
+                    toLogNav = {
+                        authBackStack.add(LogScreen)
+                    }
+                )
+            }
+            entry<LogScreen> {
+                LogScreen(
+                    windowState,
+                    soundPool,
+                    toHomeNav,
+                    toSignNav = {
+                        authBackStack.add(SignScreen)
+                    }
+                )
+            }
+            entry<SignScreen> {
+                SignScreen(
+                    windowState,
+                    soundPool,
+                    toLogNav = {
+                        authBackStack.add(LogScreen)
+                    }
+                )
+            }
         }
-        composable<LogScreen> {
-            LogScreen(
-                windowState,
-                soundPool,
-                toHomeNav,
-                toSignNav = {
-                    authNavController.navigate(SignScreen)
-                }
-            )
-        }
-        composable<SignScreen> {
-            SignScreen(
-                windowState,
-                soundPool,
-                toLogNav = {
-                    authNavController.navigate(LogScreen)
-                }
-            )
-        }
-    }
+    )
 }

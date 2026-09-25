@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Crashlytics requires a build id, normally injected by its Gradle plugin. The plugin is only
+        applied when app/google-services.json exists (CI release builds, written from Doppler); a
+        local build without it would otherwise make the SDK throw "The Crashlytics build ID is
+        missing" and stay off. When the plugin does run, it still injects the build id and
+        uploads the R8 mapping.
+    -->
+    <bool name="com.google.firebase.crashlytics.RequireBuildId">false</bool>
+</resources>

@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// YouKnow does not use Cloud Storage (profile photos are URLs stored in Firestore), so nothing
+// is readable or writable. Open a path here when a feature starts uploading files.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -8,15 +8,26 @@ import org.gradle.kotlin.dsl.configure
  * A plugin that configures an Android application project.
  *
  * @since 0.1.0
- * @author Sebas1705 09/09/2025
+ * @author Sebas1705 01/03/2025
  */
 class AppConventionPlugin: Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
+            val isUnitTestRun = gradle.startParameter.taskNames.any { it.contains("test", ignoreCase = true) }
+            val hasGoogleServicesConfig =
+                rootProject.file("./app/google-services.json").exists() ||
+                    rootProject.file("./app/src/debug/google-services.json").exists() ||
+                    rootProject.file("./app/src/Development/google-services.json").exists() ||
+                    rootProject.file("./app/src/DevelopmentDebug/google-services.json").exists()
+
             with(pluginManager) {
                 apply("com.android.application")
-                apply("com.google.firebase.crashlytics")
-                apply("com.google.gms.google-services")
+                if (!isUnitTestRun && hasGoogleServicesConfig) {
+                    apply("com.google.firebase.crashlytics")
+                    apply("com.google.gms.google-services")
+                } else {
+                    logger.lifecycle("Skipping Firebase Gradle plugins: test run or missing google-services.json.")
+                }
                 apply("org.jetbrains.kotlin.kapt")
                 apply("org.jetbrains.kotlin.android")
                 apply("buildlogic.android.hilt")

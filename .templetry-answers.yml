@@ -1,0 +1,8 @@
+schema_version: 1
+template:
+  name: android-modular-features
+  source: "github.com/Templetry/android@main/modular-features"
+  commit: cc60aeb818691348a847aecc2ee209e0e8f844d3
+variables:
+  base_package: es.sebas1705
+  project_name: You Know

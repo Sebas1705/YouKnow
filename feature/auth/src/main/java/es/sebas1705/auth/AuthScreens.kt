@@ -1,9 +1,10 @@
 package es.sebas1705.auth
 
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-interface AuthScreens {
+interface AuthScreens : NavKey {
 
     @Serializable
     object MenuScreen : AuthScreens

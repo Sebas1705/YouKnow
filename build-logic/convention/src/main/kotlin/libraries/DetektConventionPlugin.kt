@@ -5,6 +5,9 @@ import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * A plugin that configures Detekt for static analysis.
+ */
 class DetektConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
@@ -20,6 +23,7 @@ class DetektConventionPlugin : Plugin<Project> {
             )
 
             extensions.configure(DetektExtension::class.java) {
+                // Point to a default config file if it exists, otherwise use default rules
                 config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
                 buildUponDefaultConfig = true
                 allRules = false
