@@ -9,10 +9,10 @@ One Android app per variant, so each reports its own crashes and analytics:
 
 | Variant | applicationId | Firebase app id | Doppler key |
 |---|---|---|---|
-| productionRelease | `es.sebas1705.youknow` | `…:6700b706425121bba64701` | `FIREBASE_APP_ID` |
-| productionDebug | `es.sebas1705.youknow.debug` | `…:36e1a66ecde24d4da64701` | `FIREBASE_APP_ID_PRODUCTION_DEBUG` |
-| developmentRelease | `es.sebas1705.youknow.dev` | `…:1e16db34cb50c3b2a64701` | `FIREBASE_APP_ID_DEVELOPMENT` |
-| developmentDebug | `es.sebas1705.youknow.dev.debug` | `…:9787518c51d60a30a64701` | `FIREBASE_APP_ID_DEVELOPMENT_DEBUG` |
+| productionRelease | `es.sebas1705.youknow` | `…:c7f9dca343eebda5a64701` | `FIREBASE_APP_ID` |
+| productionDebug | `es.sebas1705.youknow.debug` | `…:eecebcdfdb57be54a64701` | `FIREBASE_APP_ID_PRODUCTION_DEBUG` |
+| developmentRelease | `es.sebas1705.youknow.dev` | `…:6a60144c788d2edfa64701` | `FIREBASE_APP_ID_DEVELOPMENT` |
+| developmentDebug | `es.sebas1705.youknow.dev.debug` | `…:0fb0838124c4d91ea64701` | `FIREBASE_APP_ID_DEVELOPMENT_DEBUG` |
 | stagingRelease | `es.sebas1705.youknow.staging` | `…:ab9df8c915544da3a64701` | `FIREBASE_APP_ID_STAGING` |
 | stagingDebug | `es.sebas1705.youknow.staging.debug` | `…:55681f6974ff0b24a64701` | `FIREBASE_APP_ID_STAGING_DEBUG` |
 
