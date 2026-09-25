@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Writes app/google-services.json from the Firebase keys in Doppler, so the JSON never lives in the
+# Writes app/google-services.json from Doppler (the official file in GOOGLE_SERVICES_JSON, or one
+# built from the individual Firebase keys), so the JSON never lives in the
 # repo. With the file present the build applies the google-services and Crashlytics Gradle plugins
 # (see build-logic AppConventionPlugin): Crashlytics then injects its build id and uploads the R8
 # mapping of release builds, so crashes are readable.
@@ -13,6 +14,17 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+# Preferred: the official file from Firebase, stored in Doppler by scripts/refresh-google-services.sh
+# (it also carries the Android OAuth clients derived from the registered SHAs).
+if [ -n "${GOOGLE_SERVICES_JSON:-}" ]; then
+  umask 077
+  printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+  echo "app/google-services.json written from Doppler's GOOGLE_SERVICES_JSON."
+  exit 0
+fi
+
+# Fallback: build an equivalent file from the individual keys.
 
 missing=0
 for name in FIREBASE_APP_ID FIREBASE_API_KEY FIREBASE_PROJECT_ID FIREBASE_SENDER_ID \
