@@ -27,7 +27,7 @@ enum class FamiliesMode(
     val multiPoints: Double
 ) {
     SURVIVAL(R.string.core_resources_survival, Icons.Filled.LocalFireDepartment, 100, 1.5),
-    TIME_ATTACK(R.string.core_resources_survival, Icons.Filled.HourglassBottom, 20, 1.2),
-    ALEATORY(R.string.core_resources_survival, Icons.Filled.Casino, 10, 1.0),
-    CUSTOM(R.string.core_resources_survival, Icons.Filled.DashboardCustomize, 0, 0.75)
+    TIME_ATTACK(R.string.core_resources_time_attack, Icons.Filled.HourglassBottom, 20, 1.2),
+    ALEATORY(R.string.core_resources_aleatory, Icons.Filled.Casino, 10, 1.0),
+    CUSTOM(R.string.core_resources_custom, Icons.Filled.DashboardCustomize, 0, 0.75)
 }

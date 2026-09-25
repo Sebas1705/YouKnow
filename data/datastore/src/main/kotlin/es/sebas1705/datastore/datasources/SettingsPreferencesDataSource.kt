@@ -17,18 +17,25 @@ class SettingsPreferencesDataSource @Inject constructor(
 ) {
 
     init {
+        // Write the defaults once, on the very first launch. Rewriting them on every start reset the
+        // user's settings each time, including `firstTime`, so the guide came back on every launch.
         CoroutineScope(Dispatchers.IO).launch {
-            settingsPreferences.updateData {
-                it.toBuilder()
-                    .setContrast(DefaultValuesDS.APP_UI_CONTRAST.ordinal)
-                    .setFirstTime(DefaultValuesDS.FIRST_TIME)
-                    .setMusicVolume(DefaultValuesDS.MUSIC_VOLUME)
-                    .setSoundVolume(DefaultValuesDS.SOUND_VOLUME)
-                    .setLanguage(DefaultValuesDS.GAME_LANGUAGE.ordinal)
-                    .setDefaultSet(true)
-                    .build()
-            }
+            settingsPreferences.updateData { current -> withDefaults(current) }
         }
+    }
+
+    companion object {
+        /** [current] unchanged if the defaults were already written, else the defaults. */
+        fun withDefaults(current: SettingsPreferences): SettingsPreferences =
+            if (current.defaultSet) current
+            else current.toBuilder()
+                .setContrast(DefaultValuesDS.APP_UI_CONTRAST.ordinal)
+                .setFirstTime(DefaultValuesDS.FIRST_TIME)
+                .setMusicVolume(DefaultValuesDS.MUSIC_VOLUME)
+                .setSoundVolume(DefaultValuesDS.SOUND_VOLUME)
+                .setLanguage(DefaultValuesDS.GAME_LANGUAGE.ordinal)
+                .setDefaultSet(true)
+                .build()
     }
 
     /**
@@ -112,6 +119,21 @@ class SettingsPreferencesDataSource @Inject constructor(
         contrast: Int
     ) = settingsPreferences.updateData {
         it.toBuilder().setContrast(contrast).build()
+    }
+
+    /**
+     * Update the game language (ordinal of Languages). The settings screen changes it, but
+     * nothing persisted it.
+     *
+     * @param language [Int]: Game language
+     *
+     * @since 1.1.1
+     * @author Sebas1705 25/09/2026
+     */
+    suspend fun saveLanguage(
+        language: Int
+    ) = settingsPreferences.updateData {
+        it.toBuilder().setLanguage(language).build()
     }
 
     /**

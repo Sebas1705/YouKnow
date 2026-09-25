@@ -9,6 +9,6 @@ class SaveFirstTime @Inject constructor(
 ) {
     suspend operator fun invoke() {
         val current = settingsRepository.read().first()
-        settingsRepository.update(current.copy(firstTime = false))
+        settingsRepository.update(current.copy(firstTime = true))
     }
 }
