@@ -87,7 +87,7 @@ android {
 
     configurations.all {
         resolutionStrategy {
-            force("org.jetbrains:annotations:23.0.0")
+            force("org.jetbrains:annotations:26.1.0")
         }
     }
 
