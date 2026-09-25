@@ -1,0 +1,85 @@
+name: Firebase
+
+# Security rules as code. On pull requests that touch them, the emulator tests in
+# firebase/rules-test run (no secrets needed). On main they run again and, if green, the rules are
+# deployed to youknow-tfg with a service account whose key lives in Doppler
+# (FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON, see docs/FIREBASE.md). Indexes are not deployed from here.
+on:
+  pull_request:
+    paths:
+      - "firebase/**"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/firebase.yml"
+  push:
+    branches: [main]
+    paths:
+      - "firebase/**"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/firebase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deploys never overlap or get cancelled halfway.
+concurrency:
+  group: firebase-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  rules-test:
+    name: Rules tests (emulators)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: firebase/rules-test/package-lock.json
+      - name: Install
+        working-directory: firebase/rules-test
+        run: npm ci --no-audit --no-fund
+      - name: Test rules against the emulators
+        working-directory: firebase/rules-test
+        run: npm test
+
+  deploy:
+    name: Deploy rules
+    needs: rules-test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: firebase/rules-test/package-lock.json
+      - name: Install the pinned firebase-tools
+        working-directory: firebase/rules-test
+        run: npm ci --no-audit --no-fund
+      - uses: dopplerhq/cli-action@v4
+      - name: Deploy Firestore, Realtime Database and Storage rules
+        run: |
+          doppler run -- bash -c '
+            [ -n "${FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON:-}" ] || { echo "::error::Missing secret FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON in Doppler"; exit 1; }
+            umask 077
+            printf "%s" "$FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-deploy.json"
+            export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-deploy.json"
+            firebase/rules-test/node_modules/.bin/firebase deploy \
+              --only firestore:rules,database,storage \
+              --project youknow-tfg --non-interactive'
+      - name: Remove credentials from the runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-deploy.json"
