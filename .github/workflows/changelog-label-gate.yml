@@ -27,6 +27,8 @@ jobs:
               'security',
               'breaking-change',
               'skip-changelog',
+              // Dependabot labels its PRs 'dependencies'.
+              'dependencies',
             ]);
 
             const pr = context.payload.pull_request;
@@ -40,7 +42,7 @@ jobs:
 
             if (matched.length === 0) {
               core.setFailed(
-                'Missing changelog label. Add one of: bug, enhancement, documentation, ci, security, breaking-change, skip-changelog.'
+                'Missing changelog label. Add one of: bug, enhancement, documentation, ci, security, breaking-change, skip-changelog, dependencies.'
               );
               return;
             }

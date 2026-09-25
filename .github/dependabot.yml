@@ -26,6 +26,9 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "com.android.tools:*"
         update-types: ["version-update:semver-major"]
+      # The Gradle wrapper moves together with AGP (a newer Gradle drops internal APIs that the
+      # current AGP uses, e.g. Gradle 9.6 with AGP 8.13), so it also comes from the template.
+      - dependency-name: "gradle-wrapper"
     groups:
       # One reviewable PR for minor and patch updates; majors (not ignored above) come one by one.
       gradle-dependencies:
