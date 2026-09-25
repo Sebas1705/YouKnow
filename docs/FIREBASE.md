@@ -47,7 +47,16 @@ npm install
 npm test
 ```
 
-Deploy after the tests pass:
+**CI** (`.github/workflows/firebase.yml`): every pull request touching `firebase/` runs these
+tests; a push to `main` runs them again and, if green, deploys the rules. The deploy uses its own
+service account, separate from the App Distribution one and limited to rules:
+
+| | |
+|---|---|
+| Doppler secret (`prd`) | `FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON` |
+| Roles on `youknow-tfg` | Firebase Rules Admin (Firestore + Storage rules), Firebase Realtime Database Admin (RTDB rules), Service Usage Consumer |
+
+By hand, when needed:
 
 ```bash
 npx firebase-tools deploy --only firestore:rules,database,storage --project youknow-tfg
@@ -58,5 +67,6 @@ only runs single-field queries, which need no composite index.
 
 ## Other services
 
+- **Authentication**: email/password and Google (web client `875884945428-k0hdf…`); authorized domains are the defaults.
 - **App Distribution**: group `testers`; the release pipeline uploads there.
 - **Hosting** (`youknow-tfg.web.app`), **Remote Config**, **Cloud Functions**: unused.
