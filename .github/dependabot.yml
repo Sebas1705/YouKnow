@@ -11,10 +11,29 @@ updates:
     labels:
       - "dependencies"
       - "gradle"
+    ignore:
+      # protobuf stays on 3.x while Firebase does: 4.x lite clashes with protolite-well-known-types
+      # (duplicate classes). See `protobuf` in gradle/libs.versions.toml.
+      - dependency-name: "com.google.protobuf:*"
+        update-types: ["version-update:semver-major"]
+      # Major Android Gradle Plugin upgrades need a migration; they come from the Templetry template
+      # (templetry update), not from here.
+      - dependency-name: "com.android.application"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "com.android.library"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "com.android.tools.build:*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "com.android.tools:*"
+        update-types: ["version-update:semver-major"]
     groups:
+      # One reviewable PR for minor and patch updates; majors (not ignored above) come one by one.
       gradle-dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
