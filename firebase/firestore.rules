@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// YouKnow — Cloud Firestore. Everything requires a signed-in user; each user only writes their
+// own documents. Anything not matched below is denied.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // users/{uid}: profile, points, credits and group of each player. Everyone signed in reads
+    // them (ranking, nickname search, group members); only the owner writes or deletes.
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && validUser(request.resource.data);
+
+      function validUser(user) {
+        return user.keys().hasOnly(['email', 'provider', 'nickName', 'photoUrl', 'groupId', 'points', 'credits', 'logged'])
+          && user.nickName is string && user.nickName.size() <= 30
+          && user.points is int && user.points >= 0
+          && user.credits is int && user.credits >= 0
+          && (!('groupId' in user) || user.groupId == null || user.groupId is string)
+          && (!('photoUrl' in user) || user.photoUrl == null || user.photoUrl is string);
+      }
+    }
+
+    // news/{id}: published from the console only.
+    match /news/{id} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // surveys/{uid}: one survey per user, keyed by the author's uid.
+    match /surveys/{uid} {
+      allow read: if signedIn();
+      allow create, update: if isOwner(uid) && request.resource.data.authorFirebaseId == uid;
+      allow delete: if false;
+    }
+  }
+}

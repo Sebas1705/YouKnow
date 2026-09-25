@@ -1,9 +1,13 @@
 plugins {
     alias(libs.plugins.buildlogic.data)
     alias(libs.plugins.buildlogic.firebase)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
     buildFeatures {
         buildConfig = true
     }

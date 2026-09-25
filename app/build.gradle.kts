@@ -40,7 +40,6 @@ android {
         //    what FirebaseInitProvider reads, so Auth, Firestore, Realtime Database, Storage,
         //    Messaging and Analytics work the same. Empty values = Firebase not initialized.
         if (!file("google-services.json").exists()) {
-            resValue("string", "google_app_id", secret("FIREBASE_APP_ID", ""))
             resValue("string", "google_api_key", secret("FIREBASE_API_KEY", ""))
             resValue("string", "google_crash_reporting_api_key", secret("FIREBASE_API_KEY", ""))
             resValue("string", "project_id", secret("FIREBASE_PROJECT_ID", ""))
@@ -97,6 +96,25 @@ android {
             resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
             resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
         }
+    }
+}
+
+// Each variant reports to its own Firebase app (YouKnow, YouKnow Dev, YouKnow Staging and their
+// debug twins), so development crashes and analytics stay out of production's. The id comes from
+// FIREBASE_APP_ID_<FLAVOR>[_DEBUG] and falls back to FIREBASE_APP_ID, the production app that
+// App Distribution also targets. Only needed without google-services.json: with it, the
+// google-services plugin picks each package's app id from the file.
+val hasGoogleServicesJson = file("google-services.json").exists()
+androidComponents {
+    onVariants { variant ->
+        if (hasGoogleServicesJson) return@onVariants
+        val flavor = variant.flavorName.orEmpty().uppercase()
+        val suffix = if (variant.buildType == "debug") "_DEBUG" else ""
+        val appId = secret("FIREBASE_APP_ID_$flavor$suffix", secret("FIREBASE_APP_ID", ""))
+        variant.resValues.put(
+            variant.makeResValueKey("string", "google_app_id"),
+            com.android.build.api.variant.ResValue(appId)
+        )
     }
 }
 

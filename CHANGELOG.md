@@ -12,10 +12,14 @@ The format follows Keep a Changelog principles and semantic versioning for templ
 - Production keeps the `es.sebas1705.youknow` application id (no `.pro` suffix).
 - Firebase moves to the BoM (34.19.0) with the main artifacts; the discontinued `-ktx` ones are gone.
 - Protobuf aligned on 3.25.9 (runtime, Kotlin lite and protoc) instead of forcing 3.19.4.
+- Firebase project organized: one app per variant (Staging apps added, each variant reports to its own app id), SHA certificates registered, `testers` group created. Security rules, indexes and their emulator tests are versioned under `firebase/` (`docs/FIREBASE.md`).
 ### Fixed
 - Unit tests no longer depend on the machine locale; stale settings mapper test updated.
 - Hardcoded Google Sign-In client ids removed (one belonged to another Google project).
 - Compiler warnings: deprecated `MenuAnchorType`, redundant conversion and `when` branch.
+- Security: Firestore and Realtime Database were open to anyone (read and write); new rules require sign-in and ownership.
+- Release builds: R8 obfuscated the Firestore, Realtime Database and Gson models, so a release APK would read empty data and write obfuscated field names; the data modules now ship keep rules.
+- News were always empty: Firestore stores `title_es`/`body_en`…, now mapped with `@PropertyName`.
 ## [2026.05.09] - 2026-05-09
 ### Added
 - CI and security automation in repository root workflows.

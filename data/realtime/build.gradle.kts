@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
     buildFeatures {
         buildConfig = true
     }

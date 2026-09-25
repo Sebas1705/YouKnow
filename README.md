@@ -100,6 +100,7 @@ git push origin v1.1.0
 ```
 
 Secrets, one-time setup and details: **[docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)**.
+Firebase apps, security rules and how to test and deploy them: **[docs/FIREBASE.md](docs/FIREBASE.md)**.
 ---
 
 ## Template

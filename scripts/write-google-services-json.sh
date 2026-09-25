@@ -7,7 +7,7 @@
 # Usage:  doppler run -- scripts/write-google-services-json.sh
 #         (CI calls it the same way; see .github/actions/build-release-apk)
 #
-# Every flavor/build-type applicationId gets a client entry pointing at the same Firebase app, so any
+# Every flavor/build-type applicationId gets a client entry with its own Firebase app, so any
 # variant builds. Without this file the build falls back to the same keys as resValue resources
 # (app/build.gradle.kts), which is enough for a local debug build.
 set -euo pipefail
@@ -22,20 +22,26 @@ done
 [ "$missing" -eq 0 ] || exit 1
 
 BASE_ID="es.sebas1705.youknow"
+# applicationId -> Doppler key holding its Firebase app id (each variant has its own app; any key
+# missing falls back to FIREBASE_APP_ID, the production app).
 PACKAGES=(
-  "$BASE_ID" "$BASE_ID.debug"
-  "$BASE_ID.dev" "$BASE_ID.dev.debug"
-  "$BASE_ID.staging" "$BASE_ID.staging.debug"
+  "$BASE_ID:FIREBASE_APP_ID"
+  "$BASE_ID.debug:FIREBASE_APP_ID_PRODUCTION_DEBUG"
+  "$BASE_ID.dev:FIREBASE_APP_ID_DEVELOPMENT"
+  "$BASE_ID.dev.debug:FIREBASE_APP_ID_DEVELOPMENT_DEBUG"
+  "$BASE_ID.staging:FIREBASE_APP_ID_STAGING"
+  "$BASE_ID.staging.debug:FIREBASE_APP_ID_STAGING_DEBUG"
 )
 
 clients=""
-for pkg in "${PACKAGES[@]}"; do
+for entry in "${PACKAGES[@]}"; do
+  pkg="${entry%%:*}"; key="${entry#*:}"; app_id="${!key:-$FIREBASE_APP_ID}"
   [ -z "$clients" ] || clients+=","
   clients+=$(cat <<EOF
 
     {
       "client_info": {
-        "mobilesdk_app_id": "$FIREBASE_APP_ID",
+        "mobilesdk_app_id": "$app_id",
         "android_client_info": { "package_name": "$pkg" }
       },
       "oauth_client": [ { "client_id": "$GOOGLE_WEB_CLIENT_ID", "client_type": 3 } ],
