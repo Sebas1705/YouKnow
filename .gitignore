@@ -76,3 +76,9 @@ firebase/rules-test/node_modules/
 firebase-debug.log
 database-debug.log
 firestore-debug.log
+
+# App data shipped in assets (default games data) must be versioned: the *.json rule above made
+# them disappear once already when the project moved to the repo root.
+!**/src/main/assets/*.json
+# Room schema exports, needed to write and test database migrations.
+!/data/room/schemas/**/*.json

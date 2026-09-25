@@ -16,11 +16,11 @@ class FileRepository @Inject constructor(
     private val wordDataSource: WordJsonFileDataSource
 ) {
     suspend fun readDefaultBDFamilies(): List<FamiliesJson> =
-        familiesDataSource.readJsonFile()?.let { listOf(it) } ?: emptyList()
+        familiesDataSource.readJsonFile()
 
     suspend fun readDefaultBDQuestions(): List<QuestionJson> =
-        questionDataSource.readJsonFile()?.let { listOf(it) } ?: emptyList()
+        questionDataSource.readJsonFile()
 
     suspend fun readDefaultBDWords(): List<WordJson> =
-        wordDataSource.readJsonFile()?.let { listOf(it) } ?: emptyList()
+        wordDataSource.readJsonFile()
 }

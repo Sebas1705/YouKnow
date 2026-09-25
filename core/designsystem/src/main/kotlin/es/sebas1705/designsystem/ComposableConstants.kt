@@ -9,7 +9,8 @@ object ComposableConstants {
     const val LOOP_N = 0
     const val RATE = 1.0f
 
-    // Raw resource IDs for button sounds (0 = silent fallback)
-    const val NAV_BUTTON_SOUND = 0
-    const val GAME_BUTTON_SOUND = 0
+    // Raw resources for button sounds. They were replaced by 0 during the migration to make it
+    // compile, and SoundPool.load(context, 0, …) throws Resources.NotFoundException (home crashed).
+    val NAV_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_tap
+    val GAME_BUTTON_SOUND = es.sebas1705.core.resources.R.raw.click_arcade
 }

@@ -28,6 +28,7 @@ class SettingsRepository @Inject constructor(
         settingsPreferencesDataSource.saveMusicVolume(settingsData.musicVolume)
         settingsPreferencesDataSource.saveSoundVolume(settingsData.soundVolume)
         settingsPreferencesDataSource.saveAppContrast(settingsData.appContrast)
+        settingsPreferencesDataSource.saveLanguage(settingsData.language)
     }
 
 }
