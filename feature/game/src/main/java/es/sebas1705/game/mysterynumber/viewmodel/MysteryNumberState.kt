@@ -17,6 +17,7 @@ import es.sebas1705.models.games.NumberModel
  * @param numberModel [NumberModel]: Number to guess.
  * @param status [MysteryNumberStatus]: Status of the game.
  * @param mode [MysteryNumberMode]: Mode of the game.
+ * @param guesses [List]<[Int]>: Numbers tried so far, oldest first.
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -28,7 +29,8 @@ data class MysteryNumberState(
     var timeRemaining: Float,
     var numberModel: NumberModel,
     var status: MysteryNumberStatus,
-    var mode: MysteryNumberMode?
+    var mode: MysteryNumberMode?,
+    var guesses: List<Int> = emptyList()
 ) : MVIBaseState {
 
     companion object {

@@ -1,22 +1,33 @@
 package es.sebas1705.game.mysterynumber.composables
 
-
 import android.media.SoundPool
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,38 +38,45 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
 import es.sebas1705.common.games.mysterynumber.Numbers
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.common.utlis.extensions.primitives.toReducedString
-import es.sebas1705.designsystem.buttons.common.IFilledButton
-import es.sebas1705.designsystem.cards.IPrimaryCard
-import es.sebas1705.designsystem.layouts.ApplyBack
-import es.sebas1705.designsystem.texts.Subtitle
-import es.sebas1705.designsystem.texts.Title
-import es.sebas1705.designsystem.texts.TitleSurface
-import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
-import es.sebas1705.ui.theme.Paddings.MediumPadding
-import es.sebas1705.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.ui.theme.gameBottomBarHeight
 import es.sebas1705.feature.games.R
+import es.sebas1705.game.common.GameHud
+import es.sebas1705.game.common.GameLoadError
+import es.sebas1705.game.common.GamePage
+import es.sebas1705.game.common.GamePrimaryButton
+import es.sebas1705.game.common.GameSecondaryButton
+import es.sebas1705.game.common.GameTag
+import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.tint
+import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
+import es.sebas1705.ui.theme.AppTheme
+import es.sebas1705.ui.theme.makeTitle
 import kotlinx.coroutines.delay
 
+/** Seconds of a time attack round. */
+private const val ROUND_TIME = 50f
+
 /**
- * Running mode of the Mystery Number game.
+ * A running Mystery Number: the HUD, a card with the range and the number being built, the
+ * higher/lower hint of the last try with the history of guesses, and a keypad that only offers the
+ * steps that fit the range.
  *
  * @param windowState [WindowState]: State of the window.
  * @param mysteryNumberState [MysteryNumberState]: State of the game.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
- * @param onResponseNumber ([Int], [Float]) -> Unit: Function to respond to the number.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of SoundPool and volume.
+ * @param onResponseNumber (Int, Float) -> Unit: Callback with the tried number and the time left.
  *
  * @since 1.0.0
- * @Author Sebas1705 12/09/2025
+ * @author Sebas1705 12/09/2025
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
@@ -66,142 +84,207 @@ fun Running(
     soundPool: Pair<SoundPool, Float>? = null,
     onResponseNumber: (Int, Float) -> Unit = { _, _ -> }
 ) {
-    //Body:
-    ApplyBack(
-        backId = windowState.backFill
-    ) {
-        if (mysteryNumberState.numberModel.number == -2) {
-            Title(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.feature_game_error_loading_message),
-                color = MaterialTheme.colorScheme.error
-            )
-            return@ApplyBack
-        }
-        var time by rememberSaveable { mutableFloatStateOf(15f) }
-        val number = mysteryNumberState.numberModel
-        var actualNumber by rememberSaveable { mutableIntStateOf(0) }
-        var plus by rememberSaveable { mutableStateOf(true) }
-        if (mysteryNumberState.mode == MysteryNumberMode.TIME_ATTACK) {
-            LaunchedEffect(number) {
-                time = 50f
-                while (time > 0) {
-                    delay(10)
-                    time -= 0.01f
-                }
-                onResponseNumber(-1, time)
+    val number = mysteryNumberState.numberModel
+    if (number.number == -2) {
+        GameLoadError(windowState)
+        return
+    }
+    val max = number.difficulty.maxMysteryNumber
+    var time by rememberSaveable { mutableFloatStateOf(ROUND_TIME) }
+    var current by rememberSaveable(number) { mutableIntStateOf(0) }
+    var adding by rememberSaveable { mutableStateOf(true) }
+    if (mysteryNumberState.mode == MysteryNumberMode.TIME_ATTACK) {
+        LaunchedEffect(number) {
+            time = ROUND_TIME
+            while (time > 0f) {
+                delay(50)
+                time -= 0.05f
             }
+            onResponseNumber(-1, time)
         }
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
+    }
+    val scheme = MaterialTheme.colorScheme
+    val lastGuess = mysteryNumberState.guesses.lastOrNull()
+
+    GamePage(windowState, filled = true, verticalArrangement = Arrangement.SpaceBetween) {
+        GameHud(
+            points = mysteryNumberState.points,
+            lives = mysteryNumberState.lives,
+            timeLeft = if (mysteryNumberState.mode == MysteryNumberMode.TIME_ATTACK) time else null,
+            timeTotal = ROUND_TIME
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                TitleSurface(
+            StickerCard(
+                modifier = Modifier.fillMaxWidth(),
+                shadow = number.difficulty.tint(),
+                shadowOffset = 6.dp,
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
+                Column(
                     modifier = Modifier
-                        .padding(MediumPadding),
-                    text = stringResource(R.string.feature_game_mystery_title)
-                )
-            }
-            item {
-                Subtitle(
-                    text = stringResource(R.string.feature_game_difficulty)
-                            + ": " + stringResource(number.difficulty.strRes)
-                            + "\n" + stringResource(R.string.feature_game_range) + "1 - ${number.difficulty.maxMysteryNumber}"
-                )
-            }
-            item {
-                Title(
-                    modifier = Modifier
-                        .padding(MediumPadding),
-                    text = actualNumber.toString(),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-            item {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(
-                        (if (windowState.isPortrait) windowState.widthDp else windowState.heightDp)
-                                * 0.33f
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(
-                            if (windowState.isPortrait) windowState.widthDp * 0.5f
-                            else windowState.widthDp * 0.1f
-                        )
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(Numbers.entries.size) {
-                        IFilledButton(
-                            onClick = {
-                                actualNumber += if (plus) Numbers.entries[it].number else -Numbers.entries[it].number
-                                if (actualNumber < 0) actualNumber = 0
-                                if (actualNumber > 1_000_000) actualNumber = 1_000_000
-                            },
-                            label = (if (plus) "+" else "-") + Numbers.entries[it].str,
-                            modifier = Modifier.padding(SmallestPadding),
+                    Text(
+                        text = stringResource(R.string.feature_game_mystery_title),
+                        style = MaterialTheme.typography.titleLarge.makeTitle(),
+                        color = scheme.primary
+                    )
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        GameTag(stringResource(number.difficulty.strRes), number.difficulty.tint())
+                        GameTag("1 – $max", scheme.primary)
+                    }
+                    AnimatedContent(
+                        targetState = current,
+                        transitionSpec = {
+                            (fadeIn() + scaleIn(initialScale = 0.85f, animationSpec = spring(Spring.DampingRatioMediumBouncy)))
+                                .togetherWith(fadeOut())
+                        },
+                        label = "number"
+                    ) { value ->
+                        Text(
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            text = value.toString(),
+                            style = MaterialTheme.typography.displayLarge.makeTitle(),
+                            color = scheme.tertiary
                         )
                     }
+                    GuessHint(lastGuess, number.number)
+                    if (mysteryNumberState.guesses.isNotEmpty()) GuessHistory(mysteryNumberState.guesses.takeLast(6), number.number)
                 }
             }
-            item {
-                IFilledButton(
-                    onClick = {
-                        plus = !plus
-                    },
-                    label = stringResource(R.string.feature_game_minus_plus),
-                    modifier = Modifier.padding(SmallestPadding),
+            Spacer(Modifier.height(24.dp))
+            val steps = Numbers.entries.filter { it.number <= max }
+            steps.chunked(3).forEach { row ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    row.forEach { step ->
+                        GameSecondaryButton(
+                            text = (if (adding) "+" else "−") + step.str,
+                            onClick = {
+                                current = (current + if (adding) step.number else -step.number).coerceIn(0, max)
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                GameSecondaryButton(
+                    text = if (adding) "+ / −" else "− / +",
+                    onClick = { adding = !adding }
                 )
-                IFilledButton(
-                    onClick = {
-                        onResponseNumber(actualNumber, time)
-                    },
-                    label = stringResource(R.string.feature_game_try_number),
-                    modifier = Modifier.padding(MediumPadding),
+                GameSecondaryButton(
+                    text = "0",
+                    icon = Icons.Filled.Refresh,
+                    onClick = { current = 0 }
+                )
+                GamePrimaryButton(
+                    text = stringResource(R.string.feature_game_try_number),
+                    icon = Icons.Filled.Search,
+                    onClick = { onResponseNumber(current, time) },
+                    enabled = current > 0,
+                    modifier = Modifier.weight(1f)
                 )
             }
-            stickyHeader {
-                IPrimaryCard(
+        }
+        // Keeps the keypad off the bottom illustrations.
+        Spacer(Modifier.height(56.dp))
+    }
+}
+
+/** "Higher!" or "Lower!" for the last try, or the prompt before the first one. */
+@Composable
+private fun GuessHint(lastGuess: Int?, secret: Int) {
+    val scheme = MaterialTheme.colorScheme
+    if (lastGuess == null || lastGuess == secret) {
+        Text(
+            text = stringResource(R.string.feature_game_guess_prompt),
+            style = MaterialTheme.typography.bodyMedium,
+            color = scheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        return
+    }
+    val higher = secret > lastGuess
+    AnimatedContent(targetState = lastGuess to higher, label = "hint") { (guess, up) ->
+        Row(
+            modifier = Modifier
+                .background(scheme.tertiary.copy(alpha = 0.14f), CircleShape)
+                .border(1.5.dp, scheme.tertiary, CircleShape)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (up) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward,
+                contentDescription = null,
+                tint = scheme.tertiary
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = stringResource(if (up) R.string.feature_game_higher else R.string.feature_game_lower) + "  ($guess)",
+                style = MaterialTheme.typography.titleMedium.makeTitle(),
+                color = scheme.tertiary
+            )
+        }
+    }
+}
+
+/** The last guesses as small tags with the direction each one pointed to. */
+@Composable
+private fun GuessHistory(guesses: List<Int>, secret: Int) {
+    val scheme = MaterialTheme.colorScheme
+    Column(
+        modifier = Modifier.padding(top = 14.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(R.string.feature_game_your_guesses),
+            style = MaterialTheme.typography.labelMedium,
+            color = scheme.onSurfaceVariant
+        )
+        Row(
+            modifier = Modifier.padding(top = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            guesses.forEach { guess ->
+                val up = secret > guess
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(gameBottomBarHeight)
-                        .padding(bottom = SmallestPadding)
+                        .background(scheme.primary.copy(alpha = 0.08f), CircleShape)
+                        .padding(horizontal = 8.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(SmallestPadding),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Title(
-                            text = "${stringResource(es.sebas1705.core.resources.R.string.core_resources_points)}: ${mysteryNumberState.points.toReducedString()}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Row {
-                            Title(
-                                text = "${mysteryNumberState.lives}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = stringResource(R.string.feature_game_lives),
-                                tint = MaterialTheme.colorScheme.tertiary
-                            )
-                        }
-                        if (mysteryNumberState.mode == MysteryNumberMode.TIME_ATTACK) Row {
-                            Title(
-                                text = "${time.toInt()}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.Timer,
-                                contentDescription = stringResource(R.string.feature_game_time),
-                                tint = MaterialTheme.colorScheme.tertiary
-                            )
-                        }
-                    }
+                    Text(
+                        text = guess.toString(),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = scheme.primary
+                    )
+                    Icon(
+                        imageVector = if (up) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward,
+                        contentDescription = null,
+                        tint = if (guess == secret) Color.Unspecified else scheme.primary,
+                        modifier = Modifier.size(14.dp)
+                    )
                 }
             }
         }

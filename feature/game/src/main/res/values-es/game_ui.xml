@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nombres de los juegos -->
+    <string name="feature_game_title_quiz">Quiz</string>
+    <string name="feature_game_title_word_pass">Pasapalabra</string>
+    <string name="feature_game_title_families">Familias</string>
+
+    <!-- Selección de modo -->
+    <string name="feature_game_choose_mode">Elige cómo jugar</string>
+    <string name="feature_game_mode_desc_survival">Aguanta hasta quedarte sin vidas</string>
+    <string name="feature_game_mode_desc_time_attack">Responde contra el reloj</string>
+    <string name="feature_game_mode_desc_aleatory">Una ronda rápida al azar</string>
+    <string name="feature_game_mode_desc_custom">Elige categoría y dificultad</string>
+    <string name="feature_game_mode_desc_fire_wheel">El rosco completo</string>
+    <string name="feature_game_mode_rounds">%1$d rondas</string>
+    <string name="feature_game_mode_lives">%1$d vidas</string>
+    <string name="feature_game_mode_multiplier">×%1$s puntos</string>
+
+    <!-- En partida -->
+    <string name="feature_game_round_of">%1$d / %2$d</string>
+    <string name="feature_game_higher">¡Más alto!</string>
+    <string name="feature_game_lower">¡Más bajo!</string>
+    <string name="feature_game_guess_prompt">Construye tu número y pruébalo</string>
+    <string name="feature_game_your_guesses">Tus intentos</string>
+    <string name="feature_game_definition_of">Definición %1$d de %2$d</string>
+
+    <!-- Resultados -->
+    <string name="feature_game_result_perfect">¡Perfecto!</string>
+    <string name="feature_game_result_great">¡Muy bien!</string>
+    <string name="feature_game_result_good">¡No está mal!</string>
+    <string name="feature_game_result_retry">¡Sigue practicando!</string>
+    <string name="feature_game_points_earned">puntos ganados</string>
+    <string name="feature_game_stat_correct">Aciertos</string>
+    <string name="feature_game_stat_wrong">Fallos</string>
+    <string name="feature_game_stat_accuracy">Precisión</string>
+    <string name="feature_game_stat_lives">Vidas</string>
+    <string name="feature_game_stat_time">Tiempo</string>
+    <string name="feature_game_stat_attempts">Intentos</string>
+    <string name="feature_game_number_was">El número era %1$d</string>
+</resources>

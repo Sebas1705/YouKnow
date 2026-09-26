@@ -1,65 +1,60 @@
 package es.sebas1705.game.families.composables
 
-
 import android.media.SoundPool
-import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import es.sebas1705.common.games.Difficulty
 import es.sebas1705.common.games.families.FamiliesMode
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.common.utlis.extensions.primitives.toReducedString
-import es.sebas1705.designsystem.buttons.common.IFilledButton
-import es.sebas1705.designsystem.cards.IPrimaryCard
-import es.sebas1705.designsystem.layouts.ApplyBack
-import es.sebas1705.designsystem.texts.Title
-import es.sebas1705.designsystem.texts.TitleSurface
-import es.sebas1705.game.families.viewmodel.FamiliesState
-import es.sebas1705.ui.theme.Paddings.MediumPadding
-import es.sebas1705.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.ui.theme.gameBottomBarHeight
 import es.sebas1705.feature.games.R
+import es.sebas1705.game.common.AnswerOption
+import es.sebas1705.game.common.AnswerState
+import es.sebas1705.game.common.GameHud
+import es.sebas1705.game.common.GameLoadError
+import es.sebas1705.game.common.GamePage
+import es.sebas1705.game.common.GameTag
+import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.rememberAnswerReveal
+import es.sebas1705.game.common.tint
+import es.sebas1705.game.families.viewmodel.FamiliesState
+import es.sebas1705.ui.theme.AppTheme
+import es.sebas1705.ui.theme.makeTitle
 import kotlinx.coroutines.delay
 
+/** Seconds per family in time attack. */
+private const val FAMILY_TIME = 15f
+
 /**
- * Running screen of the Families game.
+ * A running Families round: the HUD, the "which one doesn't belong?" card with its difficulty and
+ * category, and the four words as a 2×2 grid. The chosen word shows green or red for a moment.
  *
  * @param windowState [WindowState]: State of the window.
  * @param familiesState [FamiliesState]: State of the game.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
- * @param onResponseQuestion (String) -> Unit: Function to respond to the question.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of SoundPool and volume.
+ * @param onResponseQuestion (String) -> Unit: Callback with the chosen word ("TIME_OUT" on timeout).
  *
  * @since 1.0.0
- * @Author Sebas1705 21/09/2025
+ * @author Sebas1705 12/09/2025
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
@@ -67,150 +62,87 @@ fun Running(
     soundPool: Pair<SoundPool, Float>? = null,
     onResponseQuestion: (String) -> Unit = { }
 ) {
-    //Body:
-    ApplyBack(
-        backId = windowState.backFill
-    ) {
-        if (familiesState.families.isEmpty()) {
-            Title(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.feature_game_error_loading_message),
-                color = MaterialTheme.colorScheme.error
-            )
-            return@ApplyBack
-        }
-        var time by rememberSaveable { mutableFloatStateOf(15f) }
-        val family = familiesState.families[familiesState.actualFamily]
-        if (familiesState.mode == FamiliesMode.TIME_ATTACK) {
-            LaunchedEffect(family) {
-                while (time > 0) {
-                    delay(10)
-                    time -= 0.01f
-                }
-                onResponseQuestion("TIME_OUT")
+    if (familiesState.families.isEmpty()) {
+        GameLoadError(windowState)
+        return
+    }
+    val index = familiesState.actualFamily.coerceAtMost(familiesState.families.lastIndex)
+    val family = familiesState.families[index]
+    val (stateOf, choose) = rememberAnswerReveal(index, family.correctAnswer, onResponseQuestion)
+    val revealing by rememberUpdatedState(stateOf(family.correctAnswer) != AnswerState.IDLE)
+
+    // One countdown per family (it used to run once for the whole game).
+    var time by remember(index) { mutableFloatStateOf(FAMILY_TIME) }
+    if (familiesState.mode == FamiliesMode.TIME_ATTACK) {
+        LaunchedEffect(index) {
+            while (time > 0f) {
+                delay(50)
+                if (!revealing) time -= 0.05f
             }
+            if (!revealing) onResponseQuestion("TIME_OUT")
         }
-        val color = when (family.difficulty) {
-            Difficulty.EASY -> Color.Green
-            Difficulty.MEDIUM -> Color.Yellow
-            Difficulty.HARD -> Color.Red
-            else -> MaterialTheme.colorScheme.tertiary
-        }
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
+    }
+
+    GamePage(windowState, filled = true, verticalArrangement = Arrangement.SpaceBetween) {
+        GameHud(
+            points = familiesState.points,
+            round = index + 1,
+            rounds = familiesState.families.size,
+            lives = if (familiesState.mode == FamiliesMode.SURVIVAL) familiesState.lives else null,
+            maxLives = 3,
+            timeLeft = if (familiesState.mode == FamiliesMode.TIME_ATTACK) time else null,
+            timeTotal = FAMILY_TIME
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                TitleSurface(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .padding(MediumPadding)
-                        .border(1.dp, color, MaterialTheme.shapes.small),
-                    text = stringResource(R.string.feature_game_families_game),
-                    textStyle = windowState.widthFilter(
-                        MaterialTheme.typography.headlineMedium,
-                        MaterialTheme.typography.displaySmall,
-                        MaterialTheme.typography.displayLarge
-                    )
-                )
-            }
-            item {
+            StickerCard(
+                modifier = Modifier.fillMaxWidth(),
+                shadow = family.difficulty.tint(),
+                shadowOffset = 6.dp,
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
+                    modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val answers = family.answers
-                    Log.i("Running", "answers: $answers")
-                    Row(
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        GameTag(stringResource(family.difficulty.strRes), family.difficulty.tint())
+                        GameTag(stringResource(family.category.strRes), MaterialTheme.colorScheme.primary)
+                    }
+                    Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                    ) {
-                        IFilledButton(
-                            onClick = { onResponseQuestion(answers[0]) },
-                            label = answers[0],
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .padding(SmallestPadding),
-                        )
-                        IFilledButton(
-                            onClick = { onResponseQuestion(answers[1]) },
-                            label = answers[1],
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .padding(SmallestPadding),
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        IFilledButton(
-                            onClick = { onResponseQuestion(answers[2]) },
-                            label = answers[2],
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .padding(SmallestPadding),
-                        )
-                        IFilledButton(
-                            onClick = { onResponseQuestion(answers[3]) },
-                            label = answers[3],
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .padding(SmallestPadding),
-                        )
-                    }
+                            .padding(top = 16.dp, bottom = 4.dp),
+                        text = stringResource(R.string.feature_game_families_game),
+                        style = MaterialTheme.typography.headlineSmall.makeTitle(),
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
-            stickyHeader {
-                IPrimaryCard(
+            Spacer(Modifier.height(28.dp))
+            family.answers.chunked(2).forEach { pair ->
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(gameBottomBarHeight)
-                        .padding(bottom = SmallestPadding)
+                        .fillMaxWidth()
+                        .padding(vertical = 7.dp),
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(SmallestPadding),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Title(
-                            text = "${stringResource(es.sebas1705.core.resources.R.string.core_resources_points)}: ${familiesState.points.toReducedString()}",
-                            style = MaterialTheme.typography.bodyMedium
+                    pair.forEach { word ->
+                        AnswerOption(
+                            text = word,
+                            state = stateOf(word),
+                            onClick = { choose(word) },
+                            modifier = Modifier.weight(1f)
                         )
-                        Title(
-                            text = "${familiesState.actualFamily + 1}/${familiesState.families.size}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        if (familiesState.mode == FamiliesMode.SURVIVAL) Row {
-                            (1..3).forEach {
-                                Icon(
-                                    imageVector = Icons.Filled.Favorite,
-                                    contentDescription = stringResource(R.string.feature_game_lives),
-                                    tint = if (it <= familiesState.lives) MaterialTheme.colorScheme.tertiary else Color.Gray
-                                )
-                            }
-                        }
-                        else if (familiesState.mode == FamiliesMode.TIME_ATTACK) Row {
-                            (1..3).forEach {
-                                Icon(
-                                    imageVector = Icons.Filled.Timer,
-                                    contentDescription = stringResource(R.string.feature_game_time),
-                                    tint = if (it <= time / 5) MaterialTheme.colorScheme.tertiary else Color.Gray
-                                )
-                            }
-                        }
                     }
                 }
             }
         }
+        // Keeps the words off the bottom illustrations.
+        Spacer(Modifier.height(72.dp))
     }
 }
 

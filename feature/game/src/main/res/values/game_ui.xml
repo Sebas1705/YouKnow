@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Game names -->
+    <string name="feature_game_title_quiz">Quiz</string>
+    <string name="feature_game_title_word_pass">Word-Pass</string>
+    <string name="feature_game_title_families">Families</string>
+
+    <!-- Mode selection -->
+    <string name="feature_game_choose_mode">Choose how to play</string>
+    <string name="feature_game_mode_desc_survival">Keep going until you run out of lives</string>
+    <string name="feature_game_mode_desc_time_attack">Answer against the clock</string>
+    <string name="feature_game_mode_desc_aleatory">A quick random round</string>
+    <string name="feature_game_mode_desc_custom">Pick category and difficulty</string>
+    <string name="feature_game_mode_desc_fire_wheel">The whole letter wheel</string>
+    <string name="feature_game_mode_rounds">%1$d rounds</string>
+    <string name="feature_game_mode_lives">%1$d lives</string>
+    <string name="feature_game_mode_multiplier">×%1$s points</string>
+
+    <!-- In game -->
+    <string name="feature_game_round_of">%1$d / %2$d</string>
+    <string name="feature_game_higher">Higher!</string>
+    <string name="feature_game_lower">Lower!</string>
+    <string name="feature_game_guess_prompt">Build your number and try it</string>
+    <string name="feature_game_your_guesses">Your guesses</string>
+    <string name="feature_game_definition_of">Definition %1$d of %2$d</string>
+
+    <!-- Results -->
+    <string name="feature_game_result_perfect">Perfect!</string>
+    <string name="feature_game_result_great">Great job!</string>
+    <string name="feature_game_result_good">Not bad!</string>
+    <string name="feature_game_result_retry">Keep practising!</string>
+    <string name="feature_game_points_earned">points earned</string>
+    <string name="feature_game_stat_correct">Correct</string>
+    <string name="feature_game_stat_wrong">Wrong</string>
+    <string name="feature_game_stat_accuracy">Accuracy</string>
+    <string name="feature_game_stat_lives">Lives</string>
+    <string name="feature_game_stat_time">Time left</string>
+    <string name="feature_game_stat_attempts">Attempts</string>
+    <string name="feature_game_number_was">The number was %1$d</string>
+</resources>

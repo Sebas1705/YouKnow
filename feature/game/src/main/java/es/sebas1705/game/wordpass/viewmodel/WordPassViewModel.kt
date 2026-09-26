@@ -76,6 +76,7 @@ class WordPassViewModel @Inject constructor(
                     updateUi {
                         it.copy(
                             words = words,
+                            results = emptyList(),
                             status = WordPassStatus.RUNNING
                         )
                     }
@@ -96,6 +97,7 @@ class WordPassViewModel @Inject constructor(
                     updateUi {
                         it.copy(
                             words = words,
+                            results = emptyList(),
                             status = WordPassStatus.RUNNING
                         )
                     }
@@ -146,6 +148,7 @@ class WordPassViewModel @Inject constructor(
                 points = it.points + wordPoints + ((it.points + wordPoints) * (if (last) buff else 0f)).toInt(),
                 actualWord = it.actualWord + 1,
                 correctAnswers = it.correctAnswers + (if (correct) 1 else 0),
+                results = it.results + correct,
                 lives = it.lives - (if (correct) 0 else 1)
             )
         }

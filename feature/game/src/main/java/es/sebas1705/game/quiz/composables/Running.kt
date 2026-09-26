@@ -1,66 +1,62 @@
 package es.sebas1705.game.quiz.composables
 
-
 import android.media.SoundPool
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.common.games.Difficulty
+import androidx.compose.ui.unit.dp
 import es.sebas1705.common.games.QuizType
 import es.sebas1705.common.games.quiz.QuizMode
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.common.utlis.extensions.primitives.toReducedString
-import es.sebas1705.designsystem.buttons.common.IOutlinedButton
-import es.sebas1705.designsystem.cards.IPrimaryCard
-import es.sebas1705.designsystem.layouts.ApplyBack
-import es.sebas1705.designsystem.texts.Title
-import es.sebas1705.designsystem.texts.TitleSurface
+import es.sebas1705.game.common.AnswerBadges
+import es.sebas1705.game.common.AnswerOption
+import es.sebas1705.game.common.AnswerState
+import es.sebas1705.game.common.GameHud
+import es.sebas1705.game.common.GameLoadError
+import es.sebas1705.game.common.GamePage
+import es.sebas1705.game.common.GameTag
+import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.rememberAnswerReveal
+import es.sebas1705.game.common.tint
 import es.sebas1705.game.quiz.viewmodel.QuizState
-import es.sebas1705.ui.theme.OutlineThickness
-import es.sebas1705.ui.theme.Paddings.MediumPadding
-import es.sebas1705.ui.theme.Paddings.SmallestPadding
 import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.ui.theme.gameBottomBarHeight
-import es.sebas1705.feature.games.R
+import es.sebas1705.ui.theme.makeTitle
 import kotlinx.coroutines.delay
 
+/** Seconds per question in time attack. */
+private const val QUESTION_TIME = 15f
+
 /**
- * Running of the Quiz game.
+ * A running Quiz: the HUD (points, progress, lives or clock), the question card with its difficulty
+ * and category, and the answers. The chosen answer shows green or red for a moment before the next
+ * question.
  *
  * @param windowState [WindowState]: State of the window.
- * @param quizState [QuizState]: State of the game.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
- * @param onResponseQuestion ([String]) -> Unit: Function to respond to the question.
+ * @param quizState [QuizState]: State of the quiz.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of SoundPool and volume.
+ * @param onResponseQuestion (String) -> Unit: Callback with the chosen answer ("TIME_OUT" on timeout).
  *
  * @since 1.0.0
- * @Author Sebas1705 12/09/2025
+ * @author Sebas1705 12/09/2025
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
@@ -68,167 +64,99 @@ fun Running(
     soundPool: Pair<SoundPool, Float>? = null,
     onResponseQuestion: (String) -> Unit = { }
 ) {
-    //Body:
-    ApplyBack(
-        backId = windowState.backFill
-    ) {
-        if (quizState.questions.isEmpty()) {
-            Title(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.feature_game_error_loading_message),
-                color = MaterialTheme.colorScheme.error
-            )
-            return@ApplyBack
-        }
-        var time by rememberSaveable { mutableFloatStateOf(15f) }
-        val question = quizState.questions[quizState.actualQuestion]
-        if (quizState.mode == QuizMode.TIME_ATTACK) {
-            LaunchedEffect(question) {
-                while (time > 0) {
-                    delay(10)
-                    time -= 0.01f
-                }
-                onResponseQuestion("TIME_OUT")
+    if (quizState.questions.isEmpty()) {
+        GameLoadError(windowState)
+        return
+    }
+    val index = quizState.actualQuestion.coerceAtMost(quizState.questions.lastIndex)
+    val question = quizState.questions[index]
+    val (stateOf, choose) = rememberAnswerReveal(index, question.correctAnswer, onResponseQuestion)
+    val revealing by rememberUpdatedState(stateOf(question.correctAnswer) != AnswerState.IDLE)
+
+    // One countdown per question (it used to run once for the whole game).
+    var time by remember(index) { mutableFloatStateOf(QUESTION_TIME) }
+    if (quizState.mode == QuizMode.TIME_ATTACK) {
+        LaunchedEffect(index) {
+            while (time > 0f) {
+                delay(50)
+                if (!revealing) time -= 0.05f
             }
+            if (!revealing) onResponseQuestion("TIME_OUT")
         }
-        val color = when (question.difficulty) {
-            Difficulty.EASY -> Color.Green
-            Difficulty.MEDIUM -> Color.Yellow
-            Difficulty.HARD -> Color.Red
-            else -> MaterialTheme.colorScheme.tertiary
-        }
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
+    }
+
+    GamePage(windowState, filled = true, verticalArrangement = Arrangement.SpaceBetween) {
+        GameHud(
+            points = quizState.points,
+            round = index + 1,
+            rounds = quizState.questions.size,
+            lives = if (quizState.mode == QuizMode.SURVIVAL) quizState.lives else null,
+            maxLives = 3,
+            timeLeft = if (quizState.mode == QuizMode.TIME_ATTACK) time else null,
+            timeTotal = QUESTION_TIME
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                TitleSurface(
+        StickerCard(
+            modifier = Modifier.fillMaxWidth(),
+            shadow = question.difficulty.tint(),
+            shadowOffset = 6.dp,
+            shape = MaterialTheme.shapes.extraLarge
+        ) {
+            Column(Modifier.padding(20.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GameTag(stringResource(question.difficulty.strRes), question.difficulty.tint())
+                    GameTag(stringResource(question.category.strRes), MaterialTheme.colorScheme.primary)
+                }
+                Text(
                     modifier = Modifier
-                        .padding(MediumPadding)
-                        .border(OutlineThickness, color, MaterialTheme.shapes.small),
-                    text = quizState.questions[quizState.actualQuestion].question,
-                    textAlign = TextAlign.Center,
-                    textStyle = when {
-                        quizState.questions[quizState.actualQuestion].question.length > 20 -> MaterialTheme.typography.titleMedium
-                        quizState.questions[quizState.actualQuestion].question.length > 15 -> MaterialTheme.typography.headlineMedium
-                        else -> MaterialTheme.typography.displayMedium
-                    }
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 8.dp),
+                    text = question.question,
+                    style = (if (question.question.length > 80) MaterialTheme.typography.titleLarge
+                    else MaterialTheme.typography.headlineSmall).makeTitle(),
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
                 )
             }
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    val answers = question.answers
-                    if (question.quizType == QuizType.BOOLEAN) {
-                        IOutlinedButton(
-                            onClick = { onResponseQuestion(answers[0]) },
-                            label = answers[0],
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(SmallestPadding),
-                        )
-                        IOutlinedButton(
-                            onClick = { onResponseQuestion(answers[1]) },
-                            label = answers[1],
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(SmallestPadding),
-                        )
-                    } else {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            IOutlinedButton(
-                                onClick = { onResponseQuestion(answers[0]) },
-                                label = answers[0],
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f)
-                                    .padding(SmallestPadding),
-                            )
-                            IOutlinedButton(
-                                onClick = { onResponseQuestion(answers[1]) },
-                                label = answers[1],
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f)
-                                    .padding(SmallestPadding),
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            IOutlinedButton(
-                                onClick = { onResponseQuestion(answers[2]) },
-                                label = answers[2],
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f)
-                                    .padding(SmallestPadding),
-                            )
-                            IOutlinedButton(
-                                onClick = { onResponseQuestion(answers[3]) },
-                                label = answers[3],
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f)
-                                    .padding(SmallestPadding),
-                            )
-                        }
-                    }
+        }
+        Spacer(Modifier.height(28.dp))
+        val answers = question.answers
+        if (question.quizType == QuizType.BOOLEAN) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                answers.forEach { answer ->
+                    AnswerOption(
+                        text = answer,
+                        state = stateOf(answer),
+                        onClick = { choose(answer) },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
-
-            stickyHeader {
-                IPrimaryCard(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(gameBottomBarHeight)
-                        .padding(bottom = SmallestPadding)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(SmallestPadding),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Title(
-                            text = "${stringResource(es.sebas1705.core.resources.R.string.core_resources_points)}: ${quizState.points.toReducedString()}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Title(
-                            text = "${quizState.actualQuestion + 1}/${quizState.questions.size}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        if (quizState.mode == QuizMode.SURVIVAL) Row {
-                            (1..3).forEach {
-                                Icon(
-                                    imageVector = Icons.Filled.Favorite,
-                                    contentDescription = stringResource(R.string.feature_game_lives),
-                                    tint = if (it <= quizState.lives) MaterialTheme.colorScheme.tertiary else Color.Gray
-                                )
-                            }
-                        }
-                        else if (quizState.mode == QuizMode.TIME_ATTACK) Row {
-                            (0..2).forEach {
-                                Icon(
-                                    imageVector = Icons.Filled.Timer,
-                                    contentDescription = stringResource(R.string.feature_game_time),
-                                    tint = if (it <= time / 5) MaterialTheme.colorScheme.tertiary else Color.Gray
-                                )
-                            }
-                        }
-                    }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                answers.forEachIndexed { i, answer ->
+                    AnswerOption(
+                        text = answer,
+                        badge = AnswerBadges.getOrNull(i),
+                        state = stateOf(answer),
+                        onClick = { choose(answer) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
+        }
+        // Keeps the question block off the bottom illustrations.
+        Spacer(Modifier.height(72.dp))
     }
 }
 
