@@ -2,6 +2,8 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+
+## [1.1.1] - 2026-09-25
 ### Fixed
 - The guide stopped with an "Empty words" toast: the default games data (words, questions, families) had been lost when the project moved to the repo root (the `*.json` ignore rule hid them), their names did not match the code, and they were decoded as a single object instead of a list.
 - The guide came back on every launch and every setting was reset at start: the defaults were rewritten on each launch, and finishing the guide stored the wrong value.
