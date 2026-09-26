@@ -18,10 +18,10 @@ data class GameItem(
 ) {
     companion object {
         val games = listOf(
-            GameItem(R.string.feature_home_mystery_number, R.drawable.numbers),
-            GameItem(R.string.feature_home_quiz, R.drawable.quiz),
-            GameItem(R.string.feature_home_word_pass, R.drawable.wordpass),
-            GameItem(R.string.feature_home_families, R.drawable.family),
+            GameItem(R.string.feature_home_mystery_number, es.sebas1705.core.resources.R.drawable.game_numbers),
+            GameItem(R.string.feature_home_quiz, es.sebas1705.core.resources.R.drawable.game_quiz),
+            GameItem(R.string.feature_home_word_pass, es.sebas1705.core.resources.R.drawable.game_wordpass),
+            GameItem(R.string.feature_home_families, es.sebas1705.core.resources.R.drawable.game_family),
         )
     }
 }

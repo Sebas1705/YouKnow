@@ -19,6 +19,7 @@ import es.sebas1705.models.games.WordModel
  * @param status [WordPassStatus]: Status of the game.
  * @param mode [WordPassMode?]: Mode of the game.
  * @param languages [Languages]: Languages that the game will have.
+ * @param results [List<Boolean>]: Whether each answered word was right, in order (draws the letter wheel).
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -32,7 +33,8 @@ data class WordPassState(
     var words: List<WordModel>,
     var status: WordPassStatus,
     var mode: WordPassMode?,
-    var languages: Languages
+    var languages: Languages,
+    var results: List<Boolean> = emptyList()
 ) : MVIBaseState {
 
     companion object {

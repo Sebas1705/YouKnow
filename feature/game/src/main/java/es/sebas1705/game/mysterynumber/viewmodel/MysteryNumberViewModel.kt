@@ -61,6 +61,7 @@ class MysteryNumberViewModel @Inject constructor(
                 updateUi {
                     it.copy(
                         numberModel = number,
+                        guesses = emptyList(),
                         status = MysteryNumberStatus.RUNNING,
                         lives = intent.lives
                     )
@@ -91,6 +92,7 @@ class MysteryNumberViewModel @Inject constructor(
                                 mode = intent.mysteryNumberMode,
                                 lives = intent.mysteryNumberMode.lives,
                                 numberModel = number,
+                                guesses = emptyList(),
                                 status = MysteryNumberStatus.RUNNING
                             )
                         }
@@ -110,15 +112,7 @@ class MysteryNumberViewModel @Inject constructor(
     ) {
         val correct = intent.response == _uiState.value.numberModel.number
         val last = (!correct && _uiState.value.lives - 1 <= 0 || intent.response == -1)
-        if (!correct) {
-            val m =
-                if (_uiState.value.numberModel.number > intent.response) application.getString(
-                    R.string.feature_game_greater
-                ) else application.getString(
-                    R.string.feature_game_smaller
-                )
-            application.printTextInToast(application.getString(R.string.feature_game_incorrect_number) + " $m")
-        }
+        // The higher/lower hint is drawn by the screen from `guesses` (it used to be a toast).
         updateUi {
             val multiPoints = it.mode?.multiPoints ?: 1.0
             val plus =
@@ -127,7 +121,8 @@ class MysteryNumberViewModel @Inject constructor(
                 status = if (last || correct) MysteryNumberStatus.FINISHED else MysteryNumberStatus.RUNNING,
                 points = if (correct) it.points + (it.numberModel.difficulty.points * multiPoints * plus).toInt() else it.points,
                 lives = if (correct) it.lives else it.lives - 1,
-                timeRemaining = if (correct || last) intent.time else 0f
+                timeRemaining = if (correct || last) intent.time else 0f,
+                guesses = if (intent.response >= 0) it.guesses + intent.response else it.guesses
             )
         }
     }

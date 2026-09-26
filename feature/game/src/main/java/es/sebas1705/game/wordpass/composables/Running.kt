@@ -1,24 +1,28 @@
 package es.sebas1705.game.wordpass.composables
 
-
 import android.media.SoundPool
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,42 +31,43 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
-import es.sebas1705.common.games.Difficulty
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import es.sebas1705.common.games.wordpass.WordPassMode
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
-import es.sebas1705.common.utlis.extensions.primitives.toReducedString
-import es.sebas1705.designsystem.buttons.common.ITextButton
-import es.sebas1705.designsystem.buttons.icon.IStandardIconButton
-import es.sebas1705.designsystem.cards.IPrimaryCard
-import es.sebas1705.designsystem.layouts.ApplyBack
-import es.sebas1705.designsystem.texts.Title
-import es.sebas1705.designsystem.texts.TitleSurface
-import es.sebas1705.game.wordpass.viewmodel.WordPassState
-import es.sebas1705.models.games.WordModel
-import es.sebas1705.ui.theme.OutlineThickness
-import es.sebas1705.ui.theme.Paddings.MediumPadding
-import es.sebas1705.ui.theme.Paddings.SmallestPadding
-import es.sebas1705.ui.theme.AppTheme
-import es.sebas1705.ui.theme.gameBottomBarHeight
 import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.games.R
+import es.sebas1705.game.common.GameHud
+import es.sebas1705.game.common.GameLoadError
+import es.sebas1705.game.common.GamePage
+import es.sebas1705.game.common.GamePrimaryButton
+import es.sebas1705.game.common.GameTag
+import es.sebas1705.game.common.LetterStatus
+import es.sebas1705.game.common.LetterWheel
+import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.tint
+import es.sebas1705.game.wordpass.viewmodel.WordPassState
+import es.sebas1705.ui.theme.AppTheme
+import es.sebas1705.ui.theme.makeTitle
 
 /**
- * Screen of the Word Pass Game.
+ * A running Word-Pass: the HUD, the letter wheel (green guessed, red missed, the current letter
+ * pulsing) with the word's pattern inside, the definition card, and the answer field. While the
+ * keyboard is up the wheel folds into a single line so the definition stays visible.
  *
  * @param windowState [WindowState]: State of the window.
  * @param wordPassState [WordPassState]: State of the game.
- * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
- * @param onResponse (String) -> Unit: Function that will be called when the user responds to the game.
+ * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of SoundPool and volume.
+ * @param onResponse (String) -> Unit: Callback with the typed word.
  *
  * @since 1.0.0
  * @author Sebas1705 12/09/2025
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Running(
     windowState: WindowState = WindowState.default(),
@@ -70,181 +75,160 @@ fun Running(
     soundPool: Pair<SoundPool, Float>? = null,
     onResponse: (String) -> Unit = { }
 ) {
-    ApplyBack(
-        backId = windowState.backFill
+    if (wordPassState.words.isEmpty()) {
+        GameLoadError(windowState)
+        return
+    }
+    val index = wordPassState.actualWord.coerceAtMost(wordPassState.words.lastIndex)
+    val word = wordPassState.words[index]
+    var definition by rememberSaveable(index) { mutableIntStateOf(0) }
+    var response by rememberSaveable(index) { mutableStateOf("") }
+    val scheme = MaterialTheme.colorScheme
+    val submit = {
+        if (response.isNotBlank()) onResponse(response.trim())
+    }
+
+    GamePage(
+        windowState = windowState,
+        filled = true,
+        modifier = Modifier.imePadding(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        if (wordPassState.words.isEmpty()) {
-            Title(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.feature_game_error_loading_message),
-                color = MaterialTheme.colorScheme.error
-            )
-            return@ApplyBack
-        }
-        val word = wordPassState.words[wordPassState.actualWord]
-        var definition by rememberSaveable { mutableIntStateOf(0) }
-        val color = when (word.difficulty) {
-            Difficulty.EASY -> Color.Green
-            Difficulty.MEDIUM -> Color.Yellow
-            Difficulty.HARD -> Color.Red
-            else -> MaterialTheme.colorScheme.tertiary
-        }
-        val lazyMod = if (windowState.isImeVisible) Modifier.imePadding() else Modifier.padding(
-            SmallestPadding
+        GameHud(
+            points = wordPassState.points,
+            round = index + 1,
+            rounds = wordPassState.words.size,
+            lives = if (wordPassState.mode == WordPassMode.SURVIVAL) wordPassState.lives else null,
+            maxLives = 3
         )
-        LazyColumn(
-            modifier = lazyMod
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
+        Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                TitleSurface(
-                    modifier = Modifier
-                        .padding(MediumPadding)
-                        .border(OutlineThickness, color, MaterialTheme.shapes.small),
-                    text = word.toMoultedString(),
-                    textAlign = TextAlign.Center,
-                    textStyle = when {
-                        wordPassState.words[wordPassState.actualWord].word.length > 9 -> MaterialTheme.typography.titleMedium
-                        wordPassState.words[wordPassState.actualWord].word.length > 5 -> MaterialTheme.typography.headlineMedium
-                        else -> MaterialTheme.typography.displayMedium
+            val statuses = wordPassState.words.indices.map { i ->
+                when {
+                    i < wordPassState.results.size -> if (wordPassState.results[i]) LetterStatus.CORRECT else LetterStatus.WRONG
+                    i == index -> LetterStatus.CURRENT
+                    else -> LetterStatus.PENDING
+                }
+            }
+            if (!windowState.isImeVisible) {
+                LetterWheel(
+                    letters = wordPassState.words.map { it.letter.letter },
+                    statuses = statuses,
+                    modifier = Modifier.fillMaxWidth(),
+                    maxSize = 300.dp
+                ) {
+                    WordPattern(word.letter.letter, word.toMoultedString())
+                }
+            } else {
+                WordPattern(word.letter.letter, word.toMoultedString())
+            }
+            Spacer(Modifier.height(20.dp))
+            StickerCard(
+                modifier = Modifier.fillMaxWidth(),
+                shadow = word.difficulty.tint(),
+                shadowOffset = 6.dp,
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        GameTag(stringResource(word.difficulty.strRes), word.difficulty.tint())
+                        if (word.definitions.size > 1) GameTag(
+                            stringResource(R.string.feature_game_definition_of, definition + 1, word.definitions.size),
+                            scheme.primary
+                        )
                     }
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .fillMaxHeight(0.2f),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    var response by rememberSaveable { mutableStateOf("") }
-                    IOutlinedTextField(
-                        value = response,
-                        onValueChange = { response = it },
-                        label = stringResource(R.string.feature_game_guest_response),
-                        placeholder = stringResource(R.string.feature_game_guest_response),
-                        modifier = Modifier.fillMaxWidth(0.6f),
-                    )
-                    ITextButton(
-                        onClick = {
-                            onResponse(response)
-                            definition = 0
-                        },
-                        label = stringResource(R.string.feature_game_try_word),
-                    )
-                }
-            }
-
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .fillMaxHeight(0.4f),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    IStandardIconButton(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
-                        contentDescription = stringResource(R.string.feature_game_previous_definition),
-                        onClick = {
-                            definition = (definition - 1).coerceAtLeast(0)
-                        },
-                    )
-                    Title(
-                        modifier = Modifier.fillMaxWidth(0.7f),
-                        text = word.definitions[definition],
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    IStandardIconButton(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                        contentDescription = stringResource(R.string.feature_game_next_definition),
-                        onClick = {
-                            definition = (definition + 1).coerceAtMost(word.definitions.size - 1)
-                        },
-                    )
-
-                }
-            }
-
-            stickyHeader {
-                IPrimaryCard(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(gameBottomBarHeight)
-                        .padding(bottom = SmallestPadding)
-                ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(SmallestPadding),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.padding(top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Title(
-                            text = "${stringResource(es.sebas1705.core.resources.R.string.core_resources_points)}: ${wordPassState.points.toReducedString()}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Row {
-                            val titles = wordPassState.words.toViewList(wordPassState.actualWord)
-                            Title(
-                                modifier = Modifier.padding(end = SmallestPadding),
-                                text = titles[0],
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Title(
-                                text = titles[1],
+                        IconButton(
+                            onClick = { definition = (definition - 1).coerceAtLeast(0) },
+                            enabled = definition > 0
+                        ) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowLeft, stringResource(R.string.feature_game_previous_definition))
+                        }
+                        AnimatedContent(
+                            targetState = definition,
+                            transitionSpec = { fadeIn() togetherWith fadeOut() },
+                            modifier = Modifier.weight(1f),
+                            label = "definition"
+                        ) { shown ->
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = word.definitions.getOrElse(shown) { "" },
                                 style = MaterialTheme.typography.titleMedium,
-                                color = color
-                            )
-                            Title(
-                                modifier = Modifier.padding(start = SmallestPadding),
-                                text = titles[2],
-                                style = MaterialTheme.typography.bodyMedium
+                                color = scheme.onSurface,
+                                textAlign = TextAlign.Center
                             )
                         }
-                        if (wordPassState.mode == WordPassMode.SURVIVAL) Row {
-                            (1..3).forEach {
-                                Icon(
-                                    imageVector = Icons.Filled.Favorite,
-                                    contentDescription = stringResource(R.string.feature_game_lives),
-                                    tint = if (it <= wordPassState.lives) MaterialTheme.colorScheme.tertiary else Color.Gray
-                                )
-                            }
+                        IconButton(
+                            onClick = { definition = (definition + 1).coerceAtMost(word.definitions.size - 1) },
+                            enabled = definition < word.definitions.size - 1
+                        ) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowRight, stringResource(R.string.feature_game_next_definition))
                         }
                     }
                 }
             }
+            Spacer(Modifier.height(18.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IOutlinedTextField(
+                    value = response,
+                    onValueChange = { response = it },
+                    modifier = Modifier.weight(1f),
+                    label = stringResource(R.string.feature_game_guest_response),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrectEnabled = false,
+                        imeAction = ImeAction.Send
+                    ),
+                    keyboardActions = KeyboardActions(onSend = { submit() })
+                )
+                GamePrimaryButton(
+                    text = stringResource(R.string.feature_game_try_word),
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    onClick = submit,
+                    enabled = response.isNotBlank()
+                )
+            }
         }
+        // Keeps the answer row off the bottom illustrations.
+        Spacer(Modifier.height(if (windowState.isImeVisible) 8.dp else 48.dp))
     }
 }
 
-/**
- * Transform a list of [WordModel] to a list of [String]
- *
- * @receiver [List]<[WordModel]>: list of words
- * @param actualWord: [Int]: actual word
- *
- * @return [List]<[String]>: list of words
- *
- * @see WordModel
- *
- * @author Sebas1705 12/09/2025
- * @since 1.0.0
- */
-private fun List<WordModel>.toViewList(actualWord: Int): List<String> {
-    val previousWord = if (actualWord > 0) this[actualWord - 1].word else ""
-    val currentWord = this[actualWord].word
-    val nextWord = if (actualWord < this.size - 1) this[actualWord + 1].word else ""
-
-    val previousString = if (previousWord.isNotEmpty()) "..${previousWord.first()}" else ""
-    val currentString = currentWord.first().toString()
-    val nextString = if (nextWord.isNotEmpty()) "${nextWord.first()}.." else ""
-
-    return listOf(previousString, currentString, nextString)
+/** The current letter and the word's pattern ("A____a____"), animated when the word changes. */
+@Composable
+private fun WordPattern(letter: Char, pattern: String) {
+    val scheme = MaterialTheme.colorScheme
+    AnimatedContent(
+        targetState = letter to pattern,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        label = "pattern"
+    ) { (shownLetter, shownPattern) ->
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = shownLetter.uppercase(),
+                style = MaterialTheme.typography.displayMedium.makeTitle(),
+                color = scheme.tertiary
+            )
+            Text(
+                text = shownPattern,
+                style = MaterialTheme.typography.titleMedium.makeTitle().copy(letterSpacing = 3.sp),
+                color = scheme.primary,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @UiModePreviews
