@@ -8,7 +8,7 @@ activity-compose = "1.13.0"
 fragment-compose = "1.8.9"
 appcompat = "1.7.1"
 kotlin = "2.3.21"
-kotlin-core = "1.18.0"
+kotlin-core = "1.19.1"
 kotlin-serialization = "1.9.0"
 constraint-compose = "1.1.1"
 
