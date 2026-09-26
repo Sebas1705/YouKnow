@@ -5,7 +5,7 @@
 [versions]
 # Core Android and Kotlin versions
 activity-compose = "1.13.0"
-fragment-compose = "1.8.9"
+fragment-compose = "1.9.1"
 appcompat = "1.7.1"
 kotlin = "2.3.21"
 kotlin-core = "1.18.0"
