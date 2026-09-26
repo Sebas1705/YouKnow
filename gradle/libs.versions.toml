@@ -6,11 +6,11 @@
 # Core Android and Kotlin versions
 activity-compose = "1.13.0"
 fragment-compose = "1.8.9"
-appcompat = "1.7.1"
-kotlin = "2.3.21"
+appcompat = "1.8.0"
+kotlin = "2.4.20"
 kotlin-core = "1.18.0"
-kotlin-serialization = "1.9.0"
-constraint-compose = "1.1.1"
+kotlin-serialization = "1.11.0"
+constraint-compose = "1.1.2"
 
 # Compose UI versions (Compose toolkit)
 ui = "1.11.1"
@@ -20,7 +20,7 @@ ui-tooling-preview = "1.11.1"
 ui-text-google-fonts = "1.11.1"
 
 # Material design libraries and adaptive components
-material = "1.13.0"
+material = "1.14.0"
 nav3Material = "1.0.0-alpha01"
 materialIconsExtended = "1.7.8"
 material3 = "1.4.0"
@@ -42,29 +42,29 @@ lifecycle-nav3 = "2.10.0"
 # Firebase: one BoM pins every SDK. The -ktx artifacts were discontinued (last: auth 23.2.1),
 # their Kotlin APIs now live in the main modules.
 firebase-bom = "34.19.0"
-firebase-crashlytics-plugin = "3.0.6"
+firebase-crashlytics-plugin = "3.0.8"
 
 # Dependency injection (Hilt)
-hilt = "2.58"
-hilt-navigation = "1.3.0"
+hilt = "2.59.2"
+hilt-navigation = "1.4.0"
 
 # Networking and serialization (Retrofit, OkHttp, converters)
-orgJacocoCore = "0.8.14"
+orgJacocoCore = "0.8.15"
 retrofit = "3.0.0"
 retrofit-gson = "3.0.0"
-okhttp = "5.3.2"
+okhttp = "5.5.0"
 retrofitConverterFactory = "1.0.0"
 
 # Room (local database)
-room = "2.8.4"
-room-ktx = "2.8.4"
-room-compiler = "2.8.4"
+room = "2.8.5"
+room-ktx = "2.8.5"
+room-compiler = "2.8.5"
 
 # Credentials and Google identity (Auth integration)
 credentials = "1.6.0"
 credentialsPlayServicesAuth = "1.6.0"
 playServicesAuth = "21.5.0"
-googleid = "1.1.1"
+googleid = "1.2.1"
 
 # Datastore and Protobuf (for proto-based datastore)
 datastore = "1.2.1"
@@ -72,15 +72,15 @@ datastore = "1.2.1"
 # 4.x lite ships DescriptorProtos too, which clashes with protolite (duplicate classes). protoc,
 # the Kotlin lite runtime and the forced javalite runtime all follow this one version.
 protobuf = "3.25.9"
-protobufPlugin = "0.9.6"
+protobufPlugin = "0.10.0"
 
 # Utility libraries
 accompanist = "0.36.0"    # system UI controller and other accompanist helpers
 coil = "2.7.0"            # image loading (Coil)
 lottie = "6.7.1"          # Lottie animations
-couchbase = "4.0.3"       # Couchbase Lite for local NoSQL
+couchbase = "4.1.2"       # Couchbase Lite for local NoSQL
 leakcanary = "2.14"
-chucker = "4.2.0"
+chucker = "4.3.1"
 
 # Testing versions (kept stable to ensure test reliability)
 espresso-core = "3.7.0"
@@ -88,23 +88,23 @@ junit = "1.3.0"
 androidxTestCore = "1.7.0"
 testRunner = "1.7.0"
 testRules = "1.7.0"
-mockito = "5.23.0"
-mockito-kotlin = "6.1.0"
+mockito = "5.24.0"
+mockito-kotlin = "6.4.0"
 turbine = "1.2.1"
-kotlin-coroutine-tests = "1.10.2"
+kotlin-coroutine-tests = "1.11.0"
 reflectionsTest = "0.10.2"
 mockito-inline = "5.2.0"
-robolectric = "4.16.1"
+robolectric = "4.17"
 
 # Gradle / plugin versions
-androidAppPluginVersion = "8.9.1"
+androidAppPluginVersion = "8.13.2"
 androidGradlePlugin = "8.9.1"
 androidToolsCommon = "31.9.1"
-googleServices = "4.4.4"
-kotlin-gradle-plugin = "2.3.21"
-ksp = "2.3.7"
-kspGradlePlugin = "2.3.7"
-benmanes-versions = "0.53.0"
+googleServices = "4.5.0"
+kotlin-gradle-plugin = "2.4.20"
+ksp = "2.3.12"
+kspGradlePlugin = "2.3.12"
+benmanes-versions = "0.64.0"
 dependency-analyze = "2.0.0"
 detekt = "1.23.8"
 junitVersion = "4.13.2"
