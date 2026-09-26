@@ -2,6 +2,8 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+
+## [1.2.0] - 2026-09-26
 ### Changed
 - The four games get a visual refresh in the app's hand-drawn style (same backgrounds, palette and fonts): sticker-like cards and buttons, a top HUD with points, progress, hearts and a countdown bar, mode cards with the game's illustration and what each mode is and pays, and a result screen with stars and stats.
 - Quiz and Families show the right answer in green and a wrong one in red before moving on.
