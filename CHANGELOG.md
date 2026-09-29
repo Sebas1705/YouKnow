@@ -3,6 +3,20 @@ All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-30
+### Added
+- Daily Challenge: a short quiz round shared by every player on a given day, published once by whichever device asks first and read by everyone else afterwards, wired into a new card on Home.
+- A streak flame in the HUD once an answer streak reaches 2 in a row, and confetti on a flawless (3-star) result.
+- Haptic feedback alongside the existing win/lose sound on every answer reveal and result screen.
+### Changed
+- Custom mode (Quiz, Families, Mystery Number) redesigned to match the rest of the game UI: sticker-styled setup cards, pill chips for type/difficulty, and a slider with +/- steppers; question count and lives can no longer be set to 0.
+- The games' sticker card/tag look moved to `:core:designsystem` and is now used on Home's info cards too, instead of being exclusive to Play.
+- Win/lose sounds now also play on Word-Pass and Mystery Number rounds.
+### Fixed
+- Dark mode showed the light-mode game icons on Play and mode selection.
+- Custom mode (and Word-Pass's letter wheel) failed outright when opentdb/Room couldn't fill the exact requested question, family or word count; it now plays with whatever was found instead of erroring on ordinary settings.
+- A revealed answer's correct/wrong outcome, and the lives remaining, were conveyed by colour and icons alone, unlabelled for screen readers.
+
 ## [1.2.0] - 2026-09-26
 ### Changed
 - The four games get a visual refresh in the app's hand-drawn style (same backgrounds, palette and fonts): sticker-like cards and buttons, a top HUD with points, progress, hearts and a countdown bar, mode cards with the game's illustration and what each mode is and pays, and a result screen with stars and stats.
