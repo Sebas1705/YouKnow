@@ -70,7 +70,7 @@ fun Running(
     }
     val index = quizState.actualQuestion.coerceAtMost(quizState.questions.lastIndex)
     val question = quizState.questions[index]
-    val (stateOf, choose) = rememberAnswerReveal(index, question.correctAnswer, onResponseQuestion)
+    val (stateOf, choose, streak) = rememberAnswerReveal(index, question.correctAnswer, onResponseQuestion)
     val revealing by rememberUpdatedState(stateOf(question.correctAnswer) != AnswerState.IDLE)
 
     // One countdown per question (it used to run once for the whole game).
@@ -93,7 +93,8 @@ fun Running(
             lives = if (quizState.mode == QuizMode.SURVIVAL) quizState.lives else null,
             maxLives = 3,
             timeLeft = if (quizState.mode == QuizMode.TIME_ATTACK) time else null,
-            timeTotal = QUESTION_TIME
+            timeTotal = QUESTION_TIME,
+            streak = streak
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
