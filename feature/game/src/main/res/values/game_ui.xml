@@ -42,4 +42,8 @@
     <string name="feature_game_setup_questions">Questions</string>
     <!-- Accessibility -->
     <string name="feature_game_lives_remaining">%1$d of %2$d lives remaining</string>
+    <!-- Daily challenge -->
+    <string name="feature_game_daily_title">Daily Challenge</string>
+    <string name="feature_game_daily_loading">Preparing today\'s challenge…</string>
+    <string name="feature_game_daily_retry">Try again</string>
 </resources>

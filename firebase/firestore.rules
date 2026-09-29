@@ -42,5 +42,24 @@ service cloud.firestore {
       allow create, update: if isOwner(uid) && request.resource.data.authorFirebaseId == uid;
       allow delete: if false;
     }
+
+    // dailyChallenges/{date}: one shared quiz round per UTC day (yyyy-MM-dd), published by
+    // whichever device is first to ask for that day. Immutable afterwards — allowing only
+    // `create` (never `update`) is what makes the race between two devices publishing at once
+    // resolve safely: the first `create` lands, the second is rejected by this rule and that
+    // device just re-reads the now-published document instead.
+    match /dailyChallenges/{date} {
+      allow read: if signedIn();
+      allow create: if signedIn() && validDailyChallenge(date, request.resource.data);
+      allow update, delete: if false;
+
+      function validDailyChallenge(date, challenge) {
+        return date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && challenge.keys().hasOnly(['date', 'questions'])
+          && challenge.date == date
+          && challenge.questions is list
+          && challenge.questions.size() > 0 && challenge.questions.size() <= 20;
+      }
+    }
   }
 }

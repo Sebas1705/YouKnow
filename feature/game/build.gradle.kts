@@ -22,6 +22,7 @@ dependencies {
     api(projects.domain.usescases.analytics)
     api(projects.domain.usescases.wordPass)
     api(projects.domain.usescases.quiz)
+    api(projects.domain.usescases.dailyChallenge)
     api(projects.domain.usescases.families)
     api(projects.domain.usescases.mysteryNumber)
     api(projects.domain.usescases.user)

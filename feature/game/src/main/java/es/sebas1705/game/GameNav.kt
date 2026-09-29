@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.designsystem.dialogs.GameOutDialog
+import es.sebas1705.game.daily.DailyChallengeScreen
 import es.sebas1705.game.families.FamiliesScreen
 import es.sebas1705.game.mysterynumber.MysteryNumberScreen
 import es.sebas1705.game.quiz.QuizScreen
@@ -81,8 +82,16 @@ fun GameNav(
             )
         }
 
-        else -> {
+        3 -> {
             FamiliesScreen(
+                windowState,
+                soundPool,
+                onOutGameNavigation
+            )
+        }
+
+        else -> {
+            DailyChallengeScreen(
                 windowState,
                 soundPool,
                 onOutGameNavigation

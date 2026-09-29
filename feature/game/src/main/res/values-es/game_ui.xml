@@ -42,4 +42,8 @@
     <string name="feature_game_setup_questions">Preguntas</string>
     <!-- Accesibilidad -->
     <string name="feature_game_lives_remaining">%1$d de %2$d vidas restantes</string>
+    <!-- Reto diario -->
+    <string name="feature_game_daily_title">Reto diario</string>
+    <string name="feature_game_daily_loading">Preparando el reto de hoy…</string>
+    <string name="feature_game_daily_retry">Reintentar</string>
 </resources>

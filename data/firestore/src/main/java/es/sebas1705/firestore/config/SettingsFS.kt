@@ -9,6 +9,7 @@ import es.sebas1705.firestore.config.SettingsFS.ERROR_GENERIC_MESSAGE_FAIL
  * @property USERS_COLLECTION_NAME [String]: Users collection reference
  * @property NEWS_COLLECTION_NAME [String]: News collection reference
  * @property SURVEYS_COLLECTION_NAME [String]: Surveys collection reference
+ * @property DAILY_CHALLENGES_COLLECTION_NAME [String]: Daily challenges collection reference
  * @property USERS_LOGGED_FIELD [String]: Field to check if the user is logged
  * @property USERS_CREDITS_FIELD [String]: Field to store the user credits
  * @property USERS_POINTS_FIELD [String]: Field to store the user points
@@ -20,6 +21,7 @@ import es.sebas1705.firestore.config.SettingsFS.ERROR_GENERIC_MESSAGE_FAIL
  * @property ERROR_CREDITS_NEGATIVE [String]: Error message for negative credits
  * @property USER_NOT_FOUND [String]: Error message for user not found
  * @property SURVEY_NOT_FOUND [String]: Error message for survey not found
+ * @property DAILY_CHALLENGE_NOT_FOUND [String]: Error message for a day with no challenge published yet
  *
  * @author Sebas1705 22/09/2025
  * @since 1.0.0
@@ -28,6 +30,7 @@ object SettingsFS {
     const val USERS_COLLECTION_NAME = "users"
     const val NEWS_COLLECTION_NAME = "news"
     const val SURVEYS_COLLECTION_NAME = "surveys"
+    const val DAILY_CHALLENGES_COLLECTION_NAME = "dailyChallenges"
     const val USERS_LOGGED_FIELD = "logged"
     const val USERS_CREDITS_FIELD = "credits"
     const val USERS_POINTS_FIELD = "points"
@@ -40,4 +43,5 @@ object SettingsFS {
     const val ERROR_CREDITS_NEGATIVE = "The credits can't be negative"
     const val USER_NOT_FOUND = "User not found"
     const val SURVEY_NOT_FOUND = "Survey not found"
+    const val DAILY_CHALLENGE_NOT_FOUND = "Daily challenge not found"
 }
