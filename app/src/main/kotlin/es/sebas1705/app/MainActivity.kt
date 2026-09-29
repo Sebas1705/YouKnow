@@ -64,12 +64,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        mediaPlayerManager.play()
+        mediaPlayerManager.setForeground(true)
     }
 
     override fun onPause() {
         super.onPause()
-        mediaPlayerManager.pause()
+        mediaPlayerManager.setForeground(false)
     }
 
     /**
