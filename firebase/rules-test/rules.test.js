@@ -90,6 +90,45 @@ describe("Firestore news and surveys", () => {
   });
 });
 
+describe("Firestore daily challenges", () => {
+  const today = "2026-09-30";
+  const challenge = (over = {}) => ({
+    date: today,
+    questions: [{ question: "q", answers: ["a", "b"], correctAnswer: "a", category: "ANY", difficulty: "MEDIUM", quizType: "MULTIPLE" }],
+    ...over,
+  });
+
+  test("the first device publishes the day's shared round", async () => {
+    const db = as(alice).firestore();
+    await assertSucceeds(setDoc(doc(db, "dailyChallenges", today), challenge()));
+    await assertSucceeds(getDoc(doc(db, "dailyChallenges", today)));
+  });
+
+  test("anonymous clients neither read nor publish", async () => {
+    const db = as(null).firestore();
+    await assertFails(getDoc(doc(db, "dailyChallenges", today)));
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge()));
+  });
+
+  test("once published, the day is immutable — the losing device just reads it back", async () => {
+    await seed((c) => setDoc(doc(c.firestore(), "dailyChallenges", today), challenge()));
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: [] })));
+    await assertFails(updateDoc(doc(db, "dailyChallenges", today), { questions: [] }));
+    await assertFails(deleteDoc(doc(db, "dailyChallenges", today)));
+    await assertSucceeds(getDoc(doc(db, "dailyChallenges", today)));
+  });
+
+  test("rejects a mismatched date, an empty or oversized round, and unknown fields", async () => {
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ date: "2020-01-01" })));
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: [] })));
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: Array(21).fill(challenge().questions[0]) })));
+    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ createdBy: alice })));
+    await assertFails(setDoc(doc(db, "dailyChallenges", "not-a-date"), challenge({ date: "not-a-date" })));
+  });
+});
+
 describe("Realtime Database chat", () => {
   const chat = "chat-global-youknow";
 

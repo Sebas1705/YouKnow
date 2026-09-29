@@ -566,6 +566,7 @@ fun GameResultContent(
     restartIcon: ImageVector,
     exitIcon: ImageVector,
     modifier: Modifier = Modifier,
+    showExit: Boolean = true,
     extra: (@Composable () -> Unit)? = null,
 ) {
     val scheme = MaterialTheme.colorScheme
@@ -654,7 +655,7 @@ fun GameResultContent(
                 onClick = onRestart,
                 modifier = Modifier.padding(top = 20.dp)
             )
-            GameSecondaryButton(
+            if (showExit) GameSecondaryButton(
                 text = exitLabel,
                 icon = exitIcon,
                 onClick = onExit,

@@ -27,9 +27,9 @@ class GenerateQuestionList(
         difficulty: Difficulty,
         languages: Languages,
         quizType: QuizType,
-        onLoading: () -> Unit = {},
-        onSuccess: (List<QuestionModel>) -> Unit,
-        onError: (String) -> Unit
+        onLoading: suspend () -> Unit = {},
+        onSuccess: suspend (List<QuestionModel>) -> Unit,
+        onError: suspend (String) -> Unit
     ) {
         onLoading()
         val questions = databaseRepository.getQuestions(

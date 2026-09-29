@@ -7,4 +7,6 @@
     <string name="feature_home_reload">Reload db</string>
     <string name="feature_home_reload_text">Are you sure to reload database of games? (It can consume a lot of time)</string>
     <string name="feature_home_settings">Settings</string>
+    <string name="feature_home_daily_challenge">Daily Challenge</string>
+    <string name="feature_home_daily_challenge_subtitle">One shared round, same for everyone today</string>
 </resources>

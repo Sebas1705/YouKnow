@@ -2,9 +2,11 @@ package es.sebas1705.firestore.repository
 
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
+import es.sebas1705.firestore.datasources.DailyChallengeDocumentFirestoreDataSource
 import es.sebas1705.firestore.datasources.NewDocumentFirestoreDataSource
 import es.sebas1705.firestore.datasources.SurveyDocumentFirestoreDataSource
 import es.sebas1705.firestore.datasources.UserDocumentFirestoreDataSource
+import es.sebas1705.firestore.documents.DailyChallengeDocument
 import es.sebas1705.firestore.documents.NewDocument
 import es.sebas1705.firestore.documents.SurveyDocument
 import es.sebas1705.firestore.documents.UserDocument
@@ -15,7 +17,8 @@ import javax.inject.Singleton
 class FirestoreRepository @Inject constructor(
     private val userDataSource: UserDocumentFirestoreDataSource,
     private val surveyDataSource: SurveyDocumentFirestoreDataSource,
-    private val newDataSource: NewDocumentFirestoreDataSource
+    private val newDataSource: NewDocumentFirestoreDataSource,
+    private val dailyChallengeDataSource: DailyChallengeDocumentFirestoreDataSource
 ) {
     // User operations
     fun saveUser(firebaseId: String, userDocument: UserDocument): DataEmptyFlow = userDataSource.saveUser(firebaseId, userDocument)
@@ -40,4 +43,9 @@ class FirestoreRepository @Inject constructor(
 
     // News operations
     fun getNews(): DataFlow<List<NewDocument>> = newDataSource.getNews()
+
+    // Daily challenge operations
+    fun getDailyChallenge(date: String): DataFlow<DailyChallengeDocument> = dailyChallengeDataSource.getDailyChallenge(date)
+    fun createDailyChallenge(date: String, dailyChallengeDocument: DailyChallengeDocument): DataFlow<DailyChallengeDocument> =
+        dailyChallengeDataSource.createDailyChallenge(date, dailyChallengeDocument)
 }

@@ -13,8 +13,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import es.sebas1705.common.states.WindowState
@@ -56,6 +62,7 @@ import java.util.Locale
  * @param mainState [MainState]: The state of the Main Screen.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onSettingsNav () -> Unit: The navigation to the settings.
+ * @param onGameNav (Int) -> Unit: The navigation to a game, by its index in [es.sebas1705.game.GameNav].
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -67,7 +74,8 @@ fun MainDesign(
     mainState: MainState = MainState.default(),
     soundPool: Pair<SoundPool, Float>? = null,
     onReloadButton: () -> Unit = {},
-    onSettingsNav: () -> Unit = {}
+    onSettingsNav: () -> Unit = {},
+    onGameNav: (Int) -> Unit = {}
 ) {
     //Local:
     val language = Locale.getDefault().language
@@ -108,6 +116,50 @@ fun MainDesign(
                         MaterialTheme.typography.displayLarge
                     )
                 )
+            }
+
+            item {
+                IStickerCard(
+                    modifier = Modifier
+                        .fillMaxWidth(windowState.widthFilter(0.9f, 0.7f, 0.5f))
+                        .padding(bottom = LargePadding)
+                        .clickable(role = Role.Button) {
+                            // 4 is the Daily Challenge's index in es.sebas1705.game.GameNav,
+                            // outside the four games in the Play grid (0-3).
+                            onGameNav(4)
+                        },
+                    border = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.extraLarge,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(MediumPadding),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Filled.EmojiEvents,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(end = MediumPadding)
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Title(
+                                stringResource(R.string.feature_home_daily_challenge),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            IText(
+                                stringResource(R.string.feature_home_daily_challenge_subtitle),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        Icon(
+                            Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
 
             item {

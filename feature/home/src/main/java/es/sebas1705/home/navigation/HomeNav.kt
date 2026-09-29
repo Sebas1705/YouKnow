@@ -110,7 +110,8 @@ fun HomeNav(
                         windowState,
                         homeState,
                         soundPool,
-                        onSettingsNav
+                        onSettingsNav,
+                        onGameNav
                     )
                 }
                 entry<ProfileScreen> {

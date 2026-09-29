@@ -21,6 +21,7 @@ import es.sebas1705.home.navigation.viewmodel.HomeState
  * @param homeState [HomeState]: The state of the Home Screen.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onSettingsNav () -> Unit: The navigation to the settings.
+ * @param onGameNav (Int) -> Unit: The navigation to a game, by its index in [es.sebas1705.game.GameNav].
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -30,7 +31,8 @@ fun MainScreen(
     windowState: WindowState,
     homeState: HomeState,
     soundPool: Pair<SoundPool, Float>,
-    onSettingsNav: () -> Unit
+    onSettingsNav: () -> Unit,
+    onGameNav: (Int) -> Unit
 ) {
     //ViewModel:
     val mainViewModel: MainViewModel = hiltViewModel()
@@ -56,7 +58,8 @@ fun MainScreen(
         onReloadButton = {
             mainViewModel.eventHandler(MainIntent.RecreateGameDB)
         },
-        onSettingsNav
+        onSettingsNav = onSettingsNav,
+        onGameNav = onGameNav
     )
 }
 
