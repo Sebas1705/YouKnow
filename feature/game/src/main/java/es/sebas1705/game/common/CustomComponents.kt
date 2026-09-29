@@ -37,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import es.sebas1705.core.resources.Sounds
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.feature.games.R
 import es.sebas1705.ui.theme.makeTitle
 import kotlin.math.roundToInt
@@ -71,7 +73,7 @@ fun CustomSetupContent(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            StickerCard(
+            IStickerCard(
                 modifier = Modifier
                     .rotate(-4f)
                     .size(84.dp),
@@ -124,7 +126,7 @@ fun SetupSection(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val scheme = MaterialTheme.colorScheme
-    StickerCard(modifier = modifier.fillMaxWidth()) {
+    IStickerCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Row(
                 modifier = Modifier
@@ -138,7 +140,7 @@ fun SetupSection(
                     style = MaterialTheme.typography.titleLarge.makeTitle(),
                     color = scheme.primary
                 )
-                if (value != null) GameTag(value, valueColor)
+                if (value != null) ITag(value, valueColor)
             }
             content()
         }

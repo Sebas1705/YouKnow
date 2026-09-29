@@ -30,8 +30,8 @@ import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.designsystem.buttons.common.IFilledTonalButton
 import es.sebas1705.designsystem.buttons.fab.IFAB
-import es.sebas1705.designsystem.cards.IOutlinedCard
 import es.sebas1705.designsystem.cards.IResumeCard
+import es.sebas1705.designsystem.cards.IStickerCard
 import es.sebas1705.designsystem.dialogs.ReloadDialog
 import es.sebas1705.designsystem.divider.IHorDivider
 import es.sebas1705.designsystem.layouts.ApplyBack
@@ -124,26 +124,33 @@ fun MainDesign(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        IOutlinedCard(
+                        IStickerCard(
                             modifier = Modifier.fillMaxWidth(
                                 windowState.widthFilter(0.9f, 0.7f, 0.5f)
                             ),
+                            border = MaterialTheme.colorScheme.tertiary,
+                            shape = MaterialTheme.shapes.extraLarge,
                         ) {
-                            Spacer(Modifier.height(LargePadding))
-                            Title(
-                                new.first,
-                                style = MaterialTheme.typography.titleLarge,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            Spacer(Modifier.height(MediumPadding))
-                            IText(
-                                new.second,
+                            Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 25.sp)
-                            )
-                            Spacer(Modifier.height(LargePadding))
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Spacer(Modifier.height(LargePadding))
+                                Title(
+                                    new.first,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(Modifier.height(MediumPadding))
+                                IText(
+                                    new.second,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 25.sp)
+                                )
+                                Spacer(Modifier.height(LargePadding))
+                            }
                         }
                     }
                 }
@@ -168,29 +175,35 @@ fun MainDesign(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    IOutlinedCard(
+                    IStickerCard(
                         modifier = Modifier.fillMaxWidth(
                             windowState.widthFilter(0.9f, 0.7f, 0.5f)
                         ),
+                        shape = MaterialTheme.shapes.extraLarge,
                     ) {
-                        Spacer(Modifier.height(MediumPadding))
-                        Title(
-                            stringResource(R.string.feature_home_info),
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(Modifier.height(SmallPadding))
-                        Spacer(Modifier.height(SmallPadding))
-                        IFilledTonalButton(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = HugePadding),
-                            label = stringResource(R.string.feature_home_reload),
-                            onClick = { reloadDialog = true },
-                            enabled = mainState.isLoading.not()
-                        )
-                        Spacer(Modifier.height(MediumPadding))
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.height(MediumPadding))
+                            Title(
+                                stringResource(R.string.feature_home_info),
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(SmallPadding))
+                            Spacer(Modifier.height(SmallPadding))
+                            IFilledTonalButton(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = HugePadding),
+                                label = stringResource(R.string.feature_home_reload),
+                                onClick = { reloadDialog = true },
+                                enabled = mainState.isLoading.not()
+                            )
+                            Spacer(Modifier.height(MediumPadding))
+                        }
                     }
                 }
             }

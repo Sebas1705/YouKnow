@@ -28,11 +28,11 @@ import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.feature.games.R
 import es.sebas1705.game.common.AnswerOption
 import es.sebas1705.game.common.AnswerState
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.game.common.GameHud
 import es.sebas1705.game.common.GameLoadError
 import es.sebas1705.game.common.GamePage
-import es.sebas1705.game.common.GameTag
-import es.sebas1705.game.common.StickerCard
 import es.sebas1705.game.common.rememberAnswerReveal
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.families.viewmodel.FamiliesState
@@ -98,7 +98,7 @@ fun Running(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            StickerCard(
+            IStickerCard(
                 modifier = Modifier.fillMaxWidth(),
                 shadow = family.difficulty.tint(),
                 shadowOffset = 6.dp,
@@ -109,8 +109,8 @@ fun Running(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        GameTag(stringResource(family.difficulty.strRes), family.difficulty.tint())
-                        GameTag(stringResource(family.category.strRes), MaterialTheme.colorScheme.primary)
+                        ITag(stringResource(family.difficulty.strRes), family.difficulty.tint())
+                        ITag(stringResource(family.category.strRes), MaterialTheme.colorScheme.primary)
                     }
                     Text(
                         modifier = Modifier
