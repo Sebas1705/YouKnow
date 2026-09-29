@@ -40,4 +40,6 @@
     <!-- Custom mode -->
     <string name="feature_game_custom_subtitle">Prepara tu propia partida</string>
     <string name="feature_game_setup_questions">Preguntas</string>
+    <!-- Accesibilidad -->
+    <string name="feature_game_lives_remaining">%1$d de %2$d vidas restantes</string>
 </resources>

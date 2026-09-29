@@ -8,11 +8,13 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -68,6 +70,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
@@ -78,6 +83,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,6 +101,7 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.random.Random
 
 /*
  * Shared look of the four games: the "hand-drawn notebook" style of the Play screen (thick purple
@@ -216,6 +224,13 @@ fun AnswerOption(
         if (state == AnswerState.CORRECT) 1.04f else 1f,
         spring(dampingRatio = Spring.DampingRatioMediumBouncy), label = "pop"
     )
+    // The colour/icon change is visual only; a state description lets a screen reader announce
+    // whether this option turned out to be the correct one once the answer is revealed.
+    val revealedDescription = when (state) {
+        AnswerState.CORRECT -> stringResource(R.string.feature_game_stat_correct)
+        AnswerState.WRONG -> stringResource(R.string.feature_game_stat_wrong)
+        else -> null
+    }
     Box(
         modifier = modifier
             .offset(pressShift, pressShift)
@@ -227,6 +242,11 @@ fun AnswerOption(
                 enabled = enabled && state == AnswerState.IDLE,
                 role = Role.Button,
                 onClick = onClick
+            )
+            .then(
+                if (revealedDescription != null)
+                    Modifier.semantics { stateDescription = revealedDescription }
+                else Modifier
             )
             .padding(horizontal = 16.dp, vertical = 14.dp),
         contentAlignment = Alignment.CenterStart
@@ -377,7 +397,12 @@ fun GameHud(
 @Composable
 private fun LivesRow(lives: Int, maxLives: Int?) {
     val tint = MaterialTheme.colorScheme.tertiary
-    if (maxLives != null && maxLives in 1..5) Row {
+    // The hearts are individually decorative; the row as a whole announces the count once for
+    // screen readers instead of one "icon" per heart.
+    val description = stringResource(R.string.feature_game_lives_remaining, lives.coerceAtLeast(0), maxLives ?: lives)
+    if (maxLives != null && maxLives in 1..5) Row(
+        modifier = Modifier.semantics(mergeDescendants = true) { stateDescription = description }
+    ) {
         (1..maxLives).forEach {
             val alive = it <= lives
             val scale by animateFloatAsState(
@@ -393,7 +418,10 @@ private fun LivesRow(lives: Int, maxLives: Int?) {
                     .scale(scale)
             )
         }
-    } else Row(verticalAlignment = Alignment.CenterVertically) {
+    } else Row(
+        modifier = Modifier.semantics(mergeDescendants = true) { stateDescription = description },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(Icons.Filled.Favorite, null, tint = tint, modifier = Modifier.size(22.dp))
         Spacer(Modifier.width(4.dp))
         Text(
@@ -602,8 +630,9 @@ fun GameResultContent(
     val playSound = rememberGameSound()
     LaunchedEffect(Unit) { playSound(if (stars >= 2) Sounds.WIN else Sounds.LOSE) }
 
+    Box(modifier = modifier.fillMaxWidth()) {
     StickerCard(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shadow = scheme.tertiary,
         shadowOffset = 6.dp,
         shape = MaterialTheme.shapes.extraLarge
@@ -672,6 +701,67 @@ fun GameResultContent(
                 onClick = onExit,
                 modifier = Modifier.padding(top = 10.dp)
             )
+        }
+    }
+    // A one-shot flourish for a flawless round; it never plays for a lesser result.
+    if (stars == 3) ConfettiBurst(modifier = Modifier.matchParentSize())
+    }
+}
+
+/** One paper-confetti piece: where it starts, how fast and which way it flies, and its look. */
+private data class ConfettiPiece(
+    val startXFraction: Float,
+    val speedXFraction: Float,
+    val startYFraction: Float,
+    val speedYFraction: Float,
+    val color: Color,
+    val size: Dp,
+    val rotationSpeed: Float,
+    val startRotation: Float,
+)
+
+/**
+ * A short burst of falling confetti over whatever it's drawn on top of, for a flawless result.
+ * Plays once per composition and leaves no trace once done (particles simply stop being drawn).
+ */
+@Composable
+private fun ConfettiBurst(modifier: Modifier = Modifier) {
+    val scheme = MaterialTheme.colorScheme
+    val palette = gamePalette()
+    val colors = remember(scheme, palette) {
+        listOf(scheme.tertiary, scheme.primary, palette.success, scheme.secondary)
+    }
+    val pieces = remember(colors) {
+        List(28) {
+            ConfettiPiece(
+                startXFraction = Random.nextFloat(),
+                speedXFraction = (Random.nextFloat() - 0.5f) * 0.6f,
+                startYFraction = -0.15f - Random.nextFloat() * 0.25f,
+                speedYFraction = 0.9f + Random.nextFloat() * 0.6f,
+                color = colors.random(),
+                size = (5 + Random.nextInt(5)).dp,
+                rotationSpeed = (Random.nextFloat() - 0.5f) * 900f,
+                startRotation = Random.nextFloat() * 360f,
+            )
+        }
+    }
+    val progress = remember { Animatable(0f) }
+    LaunchedEffect(pieces) { progress.animateTo(1f, tween(1400, easing = LinearEasing)) }
+    Canvas(modifier = modifier) {
+        val t = progress.value
+        val fade = 1f - (t - 0.7f).coerceAtLeast(0f) / 0.3f
+        pieces.forEach { piece ->
+            val x = (piece.startXFraction + piece.speedXFraction * t) * size.width
+            // Eases in like gravity: starts slow, falls faster as it goes.
+            val y = (piece.startYFraction + piece.speedYFraction * t * t) * size.height
+            val sidePx = piece.size.toPx()
+            rotate(piece.startRotation + piece.rotationSpeed * t, pivot = Offset(x, y)) {
+                drawRect(
+                    color = piece.color.copy(alpha = piece.color.alpha * fade.coerceIn(0f, 1f)),
+                    topLeft = Offset(x - sidePx / 2, y - sidePx / 2),
+                    size = Size(sidePx, sidePx * 0.6f)
+                )
+            }
         }
     }
 }
