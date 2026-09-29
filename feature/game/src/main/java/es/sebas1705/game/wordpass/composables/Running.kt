@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import es.sebas1705.common.games.wordpass.WordPassMode
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.core.resources.Sounds
 import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.games.R
 import es.sebas1705.game.common.GameHud
@@ -50,6 +52,7 @@ import es.sebas1705.game.common.GameTag
 import es.sebas1705.game.common.LetterStatus
 import es.sebas1705.game.common.LetterWheel
 import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.rememberGameSound
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.wordpass.viewmodel.WordPassState
 import es.sebas1705.ui.theme.AppTheme
@@ -86,6 +89,15 @@ fun Running(
     val scheme = MaterialTheme.colorScheme
     val submit = {
         if (response.isNotBlank()) onResponse(response.trim())
+    }
+    // One sound per answered word; the saved count keeps a rotation from replaying it.
+    val playSound = rememberGameSound()
+    var soundedResults by rememberSaveable { mutableIntStateOf(wordPassState.results.size) }
+    LaunchedEffect(wordPassState.results.size) {
+        if (wordPassState.results.size > soundedResults) {
+            playSound(if (wordPassState.results.last()) Sounds.WIN else Sounds.LOSE)
+        }
+        soundedResults = wordPassState.results.size
     }
 
     GamePage(

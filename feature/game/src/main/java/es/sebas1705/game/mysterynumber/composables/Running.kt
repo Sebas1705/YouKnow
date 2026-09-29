@@ -47,6 +47,7 @@ import es.sebas1705.common.games.mysterynumber.MysteryNumberMode
 import es.sebas1705.common.games.mysterynumber.Numbers
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
+import es.sebas1705.core.resources.Sounds
 import es.sebas1705.feature.games.R
 import es.sebas1705.game.common.GameHud
 import es.sebas1705.game.common.GameLoadError
@@ -55,6 +56,7 @@ import es.sebas1705.game.common.GamePrimaryButton
 import es.sebas1705.game.common.GameSecondaryButton
 import es.sebas1705.game.common.GameTag
 import es.sebas1705.game.common.StickerCard
+import es.sebas1705.game.common.rememberGameSound
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
 import es.sebas1705.ui.theme.AppTheme
@@ -105,6 +107,13 @@ fun Running(
     }
     val scheme = MaterialTheme.colorScheme
     val lastGuess = mysteryNumberState.guesses.lastOrNull()
+    // A miss sounds here; a hit ends the game and the result screen plays the win.
+    val playSound = rememberGameSound()
+    var soundedGuesses by rememberSaveable { mutableIntStateOf(mysteryNumberState.guesses.size) }
+    LaunchedEffect(mysteryNumberState.guesses.size) {
+        if (mysteryNumberState.guesses.size > soundedGuesses && lastGuess != number.number) playSound(Sounds.LOSE)
+        soundedGuesses = mysteryNumberState.guesses.size
+    }
 
     GamePage(windowState, filled = true, verticalArrangement = Arrangement.SpaceBetween) {
         GameHud(

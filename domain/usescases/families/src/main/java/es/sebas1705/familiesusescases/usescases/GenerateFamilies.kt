@@ -36,10 +36,10 @@ class GenerateFamilies(
             languages,
             difficulty
         )
+        // Fewer families than asked for is still a game: a narrow category/difficulty combo may
+        // not have enough, so we play with what came back instead of failing outright.
         if (families.isEmpty())
             onError("No families found")
-        else if (families.size < numFamilies)
-            onError("Not enough families found")
         else
             onSuccess(families.map { it.toFamiliesModel() })
     }

@@ -28,6 +28,8 @@ class GenerateWheelWordPass(
     ) {
         onLoading()
         val words: MutableList<WordModel> = mutableListOf()
+        // A letter with no word for this language/difficulty is just skipped, not a failure: the
+        // wheel plays fine with the letters that did resolve, instead of spamming one toast per gap.
         Letter.entries.forEach {
             if (it == Letter.ANY)
                 return@forEach
@@ -39,9 +41,10 @@ class GenerateWheelWordPass(
             )
             if (word.isNotEmpty())
                 words.add(word[0].toWordModel())
-            else
-                onError("No ${it.letter} words found")
         }
-        onSuccess(words)
+        if (words.isEmpty())
+            onError("No words found")
+        else
+            onSuccess(words)
     }
 }

@@ -12,5 +12,7 @@ enum class Sounds(val soundRes: Int) {
     FAB_BUTTON(R.raw.sound_bowing),
     RADIO_BUTTON(R.raw.click_clock),
     NAV_BUTTON(R.raw.click_tap),
-    GAME_BUTTON(R.raw.click_arcade)
+    GAME_BUTTON(R.raw.click_arcade),
+    WIN(R.raw.sound_win),
+    LOSE(R.raw.sound_lose)
 }
