@@ -39,10 +39,10 @@ class GenerateQuestionList(
             difficulty,
             quizType
         )
+        // Fewer questions than asked for is still a game: opentdb often can't fill a narrow
+        // category/difficulty/type combo, so we play with what it gave us instead of failing.
         if (questions.isEmpty())
             onError("No questions found")
-        else if (questions.size < numberQuestions)
-            onError("Not enough questions found")
         else
             onSuccess(questions.map { it.toQuestionModel() })
     }

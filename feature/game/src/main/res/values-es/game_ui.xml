@@ -37,4 +37,7 @@
     <string name="feature_game_stat_time">Tiempo</string>
     <string name="feature_game_stat_attempts">Intentos</string>
     <string name="feature_game_number_was">El número era %1$d</string>
+    <!-- Custom mode -->
+    <string name="feature_game_custom_subtitle">Prepara tu propia partida</string>
+    <string name="feature_game_setup_questions">Preguntas</string>
 </resources>

@@ -37,4 +37,7 @@
     <string name="feature_game_stat_time">Time left</string>
     <string name="feature_game_stat_attempts">Attempts</string>
     <string name="feature_game_number_was">The number was %1$d</string>
+    <!-- Custom mode -->
+    <string name="feature_game_custom_subtitle">Set up your own game</string>
+    <string name="feature_game_setup_questions">Questions</string>
 </resources>

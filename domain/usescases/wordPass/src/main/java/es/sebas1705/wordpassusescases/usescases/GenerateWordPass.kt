@@ -45,10 +45,10 @@ class GenerateWordPass(
             |-Results: ${words.filter { it.letter == letter && it.language == languages && it.difficulty == difficulty }.size}/${words.size}
         """.trimMargin()
         )
+        // Fewer words than asked for is still a round: a narrow letter/difficulty combo may not
+        // have enough, so we play with what came back instead of failing outright.
         if (words.isEmpty())
             onError("No words found")
-        else if (words.size < numFamilies)
-            onError("Not enough words found")
         else
             onSuccess(words.map { it.toWordModel() })
     }

@@ -69,6 +69,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -79,6 +80,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import es.sebas1705.feature.games.R
 import es.sebas1705.common.games.Difficulty
+import es.sebas1705.core.resources.Sounds
+import es.sebas1705.domain.providers.SoundPoolProvider
+import es.sebas1705.domain.providers.play
 import es.sebas1705.ui.theme.makeTitle
 import kotlinx.coroutines.delay
 import kotlin.math.cos
@@ -561,6 +565,8 @@ fun GameResultContent(
     )
     val shownPoints = remember { Animatable(0f) }
     LaunchedEffect(points) { shownPoints.animateTo(points.toFloat(), tween(1_200, easing = FastOutSlowInEasing)) }
+    val playSound = rememberGameSound()
+    LaunchedEffect(Unit) { playSound(if (stars >= 2) Sounds.WIN else Sounds.LOSE) }
 
     StickerCard(
         modifier = modifier.fillMaxWidth(),
@@ -790,6 +796,7 @@ fun rememberAnswerReveal(
     revealMillis: Long = 700,
 ): Pair<(String) -> AnswerState, (String) -> Unit> {
     var selected by remember(key) { mutableStateOf<String?>(null) }
+    val playSound = rememberGameSound()
     LaunchedEffect(key, selected) {
         val answer = selected ?: return@LaunchedEffect
         delay(revealMillis)
@@ -804,6 +811,28 @@ fun rememberAnswerReveal(
             else -> AnswerState.DIMMED
         }
     }
-    val choose: (String) -> Unit = { option -> if (selected == null) selected = option }
+    val choose: (String) -> Unit = { option ->
+        if (selected == null) {
+            selected = option
+            playSound(if (option == correctAnswer) Sounds.WIN else Sounds.LOSE)
+        }
+    }
     return stateOf to choose
+}
+
+/**
+ * Plays one of the app's short sounds at the volume chosen in the settings.
+ *
+ * @since 1.2.1
+ * @author Sebas1705 26/09/2026
+ */
+@Composable
+fun rememberGameSound(): (Sounds) -> Unit {
+    val context = LocalContext.current
+    return remember(context) {
+        { sound ->
+            val pool = SoundPoolProvider.getSoundPool(context)
+            pool.play(sound, pool.second)
+        }
+    }
 }
