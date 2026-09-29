@@ -58,6 +58,9 @@ fun MainScreen(
         onReloadButton = {
             mainViewModel.eventHandler(MainIntent.RecreateGameDB)
         },
+        onDownloadQuestions = {
+            mainViewModel.eventHandler(MainIntent.DownloadQuestions)
+        },
         onSettingsNav = onSettingsNav,
         onGameNav = onGameNav
     )

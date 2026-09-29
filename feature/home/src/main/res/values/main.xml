@@ -9,4 +9,6 @@
     <string name="feature_home_settings">Settings</string>
     <string name="feature_home_daily_challenge">Daily Challenge</string>
     <string name="feature_home_daily_challenge_subtitle">One shared round, same for everyone today</string>
+    <string name="feature_home_download_questions">Download more questions</string>
+    <string name="feature_home_download_questions_success">%1$d new questions downloaded from OpenTDB</string>
 </resources>
