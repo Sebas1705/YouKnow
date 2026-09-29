@@ -44,14 +44,14 @@ import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.core.resources.Sounds
 import es.sebas1705.designsystem.textfields.IOutlinedTextField
 import es.sebas1705.feature.games.R
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.game.common.GameHud
 import es.sebas1705.game.common.GameLoadError
 import es.sebas1705.game.common.GamePage
 import es.sebas1705.game.common.GamePrimaryButton
-import es.sebas1705.game.common.GameTag
 import es.sebas1705.game.common.LetterStatus
 import es.sebas1705.game.common.LetterWheel
-import es.sebas1705.game.common.StickerCard
 import es.sebas1705.game.common.rememberGameSound
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.wordpass.viewmodel.WordPassState
@@ -137,7 +137,7 @@ fun Running(
                 WordPattern(word.letter.letter, word.toMoultedString())
             }
             Spacer(Modifier.height(20.dp))
-            StickerCard(
+            IStickerCard(
                 modifier = Modifier.fillMaxWidth(),
                 shadow = word.difficulty.tint(),
                 shadowOffset = 6.dp,
@@ -148,8 +148,8 @@ fun Running(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        GameTag(stringResource(word.difficulty.strRes), word.difficulty.tint())
-                        if (word.definitions.size > 1) GameTag(
+                        ITag(stringResource(word.difficulty.strRes), word.difficulty.tint())
+                        if (word.definitions.size > 1) ITag(
                             stringResource(R.string.feature_game_definition_of, definition + 1, word.definitions.size),
                             scheme.primary
                         )

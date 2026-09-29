@@ -49,13 +49,13 @@ import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.core.resources.Sounds
 import es.sebas1705.feature.games.R
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.game.common.GameHud
 import es.sebas1705.game.common.GameLoadError
 import es.sebas1705.game.common.GamePage
 import es.sebas1705.game.common.GamePrimaryButton
 import es.sebas1705.game.common.GameSecondaryButton
-import es.sebas1705.game.common.GameTag
-import es.sebas1705.game.common.StickerCard
 import es.sebas1705.game.common.rememberGameSound
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.mysterynumber.viewmodel.MysteryNumberState
@@ -126,7 +126,7 @@ fun Running(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            StickerCard(
+            IStickerCard(
                 modifier = Modifier.fillMaxWidth(),
                 shadow = number.difficulty.tint(),
                 shadowOffset = 6.dp,
@@ -147,8 +147,8 @@ fun Running(
                         modifier = Modifier.padding(top = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        GameTag(stringResource(number.difficulty.strRes), number.difficulty.tint())
-                        GameTag("1 – $max", scheme.primary)
+                        ITag(stringResource(number.difficulty.strRes), number.difficulty.tint())
+                        ITag("1 – $max", scheme.primary)
                     }
                     AnimatedContent(
                         targetState = current,

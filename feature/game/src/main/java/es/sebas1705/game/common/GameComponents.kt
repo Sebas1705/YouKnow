@@ -90,6 +90,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.cards.sticker
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.feature.games.R
 import es.sebas1705.common.games.Difficulty
 import es.sebas1705.core.resources.Sounds
@@ -144,41 +147,8 @@ fun Difficulty.tint(): Color = when (this) {
     else -> MaterialTheme.colorScheme.primary
 }
 
-/**
- * Sticker look: the shape filled with [container], a [border] stroke, and a solid copy of the shape
- * [shadowOffset] down-right in [shadow], like paper cut-outs on the page.
- */
-fun Modifier.sticker(
-    shape: Shape,
-    container: Color,
-    border: Color,
-    shadow: Color = border,
-    shadowOffset: Dp = 4.dp,
-    borderWidth: Dp = 2.dp,
-): Modifier = this
-    .drawBehind {
-        val outline = shape.createOutline(size, layoutDirection, this)
-        val offset = shadowOffset.toPx()
-        translate(offset, offset) { drawOutline(outline, shadow) }
-    }
-    .clip(shape)
-    .background(container, shape)
-    .border(borderWidth, border, shape)
-
-/** A sticker-styled container. */
-@Composable
-fun StickerCard(
-    modifier: Modifier = Modifier,
-    container: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
-    border: Color = MaterialTheme.colorScheme.primary,
-    shadow: Color = border,
-    shadowOffset: Dp = 4.dp,
-    shape: Shape = MaterialTheme.shapes.large,
-    content: @Composable BoxScope.() -> Unit,
-) = Box(
-    modifier = modifier.sticker(shape, container, border, shadow, shadowOffset),
-    content = content
-)
+// Modifier.sticker and StickerCard now live in :core:designsystem (es.sebas1705.designsystem.cards)
+// so Home and the other features can use the same "paper sticker" look.
 
 /**
  * One answer of Quiz or Families. Presses sink into its shadow; after answering it turns green
@@ -285,18 +255,7 @@ fun AnswerOption(
     }
 }
 
-/** Small rounded label, e.g. the difficulty of a question. */
-@Composable
-fun GameTag(text: String, color: Color, modifier: Modifier = Modifier) = Text(
-    modifier = modifier
-        .background(color.copy(alpha = 0.14f), CircleShape)
-        .border(1.dp, color, CircleShape)
-        .padding(horizontal = 10.dp, vertical = 3.dp),
-    text = text,
-    style = MaterialTheme.typography.labelMedium,
-    fontWeight = FontWeight.Bold,
-    color = color
-)
+// GameTag now lives in :core:designsystem as ITag (es.sebas1705.designsystem.chips).
 
 /**
  * The in-game header: points (animated), a streak flame once it is worth bragging about, round
@@ -316,7 +275,7 @@ fun GameHud(
 ) {
     val scheme = MaterialTheme.colorScheme
     val shownPoints by animateIntAsState(points, tween(600), label = "points")
-    StickerCard(
+    IStickerCard(
         modifier = modifier.fillMaxWidth(),
         shadow = scheme.tertiary,
         shape = MaterialTheme.shapes.extraLarge
@@ -484,7 +443,7 @@ fun ModeSelectionContent(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        StickerCard(
+        IStickerCard(
             modifier = Modifier
                 .rotate(-3f)
                 .size(132.dp),
@@ -575,7 +534,7 @@ private fun ModeCard(option: ModeOption, onClick: () -> Unit, modifier: Modifier
                 modifier = Modifier.padding(top = 6.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                option.details.forEach { GameTag(it, scheme.primary) }
+                option.details.forEach { ITag(it, scheme.primary) }
             }
         }
         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, tint = scheme.primary)
@@ -631,7 +590,7 @@ fun GameResultContent(
     LaunchedEffect(Unit) { playSound(if (stars >= 2) Sounds.WIN else Sounds.LOSE) }
 
     Box(modifier = modifier.fillMaxWidth()) {
-    StickerCard(
+    IStickerCard(
         modifier = Modifier.fillMaxWidth(),
         shadow = scheme.tertiary,
         shadowOffset = 6.dp,
@@ -668,7 +627,7 @@ fun GameResultContent(
                 color = scheme.primary,
                 textAlign = TextAlign.Center
             )
-            GameTag(modeName, scheme.tertiary, Modifier.padding(top = 6.dp))
+            ITag(modeName, scheme.tertiary, Modifier.padding(top = 6.dp))
             Text(
                 modifier = Modifier.padding(top = 18.dp),
                 text = shownPoints.value.roundToInt().toString(),

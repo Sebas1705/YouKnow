@@ -29,11 +29,11 @@ import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.game.common.AnswerBadges
 import es.sebas1705.game.common.AnswerOption
 import es.sebas1705.game.common.AnswerState
+import es.sebas1705.designsystem.cards.IStickerCard
+import es.sebas1705.designsystem.chips.ITag
 import es.sebas1705.game.common.GameHud
 import es.sebas1705.game.common.GameLoadError
 import es.sebas1705.game.common.GamePage
-import es.sebas1705.game.common.GameTag
-import es.sebas1705.game.common.StickerCard
 import es.sebas1705.game.common.rememberAnswerReveal
 import es.sebas1705.game.common.tint
 import es.sebas1705.game.quiz.viewmodel.QuizState
@@ -100,7 +100,7 @@ fun Running(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-        StickerCard(
+        IStickerCard(
             modifier = Modifier.fillMaxWidth(),
             shadow = question.difficulty.tint(),
             shadowOffset = 6.dp,
@@ -108,8 +108,8 @@ fun Running(
         ) {
             Column(Modifier.padding(20.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    GameTag(stringResource(question.difficulty.strRes), question.difficulty.tint())
-                    GameTag(stringResource(question.category.strRes), MaterialTheme.colorScheme.primary)
+                    ITag(stringResource(question.difficulty.strRes), question.difficulty.tint())
+                    ITag(stringResource(question.category.strRes), MaterialTheme.colorScheme.primary)
                 }
                 Text(
                     modifier = Modifier
