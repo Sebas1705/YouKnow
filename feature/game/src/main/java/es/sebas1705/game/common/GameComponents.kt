@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.Timer
@@ -52,8 +53,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,7 +72,9 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -274,8 +279,8 @@ fun GameTag(text: String, color: Color, modifier: Modifier = Modifier) = Text(
 )
 
 /**
- * The in-game header: points (animated), round counter with progress bar, lives as hearts, and a
- * countdown bar that turns red when time is short.
+ * The in-game header: points (animated), a streak flame once it is worth bragging about, round
+ * counter with progress bar, lives as hearts, and a countdown bar that turns red when time is short.
  */
 @Composable
 fun GameHud(
@@ -287,6 +292,7 @@ fun GameHud(
     maxLives: Int? = null,
     timeLeft: Float? = null,
     timeTotal: Float? = null,
+    streak: Int? = null,
 ) {
     val scheme = MaterialTheme.colorScheme
     val shownPoints by animateIntAsState(points, tween(600), label = "points")
@@ -309,6 +315,8 @@ fun GameHud(
                         style = MaterialTheme.typography.titleLarge.makeTitle(),
                         color = scheme.primary
                     )
+                    // Only shown once it's an actual streak, so it doesn't flicker on every question.
+                    if (streak != null && streak >= 2) StreakBadge(streak)
                 }
                 if (round != null && rounds != null) Text(
                     text = stringResource(R.string.feature_game_round_of, round, rounds),
@@ -392,6 +400,32 @@ private fun LivesRow(lives: Int, maxLives: Int?) {
             text = lives.toString(),
             style = MaterialTheme.typography.titleMedium.makeTitle(),
             color = tint
+        )
+    }
+}
+
+/** The current run of correct answers in a row, next to the points once it's worth showing off. */
+@Composable
+private fun StreakBadge(streak: Int) {
+    val scheme = MaterialTheme.colorScheme
+    val pop by animateFloatAsState(
+        1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy), label = "streakPop"
+    )
+    Row(
+        modifier = Modifier
+            .padding(start = 10.dp)
+            .graphicsLayer { scaleX = pop; scaleY = pop }
+            .background(scheme.tertiary.copy(alpha = 0.14f), CircleShape)
+            .padding(horizontal = 8.dp, vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Filled.LocalFireDepartment, null, tint = scheme.tertiary, modifier = Modifier.size(16.dp))
+        Spacer(Modifier.width(2.dp))
+        Text(
+            text = streak.toString(),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = scheme.tertiary
         )
     }
 }
@@ -784,9 +818,18 @@ fun LetterWheel(
     }
 }
 
+/** What [rememberAnswerReveal] hands back: per-option state, the click handler, and the current
+ * run of correct answers in a row (destructure the first two as before, or all three for the streak). */
+data class AnswerReveal(
+    val stateOf: (String) -> AnswerState,
+    val choose: (String) -> Unit,
+    val streak: Int,
+)
+
 /**
  * Keeps the chosen answer on screen for a moment (green or red) before handing it to the game, so
- * the player sees the result. Returns the state of each option and the click handler.
+ * the player sees the result. Also tracks the current streak of correct answers in a row, reset
+ * to 0 on the first wrong one, for as long as this composable stays in the composition.
  */
 @Composable
 fun rememberAnswerReveal(
@@ -794,8 +837,9 @@ fun rememberAnswerReveal(
     correctAnswer: String,
     onAnswer: (String) -> Unit,
     revealMillis: Long = 700,
-): Pair<(String) -> AnswerState, (String) -> Unit> {
+): AnswerReveal {
     var selected by remember(key) { mutableStateOf<String?>(null) }
+    var streak by rememberSaveable { mutableIntStateOf(0) }
     val playSound = rememberGameSound()
     LaunchedEffect(key, selected) {
         val answer = selected ?: return@LaunchedEffect
@@ -814,14 +858,17 @@ fun rememberAnswerReveal(
     val choose: (String) -> Unit = { option ->
         if (selected == null) {
             selected = option
-            playSound(if (option == correctAnswer) Sounds.WIN else Sounds.LOSE)
+            val correct = option == correctAnswer
+            streak = if (correct) streak + 1 else 0
+            playSound(if (correct) Sounds.WIN else Sounds.LOSE)
         }
     }
-    return stateOf to choose
+    return AnswerReveal(stateOf, choose, streak)
 }
 
 /**
- * Plays one of the app's short sounds at the volume chosen in the settings.
+ * Plays one of the app's short sounds at the volume chosen in the settings, and pairs it with a
+ * matching haptic tick (a firmer one for a win, a softer one for a loss) on devices that support it.
  *
  * @since 1.2.1
  * @author Sebas1705 26/09/2026
@@ -829,10 +876,14 @@ fun rememberAnswerReveal(
 @Composable
 fun rememberGameSound(): (Sounds) -> Unit {
     val context = LocalContext.current
-    return remember(context) {
+    val haptics = LocalHapticFeedback.current
+    return remember(context, haptics) {
         { sound ->
             val pool = SoundPoolProvider.getSoundPool(context)
             pool.play(sound, pool.second)
+            haptics.performHapticFeedback(
+                if (sound == Sounds.WIN) HapticFeedbackType.Confirm else HapticFeedbackType.Reject
+            )
         }
     }
 }

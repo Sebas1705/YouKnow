@@ -68,7 +68,7 @@ fun Running(
     }
     val index = familiesState.actualFamily.coerceAtMost(familiesState.families.lastIndex)
     val family = familiesState.families[index]
-    val (stateOf, choose) = rememberAnswerReveal(index, family.correctAnswer, onResponseQuestion)
+    val (stateOf, choose, streak) = rememberAnswerReveal(index, family.correctAnswer, onResponseQuestion)
     val revealing by rememberUpdatedState(stateOf(family.correctAnswer) != AnswerState.IDLE)
 
     // One countdown per family (it used to run once for the whole game).
@@ -91,7 +91,8 @@ fun Running(
             lives = if (familiesState.mode == FamiliesMode.SURVIVAL) familiesState.lives else null,
             maxLives = 3,
             timeLeft = if (familiesState.mode == FamiliesMode.TIME_ATTACK) time else null,
-            timeTotal = FAMILY_TIME
+            timeTotal = FAMILY_TIME,
+            streak = streak
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
