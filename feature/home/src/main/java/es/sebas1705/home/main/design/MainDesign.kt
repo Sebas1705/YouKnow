@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import es.sebas1705.common.states.WindowState
 import es.sebas1705.common.utlis.UiModePreviews
 import es.sebas1705.designsystem.buttons.common.IFilledTonalButton
+import es.sebas1705.designsystem.buttons.common.IOutlinedButton
 import es.sebas1705.designsystem.buttons.fab.IFAB
 import es.sebas1705.designsystem.cards.IResumeCard
 import es.sebas1705.designsystem.cards.IStickerCard
@@ -74,6 +75,7 @@ fun MainDesign(
     mainState: MainState = MainState.default(),
     soundPool: Pair<SoundPool, Float>? = null,
     onReloadButton: () -> Unit = {},
+    onDownloadQuestions: () -> Unit = {},
     onSettingsNav: () -> Unit = {},
     onGameNav: (Int) -> Unit = {}
 ) {
@@ -252,6 +254,15 @@ fun MainDesign(
                                     .padding(horizontal = HugePadding),
                                 label = stringResource(R.string.feature_home_reload),
                                 onClick = { reloadDialog = true },
+                                enabled = mainState.isLoading.not()
+                            )
+                            Spacer(Modifier.height(SmallPadding))
+                            IOutlinedButton(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = HugePadding),
+                                label = stringResource(R.string.feature_home_download_questions),
+                                onClick = onDownloadQuestions,
                                 enabled = mainState.isLoading.not()
                             )
                             Spacer(Modifier.height(MediumPadding))

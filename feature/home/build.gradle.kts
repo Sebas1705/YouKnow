@@ -28,6 +28,7 @@ dependencies {
     api(projects.domain.usescases.user)
     api(projects.domain.usescases.fill)
     api(projects.domain.usescases.news)
+    api(projects.domain.usescases.opendb)
 
     implementation(libs.coil.compose)
 }

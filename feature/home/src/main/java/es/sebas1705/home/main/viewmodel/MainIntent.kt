@@ -17,4 +17,6 @@ sealed interface MainIntent : MVIBaseIntent {
 
     data object RecreateGameDB : MainIntent
 
+    data object DownloadQuestions : MainIntent
+
 }

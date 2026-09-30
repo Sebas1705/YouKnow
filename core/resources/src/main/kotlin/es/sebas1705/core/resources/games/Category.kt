@@ -42,5 +42,39 @@ enum class Category(val id: Int?, val strRes: Int) {
 
     companion object {
         fun getCategory(id: Int): Category = entries.find { it.id == id } ?: ANY
+
+        /**
+         * Matches an OpenTDB API response's `category` display string (e.g. "Science: Computers")
+         * back to its [Category], since the API only echoes the name, never the numeric id it
+         * accepted as a request filter.
+         */
+        fun getCategoryByOpendbName(name: String): Category = OPENDB_NAMES[name] ?: ANY
+
+        private val OPENDB_NAMES = mapOf(
+            "General Knowledge" to GENERAL_KNOWLEDGE,
+            "Entertainment: Books" to BOOKS,
+            "Entertainment: Film" to FILMS,
+            "Entertainment: Music" to MUSIC,
+            "Entertainment: Musicals & Theatres" to MUSICALS_AND_THEATRES,
+            "Entertainment: Television" to TELEVISION,
+            "Entertainment: Video Games" to VIDEO_GAMES,
+            "Entertainment: Board Games" to BOARD_GAMES,
+            "Science & Nature" to SCIENCE_AND_NATURE,
+            "Science: Computers" to COMPUTERS,
+            "Science: Mathematics" to MATHEMATICS,
+            "Mythology" to MYTHOLOGY,
+            "Sports" to SPORTS,
+            "Geography" to GEOGRAPHY,
+            "History" to HISTORY,
+            "Politics" to POLITICS,
+            "Art" to ART,
+            "Celebrities" to CELEBRITIES,
+            "Animals" to ANIMALS,
+            "Vehicles" to VEHICLES,
+            "Entertainment: Comics" to COMICS,
+            "Science: Gadgets" to GADGETS,
+            "Entertainment: Japanese Anime & Manga" to ANIME_AND_MANGA,
+            "Entertainment: Cartoon & Animations" to CARTOON_AND_ANIMATIONS,
+        )
     }
 }
