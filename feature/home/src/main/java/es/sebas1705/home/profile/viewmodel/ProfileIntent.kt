@@ -1,5 +1,6 @@
 package es.sebas1705.youknow.presentation.features.home.features.profile.viewmodel
 
+import android.net.Uri
 import es.sebas1705.common.classes.mvi.MVIBaseIntent
 
 
@@ -12,9 +13,9 @@ import es.sebas1705.common.classes.mvi.MVIBaseIntent
  */
 sealed interface ProfileIntent : MVIBaseIntent {
 
-    data class ChangePhoto(
+    data class UploadPhoto(
         val firebaseId: String,
-        val urlPhoto: String
+        val uri: Uri
     ) : ProfileIntent
 
     data class ChangeNickname(

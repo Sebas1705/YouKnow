@@ -6,9 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.common.classes.mvi.MVIBaseViewModel
 import es.sebas1705.common.utlis.extensions.composables.printTextInToast
-import es.sebas1705.common.utlis.extensions.primitives.isImageUrl
 import es.sebas1705.user.UserUsesCases
-import es.sebas1705.feature.home.R
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -33,7 +31,7 @@ class ProfileViewModel @Inject constructor(
 
     override fun intentHandler(intent: ProfileIntent) {
         when (intent) {
-            is ProfileIntent.ChangePhoto -> changePhoto(intent)
+            is ProfileIntent.UploadPhoto -> uploadPhoto(intent)
             is ProfileIntent.ChangeNickname -> changeNickname(intent)
             is ProfileIntent.SendPasswordChanger -> sendPasswordChanger(intent)
             is ProfileIntent.SignOut -> signOut()
@@ -41,18 +39,16 @@ class ProfileViewModel @Inject constructor(
     }
 
     //Actions:
-    private fun changePhoto(
-        intent: ProfileIntent.ChangePhoto
+    private fun uploadPhoto(
+        intent: ProfileIntent.UploadPhoto
     ) = execute(Dispatchers.IO) {
-        if (intent.urlPhoto.isImageUrl()) {
-            userUsesCases.changePhotoToUser(
-                intent.firebaseId,
-                intent.urlPhoto,
-                onLoading = { startLoading() },
-                onEmptySuccess = { stopLoading() },
-                onError = { stopAndError(it, application::printTextInToast) }
-            )
-        } else execute { application.printTextInToast(application.getString(R.string.feature_home_user_invalid_url)) }
+        userUsesCases.uploadProfilePhoto(
+            intent.firebaseId,
+            intent.uri,
+            onLoading = { startLoading() },
+            onSuccess = { stopLoading() },
+            onError = { stopAndError(it, application::printTextInToast) }
+        )
     }
 
     private fun changeNickname(
