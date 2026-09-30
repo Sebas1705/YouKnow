@@ -15,6 +15,7 @@ import es.sebas1705.user.usescases.RemoveUserListener
 import es.sebas1705.user.usescases.SaveUser
 import es.sebas1705.user.usescases.SetGroupToUser
 import es.sebas1705.user.usescases.SetUserListener
+import es.sebas1705.user.usescases.UploadProfilePhoto
 
 /**
  * Use cases to user
@@ -34,6 +35,7 @@ data class UserUsesCases(
     val changePhotoToUser: ChangePhotoToUser,
     val changeNicknameToUser: ChangeNicknameToUser,
     val deleteDataUser: DeleteDataUser,
+    val uploadProfilePhoto: UploadProfilePhoto,
     //Getters:
     val getUser: GetUser,
     val containsUser: ContainsUser,

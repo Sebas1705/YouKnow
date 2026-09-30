@@ -6,6 +6,7 @@ import { after, before, beforeEach, describe, test } from "node:test";
 import { assertFails, assertSucceeds, initializeTestEnvironment } from "@firebase/rules-unit-testing";
 import { deleteDoc, doc, getDoc, getDocs, collection, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { ref, get, remove, set, update } from "firebase/database";
+import { ref as storageRef, deleteObject, getBytes, uploadBytes } from "firebase/storage";
 
 const alice = "alice";
 const bob = "bob";
@@ -21,6 +22,7 @@ before(async () => {
     projectId: "demo-youknow",
     firestore: { rules: readFileSync("../firestore.rules", "utf8") },
     database: { rules: readFileSync("../database.rules.json", "utf8") },
+    storage: { rules: readFileSync("../storage.rules", "utf8") },
   });
 });
 after(() => env.cleanup());
@@ -28,6 +30,9 @@ beforeEach(async () => {
   await env.clearFirestore();
   await env.clearDatabase();
 });
+
+const smallImage = () => new Uint8Array([0xff, 0xd8, 0xff, 0xe0]); // a few JPEG-ish bytes, well under the 5 MB cap
+const bigImage = () => new Uint8Array(6 * 1024 * 1024); // over the 5 MB cap
 
 const as = (uid) => (uid ? env.authenticatedContext(uid) : env.unauthenticatedContext());
 const seed = (fn) => env.withSecurityRulesDisabled(fn);
@@ -126,6 +131,41 @@ describe("Firestore daily challenges", () => {
     await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: Array(21).fill(challenge().questions[0]) })));
     await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ createdBy: alice })));
     await assertFails(setDoc(doc(db, "dailyChallenges", "not-a-date"), challenge({ date: "not-a-date" })));
+  });
+});
+
+describe("Storage profile photos", () => {
+  const path = (uid) => `profile_photos/${uid}`;
+
+  test("a user uploads and reads their own profile photo", async () => {
+    const storage = as(alice).storage();
+    await assertSucceeds(uploadBytes(storageRef(storage, path(alice)), smallImage(), { contentType: "image/jpeg" }));
+    await assertSucceeds(getBytes(storageRef(storage, path(alice))));
+  });
+
+  test("signed-in users read someone else's profile photo, anonymous clients do not", async () => {
+    await seed((c) => uploadBytes(storageRef(c.storage(), path(bob)), smallImage(), { contentType: "image/jpeg" }));
+    await assertSucceeds(getBytes(storageRef(as(alice).storage(), path(bob))));
+    await assertFails(getBytes(storageRef(as(null).storage(), path(bob))));
+  });
+
+  test("nobody uploads, overwrites or deletes someone else's photo", async () => {
+    await seed((c) => uploadBytes(storageRef(c.storage(), path(bob)), smallImage(), { contentType: "image/jpeg" }));
+    const storage = as(alice).storage();
+    await assertFails(uploadBytes(storageRef(storage, path(bob)), smallImage(), { contentType: "image/jpeg" }));
+    await assertFails(deleteObject(storageRef(storage, path(bob))));
+  });
+
+  test("rejects a non-image and a file over 5 MB", async () => {
+    const storage = as(alice).storage();
+    await assertFails(uploadBytes(storageRef(storage, path(alice)), smallImage(), { contentType: "text/plain" }));
+    await assertFails(uploadBytes(storageRef(storage, path(alice)), bigImage(), { contentType: "image/jpeg" }));
+  });
+
+  test("anonymous clients neither read nor write", async () => {
+    const storage = as(null).storage();
+    await assertFails(getBytes(storageRef(storage, path(alice))));
+    await assertFails(uploadBytes(storageRef(storage, path(alice)), smallImage(), { contentType: "image/jpeg" }));
   });
 });
 
