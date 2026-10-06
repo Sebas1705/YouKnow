@@ -2,6 +2,14 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+### Added
+- Profile photo upload: pick an image with the system Photo Picker and it is stored in Cloud Storage (`profile_photos/{uid}`, signed-in read, owner-only write, under 5 MB, images only), replacing the paste-a-URL dialog.
+- Usability survey screen (Settings -> "Give feedback"): five pages covering the full survey model, star ratings with optional comments, published to Firestore; question labels are English-only for now.
+- "Download more questions" on Home fetches fresh questions from OpenTDB into the local database.
+### Fixed
+- Background music kept playing or resumed while the app was in the background.
+### Changed
+- Updated `play-services-auth` to 22.0.0.
 
 ## [1.3.0] - 2026-09-30
 ### Added
