@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_survey_title">Usability survey</string>
+    <string name="feature_survey_subtitle">Your feedback helps improve the app</string>
+    <string name="feature_survey_about_you">About you</string>
+    <string name="feature_survey_age">Age</string>
+    <string name="feature_survey_profession">Profession</string>
+    <string name="feature_survey_android_knowing">Android knowledge</string>
+    <string name="feature_survey_applications_knowing">Apps knowledge</string>
+    <string name="feature_survey_games_knowing">Games knowledge</string>
+    <string name="feature_survey_social_networks_knowing">Social networks knowledge</string>
+    <string name="feature_survey_other_knowing">Anything else about your background?</string>
+    <string name="feature_survey_opinion_comment">Comment (optional)</string>
+    <string name="feature_survey_previous">Previous</string>
+    <string name="feature_survey_next">Next</string>
+    <string name="feature_survey_submit">Submit</string>
+    <string name="feature_survey_page_of">Page %1$d of %2$d</string>
+    <string name="feature_survey_thanks_title">Thank you!</string>
+    <string name="feature_survey_thanks_body">Your survey has been published.</string>
+    <string name="feature_survey_close">Close</string>
+    <string name="feature_survey_not_logged">You need to be signed in to answer the survey</string>
+</resources>

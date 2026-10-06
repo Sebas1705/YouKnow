@@ -21,4 +21,6 @@ dependencies {
 
     api(projects.domain.usescases.analytics)
     api(projects.domain.usescases.survey)
+    api(projects.domain.usescases.auth)
+    api(projects.domain.usescases.user)
 }

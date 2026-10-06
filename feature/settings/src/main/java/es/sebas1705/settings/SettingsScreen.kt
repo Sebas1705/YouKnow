@@ -18,6 +18,7 @@ import es.sebas1705.settings.viewmodel.SettingsViewModel
  * @param windowState [WindowState]: State of the Settings.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onBack () -> Unit: Function to go back to the previous screen.
+ * @param onSurveyNav () -> Unit: Function to navigate to the usability survey.
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -25,7 +26,8 @@ import es.sebas1705.settings.viewmodel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     windowState: WindowState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSurveyNav: () -> Unit = {}
 ) {
 
     //ViewModel:
@@ -68,7 +70,8 @@ fun SettingsScreen(
         },
         onRestoreClick = {
             settingsViewModel.eventHandler(SettingsIntent.RestoreSettings)
-        }
+        },
+        onSurveyNav = onSurveyNav
     )
 }
 

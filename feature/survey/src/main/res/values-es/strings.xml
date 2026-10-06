@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_survey_title">Encuesta de usabilidad</string>
+    <string name="feature_survey_subtitle">Tu opinión ayuda a mejorar la app</string>
+    <string name="feature_survey_about_you">Sobre ti</string>
+    <string name="feature_survey_age">Edad</string>
+    <string name="feature_survey_profession">Profesión</string>
+    <string name="feature_survey_android_knowing">Conocimiento de Android</string>
+    <string name="feature_survey_applications_knowing">Conocimiento de apps</string>
+    <string name="feature_survey_games_knowing">Conocimiento de videojuegos</string>
+    <string name="feature_survey_social_networks_knowing">Conocimiento de redes sociales</string>
+    <string name="feature_survey_other_knowing">¿Algo más sobre tu experiencia?</string>
+    <string name="feature_survey_opinion_comment">Comentario (opcional)</string>
+    <string name="feature_survey_previous">Anterior</string>
+    <string name="feature_survey_next">Siguiente</string>
+    <string name="feature_survey_submit">Enviar</string>
+    <string name="feature_survey_page_of">Página %1$d de %2$d</string>
+    <string name="feature_survey_thanks_title">¡Gracias!</string>
+    <string name="feature_survey_thanks_body">Tu encuesta se ha publicado.</string>
+    <string name="feature_survey_close">Cerrar</string>
+    <string name="feature_survey_not_logged">Necesitas iniciar sesión para responder la encuesta</string>
+</resources>

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
@@ -71,7 +72,8 @@ fun SettingsDesign(
     onSoundVolumeSliderBarChange: (Float) -> Unit = { },
     onContrastClick: (ThemeContrast) -> Unit = { },
     onLanguageClick: (Languages) -> Unit = { },
-    onRestoreClick: () -> Unit = { }
+    onRestoreClick: () -> Unit = { },
+    onSurveyNav: () -> Unit = { }
 ) {
     //Local:
     BackHandler { onBack() }
@@ -216,6 +218,12 @@ fun SettingsDesign(
                 label = stringResource(R.string.feature_settings_reset_defaults),
                 imageVector = Icons.Default.Restore,
                 onClick = onRestoreClick,
+            )
+            IVerSpacer(0.1f)
+            IOutlinedButton(
+                label = stringResource(R.string.feature_settings_give_feedback),
+                imageVector = Icons.Default.RateReview,
+                onClick = onSurveyNav,
             )
             IVerSpacer(0.4f)
         }

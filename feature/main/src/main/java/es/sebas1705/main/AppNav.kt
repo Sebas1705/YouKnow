@@ -63,7 +63,8 @@ fun AppNav(
             entry<AppGraph.SettingsScreen> {
                 SettingsScreen(
                     windowState,
-                    onBack = { appBackStack.removeLastOrNull() }
+                    onBack = { appBackStack.removeLastOrNull() },
+                    onSurveyNav = { appBackStack.add(AppGraph.SurveyScreen) }
                 )
             }
             entry<AppGraph.SurveyScreen> {
