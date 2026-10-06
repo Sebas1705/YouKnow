@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_networkerror_connection_lost">Connection lost</string>
+    <string name="feature_networkerror_offline_banner">Offline: you can still play with the questions saved on this device</string>
 </resources>

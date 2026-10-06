@@ -3,15 +3,18 @@ package es.sebas1705.main
 
 import android.media.AudioAttributes
 import android.media.SoundPool
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.sebas1705.designsystem.ComposableConstants.MAX_SOUNDS_SIMULTANEITY
 import es.sebas1705.designsystem.states.rememberWindowState
-import es.sebas1705.networkerror.NetworkErrorScreen
+import es.sebas1705.networkerror.design.OfflineBanner
 import es.sebas1705.splash.SplashScreen
 import es.sebas1705.ui.theme.AppTheme
 
@@ -62,13 +65,16 @@ fun MainScreen(
     ) {
         when {
             mainState.isSplashVisible -> SplashScreen(windowState)
-            !mainState.isNetworkAvailable -> NetworkErrorScreen(windowState)
-            else -> AppNav(
-                mainState.startDestination,
-                windowState,
-                onMusicChange = { song -> onMusicChange(song, mainState.musicVolume) },
-                soundPool = soundPool to mainState.soundVolume
-            )
+            else -> Box {
+                AppNav(
+                    mainState.startDestination,
+                    windowState,
+                    onMusicChange = { song -> onMusicChange(song, mainState.musicVolume) },
+                    soundPool = soundPool to mainState.soundVolume
+                )
+                if (!mainState.isNetworkAvailable)
+                    OfflineBanner(Modifier.align(Alignment.TopCenter))
+            }
         }
     }
 }
