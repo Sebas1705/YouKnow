@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.sebas1705.firestore.repository.FirestoreRepository
 import es.sebas1705.realtime.repository.RealtimeRepository
+import es.sebas1705.storage.repository.StorageRepository
 import es.sebas1705.user.UserUsesCases
 import es.sebas1705.user.usescases.AddCreditsToUser
 import es.sebas1705.user.usescases.AddPointsToUser
@@ -22,6 +23,7 @@ import es.sebas1705.user.usescases.RemoveUserListener
 import es.sebas1705.user.usescases.SaveUser
 import es.sebas1705.user.usescases.SetGroupToUser
 import es.sebas1705.user.usescases.SetUserListener
+import es.sebas1705.user.usescases.UploadProfilePhoto
 import javax.inject.Singleton
 
 /**
@@ -49,7 +51,8 @@ object UserModule {
     @Singleton
     fun provideUserUsesCases(
         firestoreRepository: FirestoreRepository,
-        realtimeRepository: RealtimeRepository
+        realtimeRepository: RealtimeRepository,
+        storageRepository: StorageRepository
     ): UserUsesCases = UserUsesCases(
         addCreditsToUser = AddCreditsToUser(firestoreRepository),
         addPointsToUser = AddPointsToUser(firestoreRepository),
@@ -64,7 +67,8 @@ object UserModule {
         changeNicknameToUser = ChangeNicknameToUser(firestoreRepository),
         getUserRanking = GetUserRanking(firestoreRepository),
         getUserByNickname = GetUserByNickname(firestoreRepository),
-        deleteDataUser = DeleteDataUser(firestoreRepository)
+        deleteDataUser = DeleteDataUser(firestoreRepository),
+        uploadProfilePhoto = UploadProfilePhoto(storageRepository, ChangePhotoToUser(firestoreRepository))
     )
 
 }

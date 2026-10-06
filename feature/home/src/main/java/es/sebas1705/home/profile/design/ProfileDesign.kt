@@ -21,7 +21,6 @@ import es.sebas1705.designsystem.buttons.fab.IFAB
 import es.sebas1705.designsystem.dialogs.LogoutDialog
 import es.sebas1705.designsystem.dialogs.NickDialog
 import es.sebas1705.designsystem.dialogs.ResetPasswordDialog
-import es.sebas1705.designsystem.dialogs.UrlRequestDialog
 import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.home.navigation.viewmodel.HomeState
 import es.sebas1705.home.profile.composables.LazyProfileItem
@@ -39,7 +38,7 @@ import es.sebas1705.youknow.presentation.features.home.features.profile.viewmode
  * @param homeState [HomeState]: State of the Home Screen.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param onLogout [Function0<Unit>]: Function that will be called when the user wants to logout.
- * @param onChangePhoto [(String) -> Unit]: Function that will be called when the user wants to change the photo.
+ * @param onPickPhoto [Function0<Unit>]: Function that will be called when the user taps their photo, to open the image picker.
  * @param onChangeNickname [(String) -> Unit]: Function that will be called when the user wants to change the nickname.
  * @param onChangePassword [Function0<Unit>]: Function that will be called when the user wants to change the password.
  *
@@ -53,7 +52,7 @@ fun ProfileDesign(
     homeState: HomeState = HomeState.defaultWithUser(),
     soundPool: Pair<SoundPool, Float>? = null,
     onLogout: () -> Unit = {},
-    onChangePhoto: (String) -> Unit = {},
+    onPickPhoto: () -> Unit = {},
     onChangeNickname: (String) -> Unit = {},
     onChangePassword: () -> Unit = {}
 ) {
@@ -61,7 +60,6 @@ fun ProfileDesign(
     var nickname by remember { mutableStateOf(homeState.userModel?.nickName ?: "") }
 
     //Flag:
-    var changePhotoDialog by remember { mutableStateOf(false) }
     var changeNicknameDialog by remember { mutableStateOf(false) }
     var changePassDialog by remember { mutableStateOf(false) }
     var signOutDialog by remember { mutableStateOf(false) }
@@ -84,14 +82,6 @@ fun ProfileDesign(
                     signOutDialog = false
                 },
             )
-        else if (changePhotoDialog) UrlRequestDialog(
-            windowState = windowState,
-            onConfirmButton = {
-                changePhotoDialog = false
-                onChangePhoto(it)
-            },
-            onDismissAction = { changePhotoDialog = false },
-        )
         else if (changeNicknameDialog) NickDialog(
             nickname = nickname,
             firebaseId = homeState.userModel?.firebaseId ?: "",
@@ -126,7 +116,7 @@ fun ProfileDesign(
                     nickname = nickname,
                     onChangeNickname = { nickname = it },
                     onChangeNicknameDialog = { changeNicknameDialog = true },
-                    onChangePhotoDialog = { changePhotoDialog = true },
+                    onChangePhotoDialog = onPickPhoto,
                     onChangePassDialog = { changePassDialog = true }
                 )
             }

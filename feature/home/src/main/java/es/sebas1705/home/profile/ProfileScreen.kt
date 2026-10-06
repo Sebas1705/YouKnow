@@ -3,6 +3,9 @@ package es.sebas1705.home.profile
 
 import android.media.SoundPool
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +42,15 @@ fun ProfileScreen(
     //State:
     val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
+    //Photo picker: the system Photo Picker, no storage permission needed.
+    val photoPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) homeState.userModel?.let { userModel ->
+            profileViewModel.eventHandler(ProfileIntent.UploadPhoto(userModel.firebaseId, uri))
+        } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
+    }
+
     //Body:
     ProfileDesign(
         windowState,
@@ -49,15 +61,8 @@ fun ProfileScreen(
             profileViewModel.eventHandler(ProfileIntent.SignOut)
             onAuthNav()
         },
-        onChangePhoto = { photo ->
-            homeState.userModel?.let { userModel ->
-                profileViewModel.eventHandler(
-                    ProfileIntent.ChangePhoto(
-                        userModel.firebaseId,
-                        photo
-                    )
-                )
-            } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
+        onPickPhoto = {
+            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         },
         onChangeNickname = {
             homeState.userModel?.let { userModel ->
