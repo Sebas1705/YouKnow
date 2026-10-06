@@ -19,4 +19,5 @@
     <string name="feature_survey_thanks_body">Tu encuesta se ha publicado.</string>
     <string name="feature_survey_close">Cerrar</string>
     <string name="feature_survey_not_logged">Necesitas iniciar sesión para responder la encuesta</string>
+    <string name="feature_survey_timeout">No se pudo enviar la encuesta. Revisa tu conexión o vuelve a iniciar sesión.</string>
 </resources>

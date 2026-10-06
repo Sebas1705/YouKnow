@@ -19,4 +19,5 @@
     <string name="feature_survey_thanks_body">Your survey has been published.</string>
     <string name="feature_survey_close">Close</string>
     <string name="feature_survey_not_logged">You need to be signed in to answer the survey</string>
+    <string name="feature_survey_timeout">Could not send the survey. Check your connection or sign in again.</string>
 </resources>

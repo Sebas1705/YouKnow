@@ -13,6 +13,8 @@ import es.sebas1705.resources.games.Languages
 import es.sebas1705.survey.SurveyUsesCases
 import es.sebas1705.user.UserUsesCases
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import java.util.Locale
 import javax.inject.Inject
 
@@ -93,8 +95,18 @@ class SurveyViewModel @Inject constructor(
             execute { application.printTextInToast(application.getString(R.string.feature_survey_not_logged)) }
             return@execute
         }
+        try {
+            withTimeout(SUBMIT_TIMEOUT_MS) {
+                publishSurvey(firebaseUser.uid)
+            }
+        } catch (_: TimeoutCancellationException) {
+            stopAndError(application.getString(R.string.feature_survey_timeout), application::printTextInToast)
+        }
+    }
+
+    private suspend fun publishSurvey(firebaseId: String) {
         surveyUsesCases.publicSurvey(
-            _uiState.value.toModel(firebaseUser.uid, authorNickName),
+            _uiState.value.toModel(firebaseId, authorNickName),
             onLoading = { startLoading() },
             onSuccess = {
                 stopLoading()
@@ -331,3 +343,5 @@ private fun SurveyState.toModel(firebaseId: String, nickName: String): SurveyMod
         surveyScreenGeneralOpinion = opinions["surveyScreenGeneral"] ?: Opinion(0, ""),
     )
 }
+
+private const val SUBMIT_TIMEOUT_MS = 20_000L
