@@ -2,6 +2,8 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+
+## [1.4.1] - 2026-10-07
 ### Changed
 - Losing the connection no longer replaces the whole app with a "Connection lost" screen: a thin offline banner is shown on top and the saved questions and games keep working.
 
