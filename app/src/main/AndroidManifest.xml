@@ -10,16 +10,21 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_static"
         android:label="@string/core_resources_app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_static_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         android:name="es.sebas1705.app.Application"
         tools:targetApi="35">
+        <!-- The application icon is a PNG because Firebase App Tester can only show a bitmap icon, and with
+             minSdk >= 26 the adaptive XML always wins over density PNGs. The launcher reads the activity icon,
+             so the adaptive icon stays here. -->
         <activity
             android:name="es.sebas1705.app.MainActivity"
             android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:theme="@style/Theme.App"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
