@@ -2,6 +2,8 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+
+## [1.4.2] - 2026-10-10
 ### Fixed
 - Firebase App Tester showed a generic icon instead of the app icon: the application now has a PNG icon, and the launcher keeps the adaptive one.
 
