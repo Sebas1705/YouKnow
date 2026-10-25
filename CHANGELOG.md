@@ -2,6 +2,11 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+### Added
+- Unit tests for the domain layer (OpenTDB, question, families, word, daily challenge, message, social and user mappers; quiz, OpenTDB download, mystery number, word pass, families, daily challenge, user and settings use cases) and for the Quiz, Mystery Number, Daily Challenge, Word Pass and Families ViewModels (state transitions, scoring and error paths).
+- `jacocoMergedReport` merges every module's unit-test coverage into `build/reports/jacoco/merged`, and the validate workflow posts the total line coverage in the job summary.
+### Fixed
+- `coverageUnitTestAll` never ran any test: the per-module `jacocoTestReport` looked up `testDebugUnitTest` before Android had created it, so every report was skipped with no execution data.
 
 ## [1.4.2] - 2026-10-10
 ### Fixed

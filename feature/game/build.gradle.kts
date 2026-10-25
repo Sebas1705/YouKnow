@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.buildlogic.feature)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {

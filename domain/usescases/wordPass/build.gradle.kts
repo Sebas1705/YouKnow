@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.buildlogic.domain)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {
@@ -10,6 +11,8 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            // GenerateWordPass logs through android.util.Log, which the plain unit-test android.jar would otherwise throw on.
+            isReturnDefaultValues = true
         }
     }
 }
