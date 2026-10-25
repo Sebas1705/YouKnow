@@ -1,6 +1,5 @@
 package es.sebas1705.game.families.viewmodel
 
-import kotlin.time.Duration.Companion.seconds
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -71,7 +70,7 @@ class FamiliesViewModelTest {
     private suspend fun runningGame(families: List<FamiliesEntity>, mode: FamiliesMode = FamiliesMode.ALEATORY): FamiliesViewModel {
         wheneverBlocking { database.getFamilies(eq(mode.numFamilies), any(), any(), any()) }.thenReturn(families)
         val viewModel = viewModel()
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(FamiliesIntent.SelectMode(mode))
             awaitUntil { it.status == FamiliesStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()

@@ -1,6 +1,5 @@
 package es.sebas1705.game.wordpass.viewmodel
 
-import kotlin.time.Duration.Companion.seconds
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -69,7 +68,7 @@ class WordPassViewModelTest {
     private suspend fun runningGame(words: List<WordEntity>, mode: WordPassMode = WordPassMode.ALEATORY): WordPassViewModel {
         wheneverBlocking { database.getWords(eq(words.size), eq(Letter.ANY), any(), any()) }.thenReturn(words)
         val viewModel = viewModel()
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(WordPassIntent.SelectMode(mode))
             viewModel.sendIntent(WordPassIntent.GenerateGame(Difficulty.EASY, mode, words.size))
             awaitUntil { it.status == WordPassStatus.RUNNING }
@@ -105,7 +104,7 @@ class WordPassViewModelTest {
         wheneverBlocking { database.getWords(eq(1), eq(Letter.M), any(), any()) }.thenReturn(listOf(word("mar", Letter.M)))
         val viewModel = viewModel()
 
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(WordPassIntent.GenerateGame(Difficulty.EASY, WordPassMode.FIRE_WHEEL, 0))
             val running = awaitUntil { it.status == WordPassStatus.RUNNING }
 

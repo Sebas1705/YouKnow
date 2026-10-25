@@ -17,8 +17,17 @@ abstract class MVIBaseViewModel<S : MVIBaseState, I : MVIBaseIntent> : ViewModel
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
-    init { onInit() }
+    // Posted to Main instead of invoked here: this block runs inside the superclass constructor,
+    // before Kotlin has assigned the subclass's constructor properties. Calling onInit() directly let
+    // subclasses launch work on Dispatchers.IO that could read a not-yet-injected dependency (null)
+    // when the IO thread won the race against the constructor (flaky NPE on 2-vCPU CI runners).
+    // Dispatchers.Main (not .immediate) always dispatches, so onInit() runs once construction is done.
+    init { execute { onInit() } }
 
+    /**
+     * Hook for the first load of the ViewModel. It runs on the main dispatcher right after the
+     * ViewModel has been fully constructed, so every injected dependency is available here.
+     */
     open fun onInit() {}
 
     abstract fun initState(): S

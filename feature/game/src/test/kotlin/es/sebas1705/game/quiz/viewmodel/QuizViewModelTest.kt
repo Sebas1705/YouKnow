@@ -1,6 +1,5 @@
 package es.sebas1705.game.quiz.viewmodel
 
-import kotlin.time.Duration.Companion.seconds
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -87,7 +86,7 @@ class QuizViewModelTest {
     private suspend fun runningGame(questions: List<QuestionEntity>, mode: QuizMode = QuizMode.ALEATORY): QuizViewModel {
         stubQuestions(mode.numQuestions, questions)
         val viewModel = viewModel()
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(QuizIntent.SelectMode(mode))
             awaitUntil { it.status == QuizStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
@@ -122,7 +121,7 @@ class QuizViewModelTest {
         stubQuestions(QuizMode.ALEATORY.numQuestions, questions)
         val viewModel = viewModel()
 
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(QuizIntent.SelectMode(QuizMode.ALEATORY))
             val running = awaitUntil { it.status == QuizStatus.RUNNING }
 
@@ -141,7 +140,7 @@ class QuizViewModelTest {
         wheneverBlocking { database.getQuestions(any(), any(), any(), any(), any()) }.thenReturn(listOf(questionEntity(1)))
         val viewModel = viewModel(language = Languages.ES)
 
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(QuizIntent.ReadLanguages)
             awaitUntil { it.languages == Languages.ES }
             viewModel.sendIntent(QuizIntent.GenerateGame(Category.HISTORY, Difficulty.HARD, QuizType.BOOLEAN, 5))
@@ -240,7 +239,7 @@ class QuizViewModelTest {
         val firestore = GameTestSupport.firestoreWithUser(points = 100, credits = 5)
         stubQuestions(QuizMode.ALEATORY.numQuestions, listOf(questionEntity(1, Difficulty.MEDIUM)))
         val viewModel = viewModel(firestore)
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(QuizIntent.SelectMode(QuizMode.ALEATORY))
             awaitUntil { it.status == QuizStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
@@ -276,7 +275,7 @@ class QuizViewModelTest {
         val firestore = GameTestSupport.firestoreWithUser()
         stubQuestions(QuizMode.ALEATORY.numQuestions, listOf(questionEntity(1)))
         val viewModel = viewModel(firestore)
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(QuizIntent.SelectMode(QuizMode.ALEATORY))
             awaitUntil { it.status == QuizStatus.RUNNING }
             viewModel.sendIntent(QuizIntent.Response("Right 1"))

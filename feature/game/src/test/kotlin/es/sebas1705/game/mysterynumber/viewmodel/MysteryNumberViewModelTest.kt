@@ -1,6 +1,5 @@
 package es.sebas1705.game.mysterynumber.viewmodel
 
-import kotlin.time.Duration.Companion.seconds
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -65,7 +64,7 @@ class MysteryNumberViewModelTest {
     /** A custom game with a known difficulty and life count, returned once it is RUNNING. */
     private suspend fun runningGame(difficulty: Difficulty = Difficulty.EASY, lives: Int = 7): MysteryNumberViewModel {
         val viewModel = viewModel()
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(MysteryNumberIntent.GenerateGame(difficulty, lives))
             awaitUntil { it.status == MysteryNumberStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
@@ -97,7 +96,7 @@ class MysteryNumberViewModelTest {
     fun `selecting a preset mode draws a number with the mode's lives`() = runTest {
         val viewModel = viewModel()
 
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(MysteryNumberIntent.SelectMode(MysteryNumberMode.ALEATORY))
             val running = awaitUntil { it.status == MysteryNumberStatus.RUNNING }
 
@@ -180,7 +179,7 @@ class MysteryNumberViewModelTest {
     @Test
     fun `time attack scores with the remaining time instead of the lives`() = runTest {
         val viewModel = viewModel()
-        viewModel.uiState.test(timeout = 30.seconds) {
+        viewModel.uiState.test {
             viewModel.sendIntent(MysteryNumberIntent.SelectMode(MysteryNumberMode.TIME_ATTACK))
             awaitUntil { it.status == MysteryNumberStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
