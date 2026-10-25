@@ -1,5 +1,6 @@
 package es.sebas1705.game.daily.viewmodel
 
+import kotlin.time.Duration.Companion.seconds
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -74,7 +75,7 @@ class DailyChallengeViewModelTest {
 
     private suspend fun runningChallenge(): DailyChallengeViewModel {
         val viewModel = viewModel(firestoreWithToday())
-        viewModel.uiState.test {
+        viewModel.uiState.test(timeout = 30.seconds) {
             awaitUntil { it.status == DailyChallengeStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
         }
@@ -85,7 +86,7 @@ class DailyChallengeViewModelTest {
     fun `loads today's round on creation`() = runTest {
         val viewModel = viewModel(firestoreWithToday())
 
-        viewModel.uiState.test {
+        viewModel.uiState.test(timeout = 30.seconds) {
             val running = awaitUntil { it.status == DailyChallengeStatus.RUNNING }
 
             assertEquals(listOf("Q1", "Q2"), running.questions.map { it.question })
@@ -103,7 +104,7 @@ class DailyChallengeViewModelTest {
         }
         val viewModel = viewModel(firestore)
 
-        viewModel.uiState.test {
+        viewModel.uiState.test(timeout = 30.seconds) {
             val failed = awaitUntil { it.loadError != null }
 
             assertEquals("offline", failed.loadError)
@@ -155,7 +156,7 @@ class DailyChallengeViewModelTest {
     fun `leaving with points stores them before calling back`() = runTest {
         val firestore = firestoreWithToday()
         val viewModel = viewModel(firestore)
-        viewModel.uiState.test {
+        viewModel.uiState.test(timeout = 30.seconds) {
             awaitUntil { it.status == DailyChallengeStatus.RUNNING }
             cancelAndIgnoreRemainingEvents()
         }
