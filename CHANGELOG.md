@@ -7,6 +7,7 @@ The format follows Keep a Changelog principles and semantic versioning (tags `vX
 - `jacocoMergedReport` merges every module's unit-test coverage into `build/reports/jacoco/merged`, and the validate workflow posts the total line coverage in the job summary.
 ### Fixed
 - `coverageUnitTestAll` never ran any test: the per-module `jacocoTestReport` looked up `testDebugUnitTest` before Android had created it, so every report was skipped with no execution data.
+- `MVIBaseViewModel.onInit()` ran inside the base constructor, before the subclass's injected dependencies were assigned; the Daily Challenge, Home and Survey ViewModels launched their first load from it on `Dispatchers.IO` and could hit a null use case (flaky `DailyChallengeViewModelTest` timeouts on CI). The hook is now posted to the main dispatcher and runs once the ViewModel is fully constructed.
 
 ## [1.4.2] - 2026-10-10
 ### Fixed
