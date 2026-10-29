@@ -112,7 +112,7 @@ class DailyChallengeViewModel @Inject constructor(
             firebaseId = authUsesCases.getFirebaseUser()!!.uid,
             onLoading = { },
             onSuccess = { user ->
-                Log.i("DailyChallengeViewModel", "User: $user")
+                Log.i("DailyChallengeViewModel", "User loaded")
                 execute(Dispatchers.IO) {
                     userUsesCases.addPointsToUser(
                         user = user,

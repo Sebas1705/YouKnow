@@ -68,7 +68,7 @@ class ChatViewModel @Inject constructor(
     private fun loadChat() {
         chatUsesCases.setMessagesListener(
             onSuccess = { data ->
-                Log.i("ChatViewModel", "loadChat: $data")
+                Log.i("ChatViewModel", "loadChat: messages updated")
                 updateUi {
                     it.copy(chatGlobal = data)
                 }

@@ -177,7 +177,7 @@ class FamiliesViewModel @Inject constructor(
             firebaseId = authUsesCases.getFirebaseUser()!!.uid,
             onLoading = { startLoading() },
             onSuccess = { user ->
-                Log.i("FamiliesViewModel", "User: $user")
+                Log.i("FamiliesViewModel", "User loaded")
                 execute(Dispatchers.IO) {
                     userUsesCases.addPointsToUser(
                         user = user,
