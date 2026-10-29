@@ -2,41 +2,20 @@ package es.sebas1705.datastore.datasources
 
 import androidx.datastore.core.DataStore
 import es.sebas1705.datastore.SettingsPreferences
-import es.sebas1705.datastore.config.DefaultValuesDS
 import es.sebas1705.datastore.model.SettingsData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Settings stored in Proto DataStore. The defaults are written by
+ * [es.sebas1705.datastore.migrations.SettingsDefaultsMigration] (registered in the DataStore
+ * factory) before the first value is served, so readers never see un-initialised settings.
+ */
 @Singleton
 class SettingsPreferencesDataSource @Inject constructor(
     private val settingsPreferences: DataStore<SettingsPreferences>
 ) {
-
-    init {
-        // Write the defaults once, on the very first launch. Rewriting them on every start reset the
-        // user's settings each time, including `firstTime`, so the guide came back on every launch.
-        CoroutineScope(Dispatchers.IO).launch {
-            settingsPreferences.updateData { current -> withDefaults(current) }
-        }
-    }
-
-    companion object {
-        /** [current] unchanged if the defaults were already written, else the defaults. */
-        fun withDefaults(current: SettingsPreferences): SettingsPreferences =
-            if (current.defaultSet) current
-            else current.toBuilder()
-                .setContrast(DefaultValuesDS.APP_UI_CONTRAST.ordinal)
-                .setFirstTime(DefaultValuesDS.FIRST_TIME)
-                .setMusicVolume(DefaultValuesDS.MUSIC_VOLUME)
-                .setSoundVolume(DefaultValuesDS.SOUND_VOLUME)
-                .setLanguage(DefaultValuesDS.GAME_LANGUAGE.ordinal)
-                .setDefaultSet(true)
-                .build()
-    }
 
     /**
      * Settings data

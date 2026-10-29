@@ -6,8 +6,12 @@ The format follows Keep a Changelog principles and semantic versioning (tags `vX
 - Unit tests for the domain layer (OpenTDB, question, families, word, daily challenge, message, social and user mappers; quiz, OpenTDB download, mystery number, word pass, families, daily challenge, user and settings use cases) and for the Quiz, Mystery Number, Daily Challenge, Word Pass and Families ViewModels (state transitions, scoring and error paths).
 - `jacocoMergedReport` merges every module's unit-test coverage into `build/reports/jacoco/merged`, and the validate workflow posts the total line coverage in the job summary.
 ### Fixed
+- Settings defaults are now written by a DataStore migration before the first read. They were written fire-and-forget from `SettingsPreferencesDataSource.init` on a detached `Dispatchers.IO` scope, so the first read could see uninitialised settings (0 volume, `defaultSet = false`).
 - `coverageUnitTestAll` never ran any test: the per-module `jacocoTestReport` looked up `testDebugUnitTest` before Android had created it, so every report was skipped with no execution data.
 - `MVIBaseViewModel.onInit()` ran inside the base constructor, before the subclass's injected dependencies were assigned; the Daily Challenge, Home and Survey ViewModels launched their first load from it on `Dispatchers.IO` and could hit a null use case (flaky `DailyChallengeViewModelTest` timeouts on CI). The hook is now posted to the main dispatcher and runs once the ViewModel is fully constructed.
+### Security
+- The game ViewModels (Daily Challenge, Families, Mystery Number, Quiz, Word Pass) logged the whole `UserModel`, including the email and Firebase uid; they now log only "User loaded". The chat no longer logs every message, analytics logs print the bundle key count instead of its values and no longer print user-property values, and the (disabled) FCM service no longer logs the registration token.
+- Release builds strip `Log.v`/`Log.d`/`Log.i` with an R8 `-assumenosideeffects` rule (warnings and errors are kept).
 
 ## [1.4.2] - 2026-10-10
 ### Fixed

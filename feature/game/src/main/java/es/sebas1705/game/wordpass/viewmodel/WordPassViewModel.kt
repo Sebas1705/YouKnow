@@ -168,7 +168,7 @@ class WordPassViewModel @Inject constructor(
             firebaseId = authUsesCases.getFirebaseUser()!!.uid,
             onLoading = { startLoading() },
             onSuccess = { user ->
-                Log.i("WordPassViewModel", "User: $user")
+                Log.i("WordPassViewModel", "User loaded")
                 execute(Dispatchers.IO) {
                     userUsesCases.addPointsToUser(
                         user = user,
