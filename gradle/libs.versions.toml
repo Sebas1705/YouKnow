@@ -41,7 +41,7 @@ lifecycle-nav3 = "2.10.0"
 # Firebase (Analytics, Crashlytics, Messaging, Auth, Firestore, Realtime DB, Storage)
 # Firebase: one BoM pins every SDK. The -ktx artifacts were discontinued (last: auth 23.2.1),
 # their Kotlin APIs now live in the main modules.
-firebase-bom = "34.19.0"
+firebase-bom = "35.0.0"
 firebase-crashlytics-plugin = "3.0.6"
 
 # Dependency injection (Hilt)
