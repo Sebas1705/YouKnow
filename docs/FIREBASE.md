@@ -34,7 +34,7 @@ After adding or removing an app or a SHA, run `scripts/refresh-google-services.s
 
 | Service | File | Model |
 |---|---|---|
-| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, written only by the owner (schema validated, no negative credits); `news` read-only; `surveys/{uid}` one per author |
+| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, so it holds nothing private (the email stays in Firebase Auth); written only by the owner, every field type checked; `news` read-only; `surveys/{uid}` one per author; `dailyChallenges/{date}` created once by a verified account for the current UTC day (±1 for clock skew), full shape checked, at most 5 questions of 2 to 4 answers, immutable |
 | Realtime Database | `firebase/database.rules.json` | `chat-global-youknow`: messages keyed `<uid>-<time>`, created only by their author (text ≤ 50 chars), deletable by any signed-in client (the app trims to 100); `groups-youknow`: created/deleted by the leader (`<name>-<leaderUid>`), members list rewritten by joiners |
 | Storage | `firebase/storage.rules` | closed: the app stores no files |
 
@@ -59,11 +59,38 @@ service account, separate from the App Distribution one and limited to rules:
 | Doppler secret (`prd`) | `FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON` |
 | Roles on `youknow-tfg` | Firebase Rules Admin (Firestore + Storage rules), Firebase Realtime Database Admin (RTDB rules), Service Usage Consumer |
 
+The deploy also needs `firebasestorage.defaultBucket.get`, because `firebase.json` names no Storage
+bucket and the CLI asks for the default one. The narrowest role with it is **Cloud Storage for
+Firebase Viewer** (`roles/firebasestorage.viewer`); without it the deploy stops with a 403 before
+releasing any rules. The bucket can't simply be named again: the emulator needs the plain
+`storage` form to load `storage.rules` (see #44).
+
 By hand, when needed:
 
 ```bash
 npx firebase-tools deploy --only firestore:rules,database,storage --project youknow-tfg
 ```
+
+Rules are limited to 1000 evaluated expressions per request and deny anything over it, so a size
+limit in `firestore.rules` can't grow freely: the rules tests write the largest allowed round.
+
+### Removing emails from existing profiles
+
+Profiles written before 1.5.0 still hold an `email` that every signed-in user can read. The rules
+stop new ones and let old ones stay unchanged, so that those documents can still be updated. To
+remove them, run this **after** the rules are deployed and the new app is out: older versions show an
+empty email and can't send the password reset once it's gone.
+
+```bash
+cd firebase/rules-test
+npm ci
+gcloud auth application-default login
+node migrations/remove-user-emails.mjs --project youknow-tfg           # dry run
+node migrations/remove-user-emails.mjs --project youknow-tfg --apply
+```
+
+The dry run writes nothing. Both also list documents the app can't use, which are left for you to
+review in the console: `users/` ids are uids, so keep that output private. Running it again is safe.
 
 Indexes (`firebase/firestore.indexes.json`) are deployed with `--only firestore:indexes`; the app
 only runs single-field queries, which need no composite index.

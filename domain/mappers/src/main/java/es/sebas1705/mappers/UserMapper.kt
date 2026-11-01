@@ -6,8 +6,7 @@ import es.sebas1705.models.social.UserModel
 
 fun UserDocument.toUserModel(firebaseId: String) = UserModel(
     firebaseId = firebaseId,
-    email = email,
-    provider = ProviderAuth.entries[provider],
+    provider = ProviderAuth.entries.getOrElse(provider) { ProviderAuth.EMAIL },
     nickName = nickName,
     photoUrl = photoUrl,
     groupId = groupId,
@@ -16,7 +15,6 @@ fun UserDocument.toUserModel(firebaseId: String) = UserModel(
 )
 
 fun UserModel.toUserDocument() = UserDocument(
-    email = email,
     provider = provider.ordinal,
     nickName = nickName,
     photoUrl = photoUrl,

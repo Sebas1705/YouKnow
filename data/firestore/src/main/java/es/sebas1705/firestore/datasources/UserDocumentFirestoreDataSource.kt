@@ -11,6 +11,7 @@ import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.UserDocument
+import es.sebas1705.firestore.documents.toObjectOrNull
 import javax.inject.Inject
 
 /**
@@ -77,7 +78,7 @@ class UserDocumentFirestoreDataSource @Inject constructor(
     ): DataFlow<UserDocument> = taskFlow.taskFlowProducer(
         taskAction = { usersReference.document(userId).get() },
         onSuccessListener = {
-            val userDocument = it.toObject(UserDocument::class.java)
+            val userDocument = it.toObjectOrNull(UserDocument::class.java, ::logMalformed)
             if (userDocument != null) DataState.Success(userDocument)
             else taskFlow.createResponse(
                 ErrorDataType.BAD_REQUEST,
@@ -246,8 +247,8 @@ class UserDocumentFirestoreDataSource @Inject constructor(
         taskFlow.taskFlowProducer(
             taskAction = { usersReference.orderBy(SettingsFS.USERS_POINTS_FIELD).get() },
             onSuccessListener = { snapshot ->
-                val users = snapshot.documents.map { document ->
-                    document.toObject(UserDocument::class.java)!!.let {
+                val users = snapshot.documents.mapNotNull { document ->
+                    document.toObjectOrNull(UserDocument::class.java, ::logMalformed)?.let {
                         it.nickName to it.points
                     }
                 }.reversed()
@@ -272,7 +273,8 @@ class UserDocumentFirestoreDataSource @Inject constructor(
             usersReference.whereEqualTo(SettingsFS.USERS_NICKNAME_FIELD, nickname).get()
         },
         onSuccessListener = {
-            val userDocument = it.documents.firstOrNull()?.toObject(UserDocument::class.java)
+            val userDocument = it.documents.firstOrNull()
+                ?.toObjectOrNull(UserDocument::class.java, ::logMalformed)
             if (userDocument != null) DataState.Success(userDocument to it.documents.first().id)
             else taskFlow.createResponse(
                 ErrorDataType.BAD_REQUEST,
@@ -314,7 +316,8 @@ class UserDocumentFirestoreDataSource @Inject constructor(
     ) {
         userListener =
             usersReference.document(firebaseId).addSnapshotListener { documentSnapshot, _ ->
-                val userDocument = documentSnapshot?.toObject(UserDocument::class.java)
+                val userDocument =
+                    documentSnapshot?.toObjectOrNull(UserDocument::class.java, ::logMalformed)
                 if (userDocument != null) onDataChange(userDocument)
             }
     }
@@ -330,4 +333,9 @@ class UserDocumentFirestoreDataSource @Inject constructor(
         userListener = null
     }
 
+    //Privates:
+    private fun logMalformed(message: String) {
+        logE(message)
+        logEventDataSource.logError(this.javaClass.kotlin, message)
+    }
 }

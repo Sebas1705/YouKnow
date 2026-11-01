@@ -70,7 +70,7 @@ internal object GameTestSupport {
 
     /** A signed-in user whose Firestore document reads fine and accepts points and credits. */
     fun firestoreWithUser(points: Int = 0, credits: Int = 0): FirestoreRepository = mock {
-        on { getUser(UID) } doReturn success(UserDocument("a@b.c", 1, "nick", null, null, points, credits, true))
+        on { getUser(UID) } doReturn success(UserDocument(1, "nick", null, null, points, credits, true))
         on { addPointsToUser(eq(UID), any(), any()) } doReturn success(points)
         on { addCreditsToUser(eq(UID), any(), any()) } doReturn success(credits)
     }

@@ -32,7 +32,7 @@ class UserPointsAndCreditsTest {
     @Test
     fun `getUser maps the document onto a model with the requested id`() = runTest {
         whenever(firestore.getUser("uid-1")).thenReturn(
-            success(UserDocument("ana@example.com", ProviderAuth.GOOGLE.ordinal, "ana", null, "g", 10, 20, true))
+            success(UserDocument(ProviderAuth.GOOGLE.ordinal, "ana", null, "g", 10, 20, true))
         )
         val events = mutableListOf<String>()
         var result: UserModel? = null
