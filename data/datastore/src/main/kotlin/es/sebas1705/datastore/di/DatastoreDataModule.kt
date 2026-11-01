@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.sebas1705.datastore.SettingsPreferences
+import es.sebas1705.datastore.migrations.SettingsDefaultsMigration
 import es.sebas1705.datastore.serializers.SETTINGS_PREFERENCES_FILE_NAME
 import es.sebas1705.datastore.serializers.SettingsSerializer
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +40,7 @@ object DatastoreDataModule {
         serializer = SettingsSerializer(),
         produceFile = { context.dataStoreFile(SETTINGS_PREFERENCES_FILE_NAME) },
         corruptionHandler = null,
+        migrations = listOf(SettingsDefaultsMigration),
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     )
 }

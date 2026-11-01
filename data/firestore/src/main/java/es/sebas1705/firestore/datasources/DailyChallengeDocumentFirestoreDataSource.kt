@@ -9,6 +9,8 @@ import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.DailyChallengeDocument
+import es.sebas1705.firestore.documents.hasPlayableQuestions
+import es.sebas1705.firestore.documents.toObjectOrNull
 import javax.inject.Inject
 
 /**
@@ -46,6 +48,8 @@ class DailyChallengeDocumentFirestoreDataSource @Inject constructor(
      *
      * @return [DataFlow]<[DailyChallengeDocument]>: [SettingsFS.DAILY_CHALLENGE_NOT_FOUND] when no
      * one has published that day yet — the caller then generates one and calls [createDailyChallenge].
+     * [SettingsFS.DAILY_CHALLENGE_MALFORMED] when the published document is unusable: it is immutable,
+     * so publishing again can't replace it.
      *
      * @since 1.3.0
      * @author Sebas1705 30/09/2026
@@ -53,9 +57,19 @@ class DailyChallengeDocumentFirestoreDataSource @Inject constructor(
     fun getDailyChallenge(date: String): DataFlow<DailyChallengeDocument> = taskFlow.taskFlowProducer(
         taskAction = { dailyChallengesReference.document(date).get() },
         onSuccessListener = {
-            val document = it.toObject(DailyChallengeDocument::class.java)
-            if (document != null) DataState.Success(document)
-            else taskFlow.createResponse(ErrorDataType.BAD_REQUEST, SettingsFS.DAILY_CHALLENGE_NOT_FOUND)
+            val document = it.toObjectOrNull(DailyChallengeDocument::class.java, ::logMalformed)
+            when {
+                !it.exists() -> taskFlow.createResponse(
+                    ErrorDataType.BAD_REQUEST,
+                    SettingsFS.DAILY_CHALLENGE_NOT_FOUND
+                )
+
+                document?.hasPlayableQuestions() == true -> DataState.Success(document)
+                else -> taskFlow.createResponse(
+                    ErrorDataType.INTERNAL,
+                    SettingsFS.DAILY_CHALLENGE_MALFORMED
+                )
+            }
         }
     )
 
@@ -79,4 +93,10 @@ class DailyChallengeDocumentFirestoreDataSource @Inject constructor(
         taskAction = { dailyChallengesReference.document(date).set(dailyChallengeDocument) },
         onSuccessListener = { DataState.Success(dailyChallengeDocument) }
     )
+
+    //Privates:
+    private fun logMalformed(message: String) {
+        logE(message)
+        logEventDataSource.logError(this.javaClass.kotlin, message)
+    }
 }

@@ -10,6 +10,7 @@ import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.SurveyDocument
+import es.sebas1705.firestore.documents.toObjectOrNull
 import javax.inject.Inject
 
 /**
@@ -72,7 +73,7 @@ class SurveyDocumentFirestoreDataSource @Inject constructor(
     ): DataFlow<SurveyDocument> = taskFlow.taskFlowProducer(
         taskAction = { surveysReference.document(firebaseId).get() },
         onSuccessListener = {
-            val surveyDocument = it.toObject(SurveyDocument::class.java)
+            val surveyDocument = it.toObjectOrNull(SurveyDocument::class.java, ::logMalformed)
             if (surveyDocument != null) DataState.Success(surveyDocument)
             else taskFlow.createResponse(
                 ErrorDataType.BAD_REQUEST,
@@ -92,11 +93,16 @@ class SurveyDocumentFirestoreDataSource @Inject constructor(
     fun getSurveys(): DataFlow<List<SurveyDocument>> = taskFlow.taskFlowProducer(
         taskAction = { surveysReference.get() },
         onSuccessListener = {
-            val surveys = it.documents.map { document ->
-                document.toObject(SurveyDocument::class.java)!!
+            val surveys = it.documents.mapNotNull { document ->
+                document.toObjectOrNull(SurveyDocument::class.java, ::logMalformed)
             }
             DataState.Success(surveys)
         }
     )
 
+    //Privates:
+    private fun logMalformed(message: String) {
+        logE(message)
+        logEventDataSource.logError(this.javaClass.kotlin, message)
+    }
 }

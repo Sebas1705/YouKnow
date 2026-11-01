@@ -50,7 +50,7 @@ class TaskFlow(
             } else {
                 taskAction()
                     .addOnSuccessListener { result ->
-                        trySend(onSuccessListener(result))
+                        trySend(guardedResult(result, onSuccessListener))
                         close()
                     }.addOnFailureListener { exception ->
                         trySend(
@@ -67,6 +67,22 @@ class TaskFlow(
             close()
         }
         awaitClose()
+    }
+
+    /**
+     * Runs a success listener, which Firebase calls on the main thread outside the `try` of
+     * [taskFlowProducer]. Anything it throws (a document that doesn't map onto its class, for
+     * instance) would crash the app, so it becomes an error instead; the detail is logged, and the
+     * caller gets [genericExMessage] so that mapper internals never reach the UI.
+     */
+    private fun <T, Q> guardedResult(
+        result: Q,
+        onSuccessListener: (Q) -> DataState<T>
+    ): DataState<T> = try {
+        onSuccessListener(result)
+    } catch (e: Exception) {
+        loggerAction(clazz, e.message ?: genericExMessage)
+        createResponse(ErrorDataType.INTERNAL, genericExMessage)
     }
 
     /**

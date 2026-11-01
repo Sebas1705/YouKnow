@@ -75,12 +75,8 @@ fun ProfileScreen(
             } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         },
         onChangePassword = {
-            homeState.userModel?.let { userModel ->
-                profileViewModel.eventHandler(
-                    ProfileIntent.SendPasswordChanger(
-                        userModel.email,
-                    )
-                )
+            homeState.firebaseUser?.email?.let { email ->
+                profileViewModel.eventHandler(ProfileIntent.SendPasswordChanger(email))
             } ?: ctx.printTextInToast(ctx.getString(R.string.feature_home_user_not_logged))
         }
     )

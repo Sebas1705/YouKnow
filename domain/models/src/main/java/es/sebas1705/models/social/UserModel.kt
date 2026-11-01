@@ -8,7 +8,6 @@ import es.sebas1705.core.resources.ProviderAuth
  * Model to represent a user
  *
  * @property firebaseId [String]: Firebase ID of the user
- * @property email [String]: Email of the user
  * @property provider [ProviderAuth]: Provider of the user
  * @property nickName [String]: Nickname of the user
  * @property photoUrl [String]: Photo URL of the user
@@ -22,7 +21,6 @@ import es.sebas1705.core.resources.ProviderAuth
  */
 data class UserModel(
     val firebaseId: String,
-    val email: String,
     val provider: ProviderAuth,
     val nickName: String,
     val photoUrl: String?,
@@ -34,7 +32,6 @@ data class UserModel(
     companion object {
         fun newGoogleUser(firebaseUser: FirebaseUser) = UserModel(
             firebaseId = firebaseUser.uid,
-            email = firebaseUser.email!!,
             provider = ProviderAuth.GOOGLE,
             nickName = firebaseUser.displayName!!,
             photoUrl = firebaseUser.photoUrl!!.toString(),
@@ -45,7 +42,6 @@ data class UserModel(
 
         fun newEmailUser(nickName: String, firebaseUser: FirebaseUser) = UserModel(
             firebaseId = firebaseUser.uid,
-            email = firebaseUser.email!!,
             provider = ProviderAuth.EMAIL,
             nickName = nickName,
             photoUrl = null,
@@ -57,7 +53,6 @@ data class UserModel(
         fun default(): UserModel {
             return UserModel(
                 firebaseId = "firebaseId",
-                email = "email",
                 nickName = "nickName",
                 photoUrl = "photoUrl",
                 credits = 0,

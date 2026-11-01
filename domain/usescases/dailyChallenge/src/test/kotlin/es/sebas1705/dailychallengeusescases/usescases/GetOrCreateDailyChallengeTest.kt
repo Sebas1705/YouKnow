@@ -35,6 +35,26 @@ import org.mockito.kotlin.whenever
  */
 class GetOrCreateDailyChallengeTest {
 
+    @Test
+    fun `a malformed published day is an error, not a new publish it could never win`() = runTest {
+        whenever(firestore.getDailyChallenge(date)).thenReturn(
+            flowOf(
+                DataState.Loading,
+                DataState.Error(
+                    GetOrCreateDailyChallengeTest::class,
+                    ErrorDataType.INTERNAL,
+                    SettingsFS.DAILY_CHALLENGE_MALFORMED
+                ) { _, _ -> }
+            )
+        )
+        var error: String? = null
+
+        useCase(date, onLoading = {}, onSuccess = {}, onError = { error = it })
+
+        assertEquals(SettingsFS.DAILY_CHALLENGE_MALFORMED, error)
+        verify(firestore, never()).createDailyChallenge(any(), any())
+    }
+
     private val firestore: FirestoreRepository = mock()
     private val database: DatabaseRepository = mock()
     private val useCase = GetOrCreateDailyChallenge(firestore, GenerateQuestionList(database))
