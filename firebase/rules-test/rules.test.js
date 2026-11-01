@@ -11,9 +11,10 @@ import { ref as storageRef, deleteObject, getBytes, uploadBytes } from "firebase
 const alice = "alice";
 const bob = "bob";
 const user = (over = {}) => ({
-  email: "a@example.com", provider: 0, nickName: "alice", photoUrl: null, groupId: null,
+  provider: 0, nickName: "alice", photoUrl: null, groupId: null,
   points: 0, credits: 10, logged: true, ...over,
 });
+const maxInt = 2147483647; // UserDocument maps points and credits onto a Kotlin Int.
 
 let env;
 
@@ -71,6 +72,42 @@ describe("Firestore users", () => {
     await assertFails(setDoc(doc(db, "users", alice), user({ isAdmin: true })));
     await assertFails(setDoc(doc(db, "users", alice), user({ points: "lots" })));
   });
+
+  test("profiles reject every value UserDocument can't map: everyone reads them in the ranking", async () => {
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "users", alice), user({ logged: "x" })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ provider: "x" })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ provider: 2 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ provider: -1 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ points: maxInt + 1 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ credits: maxInt + 1 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ nickName: 7 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ photoUrl: 7 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ groupId: {} })));
+
+    await assertSucceeds(setDoc(doc(db, "users", alice), user({ provider: 1, points: maxInt, credits: maxInt })));
+    await assertFails(updateDoc(doc(db, "users", alice), { logged: "x" }));
+    await assertFails(updateDoc(doc(db, "users", alice), { points: maxInt + 1 }));
+  });
+
+  test("a new profile cannot carry an email, not even the user's own", async () => {
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "users", alice), user({ email: "a@example.com" })));
+
+    await assertSucceeds(setDoc(doc(db, "users", alice), user()));
+    await assertFails(updateDoc(doc(db, "users", alice), { email: "a@example.com" }));
+  });
+
+  test("a profile written by an old version keeps working until the migration removes its email", async () => {
+    await seed((c) => setDoc(doc(c.firestore(), "users", alice), user({ email: "a@example.com" })));
+    const db = as(alice).firestore();
+
+    await assertSucceeds(updateDoc(doc(db, "users", alice), { points: 30 }));
+    await assertFails(updateDoc(doc(db, "users", alice), { email: "other@example.com" }));
+
+    await assertSucceeds(setDoc(doc(db, "users", alice), user()));
+    await assertFails(setDoc(doc(db, "users", alice), user({ email: "a@example.com" })));
+  });
 });
 
 describe("Firestore news and surveys", () => {
@@ -96,41 +133,107 @@ describe("Firestore news and surveys", () => {
 });
 
 describe("Firestore daily challenges", () => {
-  const today = "2026-09-30";
-  const challenge = (over = {}) => ({
-    date: today,
-    questions: [{ question: "q", answers: ["a", "b"], correctAnswer: "a", category: "ANY", difficulty: "MEDIUM", quizType: "MULTIPLE" }],
-    ...over,
-  });
+  const day = (offset) => new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+  const today = day(0);
+  const question = (over = {}) => ({ question: "q", answers: ["a", "b"], correctAnswer: "a", category: "ANY", difficulty: "MEDIUM", quizType: "MULTIPLE", ...over });
+  const challenge = (over = {}) => ({ date: today, questions: [question()], ...over });
+  const publish = (db, date, data) => setDoc(doc(db, "dailyChallenges", date), data);
+  const verified = (uid) => env.authenticatedContext(uid, { email_verified: true });
 
   test("the first device publishes the day's shared round", async () => {
-    const db = as(alice).firestore();
-    await assertSucceeds(setDoc(doc(db, "dailyChallenges", today), challenge()));
+    const db = verified(alice).firestore();
+    await assertSucceeds(publish(db, today, challenge()));
     await assertSucceeds(getDoc(doc(db, "dailyChallenges", today)));
+  });
+
+  test("accepts the largest round the rules allow", async () => {
+    // Exactly what the app publishes every day (5 questions, up to 4 answers), so it also guards the
+    // budget of 1000 expressions per request: over it, this write is denied.
+    const answers = ["a", "b", "c", "d"];
+    const questions = Array(5).fill(question({ answers, correctAnswer: "d" }));
+    await assertSucceeds(publish(verified(alice).firestore(), today, challenge({ questions })));
+  });
+
+  test("only verified accounts publish", async () => {
+    await assertFails(publish(as(alice).firestore(), today, challenge()));
+    await assertFails(publish(env.authenticatedContext(alice, { email_verified: false }).firestore(), today, challenge()));
+  });
+
+  test("only the current day can be published, with a day of clock skew", async () => {
+    const db = verified(alice).firestore();
+    for (const date of [day(1), day(-1)]) {
+      await assertSucceeds(publish(db, date, challenge({ date })));
+    }
+    for (const date of [day(3), day(365), day(-3), "2099-01-01"]) {
+      await assertFails(publish(db, date, challenge({ date })));
+    }
+    await assertFails(publish(db, "2026-13-45", challenge({ date: "2026-13-45" })));
+  });
+
+  test("rejects questions the app can't map or play", async () => {
+    const db = verified(alice).firestore();
+    const bad = [
+      [1, 2],
+      ["text"],
+      [null],
+      [{}],
+      [question(), 1],
+      [question({ question: 7 })],
+      [question({ question: "" })],
+      [question({ answers: "ab" })],
+      [question({ answers: [1, 2], correctAnswer: 1 })],
+      [question({ answers: ["a", 2] })],
+      [question({ answers: ["a", "b", 3] })],
+      [question({ answers: ["a", "b", "c", 4] })],
+      [question({ answers: ["a"] })],
+      [question({ answers: ["a", "b", "c", "d", "e"] })],
+      [question({ correctAnswer: "z" })],
+      [question({ correctAnswer: 1 })],
+      [question({ category: 7 })],
+      [question({ difficulty: null })],
+      [question({ quizType: {} })],
+      [question({ extra: true })],
+      [question({ question: "q".repeat(1001) })],
+      [{ question: "q", answers: ["a", "b"], correctAnswer: "a" }],
+    ];
+    for (const questions of bad) {
+      await assertFails(publish(db, today, challenge({ questions })));
+    }
+  });
+
+  test("a bad question is caught at any position", async () => {
+    const db = verified(alice).firestore();
+    for (let i = 0; i < 5; i++) {
+      const questions = Array(5).fill(question());
+      questions[i] = 1;
+      await assertFails(publish(db, today, challenge({ questions })));
+    }
   });
 
   test("anonymous clients neither read nor publish", async () => {
     const db = as(null).firestore();
     await assertFails(getDoc(doc(db, "dailyChallenges", today)));
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge()));
+    await assertFails(publish(db, today, challenge()));
   });
 
   test("once published, the day is immutable — the losing device just reads it back", async () => {
     await seed((c) => setDoc(doc(c.firestore(), "dailyChallenges", today), challenge()));
-    const db = as(alice).firestore();
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: [] })));
+    const db = verified(alice).firestore();
+    await assertFails(publish(db, today, challenge()));
+    await assertFails(publish(db, today, challenge({ questions: [] })));
     await assertFails(updateDoc(doc(db, "dailyChallenges", today), { questions: [] }));
     await assertFails(deleteDoc(doc(db, "dailyChallenges", today)));
     await assertSucceeds(getDoc(doc(db, "dailyChallenges", today)));
   });
 
   test("rejects a mismatched date, an empty or oversized round, and unknown fields", async () => {
-    const db = as(alice).firestore();
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ date: "2020-01-01" })));
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: [] })));
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ questions: Array(21).fill(challenge().questions[0]) })));
-    await assertFails(setDoc(doc(db, "dailyChallenges", today), challenge({ createdBy: alice })));
-    await assertFails(setDoc(doc(db, "dailyChallenges", "not-a-date"), challenge({ date: "not-a-date" })));
+    const db = verified(alice).firestore();
+    await assertFails(publish(db, today, challenge({ date: "2020-01-01" })));
+    await assertFails(publish(db, today, challenge({ questions: [] })));
+    await assertFails(publish(db, today, challenge({ questions: "x" })));
+    await assertFails(publish(db, today, challenge({ questions: Array(6).fill(question()) })));
+    await assertFails(publish(db, today, challenge({ createdBy: alice })));
+    await assertFails(publish(db, "not-a-date", challenge({ date: "not-a-date" })));
   });
 });
 

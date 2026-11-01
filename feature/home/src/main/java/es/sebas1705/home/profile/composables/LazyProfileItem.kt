@@ -41,6 +41,7 @@ import es.sebas1705.feature.home.R
  *
  * @param windowState [WindowState]: State of the window.
  * @param userModel [UserModel]: User's data.
+ * @param email [String]: User's email, from Firebase Auth: profiles don't store it.
  * @param soundPool [Pair]<[SoundPool], [Float]>: Pair of the SoundPool and the volume.
  * @param nickname [String]: User's nickname.
  * @param onChangeNickname (String) -> Unit: Function to change the user's nickname.
@@ -56,6 +57,7 @@ import es.sebas1705.feature.home.R
 fun LazyProfileItem(
     windowState: WindowState = WindowState.default(),
     userModel: UserModel = UserModel.default(),
+    email: String = "",
     soundPool: Pair<SoundPool, Float>? = null,
     nickname: String = "",
     onChangeNickname: (String) -> Unit = {},
@@ -126,7 +128,7 @@ fun LazyProfileItem(
     IResumeCard(
         title = userModel.nickName,
         titlesValues = mapOf(
-            stringResource(es.sebas1705.core.designsystem.R.string.core_designsystem_email) to userModel.email,
+            stringResource(es.sebas1705.core.designsystem.R.string.core_designsystem_email) to email,
             stringResource(R.string.feature_home_user_firebase_id) to userModel.firebaseId,
             stringResource(es.sebas1705.core.resources.R.string.core_resources_credits) to userModel.credits.toString(),
             stringResource(es.sebas1705.core.resources.R.string.core_resources_points) to userModel.points.toString(),

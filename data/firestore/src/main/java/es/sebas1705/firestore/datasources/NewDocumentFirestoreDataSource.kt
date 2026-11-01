@@ -8,6 +8,7 @@ import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.firestore.config.SettingsFS
 import es.sebas1705.firestore.documents.NewDocument
+import es.sebas1705.firestore.documents.toObjectOrNull
 import javax.inject.Inject
 
 /**
@@ -49,11 +50,16 @@ class NewDocumentFirestoreDataSource @Inject constructor(
     fun getNews(): DataFlow<List<NewDocument>> = taskFlow.taskFlowProducer(
         taskAction = { newsReference.get() },
         onSuccessListener = {
-            val news = it.documents.map { document ->
-                document.toObject(NewDocument::class.java)!!
+            val news = it.documents.mapNotNull { document ->
+                document.toObjectOrNull(NewDocument::class.java, ::logMalformed)
             }
             DataState.Success(news)
         }
     )
 
+    //Privates:
+    private fun logMalformed(message: String) {
+        logE(message)
+        logEventDataSource.logError(this.javaClass.kotlin, message)
+    }
 }

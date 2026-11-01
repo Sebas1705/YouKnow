@@ -10,7 +10,6 @@ import org.junit.Test
 class UserMapperTest {
 
     private val document = UserDocument(
-        email = "ana@example.com",
         provider = ProviderAuth.GOOGLE.ordinal,
         nickName = "ana",
         photoUrl = "https://example.com/ana.png",
@@ -26,12 +25,17 @@ class UserMapperTest {
 
         assertEquals("uid-1", model.firebaseId)
         assertEquals(ProviderAuth.GOOGLE, model.provider)
-        assertEquals(document.email, model.email)
         assertEquals(document.nickName, model.nickName)
         assertEquals(document.photoUrl, model.photoUrl)
         assertEquals(document.groupId, model.groupId)
         assertEquals(document.points, model.points)
         assertEquals(document.credits, model.credits)
+    }
+
+    @Test
+    fun `an unknown provider falls back instead of failing`() {
+        assertEquals(ProviderAuth.EMAIL, document.copy(provider = 99).toUserModel("uid").provider)
+        assertEquals(ProviderAuth.EMAIL, document.copy(provider = -1).toUserModel("uid").provider)
     }
 
     @Test

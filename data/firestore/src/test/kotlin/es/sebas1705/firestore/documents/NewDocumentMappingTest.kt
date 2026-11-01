@@ -40,7 +40,7 @@ class NewDocumentMappingTest {
         val serialized = CustomClassMapper.convertToPlainJavaTypes(UserDocument()) as Map<String, Any?>
 
         assertEquals(
-            setOf("email", "provider", "nickName", "photoUrl", "groupId", "points", "credits", "logged"),
+            setOf("provider", "nickName", "photoUrl", "groupId", "points", "credits", "logged"),
             serialized.keys
         )
     }
