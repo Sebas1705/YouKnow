@@ -93,7 +93,7 @@ fun ProfileDesign(
         )
         else if (changePassDialog)
             ResetPasswordDialog(
-                email = homeState.userModel?.email ?: "",
+                email = homeState.firebaseUser?.email.orEmpty(),
                 windowState,
                 onConfirm = {
                     changePassDialog = false
@@ -112,6 +112,7 @@ fun ProfileDesign(
                 LazyProfileItem(
                     windowState = windowState,
                     userModel = homeState.userModel ?: UserModel.default(),
+                    email = homeState.firebaseUser?.email.orEmpty(),
                     soundPool = soundPool,
                     nickname = nickname,
                     onChangeNickname = { nickname = it },

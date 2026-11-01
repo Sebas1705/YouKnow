@@ -37,3 +37,22 @@ data class DailyChallengeDocument(
     val date: String = "",
     val questions: List<DailyChallengeQuestionDocument> = emptyList(),
 )
+
+/**
+ * Whether the round can actually be played. Documents are immutable once published and a client
+ * wrote them, so one that maps fine can still be useless: `questions: [{}]` gives a question with
+ * no answers. Kept out of the class: the mapper would save an `isPlayable` member as a field, and
+ * the security rules reject unknown fields.
+ *
+ * @return [Boolean]: True if there is a question and each one has a text, answers and a right answer.
+ *
+ * @since 1.5.0
+ * @author Sebas1705 31/10/2026
+ */
+internal fun DailyChallengeDocument.hasPlayableQuestions(): Boolean =
+    questions.isNotEmpty() && questions.all { question ->
+        question.question.isNotBlank()
+            && question.answers.size >= 2
+            && question.answers.all { it.isNotBlank() }
+            && question.correctAnswer in question.answers
+    }
