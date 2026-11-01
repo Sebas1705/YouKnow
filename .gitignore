@@ -69,6 +69,7 @@
 # Firebase project config, rules and their tests are versioned (the *.json rule above is meant
 # for google-services.json and similar); dependencies and CLI logs are not.
 !/firebase.json
+!/firebase.emulators.json
 !/firebase/*.json
 !/firebase/rules-test/package.json
 !/firebase/rules-test/package-lock.json

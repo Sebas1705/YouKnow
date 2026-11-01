@@ -59,11 +59,20 @@ service account, separate from the App Distribution one and limited to rules:
 | Doppler secret (`prd`) | `FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON` |
 | Roles on `youknow-tfg` | Firebase Rules Admin (Firestore + Storage rules), Firebase Realtime Database Admin (RTDB rules), Service Usage Consumer |
 
-The deploy also needs `firebasestorage.defaultBucket.get`, because `firebase.json` names no Storage
-bucket and the CLI asks for the default one. The narrowest role with it is **Cloud Storage for
-Firebase Viewer** (`roles/firebasestorage.viewer`); without it the deploy stops with a 403 before
-releasing any rules. The bucket can't simply be named again: the emulator needs the plain
-`storage` form to load `storage.rules` (see #44).
+There are two configs, because the two tools want different shapes of `storage`:
+
+| File | Used by | `storage` |
+|---|---|---|
+| `firebase.json` | `firebase deploy` | array naming the bucket, `youknow-tfg.firebasestorage.app` |
+| `firebase.emulators.json` | the rules tests (`npm test`) | plain `{ "rules": ... }`, plus the emulator ports |
+
+With the bucket named the CLI skips its default-bucket lookup (`firebasestorage.defaultBucket.get`),
+which failed twice: with a 403 for the deploy account, and, once that was granted, with "Firebase
+Storage has not been set up" because the lookup finds no registered default bucket. The Storage
+emulator, in turn, can't load the array form (it asks for a `target`, and on a demo project it then
+ignores the rules and runs open ones, so the tests would pass while testing nothing). Keep both files
+in step: a rules file added to one belongs in the other. The bucket name also lives in Doppler
+(`FIREBASE_STORAGE_BUCKET`), where the app reads it.
 
 By hand, when needed:
 
