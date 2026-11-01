@@ -9,6 +9,7 @@ on:
     paths:
       - "firebase/**"
       - "firebase.json"
+      - "firebase.emulators.json"
       - ".firebaserc"
       - ".github/workflows/firebase.yml"
   push:
@@ -16,6 +17,7 @@ on:
     paths:
       - "firebase/**"
       - "firebase.json"
+      - "firebase.emulators.json"
       - ".firebaserc"
       - ".github/workflows/firebase.yml"
   workflow_dispatch:
