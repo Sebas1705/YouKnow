@@ -34,7 +34,7 @@ After adding or removing an app or a SHA, run `scripts/refresh-google-services.s
 
 | Service | File | Model |
 |---|---|---|
-| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, written only by the owner (schema validated, no negative credits); `news` read-only; `surveys/{uid}` one per author |
+| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, so it holds nothing private (the email stays in Firebase Auth); written only by the owner, every field type checked; `news` read-only; `surveys/{uid}` one per author; `dailyChallenges/{date}` created once by a verified account for the current UTC day (±1 for clock skew), full shape checked, at most 5 questions of 2 to 4 answers, immutable |
 | Realtime Database | `firebase/database.rules.json` | `chat-global-youknow`: messages keyed `<uid>-<time>`, created only by their author (text ≤ 50 chars), deletable by any signed-in client (the app trims to 100); `groups-youknow`: created/deleted by the leader (`<name>-<leaderUid>`), members list rewritten by joiners |
 | Storage | `firebase/storage.rules` | closed: the app stores no files |
 
@@ -59,11 +59,47 @@ service account, separate from the App Distribution one and limited to rules:
 | Doppler secret (`prd`) | `FIREBASE_DEPLOY_SERVICE_ACCOUNT_JSON` |
 | Roles on `youknow-tfg` | Firebase Rules Admin (Firestore + Storage rules), Firebase Realtime Database Admin (RTDB rules), Service Usage Consumer |
 
+There are two configs, because the two tools want different shapes of `storage`:
+
+| File | Used by | `storage` |
+|---|---|---|
+| `firebase.json` | `firebase deploy` | array naming the bucket, `youknow-tfg.firebasestorage.app` |
+| `firebase.emulators.json` | the rules tests (`npm test`) | plain `{ "rules": ... }`, plus the emulator ports |
+
+With the bucket named the CLI skips its default-bucket lookup (`firebasestorage.defaultBucket.get`),
+which failed twice: with a 403 for the deploy account, and, once that was granted, with "Firebase
+Storage has not been set up" because the lookup finds no registered default bucket. The Storage
+emulator, in turn, can't load the array form (it asks for a `target`, and on a demo project it then
+ignores the rules and runs open ones, so the tests would pass while testing nothing). Keep both files
+in step: a rules file added to one belongs in the other. The bucket name also lives in Doppler
+(`FIREBASE_STORAGE_BUCKET`), where the app reads it.
+
 By hand, when needed:
 
 ```bash
 npx firebase-tools deploy --only firestore:rules,database,storage --project youknow-tfg
 ```
+
+Rules are limited to 1000 evaluated expressions per request and deny anything over it, so a size
+limit in `firestore.rules` can't grow freely: the rules tests write the largest allowed round.
+
+### Removing emails from existing profiles
+
+Profiles written before 1.5.0 still hold an `email` that every signed-in user can read. The rules
+stop new ones and let old ones stay unchanged, so that those documents can still be updated. To
+remove them, run this **after** the rules are deployed and the new app is out: older versions show an
+empty email and can't send the password reset once it's gone.
+
+```bash
+cd firebase/rules-test
+npm ci
+gcloud auth application-default login
+node migrations/remove-user-emails.mjs --project youknow-tfg           # dry run
+node migrations/remove-user-emails.mjs --project youknow-tfg --apply
+```
+
+The dry run writes nothing. Both also list documents the app can't use, which are left for you to
+review in the console: `users/` ids are uids, so keep that output private. Running it again is safe.
 
 Indexes (`firebase/firestore.indexes.json`) are deployed with `--only firestore:indexes`; the app
 only runs single-field queries, which need no composite index.

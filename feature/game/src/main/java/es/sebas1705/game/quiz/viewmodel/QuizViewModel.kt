@@ -180,7 +180,7 @@ class QuizViewModel @Inject constructor(
             firebaseId = authUsesCases.getFirebaseUser()!!.uid,
             onLoading = { startLoading() },
             onSuccess = { user ->
-                Log.i("QuizViewModel", "User: $user")
+                Log.i("QuizViewModel", "User loaded")
                 execute(Dispatchers.IO) {
                     userUsesCases.addPointsToUser(
                         user = user,

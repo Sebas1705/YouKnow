@@ -141,7 +141,7 @@ class MysteryNumberViewModel @Inject constructor(
             firebaseId = authUsesCases.getFirebaseUser()!!.uid,
             onLoading = { startLoading() },
             onSuccess = { user ->
-                Log.i("MysteryNumberViewModel", "User: $user")
+                Log.i("MysteryNumberViewModel", "User loaded")
                 execute(Dispatchers.IO) {
                     userUsesCases.addPointsToUser(
                         user = user,

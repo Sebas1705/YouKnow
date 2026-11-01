@@ -22,6 +22,7 @@ import es.sebas1705.firestore.config.SettingsFS.ERROR_GENERIC_MESSAGE_FAIL
  * @property USER_NOT_FOUND [String]: Error message for user not found
  * @property SURVEY_NOT_FOUND [String]: Error message for survey not found
  * @property DAILY_CHALLENGE_NOT_FOUND [String]: Error message for a day with no challenge published yet
+ * @property DAILY_CHALLENGE_MALFORMED [String]: Error message for a published challenge that can't be played
  *
  * @author Sebas1705 22/09/2025
  * @since 1.0.0
@@ -44,4 +45,5 @@ object SettingsFS {
     const val USER_NOT_FOUND = "User not found"
     const val SURVEY_NOT_FOUND = "Survey not found"
     const val DAILY_CHALLENGE_NOT_FOUND = "Daily challenge not found"
+    const val DAILY_CHALLENGE_MALFORMED = "Daily challenge can't be played"
 }
