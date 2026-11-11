@@ -33,10 +33,13 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -252,8 +255,9 @@ class QuizViewModelTest {
         done.awaitCallback()
 
         verify(firestore).getUser(UID)
-        verify(firestore).addPointsToUser(UID, 100, earned)
-        verify(firestore).addCreditsToUser(eq(UID), eq(5), any())
+        val credits = argumentCaptor<Int>()
+        verify(firestore).addRoundRewards(eq(UID), eq(100), eq(5), eq(earned), credits.capture(), isNull())
+        assertTrue(credits.firstValue in 0..earned / 10)
         assertFalse(viewModel.uiState.value.isLoading)
     }
 
@@ -287,6 +291,6 @@ class QuizViewModelTest {
             assertEquals(QuizState.default(), reset)
             cancelAndIgnoreRemainingEvents()
         }
-        verify(firestore).addPointsToUser(eq(UID), eq(0), any())
+        verify(firestore).addRoundRewards(eq(UID), eq(0), eq(0), any(), any(), isNull())
     }
 }

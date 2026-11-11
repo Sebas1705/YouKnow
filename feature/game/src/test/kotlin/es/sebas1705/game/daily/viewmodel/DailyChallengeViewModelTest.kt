@@ -23,10 +23,13 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -165,6 +168,12 @@ class DailyChallengeViewModelTest {
         viewModel.sendIntent(DailyChallengeIntent.OutGame { done.complete(Unit) })
         done.awaitCallback()
 
-        verify(firestore).addPointsToUser(GameTestSupport.UID, 0, 10)
+        // One batch with the day's completion: the rules accept the UTC day once per player.
+        val credits = argumentCaptor<Int>()
+        verify(firestore).addRoundRewards(
+            eq(GameTestSupport.UID), eq(0), eq(0), eq(10), credits.capture(),
+            eq(java.time.LocalDate.now(java.time.ZoneOffset.UTC).toString())
+        )
+        assertTrue(credits.firstValue in 0..1)
     }
 }

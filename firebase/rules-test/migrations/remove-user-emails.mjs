@@ -113,6 +113,7 @@ async function main() {
   const report = await migrate(getFirestore(app), { apply: values.apply });
 
   console.log(values.apply ? `Applied to ${values.project}.` : `Dry run on ${values.project}: nothing was written.`);
+  if (!values.apply && report.withEmail > 0) console.log("Nothing changed: re-run with --apply to remove those emails (after the rules and the app are out, see docs/FIREBASE.md).");
   console.log(`users: ${report.users}, with email: ${report.withEmail}, email removed: ${report.removed}`);
   console.log(`dailyChallenges: ${report.challenges}`);
   console.log(`malformed users (${report.malformedUsers.length}): ${report.malformedUsers.join(", ")}`);

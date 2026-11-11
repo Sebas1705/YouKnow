@@ -2,6 +2,17 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+### Security
+- Points and credits can no longer be forged from a client. A new profile must start at 0 points and 1000 credits; points never decrease; points and credits only go up in the same batch as a round event (`users/{uid}/events/{total}`) that states exactly what was earned, carries the server time and can't be edited or deleted. A round is capped at 10000 points (credits at a tenth of them), rounds must be 10 seconds apart and totals stay under 10 000 000 points and 1 000 000 credits. The app stores each round with a single batch (`FirestoreRepository.addRoundRewards`, replacing `addPointsToUser`). Rules can't make a forged score impossible, only bounded: see "What the rules cannot prevent" in `docs/FIREBASE.md`.
+- The daily challenge can be completed once per player and UTC day: its points are only accepted together with a `users/{uid}/dailyCompletions/{date}` document, created once, for a published day, worth at most 100 points.
+- Realtime Database: a chat message can only be deleted by its author, and the members of a group can only be rewritten by its leader or by a member joining (appended to the list) or leaving (only their own uid removed) themself. Before, any signed-in user could delete any message and rewrite any group's members.
+- Auto Backup no longer copies the local database, DataStore, shared preferences (Firebase Auth session) or app files: `backup_rules.xml` and `data_extraction_rules.xml` exclude them for cloud backup and device transfer.
+### Changed
+- The chat is no longer trimmed by any client: only an author can delete a message, so the app's "remove the oldest message past 100" works only for the author's own messages. See `docs/FIREBASE.md`.
+- `remove-user-emails.mjs` says so when a dry run found emails and nothing was changed, and how to apply it.
+- Rules-test dev dependencies: `@modelcontextprotocol/sdk` 1.32.2, `hono` 4.13.18 and `fast-uri` 3.1.9 in the lockfile (the fixes Dependabot proposes in #66, #67 and #68).
+
+## [1.5.0] - 2026-11-01
 ### Added
 - Unit tests for the domain layer (OpenTDB, question, families, word, daily challenge, message, social and user mappers; quiz, OpenTDB download, mystery number, word pass, families, daily challenge, user and settings use cases) and for the Quiz, Mystery Number, Daily Challenge, Word Pass and Families ViewModels (state transitions, scoring and error paths).
 - `jacocoMergedReport` merges every module's unit-test coverage into `build/reports/jacoco/merged`, and the validate workflow posts the total line coverage in the job summary.

@@ -34,11 +34,48 @@ After adding or removing an app or a SHA, run `scripts/refresh-google-services.s
 
 | Service | File | Model |
 |---|---|---|
-| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, so it holds nothing private (the email stays in Firebase Auth); written only by the owner, every field type checked; `news` read-only; `surveys/{uid}` one per author; `dailyChallenges/{date}` created once by a verified account for the current UTC day (±1 for clock skew), full shape checked, at most 5 questions of 2 to 4 answers, immutable |
-| Realtime Database | `firebase/database.rules.json` | `chat-global-youknow`: messages keyed `<uid>-<time>`, created only by their author (text ≤ 50 chars), deletable by any signed-in client (the app trims to 100); `groups-youknow`: created/deleted by the leader (`<name>-<leaderUid>`), members list rewritten by joiners |
+| Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, so it holds nothing private (the email stays in Firebase Auth); written only by the owner, every field type checked, created at 0 points and 1000 credits, points and credits changed only through a round event (see below); `news` read-only; `surveys/{uid}` one per author; `dailyChallenges/{date}` created once by a verified account for the current UTC day (±1 for clock skew), full shape checked, at most 5 questions of 2 to 4 answers, immutable |
+| Realtime Database | `firebase/database.rules.json` | `chat-global-youknow`: messages keyed `<uid>-<time>`, created and deleted only by their author (text ≤ 50 chars); `groups-youknow`: created/deleted by the leader (`<name>-<leaderUid>`), `members` rewritten by the leader, or by a member joining (appended) or leaving (only their uid removed), at most 50 |
 | Storage | `firebase/storage.rules` | closed: the app stores no files |
 
 Everything else is denied, and nothing is readable without signing in.
+
+### Points, credits and the daily challenge
+
+There is no server to compute scores (no Cloud Functions), so the rules bound what a client may write
+to `users/{uid}`:
+
+| Rule | Where |
+|---|---|
+| A profile is created with 0 points and 1000 credits | `users/{uid}` create |
+| Points never decrease; credits only decrease on their own (the app spends 2000 on a group) | `users/{uid}` update |
+| Points or credits go up only in the same batch as an event `users/{uid}/events/{total}`, `{total}` being the points after the round | `users/{uid}` update, `events` create |
+| The event states what was earned (`kind`, `points`, `credits`, `at` = server time) and the profile gains exactly that; events can't be edited or deleted, so each total is reached once | `events` |
+| At most 10000 points per round; credits at most a tenth of the points; totals under 10 000 000 points and 1 000 000 credits | `events` |
+| Rounds at least 10 seconds apart (the previous event, `events/{points before}`, must be older) | `users/{uid}` update |
+| A daily round (`kind: daily`) is at most 100 points, for today or yesterday (UTC), for a published `dailyChallenges/{date}`, and creates `users/{uid}/dailyCompletions/{date}` in the same batch; that document is created once, so a day pays once | `events`, `dailyCompletions` |
+
+The app writes all of it with one batch per round, `FirestoreRepository.addRoundRewards`. Old app
+versions update points directly and are refused once these rules are deployed.
+
+**What the rules cannot prevent.** They can't tell a round that was played from one that was made up:
+a modified client can still claim up to 10000 points every 10 seconds (and the daily bonus once a day),
+create as many accounts as it likes and start each at 1000 credits, or read the whole ranking. The
+caps make cheating slow and visible (every gain has a timestamped event the owner can audit), not
+impossible. Real authority needs the scoring to run on a server (a Cloud Function or Cloud Run
+service that receives the answers and writes the score) and the rules then closed to client writes.
+Events stay in `users/{uid}/events` when a profile is deleted (a client can't delete them, that is
+what stops replays): they hold points, credits and a time, nothing personal, and can be removed with
+the Admin SDK.
+
+**Chat retention.** The app used to trim the chat by letting every client delete the oldest message.
+Now only an author can delete a message, so that trim only works for the author's own messages and the
+chat can grow past 100. A scheduled clean-up (console or Admin SDK) is the way to bound it.
+
+**Groups.** The members list is rewritten whole, so the rules compare old and new by index, up to 50
+(`ComposableConstants.MAX_GROUP`); they can't loop. The leader may rewrite it freely. Kicking a member
+also updates that member's own `users/{uid}.groupId`, which only they can write, so kicks from the
+app already failed before these rules.
 
 ### Test and deploy
 
@@ -85,7 +122,7 @@ limit in `firestore.rules` can't grow freely: the rules tests write the largest 
 
 ### Removing emails from existing profiles
 
-Profiles written before 1.5.0 still hold an `email` that every signed-in user can read. The rules
+Profiles written before 1.5.0 may still hold an `email` that every signed-in user can read. **The owner has to run this by hand; no CI job or deploy does.** The rules
 stop new ones and let old ones stay unchanged, so that those documents can still be updated. To
 remove them, run this **after** the rules are deployed and the new app is out: older versions show an
 empty email and can't send the password reset once it's gone.
@@ -98,7 +135,7 @@ node migrations/remove-user-emails.mjs --project youknow-tfg           # dry run
 node migrations/remove-user-emails.mjs --project youknow-tfg --apply
 ```
 
-The dry run writes nothing. Both also list documents the app can't use, which are left for you to
+The dry run is the default and writes nothing: it says how many profiles have an email and that nothing changed. Only `--apply` removes them. Both also list documents the app can't use, which are left for you to
 review in the console: `users/` ids are uids, so keep that output private. Running it again is safe.
 
 Indexes (`firebase/firestore.indexes.json`) are deployed with `--only firestore:indexes`; the app

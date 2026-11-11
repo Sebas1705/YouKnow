@@ -1,10 +1,13 @@
 // Security rules tests. Each case mirrors a real operation of the app (data/firestore and
 // data/realtime) or something a client must not be able to do. Run: npm test (starts the
 // Firestore and Realtime Database emulators, see package.json).
+import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { after, before, beforeEach, describe, test } from "node:test";
 import { assertFails, assertSucceeds, initializeTestEnvironment } from "@firebase/rules-unit-testing";
-import { deleteDoc, doc, getDoc, getDocs, collection, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import {
+  Timestamp, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where, writeBatch,
+} from "firebase/firestore";
 import { ref, get, remove, set, update } from "firebase/database";
 import { ref as storageRef, deleteObject, getBytes, uploadBytes } from "firebase/storage";
 
@@ -12,7 +15,7 @@ const alice = "alice";
 const bob = "bob";
 const user = (over = {}) => ({
   provider: 0, nickName: "alice", photoUrl: null, groupId: null,
-  points: 0, credits: 10, logged: true, ...over,
+  points: 0, credits: 1000, logged: true, ...over,
 });
 const maxInt = 2147483647; // UserDocument maps points and credits onto a Kotlin Int.
 
@@ -38,11 +41,27 @@ const bigImage = () => new Uint8Array(6 * 1024 * 1024); // over the 5 MB cap
 const as = (uid) => (uid ? env.authenticatedContext(uid) : env.unauthenticatedContext());
 const seed = (fn) => env.withSecurityRulesDisabled(fn);
 
+// What the app does at the end of a round (FirestoreRepository.addRoundRewards): one batch with the
+// profile update and the round event keyed by the new points total.
+const earn = async (db, uid, { points, credits = 0, kind = "game", date, total, at = serverTimestamp() }) => {
+  const current = (await getDoc(doc(db, "users", uid))).data() ?? { points: 0, credits: 0 };
+  const after = { points: current.points + points, credits: current.credits + credits };
+  const batch = writeBatch(db);
+  batch.update(doc(db, "users", uid), after);
+  const event = { kind, points, credits, at, ...(date ? { date } : {}) };
+  batch.set(doc(db, "users", uid, "events", String(total ?? after.points)), event);
+  if (kind === "daily") batch.set(doc(db, "users", uid, "dailyCompletions", date), { date, at: serverTimestamp() });
+  return batch.commit();
+};
+const longAgo = () => Timestamp.fromMillis(Date.now() - 60_000);
+const seedEvent = (uid, total, at) =>
+  seed((c) => setDoc(doc(c.firestore(), "users", uid, "events", String(total)), { kind: "game", points: total, credits: 0, at }));
+
 describe("Firestore users", () => {
   test("a user creates, updates and deletes their own profile", async () => {
     const db = as(alice).firestore();
     await assertSucceeds(setDoc(doc(db, "users", alice), user()));
-    await assertSucceeds(updateDoc(doc(db, "users", alice), { points: 30, credits: 5 }));
+    await assertSucceeds(updateDoc(doc(db, "users", alice), { credits: 5 })); // spending credits
     await assertSucceeds(updateDoc(doc(db, "users", alice), { groupId: "g-alice" }));
     await assertSucceeds(updateDoc(doc(db, "users", alice), { groupId: null }));
     await assertSucceeds(updateDoc(doc(db, "users", alice), { nickName: "Ali", photoUrl: "https://x/y.png" }));
@@ -61,7 +80,8 @@ describe("Firestore users", () => {
   test("nobody writes someone else's profile", async () => {
     await seed((c) => setDoc(doc(c.firestore(), "users", bob), user({ nickName: "bob" })));
     const db = as(alice).firestore();
-    await assertFails(updateDoc(doc(db, "users", bob), { points: 9999 }));
+    await assertFails(updateDoc(doc(db, "users", bob), { nickName: "mine now" }));
+    await assertFails(earn(db, bob, { points: 10, credits: 1 }));
     await assertFails(deleteDoc(doc(db, "users", bob)));
     await assertFails(setDoc(doc(db, "users", "carol"), user()));
   });
@@ -85,7 +105,7 @@ describe("Firestore users", () => {
     await assertFails(setDoc(doc(db, "users", alice), user({ photoUrl: 7 })));
     await assertFails(setDoc(doc(db, "users", alice), user({ groupId: {} })));
 
-    await assertSucceeds(setDoc(doc(db, "users", alice), user({ provider: 1, points: maxInt, credits: maxInt })));
+    await assertSucceeds(setDoc(doc(db, "users", alice), user({ provider: 1 })));
     await assertFails(updateDoc(doc(db, "users", alice), { logged: "x" }));
     await assertFails(updateDoc(doc(db, "users", alice), { points: maxInt + 1 }));
   });
@@ -102,11 +122,185 @@ describe("Firestore users", () => {
     await seed((c) => setDoc(doc(c.firestore(), "users", alice), user({ email: "a@example.com" })));
     const db = as(alice).firestore();
 
-    await assertSucceeds(updateDoc(doc(db, "users", alice), { points: 30 }));
+    await assertSucceeds(earn(db, alice, { points: 30, credits: 3 }));
+    await assertSucceeds(updateDoc(doc(db, "users", alice), { nickName: "Ali" }));
     await assertFails(updateDoc(doc(db, "users", alice), { email: "other@example.com" }));
 
+    await assertSucceeds(setDoc(doc(db, "users", alice), user({ nickName: "Ali", points: 30, credits: 1003 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ nickName: "Ali", points: 30, credits: 1003, email: "a@example.com" })));
+  });
+});
+
+describe("Firestore points and credits", () => {
+  const seedAlice = (over = {}) => seed((c) => setDoc(doc(c.firestore(), "users", alice), user(over)));
+
+  test("a new profile starts at 0 points and 1000 credits, not at a forged score", async () => {
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "users", alice), user({ points: 5000000 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ points: 1 })));
+    await assertFails(setDoc(doc(db, "users", alice), user({ credits: 999999 })));
     await assertSucceeds(setDoc(doc(db, "users", alice), user()));
-    await assertFails(setDoc(doc(db, "users", alice), user({ email: "a@example.com" })));
+  });
+
+  test("a round adds its points and credits together with its event", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertSucceeds(earn(db, alice, { points: 100, credits: 10 }));
+    const profile = (await getDoc(doc(db, "users", alice))).data();
+    assert.equal(profile.points, 100);
+    assert.equal(profile.credits, 1010);
+    assert.equal((await getDoc(doc(db, "users", alice, "events", "100"))).data().points, 100);
+  });
+
+  test("points cannot be written directly, without an event", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertFails(updateDoc(doc(db, "users", alice), { points: 5 }));
+    await assertFails(updateDoc(doc(db, "users", alice), { credits: 5000 }));
+    await assertFails(updateDoc(doc(db, "users", alice), { points: 5, credits: 1001 }));
+  });
+
+  test("an event alone, without the profile update, is refused", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertFails(setDoc(doc(db, "users", alice, "events", "100"), { kind: "game", points: 100, credits: 0, at: serverTimestamp() }));
+  });
+
+  test("the event has to state exactly what the profile gained", async () => {
+    await seedAlice({ points: 50, credits: 1000 });
+    const db = as(alice).firestore();
+    const batchWith = (profile, event, total = String(profile.points)) => {
+      const batch = writeBatch(db);
+      batch.update(doc(db, "users", alice), profile);
+      batch.set(doc(db, "users", alice, "events", total), { kind: "game", at: serverTimestamp(), ...event });
+      return batch.commit();
+    };
+    await assertFails(batchWith({ points: 150, credits: 1000 }, { points: 50, credits: 0 })); // gained more than stated
+    await assertFails(batchWith({ points: 100, credits: 1050 }, { points: 50, credits: 0 })); // credits not stated
+    await assertFails(batchWith({ points: 100, credits: 1000 }, { points: 50, credits: 0 }, "999")); // wrong event key
+    await assertFails(batchWith({ points: 100, credits: 1000 }, { points: 50, credits: 0, extra: 1 })); // unknown field
+    await assertFails(batchWith({ points: 100, credits: 1000 }, { points: 50, credits: 0, at: Timestamp.fromMillis(1) })); // forged time
+    await assertFails(batchWith({ points: 100, credits: 1000 }, { points: 50, credits: 0, kind: "bonus" })); // unknown kind
+    await assertSucceeds(batchWith({ points: 100, credits: 1000 }, { points: 50, credits: 0 }));
+  });
+
+  test("one round is capped at 10000 points and credits at a tenth of the points", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertFails(earn(db, alice, { points: 10001 }));
+    await assertFails(earn(db, alice, { points: 100, credits: 11 }));
+    await assertFails(earn(db, alice, { points: 0, credits: 0 }));
+    await assertFails(earn(db, alice, { points: -5 }));
+    await assertSucceeds(earn(db, alice, { points: 10000, credits: 1000 }));
+  });
+
+  test("points never decrease and credits only decrease on their own", async () => {
+    await seedAlice({ points: 500, credits: 500 });
+    const db = as(alice).firestore();
+    await assertFails(updateDoc(doc(db, "users", alice), { points: 400 }));
+    await assertFails(updateDoc(doc(db, "users", alice), { points: 0 }));
+    await assertSucceeds(updateDoc(doc(db, "users", alice), { credits: 100 })); // e.g. creating a group
+    await assertFails(earn(db, alice, { points: -100 }));
+  });
+
+  test("rounds are at least 10 seconds apart; the first one, or one after a pause, goes through", async () => {
+    await seedAlice({ points: 100 });
+    await seedEvent(alice, 100, Timestamp.now());
+    const db = as(alice).firestore();
+    await assertFails(earn(db, alice, { points: 10 }));
+
+    await seedEvent(alice, 100, longAgo());
+    await assertSucceeds(earn(db, alice, { points: 10 }));
+    await assertFails(earn(db, alice, { points: 10 })); // right after the one above
+  });
+
+  test("an event cannot be edited or deleted, so a total is reached once", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertSucceeds(earn(db, alice, { points: 100 }));
+    await assertFails(updateDoc(doc(db, "users", alice, "events", "100"), { points: 1 }));
+    await assertFails(deleteDoc(doc(db, "users", alice, "events", "100")));
+    // Reaching the same total again is refused, whatever the profile says.
+    await seed((c) => updateDoc(doc(c.firestore(), "users", alice), { points: 0 }));
+    await seedEvent(alice, 0, longAgo());
+    await assertFails(earn(db, alice, { points: 100 }));
+  });
+
+  test("totals stay under 10 000 000 points and 1 000 000 credits", async () => {
+    await seedAlice({ points: 9995000, credits: 1000 });
+    const db = as(alice).firestore();
+    await assertFails(earn(db, alice, { points: 6000, credits: 600 }));
+    await seedAlice({ points: 100, credits: 999999 });
+    await assertFails(earn(db, alice, { points: 100, credits: 10 }));
+  });
+
+  test("nobody reads or writes someone else's events", async () => {
+    await seedAlice();
+    await seedEvent(alice, 10, longAgo());
+    const db = as(bob).firestore();
+    await assertFails(getDoc(doc(db, "users", alice, "events", "10")));
+    await assertFails(setDoc(doc(db, "users", alice, "events", "20"), { kind: "game", points: 10, credits: 0, at: serverTimestamp() }));
+    await assertSucceeds(getDoc(doc(as(alice).firestore(), "users", alice, "events", "10")));
+  });
+});
+
+describe("Firestore daily challenge completions", () => {
+  const day = (offset) => new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+  const today = day(0);
+  const publish = (date) => seed((c) => setDoc(doc(c.firestore(), "dailyChallenges", date), { date, questions: [] }));
+  const seedAlice = () => seed((c) => setDoc(doc(c.firestore(), "users", alice), user()));
+
+  test("a player completes the day's challenge once", async () => {
+    await publish(today);
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertSucceeds(earn(db, alice, { points: 40, credits: 4, kind: "daily", date: today }));
+    assert.equal((await getDoc(doc(db, "users", alice, "dailyCompletions", today))).data().date, today);
+  });
+
+  test("the same day cannot be replayed for points, not even after the rate limit", async () => {
+    await publish(today);
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertSucceeds(earn(db, alice, { points: 40, kind: "daily", date: today }));
+    await seedEvent(alice, 40, longAgo());
+    await assertFails(earn(db, alice, { points: 40, kind: "daily", date: today }));
+    await assertFails(setDoc(doc(db, "users", alice, "dailyCompletions", today), { date: today, at: serverTimestamp() }));
+    await assertFails(deleteDoc(doc(db, "users", alice, "dailyCompletions", today)));
+  });
+
+  test("each player has their own completion for the day", async () => {
+    await publish(today);
+    await seedAlice();
+    await seed((c) => setDoc(doc(c.firestore(), "users", bob), user({ nickName: "bob" })));
+    await assertSucceeds(earn(as(alice).firestore(), alice, { points: 40, kind: "daily", date: today }));
+    await assertSucceeds(earn(as(bob).firestore(), bob, { points: 40, kind: "daily", date: today }));
+  });
+
+  test("yesterday is accepted for a round that ended after midnight; other days are not", async () => {
+    await publish(day(-1));
+    await publish(day(-5));
+    await publish(day(2));
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertFails(earn(db, alice, { points: 40, kind: "daily", date: day(-5) }));
+    await assertFails(earn(db, alice, { points: 40, kind: "daily", date: day(2) }));
+    await assertSucceeds(earn(db, alice, { points: 40, kind: "daily", date: day(-1) }));
+  });
+
+  test("a day with no published challenge, a daily round over 100 points or a malformed date is refused", async () => {
+    await seedAlice();
+    const db = as(alice).firestore();
+    await assertFails(earn(db, alice, { points: 40, kind: "daily", date: today })); // nothing published
+    await publish(today);
+    await assertFails(earn(db, alice, { points: 101, kind: "daily", date: today }));
+    await assertFails(earn(db, alice, { points: 40, kind: "daily", date: "today" }));
+  });
+
+  test("a completion on its own, without a points gain, is refused", async () => {
+    await publish(today);
+    await seedAlice();
+    await assertFails(setDoc(doc(as(alice).firestore(), "users", alice, "dailyCompletions", today), { date: today, at: serverTimestamp() }));
   });
 });
 
@@ -290,9 +484,18 @@ describe("Realtime Database chat", () => {
     await assertFails(set(ref(db, `${chat}/${bob}-5`), { text: "edited", authorName: "bob" }));
   });
 
-  test("any signed-in client trims old messages (the app keeps the latest 100)", async () => {
-    await seed((c) => set(ref(c.database(), `${chat}/${bob}-5`), { text: "old", authorName: "bob" }));
-    await assertSucceeds(remove(ref(as(alice).database(), `${chat}/${bob}-5`)));
+  test("only the author deletes a message, whoever else is signed in", async () => {
+    const recent = `${bob}-${Date.now()}`;
+    await seed((c) => set(ref(c.database(), `${chat}/${recent}`), { text: "mine", authorName: "bob" }));
+    await assertFails(remove(ref(as(alice).database(), `${chat}/${recent}`)));
+    await assertFails(set(ref(as(alice).database(), `${chat}/${recent}`), null));
+    await assertSucceeds(remove(ref(as(bob).database(), `${chat}/${recent}`)));
+  });
+
+  test("a message that does not exist cannot be deleted, and anonymous clients delete nothing", async () => {
+    const key = `${bob}-${Date.now() - 30 * 86_400_000}`;
+    await seed((c) => set(ref(c.database(), `${chat}/${key}`), { text: "old", authorName: "bob" }));
+    await assertFails(remove(ref(as(null).database(), `${chat}/${key}`)));
   });
 
   test("anonymous clients neither read nor write", async () => {
@@ -318,12 +521,72 @@ describe("Realtime Database groups", () => {
     await assertFails(set(ref(db, `${groups}/Team-${bob}`), { description: "mine now", members: [alice] }));
   });
 
+  const team = `${groups}/Team-${bob}`;
+  const seedTeam = (members) => seed((c) => set(ref(c.database(), team), { description: "d", ...(members.length ? { members } : {}) }));
+  const members = (db) => ref(db, `${team}/members`);
+
   test("members join and leave by rewriting the list (set and updateChildren)", async () => {
-    await seed((c) => set(ref(c.database(), `${groups}/Team-${bob}`), { description: "d", members: [bob] }));
+    await seedTeam([bob]);
     const db = as(alice).database();
-    await assertSucceeds(set(ref(db, `${groups}/Team-${bob}/members`), [bob, alice]));
-    await assertSucceeds(update(ref(db, `${groups}/Team-${bob}`), { members: [bob] }));
+    await assertSucceeds(set(members(db), [bob, alice]));
+    await assertSucceeds(update(ref(db, team), { members: [bob] }));
     await assertFails(set(ref(db, `${groups}/Ghost-${bob}/members`), [alice]));
+  });
+
+  test("someone joins a group that has no members yet, and the last one out leaves it empty", async () => {
+    await seedTeam([]);
+    await assertSucceeds(set(members(as(alice).database()), [alice]));
+    await assertSucceeds(remove(members(as(alice).database())));
+  });
+
+  test("a member joins only as themself, at the end of the list", async () => {
+    await seedTeam([bob, "carol"]);
+    const db = as(alice).database();
+    await assertFails(set(members(db), [bob, "carol", "dave"])); // adding someone else
+    await assertFails(set(members(db), [alice, bob, "carol"])); // not at the end
+    await assertFails(set(members(db), [bob, "carol", alice, "dave"])); // two at once
+    await assertFails(set(members(db), [bob, alice])); // replaces carol
+    await assertFails(set(members(db), [alice])); // replaces everyone
+    await assertSucceeds(set(members(db), [bob, "carol", alice]));
+  });
+
+  test("a member leaves only themself, the rest keep their order", async () => {
+    await seedTeam([bob, alice, "carol", "dave"]);
+    const db = as(alice).database();
+    await assertFails(set(members(db), [bob, alice, "dave"])); // kicks carol
+    await assertFails(set(members(db), [bob, "carol", "dave", alice])); // not a removal
+    await assertFails(set(members(db), [bob, "carol"])); // takes carol or dave out too
+    await assertFails(set(members(db), [alice])); // takes everyone but themself... and bob
+    await assertFails(set(members(db), [bob, "dave", "carol"])); // reorders
+    await assertFails(set(members(db), [bob, "carol", "carol"])); // duplicates
+    await assertSucceeds(set(members(db), [bob, "carol", "dave"]));
+  });
+
+  test("a member cannot kick or empty a group; the leader can", async () => {
+    await seedTeam([bob, alice, "carol"]);
+    await assertFails(set(members(as("carol").database()), [bob, "carol"])); // carol kicks alice
+    await assertFails(remove(members(as("carol").database())));
+    await assertFails(set(members(as("mallory").database()), [bob, alice, "carol", "mallory", "x"]));
+    await assertSucceeds(set(members(as(bob).database()), [bob, "carol"])); // the leader kicks alice
+  });
+
+  test("an outsider cannot rewrite the members of a group they are not part of, whatever they send", async () => {
+    await seedTeam([bob, alice]);
+    const db = as("mallory").database();
+    await assertFails(set(members(db), ["mallory"]));
+    await assertFails(set(members(db), [bob, alice, "mallory", "mallory"]));
+    await assertFails(update(ref(db, team), { members: [bob] }));
+    await assertFails(set(ref(db, `${team}/description`), "hacked"));
+  });
+
+  test("a group holds at most 50 members, indexed 0 to 49", async () => {
+    const full = Array.from({ length: 49 }, (_, i) => (i === 0 ? bob : `m${i}`));
+    await seedTeam(full);
+    const db = as(alice).database();
+    await assertSucceeds(set(members(db), [...full, alice])); // the 50th
+    await assertFails(set(members(as("zed").database()), [...full, alice, "zed"])); // the 51st
+    await assertFails(set(members(as(bob).database()), [...full, alice, "zed"])); // not even the leader
+    await assertSucceeds(set(members(as("m7").database()), [...full, alice].filter((m) => m !== "m7"))); // leaving a big group
   });
 
   test("the leader deletes the group; others only once it has no members", async () => {

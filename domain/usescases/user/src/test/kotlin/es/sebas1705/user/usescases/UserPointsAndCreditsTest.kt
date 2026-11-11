@@ -2,6 +2,7 @@ package es.sebas1705.user.usescases
 
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.states.ErrorDataType
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.core.resources.ProviderAuth
 import es.sebas1705.firestore.documents.UserDocument
@@ -11,11 +12,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-/** GetUser, AddPointsToUser and AddCreditsToUser, the three use cases every game screen ends with. */
+/** GetUser, AddRoundRewards and AddCreditsToUser, the use cases every game screen ends with. */
 class UserPointsAndCreditsTest {
 
     private val firestore: FirestoreRepository = mock()
@@ -23,6 +26,8 @@ class UserPointsAndCreditsTest {
     private val user = UserModel.default().copy(firebaseId = "uid-1", points = 40, credits = 7)
 
     private fun <T> success(value: T): DataFlow<T> = flowOf(DataState.Loading, DataState.Success(value))
+
+    private fun emptySuccess(): DataEmptyFlow = flowOf(DataState.Loading, DataState.EmptySuccess)
 
     private fun <T> failure(message: String): DataFlow<T> = flowOf(
         DataState.Loading,
@@ -59,23 +64,34 @@ class UserPointsAndCreditsTest {
     }
 
     @Test
-    fun `addPointsToUser sends the current and added points and returns the new total`() = runTest {
-        whenever(firestore.addPointsToUser("uid-1", 40, 15)).thenReturn(success(55))
-        var total: Int? = null
+    fun `addRoundRewards sends the current totals and what the round earned`() = runTest {
+        whenever(firestore.addRoundRewards("uid-1", 40, 7, 15, 1, null)).thenReturn(emptySuccess())
+        var stored = false
 
-        AddPointsToUser(firestore)(user, 15, onSuccess = { total = it }, onError = { error(it) })
+        AddRoundRewards(firestore)(user, 15, 1, onSuccess = { stored = true }, onError = { error(it) })
 
-        assertEquals(55, total)
+        assertTrue(stored)
+        verify(firestore).addRoundRewards("uid-1", 40, 7, 15, 1, null)
     }
 
     @Test
-    fun `addPointsToUser surfaces repository errors`() = runTest {
-        whenever(firestore.addPointsToUser("uid-1", 40, 15)).thenReturn(failure("offline"))
+    fun `addRoundRewards passes the day of the daily challenge`() = runTest {
+        whenever(firestore.addRoundRewards("uid-1", 40, 7, 15, 1, "2026-11-11")).thenReturn(emptySuccess())
+        var stored = false
+
+        AddRoundRewards(firestore)(user, 15, 1, dailyDate = "2026-11-11", onSuccess = { stored = true }, onError = { error(it) })
+
+        assertTrue(stored)
+    }
+
+    @Test
+    fun `addRoundRewards surfaces the error when the rules refuse the round`() = runTest {
+        whenever(firestore.addRoundRewards("uid-1", 40, 7, 15, 1, null)).thenReturn(failure("PERMISSION_DENIED"))
         var error: String? = null
 
-        AddPointsToUser(firestore)(user, 15, onSuccess = { error("unexpected") }, onError = { error = it })
+        AddRoundRewards(firestore)(user, 15, 1, onSuccess = { error("unexpected") }, onError = { error = it })
 
-        assertEquals("offline", error)
+        assertEquals("PERMISSION_DENIED", error)
     }
 
     @Test
