@@ -2,7 +2,7 @@ package es.sebas1705.user
 
 
 import es.sebas1705.user.usescases.AddCreditsToUser
-import es.sebas1705.user.usescases.AddPointsToUser
+import es.sebas1705.user.usescases.AddRoundRewards
 import es.sebas1705.user.usescases.ChangeNicknameToUser
 import es.sebas1705.user.usescases.ChangePhotoToUser
 import es.sebas1705.user.usescases.ContainsUser
@@ -31,7 +31,7 @@ data class UserUsesCases(
     val setGroupToUser: SetGroupToUser,
     val removeGroupToUser: RemoveGroupToUser,
     val addCreditsToUser: AddCreditsToUser,
-    val addPointsToUser: AddPointsToUser,
+    val addRoundRewards: AddRoundRewards,
     val changePhotoToUser: ChangePhotoToUser,
     val changeNicknameToUser: ChangeNicknameToUser,
     val deleteDataUser: DeleteDataUser,

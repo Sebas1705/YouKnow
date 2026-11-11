@@ -16,6 +16,14 @@ import es.sebas1705.firestore.config.SettingsFS.ERROR_GENERIC_MESSAGE_FAIL
  * @property USERS_GROUP_FIELD [String]: Field to store the user group
  * @property USERS_PHOTO_FIELD [String]: Field to store the user photo
  * @property USERS_NICKNAME_FIELD [String]: Field to store the user nickname
+ * @property EVENTS_COLLECTION_NAME [String]: Subcollection of users/{uid} with one event per round
+ * @property DAILY_COMPLETIONS_COLLECTION_NAME [String]: Subcollection of users/{uid} with one document per completed daily challenge
+ * @property EVENTS_KIND_FIELD [String]: Field of an event with the kind of round
+ * @property EVENTS_AT_FIELD [String]: Field of an event or completion with the server time
+ * @property EVENTS_DATE_FIELD [String]: Field of a daily event or completion with the UTC day
+ * @property EVENT_KIND_GAME [String]: Kind of event of a regular round
+ * @property EVENT_KIND_DAILY [String]: Kind of event of the daily challenge
+ * @property ERROR_ROUND_NOTHING_EARNED [String]: Error message for a round that earned no points
  * @property ERROR_GENERIC_MESSAGE_EX [String]: Generic error message for exceptions
  * @property ERROR_GENERIC_MESSAGE_FAIL [String]: Generic error message for failure listeners
  * @property ERROR_CREDITS_NEGATIVE [String]: Error message for negative credits
@@ -38,10 +46,18 @@ object SettingsFS {
     const val USERS_GROUP_FIELD = "groupId"
     const val USERS_PHOTO_FIELD = "photoUrl"
     const val USERS_NICKNAME_FIELD = "nickName"
+    const val EVENTS_COLLECTION_NAME = "events"
+    const val DAILY_COMPLETIONS_COLLECTION_NAME = "dailyCompletions"
+    const val EVENTS_KIND_FIELD = "kind"
+    const val EVENTS_AT_FIELD = "at"
+    const val EVENTS_DATE_FIELD = "date"
+    const val EVENT_KIND_GAME = "game"
+    const val EVENT_KIND_DAILY = "daily"
 
     const val ERROR_GENERIC_MESSAGE_EX = "An error occurred on firestore by an exception"
     const val ERROR_GENERIC_MESSAGE_FAIL = "An error occurred on firestore by failure listener"
     const val ERROR_CREDITS_NEGATIVE = "The credits can't be negative"
+    const val ERROR_ROUND_NOTHING_EARNED = "A round has to earn points to be stored"
     const val USER_NOT_FOUND = "User not found"
     const val SURVEY_NOT_FOUND = "Survey not found"
     const val DAILY_CHALLENGE_NOT_FOUND = "Daily challenge not found"
