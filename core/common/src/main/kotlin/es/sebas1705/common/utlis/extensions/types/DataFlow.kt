@@ -1,7 +1,9 @@
 package es.sebas1705.common.utlis.extensions.types
 
+import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
+import kotlinx.coroutines.flow.first
 
 /**
  * Catcher function to handle the different states of the response
@@ -54,3 +56,16 @@ suspend fun DataEmptyFlow.collect(
         onError = { onError(it.message) }
     )
 }
+
+/**
+ * Waits for the first state that is not [DataState.Loading]: the outcome of the operation, for
+ * callers that run several operations in sequence and must look at each result.
+ *
+ * @receiver [DataFlow]: the response state (a [DataEmptyFlow] is a `DataFlow<Nothing>`)
+ *
+ * @return [DataState]: [DataState.Success], [DataState.EmptySuccess] or [DataState.Error]
+ *
+ * @since 1.6.0
+ * @author Sebas1705 11/11/2026
+ */
+suspend fun <T> DataFlow<T>.awaitResult(): DataState<T> = first { it !is DataState.Loading }

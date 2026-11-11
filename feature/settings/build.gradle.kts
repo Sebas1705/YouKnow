@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.buildlogic.feature)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {
@@ -21,4 +22,6 @@ dependencies {
 
     api(projects.domain.usescases.analytics)
     api(projects.domain.usescases.settings)
+    api(projects.domain.usescases.auth)
+    api(projects.domain.usescases.user)
 }

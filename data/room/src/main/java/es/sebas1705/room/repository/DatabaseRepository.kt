@@ -29,6 +29,8 @@ class DatabaseRepository @Inject constructor(
     suspend fun getSurvey(authorFirebaseId: String): SurveyEntity? =
         database.surveyDao().getSurvey(authorFirebaseId)
 
+    suspend fun deleteSurvey(authorFirebaseId: String): Int = database.surveyDao().deleteSurvey(authorFirebaseId)
+
     suspend fun insertOrReplace(entity: FamiliesEntity) = database.familiesDao().insertOrReplace(entity)
     suspend fun insertOrReplace(entity: QuestionEntity) = database.questionDao().insertOrReplace(entity)
     suspend fun insertOrReplace(entity: WordEntity) = database.wordDao().insertOrReplace(entity)

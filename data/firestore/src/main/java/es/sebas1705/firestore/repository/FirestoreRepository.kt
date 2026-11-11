@@ -32,6 +32,7 @@ class FirestoreRepository @Inject constructor(
     fun containsUser(firebaseId: String): DataFlow<Boolean> = userDataSource.containsUser(firebaseId)
     fun getUserRanking(): DataFlow<List<Pair<String, Int>>> = userDataSource.getUserRanking()
     fun getUserByNickname(nickname: String): DataFlow<Pair<UserDocument, String>> = userDataSource.getUserByNickname(nickname)
+    fun getUserGroupId(firebaseId: String): DataFlow<String?> = userDataSource.getUserGroupId(firebaseId)
     fun deleteDataUser(firebaseId: String): DataEmptyFlow = userDataSource.deleteDataUser(firebaseId)
     fun setUserListener(firebaseId: String, onDataChange: (UserDocument) -> Unit) = userDataSource.setUserListener(firebaseId, onDataChange)
     fun removeUserListener() = userDataSource.removeUserListener()

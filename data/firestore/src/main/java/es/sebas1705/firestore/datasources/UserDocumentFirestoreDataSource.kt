@@ -284,6 +284,25 @@ class UserDocumentFirestoreDataSource @Inject constructor(
     )
 
     /**
+     * Get the id of the group a user belongs to, read from the raw document so that a profile the
+     * mapper cannot map (an old or hand-edited one) never blocks leaving the group.
+     *
+     * @param firebaseId [String]: Id of the user
+     *
+     * @return [DataFlow]<[String]?>: Flow with the group id, or `null` when the user has no group or
+     * no profile document.
+     *
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
+     */
+    fun getUserGroupId(
+        firebaseId: String
+    ): DataFlow<String?> = taskFlow.taskFlowProducer(
+        taskAction = { usersReference.document(firebaseId).get() },
+        onSuccessListener = { DataState.Success(it.getString(SettingsFS.USERS_GROUP_FIELD)) }
+    )
+
+    /**
      * Delete the data of a user
      *
      * @param firebaseId [String]: Id of the user to delete the data

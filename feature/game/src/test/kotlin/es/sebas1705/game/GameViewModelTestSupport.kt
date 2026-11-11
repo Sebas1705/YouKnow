@@ -89,7 +89,10 @@ internal object GameTestSupport {
             signUpEmailUser = mock(),
             sendForgotPassword = mock(),
             signGoogle = mock(),
-            signOut = mock()
+            signOut = mock(),
+            getAccountProvider = mock(),
+            reauthenticateWithPassword = mock(),
+            reauthenticateWithGoogle = mock()
         )
     }
 
@@ -105,6 +108,7 @@ internal object GameTestSupport {
         changePhotoToUser = mock(),
         changeNicknameToUser = mock(),
         deleteDataUser = mock(),
+        deleteCurrentUser = mock(),
         uploadProfilePhoto = mock(),
         getUser = GetUser(firestore),
         containsUser = mock(),

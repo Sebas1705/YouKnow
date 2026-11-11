@@ -1,10 +1,13 @@
 package es.sebas1705.storage.datasources
 
 import android.net.Uri
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.DataState
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.storage.config.SettingsStorage
@@ -62,5 +65,30 @@ class ProfilePhotoStorageDataSource @Inject constructor(
             }
         },
         onSuccessListener = { downloadUri -> DataState.Success(downloadUri.toString()) }
+    )
+
+    /**
+     * Delete the given user's profile photo. A user who never uploaded one (no file at that path)
+     * is a success: there is nothing left to delete.
+     *
+     * @param firebaseId [String]: Id of the user the photo belongs to.
+     *
+     * @return [DataEmptyFlow]: Flow with the response of the operation.
+     *
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
+     */
+    fun deleteProfilePhoto(
+        firebaseId: String
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
+        taskAction = {
+            profilePhotosReference.child(firebaseId).delete().continueWithTask<Void> { task ->
+                val failure = task.exception
+                if (failure is StorageException && failure.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                    Tasks.forResult<Void>(null)
+                } else task
+            }
+        },
+        onSuccessListener = { DataState.EmptySuccess }
     )
 }
