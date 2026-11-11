@@ -2,6 +2,8 @@
 All notable changes to this repository are documented in this file.
 The format follows Keep a Changelog principles and semantic versioning (tags `vX.Y.Z`).
 ## [Unreleased]
+### Changed
+- README rewritten to match the app: the four games, the daily challenge, ranking, chat, groups and news, the Firebase services it uses (Firestore, Realtime Database, Storage, Auth) and its architecture. It had no screenshots and still has none: none exist in the repository yet.
 ### Added
 - Unit tests for the domain layer (OpenTDB, question, families, word, daily challenge, message, social and user mappers; quiz, OpenTDB download, mystery number, word pass, families, daily challenge, user and settings use cases) and for the Quiz, Mystery Number, Daily Challenge, Word Pass and Families ViewModels (state transitions, scoring and error paths).
 - `jacocoMergedReport` merges every module's unit-test coverage into `build/reports/jacoco/merged`, and the validate workflow posts the total line coverage in the job summary.
