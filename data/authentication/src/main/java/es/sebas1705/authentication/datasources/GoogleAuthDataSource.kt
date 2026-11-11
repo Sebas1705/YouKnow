@@ -5,12 +5,16 @@ import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.authentication.config.SettingsAuth
 import es.sebas1705.authentication.config.getCredentialRequestGoogle
+import es.sebas1705.authentication.config.reauthFailureType
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.ErrorDataType
 import es.sebas1705.common.states.DataState
@@ -56,7 +60,30 @@ class GoogleAuthDataSource @Inject constructor(
      * @since 0.1.0
      * @author Sebas1705 09/09/2025
      */
-    suspend fun signWithGoogle(): DataEmptyFlow {
+    suspend fun signWithGoogle(): DataEmptyFlow =
+        authenticateWithGoogle { firebaseAuth.signInWithCredential(it) }
+
+    /**
+     * Confirms the current user's Google account so Firebase accepts a sensitive operation, with the
+     * same credential flow as [signWithGoogle].
+     *
+     * @return [DataEmptyFlow]: fails with [ErrorDataType.FORBIDDEN] when the chosen Google account is
+     * not the signed-in one.
+     *
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
+     */
+    suspend fun reauthenticateWithGoogle(): DataEmptyFlow =
+        authenticateWithGoogle(::reauthFailureType) { credential ->
+            val user = firebaseAuth.currentUser
+                ?: throw IllegalStateException(SettingsAuth.NOT_LOGGED_USER)
+            user.reauthenticateAndRetrieveData(credential)
+        }
+
+    private suspend fun authenticateWithGoogle(
+        failureType: (Exception) -> ErrorDataType = { ErrorDataType.BAD_REQUEST },
+        firebaseAction: (AuthCredential) -> Task<AuthResult>
+    ): DataEmptyFlow {
         credentialManager = CredentialManager.create(context)
         var credential: Credential? = null
         var error = ""
@@ -84,7 +111,7 @@ class GoogleAuthDataSource @Inject constructor(
                     GoogleIdTokenCredential.createFrom(credential!!.data)
                 val authCredential =
                     GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-                firebaseAuth.signInWithCredential(authCredential)
+                firebaseAction(authCredential)
             },
             onSuccessListener = {
                 if (it.user != null) DataState.EmptySuccess
@@ -92,7 +119,8 @@ class GoogleAuthDataSource @Inject constructor(
                     ErrorDataType.INTERNAL,
                     SettingsAuth.NOT_LOGGED_USER
                 )
-            }
+            },
+            failureType = failureType
         )
     }
 }

@@ -25,6 +25,7 @@ Quick module inventory grouped by layer.
 - `:data:repositories`
 - `:data:retrofit`
 - `:data:room`
+- `:data:storage`
 
 ## Domain
 
@@ -55,7 +56,7 @@ Quick module inventory grouped by layer.
 - `:feature:home` — tabbed home: main, profile, chat, play, groups (nested `HomeNav`)
 - `:feature:game` — mystery number, quiz, word pass, families
 - `:feature:guide` — first-run onboarding
-- `:feature:settings`
+- `:feature:settings` — app settings and account deletion
 - `:feature:survey`
 - `:feature:splash`
 - `:feature:networkerror`

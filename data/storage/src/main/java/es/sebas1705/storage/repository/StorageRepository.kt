@@ -1,6 +1,7 @@
 package es.sebas1705.storage.repository
 
 import android.net.Uri
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.storage.datasources.ProfilePhotoStorageDataSource
 import javax.inject.Inject
@@ -13,4 +14,7 @@ class StorageRepository @Inject constructor(
     // Profile photo operations
     fun uploadProfilePhoto(firebaseId: String, uri: Uri): DataFlow<String> =
         profilePhotoDataSource.uploadProfilePhoto(firebaseId, uri)
+
+    fun deleteProfilePhoto(firebaseId: String): DataEmptyFlow =
+        profilePhotoDataSource.deleteProfilePhoto(firebaseId)
 }

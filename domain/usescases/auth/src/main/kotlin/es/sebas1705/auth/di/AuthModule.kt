@@ -5,7 +5,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.sebas1705.auth.AuthUsesCases
+import es.sebas1705.auth.GetAccountProvider
 import es.sebas1705.auth.GetFirebaseUser
+import es.sebas1705.auth.ReauthenticateWithGoogle
+import es.sebas1705.auth.ReauthenticateWithPassword
 import es.sebas1705.auth.SendForgotPassword
 import es.sebas1705.auth.SignGoogle
 import es.sebas1705.auth.SignInEmailUser
@@ -28,6 +31,9 @@ object AuthModule {
         signUpEmailUser = SignUpEmailUser(authenticationRepository),
         sendForgotPassword = SendForgotPassword(authenticationRepository),
         signGoogle = SignGoogle(authenticationRepository),
-        signOut = SignOut(authenticationRepository)
+        signOut = SignOut(authenticationRepository),
+        getAccountProvider = GetAccountProvider(authenticationRepository),
+        reauthenticateWithPassword = ReauthenticateWithPassword(authenticationRepository),
+        reauthenticateWithGoogle = ReauthenticateWithGoogle(authenticationRepository)
     )
 }

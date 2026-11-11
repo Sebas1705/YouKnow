@@ -32,6 +32,9 @@ class TaskFlow(
      * @param assertChecker Optional pre-check; returns an error message string on failure, null on success.
      * @param taskAction Suspending lambda that returns a Firebase [Task].
      * @param onSuccessListener Callback invoked when the [Task] completes successfully.
+     * @param failureType Maps the exception of a failed [Task] to the [ErrorDataType] of the error
+     * (default [ErrorDataType.BAD_REQUEST]), so callers can tell apart failures they must handle
+     * differently, such as a rejected password.
      *
      * @return [DataFlow] emitting [DataState.Loading], then either the result or an error.
      *
@@ -40,7 +43,8 @@ class TaskFlow(
     fun <T, Q> taskFlowProducer(
         assertChecker: suspend () -> String? = { null },
         taskAction: suspend () -> Task<Q>,
-        onSuccessListener: (Q) -> DataState<T>
+        onSuccessListener: (Q) -> DataState<T>,
+        failureType: (Exception) -> ErrorDataType = { ErrorDataType.BAD_REQUEST }
     ): DataFlow<T> = callbackFlow {
         try {
             trySend(DataState.Loading)
@@ -55,7 +59,7 @@ class TaskFlow(
                     }.addOnFailureListener { exception ->
                         trySend(
                             createResponse(
-                                ErrorDataType.BAD_REQUEST,
+                                failureType(exception),
                                 exception.message ?: genericFailMessage
                             )
                         )
