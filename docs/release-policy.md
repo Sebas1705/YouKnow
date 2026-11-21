@@ -29,6 +29,8 @@ build installs over the previous one.
 
 - Workflow: `.github/workflows/release-apk.yml` (build: `.github/actions/build-release-apk`).
 - Trigger: pushing a `vX.Y.Z` tag, or *Run workflow* with a version (creates the tag on that commit).
+- Runner: the PC when its heartbeat is fresh (push or manual run only), else GitHub-hosted; see
+  `docs/DISTRIBUTION.md` (Runner choice).
 - Result: signed `Production` release APK attached to a GitHub Release (with its `.sha256` and
   generated notes) and uploaded to Firebase App Distribution.
 - Label gate workflow: `.github/workflows/changelog-label-gate.yml`; release notes categories:

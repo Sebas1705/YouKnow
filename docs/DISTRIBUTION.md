@@ -64,6 +64,24 @@ scripts/refresh-google-services.sh
 The composite action checks that Doppler has every secret before building and fails naming the
 missing one.
 
+### Runner choice (PC or GitHub-hosted)
+
+The heavy Linux jobs (`release` in `release-apk.yml`; `build_lint`, `detekt` and `unit_tests` in
+`validate.yml`) run on the owner's PC when it is free, and on GitHub-hosted `ubuntu-latest` otherwise.
+A small `pick-runner` job (always GitHub-hosted) decides:
+
+- The PC is chosen only for `push` (tag pushes included) and `workflow_dispatch` events. Pull requests,
+  schedules and every other event always stay on `ubuntu-latest`, so fork code never runs on the PC.
+- The repository variable `PC_RUNNER_HEARTBEAT` (epoch seconds, UTC) is refreshed every minute by a watcher
+  on the PC, only while the PC is free and idle. If it is missing or older than 180 seconds the job falls
+  back to GitHub-hosted automatically; nothing has to be changed by hand.
+- The PC runner is a Linux Docker container (`self-hosted, Linux, X64, pc, android`) with JDK 21 and the
+  Android cmdline-tools in `/opt/android-sdk`, no Docker socket. Steps that only make sense on one kind of
+  runner are guarded with `runner.environment`; the PC gets Node from `actions/setup-node` and the
+  Android SDK location is exported by a `Locate the Android SDK` step.
+- Light jobs (label gate, label sync, dependency report, security, Firebase rules tests) stay GitHub-hosted.
+- Setup of the runner itself lives in Sebas1705/ci-runner.
+
 ## One-time setup
 
 1. **Doppler**: project `youknow` with configs `dev` and `prd`, holding the secrets above. Create a
