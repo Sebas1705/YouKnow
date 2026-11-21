@@ -24,8 +24,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
+  # Chooses where the heavy jobs run: this PC (self-hosted runner, see Sebas1705/ci-runner) when its
+  # heartbeat variable is under 3 minutes old, otherwise a GitHub-hosted runner. Only push and
+  # workflow_dispatch may use the PC; pull requests never run on it.
+  pick-runner:
+    name: Pick the runner
     runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.pick.outputs.runner }}
+    steps:
+      - id: pick
+        env:
+          HEARTBEAT: ${{ vars.PC_RUNNER_HEARTBEAT }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          runner='"ubuntu-latest"'
+          if { [ "$EVENT" = push ] || [ "$EVENT" = workflow_dispatch ]; } && [ -n "${HEARTBEAT:-}" ]; then
+            age=$(( $(date +%s) - HEARTBEAT ))
+            if [ "$age" -ge 0 ] && [ "$age" -lt 180 ]; then runner='["self-hosted","pc"]'; fi
+          fi
+          echo "Runner: $runner"
+          echo "runner=$runner" >> "$GITHUB_OUTPUT"
+
+  release:
+    needs: pick-runner
+    runs-on: ${{ fromJSON(needs.pick-runner.outputs.runner) }}
     timeout-minutes: 45
     env:
       DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
@@ -34,6 +58,22 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      # The PC image is minimal: Node (for the Firebase CLI) comes from setup-node and the other tools are
+      # installed when missing. GitHub-hosted images already have all of them.
+      - uses: actions/setup-node@v7
+        if: runner.environment == 'self-hosted'
+        with:
+          node-version: 22
+      - name: Install missing tools
+        if: runner.environment == 'self-hosted'
+        run: |
+          missing=()
+          for tool in gh git curl unzip; do command -v "$tool" >/dev/null || missing+=("$tool"); done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq "${missing[@]}"
+          fi
 
       - name: Resolve version and tag
         id: ver
@@ -55,6 +95,18 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           case "$VERSION" in *-*) echo "prerelease=--prerelease" >> "$GITHUB_OUTPUT" ;; *) echo "prerelease=" >> "$GITHUB_OUTPUT" ;; esac
+
+      # The PC image ships the Android cmdline-tools in /opt/android-sdk; GitHub-hosted images set this up themselves.
+      - name: Locate the Android SDK
+        if: runner.environment == 'self-hosted'
+        run: |
+          set -euo pipefail
+          sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/opt/android-sdk}}"
+          echo "ANDROID_HOME=$sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$sdk" >> "$GITHUB_ENV"
+          sdkmanager="$(command -v sdkmanager || ls "$sdk"/cmdline-tools/*/bin/sdkmanager | head -1)"
+          # Accept the SDK licences so Gradle can download missing packages (best effort, may need sudo).
+          yes | "$sdkmanager" --sdk_root="$sdk" --licenses >/dev/null 2>&1 || yes | sudo "$sdkmanager" --sdk_root="$sdk" --licenses >/dev/null 2>&1 || true
 
       - uses: ./.github/actions/build-release-apk
         with:
