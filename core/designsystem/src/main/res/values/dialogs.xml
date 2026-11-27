@@ -11,7 +11,12 @@
 
     <!-- DeleteAccount -->
     <string name="core_designsystem_delete_account">Delete account</string>
-    <string name="core_designsystem_delete_account_text">Are you sure to delete your account data?</string>
+    <string name="core_designsystem_delete_account_text">This permanently deletes your account: your profile, points and credits, your chat messages, your profile photo and your place in a group. It cannot be undone. A usability survey you published cannot be deleted from the app (see the account deletion page of the project).</string>
+    <string name="core_designsystem_delete_account_confirm">Delete permanently</string>
+
+    <!-- ConfirmPassword -->
+    <string name="core_designsystem_confirm_password_title">Confirm your password</string>
+    <string name="core_designsystem_confirm_password_text">For your security, type your password again to continue.</string>
 
     <!-- ErrorInfo -->
     <string name="core_designsystem_title_error">Error message</string>

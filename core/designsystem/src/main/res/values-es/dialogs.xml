@@ -11,7 +11,12 @@
 
     <!-- DeleteAccount -->
     <string name="core_designsystem_delete_account">Borrar cuenta</string>
-    <string name="core_designsystem_delete_account_text">¿Estás seguro de eliminar los datos de tu usuario?</string>
+    <string name="core_designsystem_delete_account_text">Esto elimina tu cuenta para siempre: tu perfil, puntos y créditos, tus mensajes del chat, tu foto de perfil y tu pertenencia a un grupo. No se puede deshacer. Una encuesta de usabilidad que hayas publicado no se puede borrar desde la app (consulta la página de eliminación de cuenta del proyecto).</string>
+    <string name="core_designsystem_delete_account_confirm">Eliminar para siempre</string>
+
+    <!-- ConfirmPassword -->
+    <string name="core_designsystem_confirm_password_title">Confirma tu contraseña</string>
+    <string name="core_designsystem_confirm_password_text">Por tu seguridad, escribe de nuevo tu contraseña para continuar.</string>
 
     <!-- ErrorInfo -->
     <string name="core_designsystem_title_error">Mensaje de error</string>

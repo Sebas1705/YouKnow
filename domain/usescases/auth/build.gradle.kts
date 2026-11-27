@@ -2,6 +2,7 @@ import es.sebas1705.convention.implementation
 
 plugins {
     alias(libs.plugins.buildlogic.domain)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 android {

@@ -11,7 +11,7 @@ Android trivia and quiz app built with **Kotlin** and **Jetpack Compose** on a m
 - **Firebase Auth** — user authentication and profile photo upload
 - **Survey system** — collect user input within the app
 - **Guide / onboarding** — built-in guide for new players
-- **Settings** — customizable app preferences
+- **Settings** — customizable app preferences and in-app account deletion ([what is deleted](docs/account-deletion.html))
 - **Network error handling** — dedicated screen for offline/error states
 
 ---
@@ -101,6 +101,7 @@ git push origin v1.1.0
 
 Secrets, one-time setup and details: **[docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)**.
 Firebase apps, security rules and how to test and deploy them: **[docs/FIREBASE.md](docs/FIREBASE.md)**.
+Deleting an account (in the app, or by email without it): **[docs/account-deletion.html](docs/account-deletion.html)**.
 ---
 
 ## Template

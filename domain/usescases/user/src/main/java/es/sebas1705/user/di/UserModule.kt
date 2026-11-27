@@ -6,6 +6,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.sebas1705.firestore.repository.FirestoreRepository
+import es.sebas1705.repositories.interfaces.IAuthenticationRepository
+import es.sebas1705.room.repository.DatabaseRepository
 import es.sebas1705.realtime.repository.RealtimeRepository
 import es.sebas1705.storage.repository.StorageRepository
 import es.sebas1705.user.UserUsesCases
@@ -14,6 +16,7 @@ import es.sebas1705.user.usescases.AddPointsToUser
 import es.sebas1705.user.usescases.ChangeNicknameToUser
 import es.sebas1705.user.usescases.ChangePhotoToUser
 import es.sebas1705.user.usescases.ContainsUser
+import es.sebas1705.user.usescases.DeleteCurrentUser
 import es.sebas1705.user.usescases.DeleteDataUser
 import es.sebas1705.user.usescases.GetUser
 import es.sebas1705.user.usescases.GetUserByNickname
@@ -41,6 +44,9 @@ object UserModule {
      *
      * @param firestoreRepository [FirestoreRepository]: Repository to access to the firestore
      * @param realtimeRepository [RealtimeRepository]: Repository to access to the realtime database
+     * @param storageRepository [StorageRepository]: Repository to access to the profile photos
+     * @param authenticationRepository [IAuthenticationRepository]: Repository to delete the account
+     * @param databaseRepository [DatabaseRepository]: Repository to the data stored on the device
      *
      * @return [UserUsesCases]: Use cases of the user
      *
@@ -52,7 +58,9 @@ object UserModule {
     fun provideUserUsesCases(
         firestoreRepository: FirestoreRepository,
         realtimeRepository: RealtimeRepository,
-        storageRepository: StorageRepository
+        storageRepository: StorageRepository,
+        authenticationRepository: IAuthenticationRepository,
+        databaseRepository: DatabaseRepository
     ): UserUsesCases = UserUsesCases(
         addCreditsToUser = AddCreditsToUser(firestoreRepository),
         addPointsToUser = AddPointsToUser(firestoreRepository),
@@ -68,6 +76,13 @@ object UserModule {
         getUserRanking = GetUserRanking(firestoreRepository),
         getUserByNickname = GetUserByNickname(firestoreRepository),
         deleteDataUser = DeleteDataUser(firestoreRepository),
+        deleteCurrentUser = DeleteCurrentUser(
+            authenticationRepository,
+            firestoreRepository,
+            realtimeRepository,
+            storageRepository,
+            databaseRepository
+        ),
         uploadProfilePhoto = UploadProfilePhoto(storageRepository, ChangePhotoToUser(firestoreRepository))
     )
 

@@ -11,4 +11,11 @@
     <string name="feature_settings_Game_language">Game language</string>
     <string name="feature_settings_music">Volumen música</string>
     <string name="feature_settings_sound">Volumen sonido</string>
+    <string name="feature_settings_delete_account">Eliminar cuenta</string>
+    <string name="feature_settings_delete_account_done">Tu cuenta ha sido eliminada</string>
+    <string name="feature_settings_delete_error_wrong_credentials">La contraseña no es correcta, o esa no es la cuenta de Google con la que iniciaste sesión. Inténtalo de nuevo.</string>
+    <string name="feature_settings_delete_error_recent_login">Por tu seguridad, confirma tu identidad otra vez para terminar. Tus datos ya están eliminados.</string>
+    <string name="feature_settings_delete_error_data_deleted">Tus datos se eliminaron pero no se pudo eliminar la cuenta. Comprueba tu conexión e inténtalo de nuevo.</string>
+    <string name="feature_settings_delete_error_not_signed_in">No has iniciado sesión. Inicia sesión de nuevo para eliminar tu cuenta.</string>
+    <string name="feature_settings_delete_error_generic">No se pudo eliminar la cuenta. Comprueba tu conexión e inténtalo de nuevo.</string>
 </resources>

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.buildlogic.data)
     alias(libs.plugins.buildlogic.firebase)
     alias(libs.plugins.buildlogic.credential)
+    alias(libs.plugins.buildlogic.unit.test)
 }
 
 // Web OAuth client of the Firebase project (Google Sign-In's server client id), from Doppler or

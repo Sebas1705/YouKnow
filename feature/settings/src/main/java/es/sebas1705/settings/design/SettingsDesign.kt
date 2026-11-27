@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material3.DropdownMenuItem
@@ -34,6 +35,8 @@ import es.sebas1705.common.utlis.extensions.primitives.percentageFormat
 import es.sebas1705.designsystem.buttons.common.IFilledButton
 import es.sebas1705.designsystem.buttons.common.IOutlinedButton
 import es.sebas1705.designsystem.buttons.icon.IFilledTonalIconButton
+import es.sebas1705.designsystem.dialogs.DeleteAccountDialog
+import es.sebas1705.designsystem.dialogs.PasswordConfirmDialog
 import es.sebas1705.designsystem.extras.DropdownList
 import es.sebas1705.designsystem.layouts.ApplyBack
 import es.sebas1705.designsystem.slider.ISlider
@@ -42,6 +45,8 @@ import es.sebas1705.designsystem.texts.IText
 import es.sebas1705.designsystem.texts.TitleSurface
 import es.sebas1705.feature.settings.R
 import es.sebas1705.resources.games.Languages
+import es.sebas1705.settings.viewmodel.DeleteAccountError
+import es.sebas1705.settings.viewmodel.DeleteAccountStep
 import es.sebas1705.settings.viewmodel.SettingsState
 import es.sebas1705.ui.theme.AppTheme
 import es.sebas1705.ui.theme.Paddings.MediumPadding
@@ -57,6 +62,10 @@ import es.sebas1705.designsystem.dialogs.LoadingDialog
  * @param onSoundVolumeSliderBarChange (Float) -> Unit: Function to change the sound volume of the app.
  * @param onContrastClick (ThemeContrast) -> Unit: Function to change the contrast of the theme.
  * @param onRestoreClick () -> Unit: Function to restore the default settings.
+ * @param onDeleteAccountClick () -> Unit: Function called when the user taps "Delete account".
+ * @param onDeleteAccountConfirm () -> Unit: Function called when the user confirms the deletion.
+ * @param onDeleteAccountPassword (String) -> Unit: Function called with the password typed to re-authenticate.
+ * @param onDeleteAccountDismiss () -> Unit: Function called when the user closes a deletion dialog.
  *
  * @author Sebas1705 12/09/2025
  * @since 1.0.0
@@ -73,10 +82,15 @@ fun SettingsDesign(
     onContrastClick: (ThemeContrast) -> Unit = { },
     onLanguageClick: (Languages) -> Unit = { },
     onRestoreClick: () -> Unit = { },
-    onSurveyNav: () -> Unit = { }
+    onSurveyNav: () -> Unit = { },
+    onDeleteAccountClick: () -> Unit = { },
+    onDeleteAccountConfirm: () -> Unit = { },
+    onDeleteAccountPassword: (String) -> Unit = { },
+    onDeleteAccountDismiss: () -> Unit = { }
 ) {
     //Local:
-    BackHandler { onBack() }
+    // Leaving the screen would cancel a running account deletion halfway.
+    BackHandler { if (!isLoading) onBack() }
 
     //States:
     var music by rememberSaveable { mutableFloatStateOf(settingsState.settings.musicVolume) }
@@ -93,11 +107,20 @@ fun SettingsDesign(
         backId = windowState.backFill
     ) {
 
+        DeleteAccountDialogs(
+            windowState,
+            settingsState,
+            isLoading,
+            onDeleteAccountConfirm,
+            onDeleteAccountPassword,
+            onDeleteAccountDismiss
+        )
+
         if (isLoading)
             LoadingDialog(windowState)
 
         IFilledTonalIconButton(
-            onClick = { onBack() },
+            onClick = { if (!isLoading) onBack() },
             contentDescription = stringResource(es.sebas1705.core.resources.R.string.core_resources_back),
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             modifier = Modifier
@@ -225,7 +248,13 @@ fun SettingsDesign(
                 imageVector = Icons.Default.RateReview,
                 onClick = onSurveyNav,
             )
-            IVerSpacer(0.4f)
+            IVerSpacer(0.1f)
+            IOutlinedButton(
+                label = stringResource(R.string.feature_settings_delete_account),
+                imageVector = Icons.Default.Delete,
+                onClick = onDeleteAccountClick,
+            )
+            IVerSpacer(0.2f)
         }
     }
 }
@@ -236,4 +265,45 @@ private fun SettingsPreview() {
     AppTheme {
         SettingsDesign()
     }
+}
+/**
+ * Dialogs of the account deletion flow. They give way to the loading dialog while a step runs.
+ *
+ * @since 1.6.0
+ * @author Sebas1705 11/11/2026
+ */
+@Composable
+private fun DeleteAccountDialogs(
+    windowState: WindowState,
+    settingsState: SettingsState,
+    isLoading: Boolean,
+    onConfirm: () -> Unit,
+    onPassword: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    if (isLoading) return
+    val errorMessage = settingsState.deleteAccountError?.let { stringResource(it.messageRes()) }
+    when (settingsState.deleteAccountStep) {
+        DeleteAccountStep.Hidden -> Unit
+        DeleteAccountStep.Confirm -> DeleteAccountDialog(
+            windowState = windowState,
+            errorMessage = errorMessage,
+            onConfirm = onConfirm,
+            onDismiss = onDismiss
+        )
+        DeleteAccountStep.ReauthPassword -> PasswordConfirmDialog(
+            windowState = windowState,
+            errorMessage = errorMessage,
+            onConfirm = onPassword,
+            onDismiss = onDismiss
+        )
+    }
+}
+
+private fun DeleteAccountError.messageRes(): Int = when (this) {
+    DeleteAccountError.WrongCredentials -> R.string.feature_settings_delete_error_wrong_credentials
+    DeleteAccountError.RecentLoginRequired -> R.string.feature_settings_delete_error_recent_login
+    DeleteAccountError.DataDeletedAccountKept -> R.string.feature_settings_delete_error_data_deleted
+    DeleteAccountError.NotSignedIn -> R.string.feature_settings_delete_error_not_signed_in
+    DeleteAccountError.Generic -> R.string.feature_settings_delete_error_generic
 }

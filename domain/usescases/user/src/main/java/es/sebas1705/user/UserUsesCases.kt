@@ -6,6 +6,7 @@ import es.sebas1705.user.usescases.AddPointsToUser
 import es.sebas1705.user.usescases.ChangeNicknameToUser
 import es.sebas1705.user.usescases.ChangePhotoToUser
 import es.sebas1705.user.usescases.ContainsUser
+import es.sebas1705.user.usescases.DeleteCurrentUser
 import es.sebas1705.user.usescases.DeleteDataUser
 import es.sebas1705.user.usescases.GetUser
 import es.sebas1705.user.usescases.GetUserByNickname
@@ -35,6 +36,7 @@ data class UserUsesCases(
     val changePhotoToUser: ChangePhotoToUser,
     val changeNicknameToUser: ChangeNicknameToUser,
     val deleteDataUser: DeleteDataUser,
+    val deleteCurrentUser: DeleteCurrentUser,
     val uploadProfilePhoto: UploadProfilePhoto,
     //Getters:
     val getUser: GetUser,

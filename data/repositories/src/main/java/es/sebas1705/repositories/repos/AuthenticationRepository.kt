@@ -1,5 +1,6 @@
 package es.sebas1705.repositories.repos
 
+import es.sebas1705.authentication.config.AccountProvider
 import es.sebas1705.authentication.datasources.EmailAuthDataSource
 import es.sebas1705.authentication.datasources.GoogleAuthDataSource
 import es.sebas1705.authentication.datasources.UserAuthDataSource
@@ -45,4 +46,14 @@ class AuthenticationRepository @Inject constructor(
     override fun signOut(): Boolean = userAuthDataSource.signOut()
     override fun isUserLogged(): Boolean = userAuthDataSource.isUserLogged()
     override fun getCurrentUser() = userAuthDataSource.getCurrentUser()
+
+    //Account deletion:
+    override fun reauthenticateWithPassword(password: String): DataEmptyFlow =
+        emailAuthDataSource.reauthenticate(password)
+
+    override suspend fun reauthenticateWithGoogle(): DataEmptyFlow =
+        googleAuthDataSource.reauthenticateWithGoogle()
+
+    override fun deleteCurrentUser(): DataEmptyFlow = userAuthDataSource.deleteCurrentUser()
+    override fun getAccountProvider(): AccountProvider = userAuthDataSource.getAccountProvider()
 }

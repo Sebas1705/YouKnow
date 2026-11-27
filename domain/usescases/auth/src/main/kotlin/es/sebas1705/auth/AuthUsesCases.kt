@@ -6,5 +6,8 @@ data class AuthUsesCases(
     val signUpEmailUser: SignUpEmailUser,
     val sendForgotPassword: SendForgotPassword,
     val signGoogle: SignGoogle,
-    val signOut: SignOut
+    val signOut: SignOut,
+    val getAccountProvider: GetAccountProvider,
+    val reauthenticateWithPassword: ReauthenticateWithPassword,
+    val reauthenticateWithGoogle: ReauthenticateWithGoogle
 )

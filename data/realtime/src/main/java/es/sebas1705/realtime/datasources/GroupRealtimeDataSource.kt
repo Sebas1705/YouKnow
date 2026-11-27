@@ -8,6 +8,7 @@ import es.sebas1705.analytics.datasources.LogEventDataSource
 import es.sebas1705.common.classes.TaskFlow
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.utlis.alias.DataEmptyFlow
+import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.common.utlis.extensions.types.logE
 import es.sebas1705.realtime.config.SettingsRT
 import es.sebas1705.realtime.jsons.GroupJson
@@ -80,6 +81,27 @@ class GroupRealtimeDataSource @Inject constructor(
     ): DataEmptyFlow = taskFlow.taskFlowProducer(
         taskAction = { groupsReference.child(groupId).removeValue() },
         onSuccessListener = { DataState.EmptySuccess },
+    )
+
+    /**
+     * Read a group once
+     *
+     * @param groupId [String]: Group id
+     *
+     * @return [DataFlow]<[GroupJson]?> with the group, or `null` when it does not exist (anymore)
+     *
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
+     */
+    fun getGroup(
+        groupId: String
+    ): DataFlow<GroupJson?> = taskFlow.taskFlowProducer(
+        taskAction = { groupsReference.child(groupId).get() },
+        onSuccessListener = { snapshot ->
+            DataState.Success(
+                if (snapshot.exists()) snapshot.getValue(GroupJson::class.java) else null
+            )
+        },
     )
 
     /**

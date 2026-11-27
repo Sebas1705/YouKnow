@@ -1,5 +1,6 @@
 package es.sebas1705.realtime.datasources
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -63,6 +64,41 @@ class MessageRealtimeDataSource @Inject constructor(
         onSuccessListener = { DataState.EmptySuccess },
     )
 
+    /**
+     * Delete every message the given user wrote in the global chat.
+     *
+     * Messages are keyed `<authorUid>-<time>`, so they are found with a key-range query on that
+     * prefix (a uid never contains `-`, so the prefix cannot match another user) and removed in one
+     * multi-path update. The rules let any signed-in client delete a message, so this needs no more
+     * than the user's own session.
+     *
+     * @param authorId [String]: Firebase uid of the author
+     *
+     * @return [DataEmptyFlow] with the response of the operation; having no messages is a success
+     *
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
+     */
+    fun removeMessagesOf(
+        authorId: String
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
+        taskAction = {
+            val prefix = "$authorId-"
+            globalChatReference.orderByKey().startAt(prefix).endAt(prefix + KEY_RANGE_END)
+                .get()
+                .continueWithTask { query ->
+                    if (!query.isSuccessful) throw query.exception ?: IllegalStateException(
+                        SettingsRT.ERROR_GENERIC_MESSAGE_FAIL
+                    )
+                    val removals: Map<String, Any?> =
+                        query.result.children.mapNotNull { it.key }.associateWith { null }
+                    if (removals.isEmpty()) Tasks.forResult<Void?>(null)
+                    else globalChatReference.updateChildren(removals)
+                }
+        },
+        onSuccessListener = { DataState.EmptySuccess },
+    )
+
     //Sets Listeners:
     /**
      * Get the messages from the global chat
@@ -114,6 +150,12 @@ class MessageRealtimeDataSource @Inject constructor(
             globalChatReference.removeEventListener(it)
             messagesListener = null
         }
+    }
+
+
+    private companion object {
+        /** Highest code point, so `startAt(p).endAt(p + KEY_RANGE_END)` covers every key starting with `p`. */
+        const val KEY_RANGE_END = "\uf8ff"
     }
 
 }

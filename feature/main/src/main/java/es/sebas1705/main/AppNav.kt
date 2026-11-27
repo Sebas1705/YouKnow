@@ -64,7 +64,8 @@ fun AppNav(
                 SettingsScreen(
                     windowState,
                     onBack = { appBackStack.removeLastOrNull() },
-                    onSurveyNav = { appBackStack.add(AppGraph.SurveyScreen) }
+                    onSurveyNav = { appBackStack.add(AppGraph.SurveyScreen) },
+                    onAccountDeleted = { appBackStack.pushAndFree(AppGraph.AuthNavigation) }
                 )
             }
             entry<AppGraph.SurveyScreen> {

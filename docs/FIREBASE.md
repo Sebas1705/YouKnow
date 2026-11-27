@@ -36,7 +36,7 @@ After adding or removing an app or a SHA, run `scripts/refresh-google-services.s
 |---|---|---|
 | Firestore | `firebase/firestore.rules` | `users/{uid}` read by signed-in users, so it holds nothing private (the email stays in Firebase Auth); written only by the owner, every field type checked; `news` read-only; `surveys/{uid}` one per author; `dailyChallenges/{date}` created once by a verified account for the current UTC day (±1 for clock skew), full shape checked, at most 5 questions of 2 to 4 answers, immutable |
 | Realtime Database | `firebase/database.rules.json` | `chat-global-youknow`: messages keyed `<uid>-<time>`, created only by their author (text ≤ 50 chars), deletable by any signed-in client (the app trims to 100); `groups-youknow`: created/deleted by the leader (`<name>-<leaderUid>`), members list rewritten by joiners |
-| Storage | `firebase/storage.rules` | closed: the app stores no files |
+| Storage | `firebase/storage.rules` | `profile_photos/{uid}`: read by signed-in users, written (images under 5 MB) and deleted only by the owner; everything else closed |
 
 Everything else is denied, and nothing is readable without signing in.
 
@@ -103,6 +103,49 @@ review in the console: `users/` ids are uids, so keep that output private. Runni
 
 Indexes (`firebase/firestore.indexes.json`) are deployed with `--only firestore:indexes`; the app
 only runs single-field queries, which need no composite index.
+
+## Account deletion
+
+Settings → **Delete account** deletes the signed-in user's account and what the app stores about them
+(`DeleteCurrentUser`, `docs/ai/FLOW_CATALOG.md` Flow 4). The user confirms, then re-authenticates
+(password, or the Google account picker; Firebase refuses to delete a stale sign-in), then the steps
+run in this order and stop at the first failure (every one tolerates being repeated, so retrying is
+safe):
+
+| # | Step | Needs from the rules |
+|---|---|---|
+| 1 | Leave the group in `groups-youknow/<name>-<leaderUid>`: remove the uid from `members`; delete the group only when no member is left | `members` is writable by any signed-in user; the group is deletable by its leader or once it has no members |
+| 2 | Delete the user's chat messages in `chat-global-youknow` (key range query on the `<uid>-` prefix, one multi-path update) | any signed-in client may delete a message |
+| 3 | Delete `profile_photos/<uid>` in Storage (a user with no photo is not an error) | owner may delete |
+| 4 | Delete the usability survey cached on the device (Room `survey_table`) | none |
+| 5 | Delete `users/<uid>` in Firestore | owner may delete |
+| 6 | Delete the Firebase Authentication user | none (the rules need the session in 1 to 5, so it goes last) |
+
+The group id is read from `users/<uid>` (step 1), which is why that document goes after it. If step 6
+fails after 1 to 5 (offline, or Firebase still wants a recent sign-in), the data is gone and the
+account is not: the dialog says so and confirming again re-authenticates and finishes.
+
+What is **kept**, and why (also stated in `docs/account-deletion.html`):
+
+- **`surveys/<uid>`** (nickname, age, profession, ratings): the rules say `allow delete: if false`, so
+  a client cannot delete it. Removing it needs a console/admin action, on request. Allowing the owner
+  to delete it is a one-line rules change (`allow delete: if isOwner(uid)`) plus a delete call in
+  `DeleteCurrentUser`.
+- **A leader's uid in the group id**: if the leader deletes the account while others remain, the group
+  stays (a group is never dissolved under its members) and its key keeps the uid, a random Firebase
+  id, until the last member leaves and the empty group is deleted.
+- **Analytics and Crashlytics** data, kept under Google's retention; and the device preferences
+  (volume, contrast, language) and downloaded questions, which are not part of the account.
+
+Rollout: deploy the rules before the app release as usual. This feature adds no rule changes: it only
+uses deletes the current rules already allow. It does depend on the owner being able to delete
+`users/<uid>`; if that rule changes, step 5 must keep working.
+
+Without the app, deletion is requested by email (contact in `SECURITY.md`), as written on
+`docs/account-deletion.html`. That page is plain static HTML in `docs/`; it becomes public when
+GitHub Pages is enabled for the repository (source: branch `main`, folder `/docs`), at
+`https://sebas1705.github.io/YouKnow/account-deletion.html`. Pages is not enabled today, and
+`firebase.json` hosting is unused, so until then the page is only readable in the repository.
 
 ## Other services
 
