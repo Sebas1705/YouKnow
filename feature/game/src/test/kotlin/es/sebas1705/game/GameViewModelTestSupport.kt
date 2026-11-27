@@ -6,6 +6,7 @@ import es.sebas1705.auth.AuthUsesCases
 import es.sebas1705.auth.GetFirebaseUser
 import es.sebas1705.common.states.DataState
 import es.sebas1705.common.states.ErrorDataType
+import es.sebas1705.common.utlis.alias.DataEmptyFlow
 import es.sebas1705.common.utlis.alias.DataFlow
 import es.sebas1705.datastore.model.SettingsData
 import es.sebas1705.firestore.documents.UserDocument
@@ -21,7 +22,7 @@ import es.sebas1705.settings.ReadGameLanguage
 import es.sebas1705.settings.SettingUsesCases
 import es.sebas1705.user.UserUsesCases
 import es.sebas1705.user.usescases.AddCreditsToUser
-import es.sebas1705.user.usescases.AddPointsToUser
+import es.sebas1705.user.usescases.AddRoundRewards
 import es.sebas1705.user.usescases.GetUser
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -52,6 +54,8 @@ internal object GameTestSupport {
 
     fun <T> success(value: T): DataFlow<T> = flowOf(DataState.Loading, DataState.Success(value))
 
+    fun emptySuccess(): DataEmptyFlow = flowOf(DataState.Loading, DataState.EmptySuccess)
+
     fun <T> failure(message: String): DataFlow<T> = flowOf(
         DataState.Loading,
         DataState.Error(GameTestSupport::class, ErrorDataType.INTERNAL, message) { _, _ -> }
@@ -71,8 +75,13 @@ internal object GameTestSupport {
     /** A signed-in user whose Firestore document reads fine and accepts points and credits. */
     fun firestoreWithUser(points: Int = 0, credits: Int = 0): FirestoreRepository = mock {
         on { getUser(UID) } doReturn success(UserDocument(1, "nick", null, null, points, credits, true))
-        on { addPointsToUser(eq(UID), any(), any()) } doReturn success(points)
+        on { addRoundRewards(eq(UID), any(), any(), any(), any(), anyOrNull()) } doReturn emptySuccess()
         on { addCreditsToUser(eq(UID), any(), any()) } doReturn success(credits)
+    }
+
+    /** A user whose document reads fine but whose rewards the security rules refuse. */
+    fun firestoreRejectingRewards(message: String = "PERMISSION_DENIED"): FirestoreRepository = firestoreWithUser().also {
+        whenever(it.addRoundRewards(eq(UID), any(), any(), any(), any(), anyOrNull())).thenReturn(failure(message))
     }
 
     /** A user whose document cannot be read. */
@@ -93,7 +102,7 @@ internal object GameTestSupport {
         )
     }
 
-    /** Real GetUser / AddPointsToUser / AddCreditsToUser on the given repository, the rest mocked. */
+    /** Real GetUser / AddRoundRewards / AddCreditsToUser on the given repository, the rest mocked. */
     fun userUsesCases(firestore: FirestoreRepository): UserUsesCases = UserUsesCases(
         setUserListener = mock(),
         removeUserListener = mock(),
@@ -101,7 +110,7 @@ internal object GameTestSupport {
         setGroupToUser = mock(),
         removeGroupToUser = mock(),
         addCreditsToUser = AddCreditsToUser(firestore),
-        addPointsToUser = AddPointsToUser(firestore),
+        addRoundRewards = AddRoundRewards(firestore),
         changePhotoToUser = mock(),
         changeNicknameToUser = mock(),
         deleteDataUser = mock(),

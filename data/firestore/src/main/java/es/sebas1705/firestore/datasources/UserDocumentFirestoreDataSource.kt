@@ -1,5 +1,6 @@
 package es.sebas1705.firestore.datasources
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import es.sebas1705.analytics.datasources.LogEventDataSource
@@ -88,7 +89,8 @@ class UserDocumentFirestoreDataSource @Inject constructor(
     )
 
     /**
-     * Add credits to a user
+     * Change the credits of a user by spending them (a negative amount). The rules refuse any
+     * increase outside [addRoundRewards].
      *
      * @param userId [String]: Id of the user to add the credits
      * @param oldCredits [Int]: Old credits of the user
@@ -113,27 +115,71 @@ class UserDocumentFirestoreDataSource @Inject constructor(
     )
 
     /**
-     * Add points to a user
+     * Store what a finished round earned, in one batch the security rules accept: the new points and
+     * credits of the profile, the round event keyed by the new points total (users/{uid}/events) and,
+     * for the daily challenge, the day's completion (users/{uid}/dailyCompletions). The rules check
+     * that the event states exactly what the profile gained, that rounds are 10 seconds apart and
+     * that a day is completed once, so a profile can't gain points any other way
+     * (see docs/FIREBASE.md).
      *
-     * @param userId [String]: Id of the user to add the points
-     * @param addPoints [Int]: Points to add
-     * @param oldPoints [Int]: Old points of the user
+     * @param userId [String]: Id of the user that played the round
+     * @param oldPoints [Int]: Points of the user before the round
+     * @param oldCredits [Int]: Credits of the user before the round
+     * @param points [Int]: Points earned, more than 0
+     * @param credits [Int]: Credits earned, at most a tenth of the points
+     * @param dailyDate [String]?: UTC day (yyyy-MM-dd) when the round is the daily challenge
      *
-     * @return [DataFlow]<[Int]>: Flow with the response of the operation
+     * @return [DataEmptyFlow]: Flow with the response of the operation
      *
-     * @since 1.0.0
-     * @author Sebas1705 22/09/2025
+     * @since 1.6.0
+     * @author Sebas1705 11/11/2026
      */
-    fun addPointsToUser(
+    fun addRoundRewards(
         userId: String,
-        addPoints: Int,
-        oldPoints: Int
-    ): DataFlow<Int> = taskFlow.taskFlowProducer(
-        taskAction = {
-            usersReference.document(userId)
-                .update(SettingsFS.USERS_POINTS_FIELD, oldPoints + addPoints)
+        oldPoints: Int,
+        oldCredits: Int,
+        points: Int,
+        credits: Int,
+        dailyDate: String? = null
+    ): DataEmptyFlow = taskFlow.taskFlowProducer(
+        assertChecker = {
+            if (points <= 0 || credits < 0) SettingsFS.ERROR_ROUND_NOTHING_EARNED else null
         },
-        onSuccessListener = { DataState.Success(oldPoints + addPoints) }
+        taskAction = {
+            val newPoints = oldPoints + points
+            val userReference = usersReference.document(userId)
+            val event = mutableMapOf<String, Any>(
+                SettingsFS.EVENTS_KIND_FIELD to
+                        if (dailyDate == null) SettingsFS.EVENT_KIND_GAME else SettingsFS.EVENT_KIND_DAILY,
+                SettingsFS.USERS_POINTS_FIELD to points,
+                SettingsFS.USERS_CREDITS_FIELD to credits,
+                SettingsFS.EVENTS_AT_FIELD to FieldValue.serverTimestamp()
+            )
+            val batch = firestore.batch()
+            batch.update(
+                userReference,
+                mapOf(
+                    SettingsFS.USERS_POINTS_FIELD to newPoints,
+                    SettingsFS.USERS_CREDITS_FIELD to oldCredits + credits
+                )
+            )
+            if (dailyDate != null) {
+                event[SettingsFS.EVENTS_DATE_FIELD] = dailyDate
+                batch.set(
+                    userReference.collection(SettingsFS.DAILY_COMPLETIONS_COLLECTION_NAME).document(dailyDate),
+                    mapOf(
+                        SettingsFS.EVENTS_DATE_FIELD to dailyDate,
+                        SettingsFS.EVENTS_AT_FIELD to FieldValue.serverTimestamp()
+                    )
+                )
+            }
+            batch.set(
+                userReference.collection(SettingsFS.EVENTS_COLLECTION_NAME).document(newPoints.toString()),
+                event
+            )
+            batch.commit()
+        },
+        onSuccessListener = { DataState.EmptySuccess }
     )
 
     /**

@@ -10,7 +10,7 @@ import es.sebas1705.realtime.repository.RealtimeRepository
 import es.sebas1705.storage.repository.StorageRepository
 import es.sebas1705.user.UserUsesCases
 import es.sebas1705.user.usescases.AddCreditsToUser
-import es.sebas1705.user.usescases.AddPointsToUser
+import es.sebas1705.user.usescases.AddRoundRewards
 import es.sebas1705.user.usescases.ChangeNicknameToUser
 import es.sebas1705.user.usescases.ChangePhotoToUser
 import es.sebas1705.user.usescases.ContainsUser
@@ -55,7 +55,7 @@ object UserModule {
         storageRepository: StorageRepository
     ): UserUsesCases = UserUsesCases(
         addCreditsToUser = AddCreditsToUser(firestoreRepository),
-        addPointsToUser = AddPointsToUser(firestoreRepository),
+        addRoundRewards = AddRoundRewards(firestoreRepository),
         containsUser = ContainsUser(firestoreRepository),
         getUser = GetUser(firestoreRepository),
         saveUser = SaveUser(firestoreRepository),

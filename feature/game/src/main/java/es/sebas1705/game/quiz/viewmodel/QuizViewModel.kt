@@ -181,28 +181,19 @@ class QuizViewModel @Inject constructor(
             onLoading = { startLoading() },
             onSuccess = { user ->
                 Log.i("QuizViewModel", "User loaded")
-                execute(Dispatchers.IO) {
-                    userUsesCases.addPointsToUser(
+                if (points <= 0) {
+                    // Nothing was earned, so there is nothing to store.
+                    stopLoading()
+                    execute { onSuccess() }
+                } else execute(Dispatchers.IO) {
+                    userUsesCases.addRoundRewards(
                         user = user,
-                        pointsToAdd = points,
+                        points = points,
+                        credits = points / (10..100).random(),
                         onSuccess = {
-                            Log.i("QuizViewModel", "Points added")
-                            execute(Dispatchers.IO) {
-                                userUsesCases.addCreditsToUser(
-                                    user = user,
-                                    creditsToAdd = points / (10..100).random(),
-                                    onSuccess = {
-                                        Log.i("QuizViewModel", "Credits added")
-                                        stopLoading()
-                                        execute {
-                                            onSuccess()
-                                        }
-                                    },
-                                    onError = { error ->
-                                        stopAndError(error, application::printTextInToast)
-                                    }
-                                )
-                            }
+                            Log.i("QuizViewModel", "Round rewards stored")
+                            stopLoading()
+                            execute { onSuccess() }
                         },
                         onError = { error ->
                             stopAndError(error, application::printTextInToast)

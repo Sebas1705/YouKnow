@@ -32,6 +32,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.never
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
@@ -62,8 +66,12 @@ class MysteryNumberViewModelTest {
     )
 
     /** A custom game with a known difficulty and life count, returned once it is RUNNING. */
-    private suspend fun runningGame(difficulty: Difficulty = Difficulty.EASY, lives: Int = 7): MysteryNumberViewModel {
-        val viewModel = viewModel()
+    private suspend fun runningGame(
+        difficulty: Difficulty = Difficulty.EASY,
+        lives: Int = 7,
+        firestore: FirestoreRepository = GameTestSupport.firestoreWithUser()
+    ): MysteryNumberViewModel {
+        val viewModel = viewModel(firestore)
         viewModel.uiState.test {
             viewModel.sendIntent(MysteryNumberIntent.GenerateGame(difficulty, lives))
             awaitUntil { it.status == MysteryNumberStatus.RUNNING }
@@ -208,6 +216,23 @@ class MysteryNumberViewModelTest {
     @Test
     fun `leaving the game stores points and credits before calling back`() = runTest {
         val firestore = GameTestSupport.firestoreWithUser(points = 50, credits = 2)
+        val viewModel = runningGame(Difficulty.EASY, lives = 2, firestore = firestore)
+        viewModel.sendIntent(MysteryNumberIntent.Response(viewModel.uiState.value.numberModel.number, 1f))
+        val earned = viewModel.uiState.value.points
+        val done = CompletableDeferred<Unit>()
+
+        viewModel.sendIntent(MysteryNumberIntent.OutGame { done.complete(Unit) })
+        done.awaitCallback()
+
+        verify(firestore).getUser(UID)
+        val credits = argumentCaptor<Int>()
+        verify(firestore).addRoundRewards(eq(UID), eq(50), eq(2), eq(earned), credits.capture(), isNull())
+        assertTrue(credits.firstValue in 0..earned / 10)
+    }
+
+    @Test
+    fun `leaving with no points reads the user but stores nothing`() = runTest {
+        val firestore = GameTestSupport.firestoreWithUser(points = 50, credits = 2)
         val viewModel = viewModel(firestore)
         val done = CompletableDeferred<Unit>()
 
@@ -215,8 +240,22 @@ class MysteryNumberViewModelTest {
         done.awaitCallback()
 
         verify(firestore).getUser(UID)
-        verify(firestore).addPointsToUser(UID, 50, 0)
-        verify(firestore).addCreditsToUser(eq(UID), eq(2), any())
+        verify(firestore, never()).addRoundRewards(any(), any(), any(), any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `leaving when the rules refuse the rewards toasts the error and never calls back`() = runTest {
+        val firestore = GameTestSupport.firestoreRejectingRewards("PERMISSION_DENIED")
+        val viewModel = runningGame(Difficulty.EASY, lives = 2, firestore = firestore)
+        viewModel.sendIntent(MysteryNumberIntent.Response(viewModel.uiState.value.numberModel.number, 1f))
+        val done = CompletableDeferred<Unit>()
+
+        viewModel.sendIntent(MysteryNumberIntent.OutGame { done.complete(Unit) })
+
+        assertEquals("PERMISSION_DENIED", awaitToast())
+        settle()
+        assertFalse(done.isCompleted)
+        assertFalse(viewModel.uiState.value.isLoading)
     }
 
     @Test

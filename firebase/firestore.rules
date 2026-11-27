@@ -17,12 +17,34 @@ service cloud.firestore {
     // them (ranking, nickname search, group members), so nothing private belongs here: the email
     // stays in Firebase Auth. Only the owner writes or deletes. The checks mirror UserDocument: a
     // value it can't map must not get in, because others read this document too.
+    //
+    // Points and credits are what the ranking shows, and there is no server to compute them, so
+    // the rules bound what a client may write. They cannot make a forged score impossible: see
+    // "What the rules cannot prevent" in docs/FIREBASE.md.
+    //   - a new profile starts at 0 points and 1000 credits;
+    //   - points never decrease, and credits only decrease on their own (the app spends them);
+    //   - points and credits only go up together with a round event, created in the SAME batch
+    //     at users/{uid}/events/{total}, where {total} is the points total after the round. The
+    //     event states what was earned, carries the server time and can't be edited or deleted,
+    //     so each total can be reached once;
+    //   - a round is worth at most 10000 points and credits at most a tenth of the points (the
+    //     app grants points / (10..100)); a daily round at most 100 points, once per UTC day
+    //     (users/{uid}/dailyCompletions/{date});
+    //   - rounds are at least 10 seconds apart, and totals stay under 10 000 000 points and
+    //     1 000 000 credits.
     match /users/{uid} {
       allow read: if signedIn();
       allow delete: if isOwner(uid);
-      allow create, update: if isOwner(uid)
+      allow create: if isOwner(uid)
         && validUser(request.resource.data)
-        && noNewEmail(request.resource.data);
+        && noNewEmail(request.resource.data)
+        && request.resource.data.points == 0
+        && request.resource.data.credits == 1000;
+      allow update: if isOwner(uid)
+        && validUser(request.resource.data)
+        && noNewEmail(request.resource.data)
+        && (unrewarded(resource.data, request.resource.data)
+            || rewarded(uid, resource.data, request.resource.data));
 
       function validUser(user) {
         return user.keys().hasOnly(['email', 'provider', 'nickName', 'photoUrl', 'groupId', 'points', 'credits', 'logged'])
@@ -46,6 +68,82 @@ service cloud.firestore {
       function noNewEmail(user) {
         return !('email' in user)
           || (resource != null && 'email' in resource.data && user.email == resource.data.email);
+      }
+
+      // Profile edits and spending credits: points stay, credits don't grow.
+      function unrewarded(before, after) {
+        return after.points == before.points && after.credits <= before.credits;
+      }
+
+      function eventPath(uid, total) {
+        return /databases/$(database)/documents/users/$(uid)/events/$(string(total));
+      }
+
+      // Points grew: the round event for the new total is created in this same batch (it did not
+      // exist before), and the previous round's event, if any, is at least 10 seconds old.
+      function rewarded(uid, before, after) {
+        return after.points > before.points
+          && existsAfter(eventPath(uid, after.points))
+          && !exists(eventPath(uid, after.points))
+          && (!exists(eventPath(uid, before.points))
+              || request.time >= get(eventPath(uid, before.points)).data.at + duration.value(10, 's'));
+      }
+
+      // users/{uid}/events/{total}: what a round earned. Created together with the profile update
+      // that adds exactly these points and credits, and never changed afterwards.
+      match /events/{total} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) && validEvent(uid, total, request.resource.data);
+        allow update, delete: if false;
+
+        function validEvent(uid, total, event) {
+          let before = get(/databases/$(database)/documents/users/$(uid)).data;
+          let after = getAfter(/databases/$(database)/documents/users/$(uid)).data;
+          return event.keys().hasOnly(['kind', 'points', 'credits', 'at', 'date'])
+            && event.kind in ['game', 'daily']
+            && event.points is int && event.points > 0 && event.points <= 10000
+            && event.credits is int && event.credits >= 0 && event.credits * 10 <= event.points
+            && event.at == request.time
+            && total == string(after.points)
+            && after.points == before.points + event.points
+            && after.credits == before.credits + event.credits
+            && after.points <= 10000000
+            && after.credits <= 1000000
+            && ((event.kind == 'game' && !('date' in event))
+                || (event.kind == 'daily' && dailyCompleted(uid, event)));
+        }
+
+        // A daily round: at most 100 points, backed by a completion created in this batch for
+        // today (UTC) or yesterday (a round that ends after midnight); that day's challenge must
+        // exist.
+        function dailyCompleted(uid, event) {
+          return event.get('date', null) is string
+            && event.points <= 100
+            && (event.date == utcDate(request.time) || event.date == utcDate(request.time - duration.value(1, 'd')))
+            && existsAfter(/databases/$(database)/documents/users/$(uid)/dailyCompletions/$(event.date))
+            && !exists(/databases/$(database)/documents/users/$(uid)/dailyCompletions/$(event.date))
+            && exists(/databases/$(database)/documents/dailyChallenges/$(event.date));
+        }
+      }
+
+      // users/{uid}/dailyCompletions/{date}: one per player and UTC day, which is what stops the
+      // daily challenge from being replayed for points. Created together with its round event.
+      match /dailyCompletions/{date} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && request.resource.data.keys().hasOnly(['date', 'at'])
+          && request.resource.data.date == date
+          && request.resource.data.at == request.time
+          && date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && getAfter(/databases/$(database)/documents/users/$(uid)).data.points > get(/databases/$(database)/documents/users/$(uid)).data.points;
+        allow update, delete: if false;
+      }
+
+      // yyyy-MM-dd in UTC, like the app's daily challenge ids.
+      function utcDate(time) {
+        return string(time.year()) + '-'
+          + (time.month() < 10 ? '0' : '') + string(time.month()) + '-'
+          + (time.day() < 10 ? '0' : '') + string(time.day());
       }
     }
 

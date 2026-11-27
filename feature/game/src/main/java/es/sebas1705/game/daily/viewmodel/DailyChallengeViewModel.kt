@@ -38,6 +38,10 @@ class DailyChallengeViewModel @Inject constructor(
     private val application: Application
 ) : MVIBaseViewModel<DailyChallengeState, DailyChallengeIntent>() {
 
+    /** The UTC day of the round being played: the day its points are credited to, even past midnight. */
+    @Volatile
+    private var challengeDate: String = LocalDate.now(ZoneOffset.UTC).format(DATE_FORMATTER)
+
     override fun initState(): DailyChallengeState = DailyChallengeState.default()
 
     override fun onInit() {
@@ -55,6 +59,7 @@ class DailyChallengeViewModel @Inject constructor(
     //Actions:
     private fun loadChallenge() = execute(Dispatchers.IO) {
         val today = LocalDate.now(ZoneOffset.UTC).format(DATE_FORMATTER)
+        challengeDate = today
         dailyChallengeUsesCases.getOrCreateDailyChallenge(
             date = today,
             onLoading = { updateUi { it.copy(status = DailyChallengeStatus.LOADING, loadError = null) } },
@@ -114,19 +119,14 @@ class DailyChallengeViewModel @Inject constructor(
             onSuccess = { user ->
                 Log.i("DailyChallengeViewModel", "User loaded")
                 execute(Dispatchers.IO) {
-                    userUsesCases.addPointsToUser(
+                    // One batch: the points, the credits, the round event and the day's completion.
+                    // The rules accept the day once per player, so a replay is refused here.
+                    userUsesCases.addRoundRewards(
                         user = user,
-                        pointsToAdd = points,
-                        onSuccess = {
-                            execute(Dispatchers.IO) {
-                                userUsesCases.addCreditsToUser(
-                                    user = user,
-                                    creditsToAdd = points / (10..100).random(),
-                                    onSuccess = { execute { onSuccess() } },
-                                    onError = { error -> stopAndError(error, application::printTextInToast) }
-                                )
-                            }
-                        },
+                        points = points,
+                        credits = points / (10..100).random(),
+                        dailyDate = challengeDate,
+                        onSuccess = { execute { onSuccess() } },
                         onError = { error -> stopAndError(error, application::printTextInToast) }
                     )
                 }

@@ -24,7 +24,8 @@ class FirestoreRepository @Inject constructor(
     fun saveUser(firebaseId: String, userDocument: UserDocument): DataEmptyFlow = userDataSource.saveUser(firebaseId, userDocument)
     fun getUser(userId: String): DataFlow<UserDocument> = userDataSource.getUser(userId)
     fun addCreditsToUser(userId: String, oldCredits: Int, addCredits: Int): DataFlow<Int> = userDataSource.addCreditsToUser(userId, oldCredits, addCredits)
-    fun addPointsToUser(userId: String, addPoints: Int, oldPoints: Int): DataFlow<Int> = userDataSource.addPointsToUser(userId, addPoints, oldPoints)
+    fun addRoundRewards(userId: String, oldPoints: Int, oldCredits: Int, points: Int, credits: Int, dailyDate: String? = null): DataEmptyFlow =
+        userDataSource.addRoundRewards(userId, oldPoints, oldCredits, points, credits, dailyDate)
     fun setGroupToUser(firebaseId: String, groupId: String?): DataEmptyFlow = userDataSource.setGroupToUser(firebaseId, groupId)
     fun removeGroupFromUser(firebaseId: String): DataEmptyFlow = userDataSource.removeGroupFromUser(firebaseId)
     fun changePhotoToUser(firebaseId: String, photoUrl: String): DataEmptyFlow = userDataSource.changePhotoToUser(firebaseId, photoUrl)
