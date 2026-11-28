@@ -12,6 +12,10 @@ permissions:
 jobs:
   changelog_label_gate:
     name: Changelog Label Gate
+    # Dependabot opens a PR and adds its labels a second later. The `opened` run sees no label yet and fails, while the `labeled`
+    # run that follows passes, so every Dependabot PR kept a stale red check next to the green one. Its `labeled` run does the
+    # validation, so the `opened` run of Dependabot is skipped. Every other author is still checked on every event.
+    if: github.event.action != 'opened' || github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
 
     steps:
